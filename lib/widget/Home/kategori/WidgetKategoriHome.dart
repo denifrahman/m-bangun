@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:apps/Utils/LocalBindings.dart';
+import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/models/KategoriM.dart';
 import 'package:apps/provider/Api.dart';
+import 'package:apps/screen/KategoriScreen.dart';
+import 'package:apps/screen/SubKategoriScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class WidgetKategoriHome extends StatefulWidget {
   WidgetKategoriHome({Key key}) : super(key: key);
@@ -59,6 +61,7 @@ class _WidgetKategoriHomeState extends State<WidgetKategoriHome> {
             children: <Widget>[
               Text('Kategori',style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
               InkWell(
+                onTap: () => {_openKategori()},
                 child: Text(
                   'Semua',
                   style: TextStyle(fontSize: 12, color: Colors.red),
@@ -76,19 +79,23 @@ class _WidgetKategoriHomeState extends State<WidgetKategoriHome> {
               itemCount: dataKategori.length,
               itemBuilder: (context, index) {
                 return Card(
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    padding: EdgeInsets.all(8),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Image.network(
-                          dataKategori[index].produkkategorithumbnail,width: 45,
-                        ),
-                        Divider(),
-                        Text(dataKategori[index].produkkategorinama),
-                      ],
+                  child: InkWell(
+                    onTap: () => openSubkategori(dataKategori[index]),
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      padding: EdgeInsets.all(8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.network(
+                            dataKategori[index].produkkategorithumbnail,
+                            width: 45,
+                          ),
+                          Divider(),
+                          Text(dataKategori[index].produkkategorinama),
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -96,5 +103,22 @@ class _WidgetKategoriHomeState extends State<WidgetKategoriHome> {
         )
       ],
     );
+  }
+
+  _openKategori() {
+    Navigator.push(
+      context,
+      SlideRightRoute(page: KategoriScreen()),
+    );
+  }
+
+  void openSubkategori(param) {
+    Navigator.push(
+        context,
+        SlideRightRoute(
+            page: SubKategoriScreen(
+          idKategori: int.parse(param.produkkategoriid),
+          namaKategori: param.produkkategorinama,
+        )));
   }
 }

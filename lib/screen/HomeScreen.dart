@@ -1,8 +1,12 @@
+import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/widget/Home/kategori/WidgetCari.dart';
 import 'package:apps/widget/Home/kategori/WidgetKategoriHome.dart';
 import 'package:apps/widget/Home/kategori/WidgetLokasi.dart';
+import 'package:apps/widget/Home/kategori/WidgetNews.dart';
 import 'package:apps/widget/Home/kategori/WidgetRecentUpload.dart';
+import 'package:apps/widget/WidgetSearch.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,12 +18,17 @@ class HomeScreen extends StatefulWidget {
   }
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final RoundedLoadingButtonController _btnController =
-      new RoundedLoadingButtonController();
+  new RoundedLoadingButtonController();
+  AnimationController _hideFabAnimation;
+
   @override
   void initState() {
     super.initState();
+    _hideFabAnimation =
+        AnimationController(vsync: this, duration: kThemeAnimationDuration);
+    _hideFabAnimation.forward();
   }
 
   @override
@@ -27,38 +36,76 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  bool _handleScrollNotification(ScrollNotification notification) {
+    if (notification.depth == 0) {
+      if (notification is UserScrollNotification) {
+        final UserScrollNotification userScroll = notification;
+        _hideFabAnimation.forward();
+        switch (userScroll.direction) {
+          case ScrollDirection.forward:
+            if (userScroll.metrics.maxScrollExtent !=
+                userScroll.metrics.minScrollExtent) {
+              _hideFabAnimation.forward();
+            }
+            break;
+          case ScrollDirection.reverse:
+            if (userScroll.metrics.maxScrollExtent !=
+                userScroll.metrics.minScrollExtent) {
+              _hideFabAnimation.reverse();
+            }
+            break;
+          case ScrollDirection.idle:
+            break;
+        }
+      }
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          title: Text(
-            'M-Bangun',
-            textAlign: TextAlign.left,
-            style: TextStyle(fontFamily: 'OpenSans-Semibold'),
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                WidgetLokasi(),
-                WidgetCari(),
-                WidgetKategoriHome(),
-                WidgetRecentUpload()
-              ],
+    return NotificationListener<ScrollNotification>(
+        onNotification: _handleScrollNotification,
+        child: Scaffold(
+            appBar: AppBar(
+              elevation: 0,
+              title: Text(
+                'M-Bangun',
+                textAlign: TextAlign.left,
+                style: TextStyle(fontFamily: 'OpenSans-Semibold'),
+              ),
             ),
-          ),
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {},
-          backgroundColor: Colors.red,
-          tooltip: 'Posting Iklan Anda',
-          icon: Icon(Icons.add_a_photo),
-          label: Text("New Ads"),
+            body: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    WidgetLokasi(),
+                    Container(
+                      margin: EdgeInsets.only(bottom: 30, top: 30),
+                      child: WidgetSearch(),
+                    ),
+                    WidgetKategoriHome(),
+                    WidgetNews()
+                  ],
+                ),
+              ),
+            ),
+            floatingActionButton: ScaleTransition(
+              scale: _hideFabAnimation,
+              alignment: Alignment.bottomCenter,
+              child: FloatingActionButton.extended(
+                onPressed: () {},
+                backgroundColor: Colors.red,
+                tooltip: 'Posting Iklan Anda',
+                icon: Icon(Icons.add_a_photo),
+                label: Text("New Ads"),
+              ),
+            )
         )
     );
   }
+
+
 }

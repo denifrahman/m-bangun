@@ -1,10 +1,11 @@
 import 'dart:convert';
 
 import 'package:apps/Utils/LocalBindings.dart';
-import 'package:apps/models/penjamin.dart';
+import 'package:apps/models/ProdukListM.dart';
 import 'package:apps/provider/Api.dart';
+import 'package:floating_search_bar/floating_search_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:jiffy/jiffy.dart';
 
 class WidgetCari extends StatefulWidget {
   WidgetCari({Key key}) : super(key: key);
@@ -16,8 +17,13 @@ class WidgetCari extends StatefulWidget {
 }
 
 class _WidgetCariState extends State<WidgetCari> {
+  var dataProdukList = new List<ProdukListM>();
+  String idKecamatan = '';
+  String idKota = '';
+  String idProvinsi = '';
+  String idSubKategori = '';
+
   @override
-  var dataHistory = new List<Penjamin>();
   void initState() {
     super.initState();
   }
@@ -27,348 +33,127 @@ class _WidgetCariState extends State<WidgetCari> {
     super.dispose();
   }
 
+  void _getProdukByParam(key) async {
+    String token = await LocalStorage.sharedInstance.readValue('token');
+    Api.getAllProdukByParam(
+            token, idKecamatan, idKota, idProvinsi, idSubKategori, key)
+        .then((response) {
+      var result = json.decode(response.body)['data'];
+      if (result == []) {
+        setState(() {
+          dataProdukList = [];
+        });
+      } else {
+        Iterable list = json.decode(response.body)['data'];
+        setState(() {
+          dataProdukList =
+              list.map((model) => ProdukListM.fromMap(model)).toList();
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Container(
-      margin: EdgeInsets.only(bottom: 30, top: 30),
-      child: Container(
-          padding: EdgeInsets.only(left: 20, right: 20),
-          width: MediaQuery.of(context).size.width,
-          height: 40,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(0))),
-          child: InkWell(
-            onTap: () => _search(context),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'Cari',
-                  style: TextStyle(fontSize: 11),
-                ),
-                Icon(
-                  Icons.search,
-                  size: 20,
-                )
-              ],
-            ),
-          )),
-    );
-  }
-  _search(context) async {
-//    LocalStorage.sharedInstance.deleteValue('historySearch');
-    String historySearch =
-    await LocalStorage.sharedInstance.readValue('historySearch');
-    print(' set $historySearch');
-    if (historySearch == null) {
-      historySearch = '[]';
-    }
-    String tokenValid = await LocalStorage.sharedInstance.readValue('token');
-    Api.getKategori(tokenValid).then((response) {
-      Iterable list = json.decode(response.body)['data'];
-      setState(() {
-        dataHistory = list.map((model) => Penjamin.fromJson(model)).toList();
-      });
-      showSearch(
-          context: context,
-          delegate: CabangSearchDelegate(
-              list.map((model) => Penjamin.fromJson(model)).toList(),
-              json.decode(historySearch)));
-    });
-  }
-}
-class CabangSearchDelegate extends SearchDelegate<String> {
-  final List<Penjamin> result;
-  final List<dynamic> historySearch;
-  final data = ["Klinik Pratama", "Klinik Mawar", "Klinik Sentosa", "Kita"];
-  var tempHistory = [];
-  CabangSearchDelegate(this.result, this.historySearch)
-      : super(
-    searchFieldLabel: "Cari",
-    keyboardType: TextInputType.text,
-    textInputAction: TextInputAction.search,
-  );
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-        },
-      )
-    ];
-  }
-
-  @override
-  ThemeData appBarTheme(BuildContext context) {
-    assert(context != null);
-    final ThemeData theme = Theme.of(context);
-    assert(theme != null);
-    return theme;
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    // TODO: implement buildLeading
-    return IconButton(
-      icon: AnimatedIcon(
-        icon: AnimatedIcons.menu_arrow,
-        progress: transitionAnimation,
-      ),
-      onPressed: () {
-        close(context, null);
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-//    if(historySearch.length == 0 && tempHistory.length == 0){
-//      tempHistory = ['"$query"'];
-//      print('kosong all');
-//    }else{
-//      print('kosong');
-//      historySearch.add('"$query"');
-////      tempHistory.add(json.encode(historySearch));
-//    LocalStorage.sharedInstance.writeValue(key: 'historySearch', value: '$tempHistory');
-//    }
-//    var a = json.encode(historySearch).replaceAll('[', '');
-//    print('akhir $a');
-//    print("'$tempHistory'");
-    final suggestionList = query.isEmpty
-        ? result.take(3).toList()
-        : result.where((a) => a.penjaminId.contains(query)).toList();
-    return ListView.builder(
-        padding: EdgeInsets.only(left: 5, right: 5, top: 10),
-        itemCount: suggestionList.length,
-        itemBuilder: (context, index) {
-          return Column(
-            children: <Widget>[
-              Container(
-                child: ListTile(
-                  onTap: () => _openCabang(context),
-                  title: Text(
-                    suggestionList[index].penjaminNama == null
-                        ? "Kosong"
-                        : suggestionList[index].penjaminNama,
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey[700]),
-                  ),
-                  subtitle: Row(
+    return Scaffold(
+//      appBar: AppBar(
+//        title: Text('Cari'),
+//      ),
+        body: FloatingSearchBar.builder(
+          pinned: true,
+          itemCount: dataProdukList.length,
+          padding: EdgeInsets.only(top: 10.0),
+          itemBuilder: (BuildContext context, int j) {
+            var harga = dataProdukList[j].produkharga;
+            return Container(
+              height: 320,
+              child: Card(
+                semanticContainer: true,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                child: InkWell(
+                  onTap: () => _openDetailNews(dataProdukList[j]),
+                  child: Column(
                     children: <Widget>[
-                      Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                        size: 12,
-                      ),
-                      Text(
-                        ' 4,6',
-                        style: TextStyle(fontSize: 10),
-                      ),
                       Container(
-                        width: 8,
+                        height: 50,
+                        child: ListTile(
+                          title: RichText(
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            strutStyle:
+                            StrutStyle(fontSize: 12.0),
+                            text: TextSpan(
+                              style: TextStyle(
+                                  color: Colors.grey[800],
+                                  fontSize: 11
+                              ),
+                              text: '${dataProdukList[j].produknama}',),
+                          ),
+                          trailing: Icon(Icons.favorite_border, size: 14,),
+                        ),
                       ),
-                      Icon(
-                        Icons.credit_card,
-                        color: Colors.blue,
-                        size: 12,
+                      Expanded(
+                        flex: 2,
+                        child: Image.network(
+                          dataProdukList[j].produkthumbnail == null
+                              ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
+                              : dataProdukList[j].produkthumbnail,
+                          fit: BoxFit.cover,
+                          width: 200,
+                        ),
                       ),
-                      Text(
-                        ' BPJS',
-                        style: TextStyle(fontSize: 10, color: Colors.green),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding: EdgeInsets.all(0),
+                          child: ListTile(
+                            title: Row(
+                              children: <Widget>[
+                                Text('Rp ', style: TextStyle(fontSize: 12),),
+                                Text(harga == null ? '-' : harga,
+                                    style: TextStyle(fontSize: 12)),
+                              ],
+                            ),
+                            subtitle: Text(
+                              Jiffy(dataProdukList[j].produkcreate).fromNow(),
+                              style: TextStyle(fontSize: 10),),
+                          ),
+                        ),
                       ),
-                      Container(
-                        width: 8,
-                      ),
-                      Icon(
-                        Icons.location_on,
-                        color: Colors.red,
-                        size: 12,
-                      ),
-                      Text(
-                        ' Surabaya',
-                        style: TextStyle(fontSize: 10, color: Colors.grey[700]),
-                      )
+
                     ],
                   ),
-                  trailing: SizedBox(
-                    height: 30.0,
-                    width: 25.0,
-                    child: IconButton(
-                      icon: Icon(
-                        FontAwesomeIcons.heart,
-                        size: 18,
-                      ),
-                      onPressed: () {},
-                    ),
-                  ),
-                  leading: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: new BoxDecoration(
-                          color: Colors.grey[200].withOpacity(0.8),
-                          //new Color.fromRGBO(255, 0, 0, 0.0),
-                          borderRadius:
-                          new BorderRadius.all(Radius.circular(40.0))),
-                      child: Align(
-                          alignment: Alignment.center,
-                          child: Icon(Icons.business))),
                 ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                elevation: 5,
+                margin: EdgeInsets.all(10),
               ),
-              Container(
-                padding: EdgeInsets.only(left: 15, right: 15),
-                child: Divider(),
-              )
-            ],
-          );
-        });
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    // TODO: implement buildSuggestions
-    print(historySearch.length);
-    final suggestionList = query.isEmpty
-        ? result.take(3).toList()
-        : result.where((a) => a.penjaminId.contains(query)).toList();
-    return query.isEmpty
-        ? Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.all(10),
-          child: Text(
-            'Riwayat Pencarian',
-            textAlign: TextAlign.left,
+            );
+          },
+          leading: IconButton(icon: Icon(Icons.arrow_back),
+            onPressed: () => {Navigator.pop(context)},),
+          onChanged: (String value) => _onSearch(value),
+          onTap: () {},
+          decoration: InputDecoration.collapsed(
+            hintText: "Search...",
           ),
-        ),
-        Container(
-          height: 55,
-          child: ListView.builder(
-              padding: EdgeInsets.all(10),
-              scrollDirection: Axis.horizontal,
-              itemCount: suggestionList.length,
-              itemBuilder: (BuildContext, index) {
-                return Container(
-                  margin: EdgeInsets.only(right: 5),
-                  child: FittedBox(
-                    fit: BoxFit.fill,
-                    child: InkWell(
-                      onTap: () {
-                        query = '3';
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(20))),
-                        child: Center(child: Text('Klinik Kandungan')),
-                      ),
-                    ),
-                  ),
-                );
-              }),
         )
-      ],
-    )
-        : ListView.builder(
-        padding: EdgeInsets.only(left: 5, right: 5, top: 10),
-        itemCount: suggestionList.length,
-        itemBuilder: (context, index) {
-          return Column(
-            children: <Widget>[
-              Container(
-                child: ListTile(
-                  onTap: () => _openCabang(context),
-                  title: Text(
-                    suggestionList[index].penjaminNama == null
-                        ? "Kosong"
-                        : suggestionList[index].penjaminNama,
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey[700]),
-                  ),
-                  subtitle: Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                        size: 12,
-                      ),
-                      Text(
-                        ' 4,6',
-                        style: TextStyle(fontSize: 10),
-                      ),
-                      Container(
-                        width: 8,
-                      ),
-                      Icon(
-                        Icons.credit_card,
-                        color: Colors.blue,
-                        size: 12,
-                      ),
-                      Text(
-                        ' BPJS',
-                        style: TextStyle(fontSize: 10, color: Colors.green),
-                      ),
-                      Container(
-                        width: 8,
-                      ),
-                      Icon(
-                        Icons.location_on,
-                        color: Colors.red,
-                        size: 12,
-                      ),
-                      Text(
-                        ' Surabaya',
-                        style: TextStyle(
-                            fontSize: 10, color: Colors.grey[700]),
-                      )
-                    ],
-                  ),
-                  trailing: SizedBox(
-                    height: 30.0,
-                    width: 25.0,
-                    child: IconButton(
-                      icon: Icon(
-                        FontAwesomeIcons.heart,
-                        size: 18,
-                      ),
-                      onPressed: () {},
-                    ),
-                  ),
-                  leading: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: new BoxDecoration(
-                          color: Colors.grey[200].withOpacity(0.8),
-                          //new Color.fromRGBO(255, 0, 0, 0.0),
-                          borderRadius:
-                          new BorderRadius.all(Radius.circular(40.0))),
-                      child: Align(
-                          alignment: Alignment.center,
-                          child: Icon(Icons.business))),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(left: 15, right: 15),
-                child: Divider(),
-              )
-            ],
-          );
-        });
+    );
   }
 
-  _openCabang(context) {
-//    Navigator.of(context).push(PageRouteTransition(
-//        animationType: AnimationType.slide_up,
-//        builder: (context) => CabangScreen()));
+  _onSearch(String value) {
+    if (value.isNotEmpty) {
+      _getProdukByParam(value);
+    }
+    {
+      setState(() {
+        dataProdukList = [];
+      });
+    }
   }
+
+  _openDetailNews(ProdukListM dataProdukList) {}
 }

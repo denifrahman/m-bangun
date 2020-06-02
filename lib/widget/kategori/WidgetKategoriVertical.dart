@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:apps/Utils/LocalBindings.dart';
+import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/models/KategoriM.dart';
 import 'package:apps/provider/Api.dart';
+import 'package:apps/screen/SubKategoriScreen.dart';
 import 'package:flutter/material.dart';
 
 class WidgetKategoriVertical extends StatefulWidget {
@@ -26,6 +28,7 @@ class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
   void dispose() {
     super.dispose();
   }
+
   void _getToken() async {
     Api.getToken().then((value) {
       var data = json.decode(value.body);
@@ -44,6 +47,7 @@ class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
       });
     });
   }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -54,23 +58,32 @@ class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
           itemCount: dataKategori.length,
           itemBuilder: (context, index) {
             return Card(
-              child: Container(
-                height: 100,
-                width: 100,
-                padding: EdgeInsets.all(8),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Image.network(
-                      dataKategori[index].produkkategorithumbnail,width: 45,
+              child: InkWell(
+                onTap: () => openSubkategori(dataKategori[index]),
+                child: Container(
+                  width: 100,
+                  padding: EdgeInsets.all(8),
+                  child: ListTile(
+                    leading: Image.network(
+                      dataKategori[index].produkkategorithumbnail,
+                      width: 45,
                     ),
-                    Divider(),
-                    Text(dataKategori[index].produkkategorinama),
-                  ],
+                    title: Text(dataKategori[index].produkkategorinama),
+                  ),
                 ),
               ),
             );
           }),
     );
+  }
+
+  void openSubkategori(param) {
+    Navigator.push(
+        context,
+        SlideRightRoute(
+            page: SubKategoriScreen(
+          idKategori: int.parse(param.produkkategoriid),
+          namaKategori: param.produkkategorinama,
+        )));
   }
 }

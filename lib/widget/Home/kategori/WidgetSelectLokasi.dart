@@ -9,7 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class WidgetSelectLokasi extends StatefulWidget {
-  WidgetSelectLokasi({Key key}) : super(key: key);
+  final String idProvinsi;
+
+  WidgetSelectLokasi({Key key, this.idProvinsi}) : super(key: key);
 
   @override
   _WidgetSelectLokasiState createState() {
@@ -30,6 +32,7 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
   void initState() {
     super.initState();
     _getCurrentToken();
+    print(widget.idProvinsi);
   }
 
   @override
@@ -44,7 +47,7 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
         dataProvinsi =
             list.map((model) => ProvinsiM.fromMap(model)).toList();
       });
-      _getCurrentProvinsi(token);
+//      _getCurrentProvinsi(token);
     });
   }
   void _getAllKecamatanByIdKota(token) async{
@@ -62,25 +65,19 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
     String token = await LocalStorage.sharedInstance.readValue('token');
     _getAllProvinsi(token);
   }
-  void _getCurrentProvinsi(token)async{
-    String currentIdProvinsi = await LocalStorage.sharedInstance.readValue('idProvinsi');
-    setState(() {
-      idProvinsi = currentIdProvinsi;
-    });
-    _getAllKotaByIdprovinsi(token);
-  }
   void _onchangeKota(String newValue) async{
     String token = await LocalStorage.sharedInstance.readValue('token');
     _getAllKecamatanByIdKota(token);
   }
-
   _simpanKota() {
+    print(idProvinsi);
     LocalStorage.sharedInstance
         .writeValue(key: 'idProvinsi', value: idProvinsi);
     LocalStorage.sharedInstance
-        .writeValue(key: 'idKota', value: idKota);
-    LocalStorage.sharedInstance
-        .writeValue(key: 'idKecamatan', value: idKecamatan);
+        .writeValue(key: 'idKota', value: idKota == null ? 'null' : idKota);
+    print(idKota);
+    LocalStorage.sharedInstance.writeValue(
+        key: 'idKecamatan', value: idKecamatan == null ? 'null' : idKecamatan);
     Navigator.pop(context);
   }
 
@@ -92,7 +89,7 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
   void _getAllKotaByIdprovinsi(String token) {
     Api.getAllKotaByIdProvinsi(token,idProvinsi).then((value){
       var result = json.decode(value.body);
-      print(result);
+//      print(result);
       Iterable list = result['data'];
       setState(() {
         dataKota =
@@ -134,7 +131,7 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
                                 color: Colors.grey,
                                 fontSize: 12),
                           ),
-                          value: idProvinsi,
+                          value: widget.idProvinsi,
                           onChanged: (String newValue) {
                             setState(() {
                               idProvinsi = newValue;

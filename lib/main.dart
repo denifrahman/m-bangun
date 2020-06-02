@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:apps/Utils/BottomAnimation.dart';
-import 'package:apps/Utils/StandartBottomBar/StandartBottomBar.dart';
 import 'package:apps/Utils/ThemeChanger.dart';
 import 'package:apps/screen/ActivityScreen.dart';
 import 'package:apps/screen/DasboardScreen.dart';

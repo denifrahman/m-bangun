@@ -12,13 +12,14 @@ ThemeData light = ThemeData(
         fontWeight: FontWeight.w500),
   ),
   fontFamily: 'OpenSans-Regular',
-  primaryColor: Colors.white,
+  primaryColor: Colors.green[600],
   appBarTheme: AppBarTheme(
       brightness: Brightness.light,
-      actionsIconTheme: IconThemeData(size: 14),
+      color: Colors.white,
+      iconTheme: IconThemeData(color: Colors.black),
       textTheme: TextTheme(
           title: TextStyle(
-              fontSize: 15,
+              fontSize: 14,
               color: Colors.black,
               fontFamily: 'OpenSans-Regular',
               fontWeight: FontWeight.bold))),

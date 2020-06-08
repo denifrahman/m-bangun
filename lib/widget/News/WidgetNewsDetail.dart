@@ -53,27 +53,23 @@ class _WidgetNewsDetailState extends State<WidgetNewsDetail> {
                       ),
                       text: widget.title),
                 ),
-                background: Container(
-                  margin: EdgeInsets.only(bottom: 4),
-                  width: MediaQuery.of(context).size.width,
-                  child: Carousel(
-                    autoplay: false,
-                    overlayShadow: false,
-                    noRadiusForIndicator: true,
-                    images: [
-                      Image.network(
-                        widget.tumbhnail == null
-                            ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
-                            : widget.tumbhnail,
-//                        width: 45,
-                      ),
-                    ],
-                    dotSize: 4.0,
-                    dotSpacing: 15.0,
-                    dotColor: Colors.lightGreenAccent,
-                    indicatorBgPadding: 3.0,
-                    dotBgColor: Colors.grey.withOpacity(0.5),
-                  ),
+                background: Carousel(
+                  autoplay: false,
+                  overlayShadow: false,
+                  noRadiusForIndicator: true,
+                  images: [
+                    Image.network(
+                      widget.tumbhnail == null
+                          ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
+                          : widget.tumbhnail,
+                      width: MediaQuery.of(context).size.width,
+                    ),
+                  ],
+                  dotSize: 4.0,
+                  dotSpacing: 15.0,
+                  dotColor: Colors.lightGreenAccent,
+                  indicatorBgPadding: 3.0,
+                  dotBgColor: Colors.grey.withOpacity(0.5),
                 ),
               ),
             ),

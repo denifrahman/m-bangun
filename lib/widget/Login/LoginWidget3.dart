@@ -1,16 +1,14 @@
+import 'dart:async';
+import 'dart:convert' show json;
+
+import 'package:apps/Utils/BottomAnimation.dart';
 import 'package:apps/provider/Akun.dart';
 import 'package:apps/provider/Auth.dart';
 import 'package:apps/widget/DataDiri/DataDiri.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:apps/Utils/BottomAnimation.dart';
-import 'dart:async';
-import 'dart:convert' show json;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-
-import "package:http/http.dart" as http;
 
 class LoginWidget3 extends StatefulWidget {
   @override
@@ -41,53 +39,6 @@ class _LoginWidget3State extends State<LoginWidget3>
         _currentUser = account;
       });
     });
-  }
-
-  Future<void> _handleGetContact() async {
-    setState(() {
-      _contactText = "Loading contact info...";
-    });
-    final http.Response response = await http.get(
-      'https://people.googleapis.com/v1/people/me/connections'
-      '?requestMask.includeField=person.names',
-      headers: await _currentUser.authHeaders,
-    );
-    print(response.body);
-    if (response.statusCode != 200) {
-      setState(() {
-        _contactText = "People API gave a ${response.statusCode} "
-            "response. Check logs for details.";
-      });
-      print('People API ${response.statusCode} response: ${response.body}');
-      return;
-    }
-    final Map<String, dynamic> data = json.decode(response.body);
-    final String namedContact = _pickFirstNamedContact(data);
-    setState(() {
-      if (namedContact != null) {
-        _contactText = "I see you know $namedContact!";
-      } else {
-        _contactText = "No contacts to display.";
-      }
-    });
-  }
-
-  String _pickFirstNamedContact(Map<String, dynamic> data) {
-    final List<dynamic> connections = data['connections'];
-    final Map<String, dynamic> contact = connections?.firstWhere(
-      (dynamic contact) => contact['names'] != null,
-      orElse: () => null,
-    );
-    if (contact != null) {
-      final Map<String, dynamic> name = contact['names'].firstWhere(
-        (dynamic name) => name['displayName'] != null,
-        orElse: () => null,
-      );
-      if (name != null) {
-        return name['displayName'];
-      }
-    }
-    return null;
   }
 
   _hadleChekSession() {
@@ -130,7 +81,7 @@ class _LoginWidget3State extends State<LoginWidget3>
                           child: child,
                         );
                       }),
-                      (Route route) => false);
+                          (Route route) => false);
                   setState(() {
                     _saving = false;
                   });
@@ -166,7 +117,7 @@ class _LoginWidget3State extends State<LoginWidget3>
                       child: child,
                     );
                   }),
-                  (Route route) => false);
+                      (Route route) => false);
               setState(() {
                 _saving = false;
               });
@@ -188,7 +139,7 @@ class _LoginWidget3State extends State<LoginWidget3>
                       child: child,
                     );
                   }),
-                  (Route route) => false);
+                      (Route route) => false);
               setState(() {
                 _saving = false;
               });
@@ -233,7 +184,7 @@ class _LoginWidget3State extends State<LoginWidget3>
               new Container(
                 width: MediaQuery.of(context).size.width,
                 margin:
-                    const EdgeInsets.only(left: 30.0, right: 30.0, top: 150.0),
+                const EdgeInsets.only(left: 30.0, right: 30.0, top: 150.0),
                 alignment: Alignment.center,
                 child: new Row(
                   children: <Widget>[
@@ -303,7 +254,7 @@ class _LoginWidget3State extends State<LoginWidget3>
   }
 
   PageController _controller =
-      new PageController(initialPage: 1, viewportFraction: 1.0);
+  new PageController(initialPage: 1, viewportFraction: 1.0);
 
   Future<void> _handleSignIn() async {
     try {

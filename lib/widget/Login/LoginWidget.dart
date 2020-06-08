@@ -1,20 +1,36 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-class LoginWidget extends StatelessWidget {
+import 'package:apps/Utils/LocalBindings.dart';
+import 'package:apps/Utils/navigation_right.dart';
+import 'package:apps/provider/Api.dart';
+import 'package:apps/screen/PendaftaranScreen.dart';
+import 'package:flutter/material.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
+
+class LoginWidget extends StatefulWidget {
   final Color primaryColor;
   final Color backgroundColor;
-  final AssetImage backgroundImage;
+  final String page;
 
-  LoginWidget(
-      {Key key, this.primaryColor, this.backgroundColor, this.backgroundImage});
+  LoginWidget({Key key, this.primaryColor, this.backgroundColor, this.page});
+
+  @override
+  _LoginWidgetState createState() => _LoginWidgetState();
+}
+
+class _LoginWidgetState extends State<LoginWidget> {
+  final RoundedLoadingButtonController _btnController =
+  new RoundedLoadingButtonController();
+
+  final FocusNode myFocusNodeEmailLogin = FocusNode();
+  final FocusNode myFocusNodePasswordLogin = FocusNode();
+
+  TextEditingController loginEmailController = new TextEditingController();
+  TextEditingController loginPasswordController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
-      height: MediaQuery.of(context).size.height,
-      decoration: BoxDecoration(
-        color: this.backgroundColor,
-      ),
+    return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
@@ -22,19 +38,13 @@ class LoginWidget extends StatelessWidget {
           new ClipPath(
             clipper: MyClipper(),
             child: Container(
-              decoration: BoxDecoration(
-                image: new DecorationImage(
-                    image: this.backgroundImage,
-                    fit: BoxFit.cover,
-                    colorFilter: ColorFilter.linearToSrgbGamma()),
-              ),
               alignment: Alignment.center,
-              padding: EdgeInsets.only(top: 100.0, bottom: 100.0),
+              padding: EdgeInsets.only(top: 50.0, bottom: 50.0),
               child: Column(
                 children: <Widget>[
                   Container(
                     child: new Image(
-                        width: 220,
+                        width: 100,
                         fit: BoxFit.fill,
                         image: new AssetImage('assets/logo.png')),
                   ),
@@ -76,7 +86,10 @@ class LoginWidget extends StatelessWidget {
                   margin: const EdgeInsets.only(left: 00.0, right: 10.0),
                 ),
                 new Expanded(
-                  child: TextField(
+                  child: TextFormField(
+                    focusNode: myFocusNodeEmailLogin,
+                    controller: loginEmailController,
+                    keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Enter your email',
@@ -121,7 +134,11 @@ class LoginWidget extends StatelessWidget {
                   margin: const EdgeInsets.only(left: 00.0, right: 10.0),
                 ),
                 new Expanded(
-                  child: TextField(
+                  child: TextFormField(
+                    focusNode: myFocusNodePasswordLogin,
+                    controller: loginPasswordController,
+                    keyboardType: TextInputType.text,
+                    obscureText: true,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Enter your password',
@@ -138,93 +155,11 @@ class LoginWidget extends StatelessWidget {
             child: new Row(
               children: <Widget>[
                 new Expanded(
-                  child: FlatButton(
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(30.0)),
-                    splashColor: this.primaryColor,
-                    color: this.primaryColor,
-                    child: new Row(
-                      children: <Widget>[
-                        new Padding(
-                          padding: const EdgeInsets.only(left: 20.0),
-                          child: Text(
-                            "LOGIN",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        new Expanded(
-                          child: Container(),
-                        ),
-                        new Transform.translate(
-                          offset: Offset(15.0, 0.0),
-                          child: new Container(
-                            padding: const EdgeInsets.all(5.0),
-                            child: FlatButton(
-                              shape: new RoundedRectangleBorder(
-                                  borderRadius:
-                                      new BorderRadius.circular(28.0)),
-                              splashColor: Colors.white,
-                              color: Colors.white,
-                              child: Icon(
-                                Icons.arrow_forward,
-                                color: this.primaryColor,
-                              ),
-                              onPressed: () => {},
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    onPressed: () => {},
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 10.0),
-            padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-            child: new Row(
-              children: <Widget>[
-                new Expanded(
-                  child: FlatButton(
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(30.0)),
-                    splashColor: Color(0xFF3B5998),
-                    color: Color(0xff3B5998),
-                    child: new Row(
-                      children: <Widget>[
-                        new Padding(
-                          padding: const EdgeInsets.only(left: 20.0),
-                          child: Text(
-                            "LOGIN WITH FACEBOOK",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        new Expanded(
-                          child: Container(),
-                        ),
-                        new Transform.translate(
-                          offset: Offset(15.0, 0.0),
-                          child: new Container(
-                            padding: const EdgeInsets.all(5.0),
-                            child: FlatButton(
-                              shape: new RoundedRectangleBorder(
-                                  borderRadius:
-                                      new BorderRadius.circular(28.0)),
-                              splashColor: Colors.white,
-                              color: Colors.white,
-                              child: Icon(
-                                const IconData(0xea90, fontFamily: 'icomoon'),
-                                color: Color(0xff3b5998),
-                              ),
-                              onPressed: () => {},
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    onPressed: () => {},
+                  child: RoundedLoadingButton(
+                    child: Text('MASUK', style: TextStyle(color: Colors.white)),
+                    color: Color(0xFFb16a085),
+                    controller: _btnController,
+                    onPressed: () => _login(),
                   ),
                 ),
               ],
@@ -245,10 +180,10 @@ class LoginWidget extends StatelessWidget {
                       alignment: Alignment.center,
                       child: Text(
                         "DON'T HAVE AN ACCOUNT?",
-                        style: TextStyle(color: this.primaryColor),
+                        style: TextStyle(color: this.widget.primaryColor),
                       ),
                     ),
-                    onPressed: () => {},
+                    onPressed: () => _openPendaftaranScreen(),
                   ),
                 ),
               ],
@@ -257,6 +192,37 @@ class LoginWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  _login() {
+    var map = new Map<String, dynamic>();
+    map['userpassword'] = loginPasswordController.text;
+    map['useremail'] = loginEmailController.text;
+    Api.login(map).then((value) {
+      var data = json.decode(value.body);
+      print(data);
+      if (data['status']) {
+        _btnController.success();
+        LocalStorage.sharedInstance
+            .writeValue(key: 'session', value: json.encode(data));
+        Navigator.popAndPushNamed(context, widget.page);
+      } else {
+        _btnController.reset();
+      }
+    });
+  }
+
+  _openPendaftaranScreen() {
+    Navigator.push(context, SlideRightRoute(page: PendaftaranScreen())).then((
+        value) {
+      print(value);
+      if (value != null) {
+        setState(() {
+          loginEmailController.text = value['useremail'];
+          loginPasswordController.text = value['userpassword'];
+        });
+      }
+    });
   }
 }
 

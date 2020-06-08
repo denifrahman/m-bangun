@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:apps/widget/Login/LoginWidget.dart';
+import 'package:flutter/material.dart';
 
 class LoginScreen2 extends StatelessWidget {
   LoginScreen2({Key key}) : super(key: key);
@@ -12,7 +12,6 @@ class LoginScreen2 extends StatelessWidget {
         child: LoginWidget(
           primaryColor: Color(0xFF4aa0d5),
           backgroundColor: Colors.white,
-          backgroundImage: new AssetImage("assets/full-bloom.png"),
         ),
       ),
     );

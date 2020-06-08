@@ -14,26 +14,32 @@ class ProdukScreen extends StatelessWidget {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: Text(this.namaKategori),
         actions: <Widget>[
           IconButton(
               icon: Icon(
-            Icons.filter_list,
-            color: Colors.red,
+                Icons.filter_list,
+            color: Color(0xffb16a085),
           ))
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            children: <Widget>[
-              WidgetSearch(),
-              WidgetListProduk(
+      body: Padding(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          children: <Widget>[
+            Container(
+                height: 50,
+                padding: EdgeInsets.only(bottom: 10),
+                child: WidgetSearch()),
+            Expanded(
+//              height: 200,
+              flex: 2,
+              child: WidgetListProduk(
                 idSubKategori: this.idSubKategori,
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );

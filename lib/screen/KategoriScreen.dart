@@ -9,6 +9,7 @@ class KategoriScreen extends StatelessWidget {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: Text('Semua Kategori'),
       ),
       body: WidgetKategoriVertical(),

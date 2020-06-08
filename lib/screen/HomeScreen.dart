@@ -1,9 +1,8 @@
 import 'package:apps/Utils/navigation_right.dart';
-import 'package:apps/widget/Home/kategori/WidgetCari.dart';
+import 'package:apps/screen/RequestScreen.dart';
 import 'package:apps/widget/Home/kategori/WidgetKategoriHome.dart';
 import 'package:apps/widget/Home/kategori/WidgetLokasi.dart';
 import 'package:apps/widget/Home/kategori/WidgetNews.dart';
-import 'package:apps/widget/Home/kategori/WidgetRecentUpload.dart';
 import 'package:apps/widget/WidgetSearch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -70,24 +69,22 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         child: Scaffold(
             appBar: AppBar(
               elevation: 0,
-              title: Text(
-                'M-Bangun',
-                textAlign: TextAlign.left,
-                style: TextStyle(fontFamily: 'OpenSans-Semibold'),
-              ),
+              title: WidgetLokasi(),
             ),
             body: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.only(left: 10.0, right: 10),
               child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    WidgetLokasi(),
                     Container(
-                      margin: EdgeInsets.only(bottom: 30, top: 30),
+                      margin: EdgeInsets.only(top: 10),
                       child: WidgetSearch(),
                     ),
-                    WidgetKategoriHome(),
-                    WidgetNews()
+                    WidgetNews(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: WidgetKategoriHome(),
+                    ),
                   ],
                 ),
               ),
@@ -96,16 +93,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               scale: _hideFabAnimation,
               alignment: Alignment.bottomCenter,
               child: FloatingActionButton.extended(
-                onPressed: () {},
-                backgroundColor: Colors.red,
+                onPressed: () => _openRequest(),
+                backgroundColor: Color(0xffb16a085),
                 tooltip: 'Posting Iklan Anda',
                 icon: Icon(Icons.add_a_photo),
-                label: Text("New Ads"),
+                label: Text("Request"),
               ),
             )
         )
     );
   }
 
-
+  _openRequest() {
+    Navigator.push(context, SlideRightRoute(page: RequestScreen()));
+  }
 }

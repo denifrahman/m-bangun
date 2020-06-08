@@ -64,44 +64,69 @@ class _WidgetKategoriHomeState extends State<WidgetKategoriHome> {
                 onTap: () => {_openKategori()},
                 child: Text(
                   'Semua',
-                  style: TextStyle(fontSize: 12, color: Colors.red),
+                  style: TextStyle(fontSize: 12, color: Color(0xffb16a085)),
                 ),
               ),
             ],
           ),
         ),
         Container(
-          height: 120,
-          width: MediaQuery.of(context).size.width,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.only(left: 5, right: 5, top: 10),
-              itemCount: dataKategori.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  child: InkWell(
-                    onTap: () => openSubkategori(dataKategori[index]),
-                    child: Container(
-                      height: 100,
-                      width: 100,
-                      padding: EdgeInsets.all(8),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Image.network(
-                            dataKategori[index].produkkategorithumbnail,
-                            width: 45,
-                          ),
-                          Divider(),
-                          Text(dataKategori[index].produkkategorinama),
-                        ],
+            height: 220,
+            margin: EdgeInsets.only(top: 25),
+            width: MediaQuery.of(context).size.width,
+            child: GridView.count(
+              shrinkWrap: true,
+              primary: true,
+              physics: new NeverScrollableScrollPhysics(),
+              crossAxisCount: 3,
+              children: List.generate(dataKategori.length, (index) {
+                return Container(
+                  child: Column(
+                    children: <Widget>[
+                      InkWell(
+                        onTap: () => openSubkategori(dataKategori[index]),
+                        child: new Container(
+                            height: 60,
+                            width: 60,
+                            margin: EdgeInsets.only(bottom: 6),
+                            decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(50.0)),
+                              gradient: new LinearGradient(
+                                  colors: [
+                                    Color(0xffb16a085).withOpacity(0.1),
+                                    Colors.white
+                                  ],
+                                  begin: const FractionalOffset(7.0, 10.1),
+                                  end: const FractionalOffset(0.0, 0.0),
+                                  stops: [0.0, 1.0],
+                                  tileMode: TileMode.clamp),
+                            ),
+                            child: new Center(
+                              child:
+                              Image.network(
+                                dataKategori[index].produkkategorithumbnail ==
+                                    null
+                                    ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
+                                    : dataKategori[index]
+                                    .produkkategorithumbnail,
+                                fit: BoxFit.cover,
+                                width: 40,
+                              ),
+                            )),
                       ),
-                    ),
+                      Text(
+                        dataKategori[index].produkkategorinama,
+                        style: TextStyle(fontSize: 13),
+                      )
+                    ],
                   ),
                 );
               }),
         )
+        )
       ],
+
     );
   }
 

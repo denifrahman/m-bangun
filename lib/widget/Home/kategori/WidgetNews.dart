@@ -65,7 +65,7 @@ class _WidgetNewsState extends State<WidgetNews> {
               InkWell(
                 child: Text(
                   'Semua',
-                  style: TextStyle(fontSize: 12, color: Colors.red),
+                  style: TextStyle(fontSize: 12, color: Color(0xffb16a085)),
                 ),
               ),
             ],

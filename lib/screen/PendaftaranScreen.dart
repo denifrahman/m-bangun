@@ -1,3 +1,4 @@
+import 'package:apps/widget/Pendaftaran/WidgetPendaftaran.dart';
 import 'package:flutter/material.dart';
 
 class PendaftaranScreen extends StatefulWidget {
@@ -25,8 +26,10 @@ class _PendaftaranScreenState extends State<PendaftaranScreen> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: Text('Pendaftaran'),
       ),
+      body: WidgetPendaftaran(),
     );
   }
 }

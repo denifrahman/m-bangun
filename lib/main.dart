@@ -1,12 +1,8 @@
-import 'dart:io';
-
 import 'package:apps/Utils/BottomAnimation.dart';
 import 'package:apps/Utils/ThemeChanger.dart';
-import 'package:apps/screen/ActivityScreen.dart';
-import 'package:apps/screen/DasboardScreen.dart';
-import 'package:apps/screen/HistoryScreen.dart';
 import 'package:apps/screen/LoginScreen.dart';
 import 'package:apps/screen/ProfileScreen.dart';
+import 'package:apps/screen/RequestScreen.dart';
 import 'package:apps/screen/SplashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -55,10 +51,9 @@ class _MyAppState extends State<MyApp> {
             routes: {
               '/splace-screen': (context) => SplaceScreen(),
               '/login': (context) => LoginScreen(),
-              '/dashboard': (context) => DashboardScreen(),
-              '/activity': (context) => ActivityScreen(),
-              '/history': (context) => HistoryScreen(),
+              '/request': (context) => RequestScreen(),
               '/profile': (context) => ProfileScreen(),
+              '/BottomNavBar': (context) => BottomAnimateBar()
             },
 //            builder: (BuildContext context, Widget widget) {
 //              final mediaQuery = MediaQuery.of(context);

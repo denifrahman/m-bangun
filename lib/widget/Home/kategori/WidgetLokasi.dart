@@ -47,97 +47,94 @@ class _WidgetLokasiState extends State<WidgetLokasi> {
     var kecamatan = namaKecamatan == null ? '' : namaKecamatan.toLowerCase();
     var kota = namaKota == null ? '' : namaKota.toLowerCase();
     var provinsi = namaProvinsi == null ? '' : namaProvinsi.toLowerCase();
-    return Container(
-      margin: EdgeInsets.only(top: 20),
-      child: Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    'M Bangun Project',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  Container(
-                    height: 5,
-                  ),
-                  Text(
-                    'Cari pekerjaanmu disini',
-                    style: TextStyle(fontSize: 12),
-                  )
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.place,
-                        size: 15,
-                        color: Colors.grey[600],
-                      ),
-                      Text(
-                        'Lokasi Anda',
-                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                      ),
-                    ],
-                  ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Image(
+                width: 35,
+                fit: BoxFit.fill,
+                image: new AssetImage('assets/logo.png')),
+            Container(
+              width: 5,
+            ),
+            Text(
+              'm-Bangun',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: 'SUNDAY',
+                  letterSpacing: 2,
+                  fontWeight: FontWeight.bold),
+            )
+          ],
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Icon(
+                  Icons.place,
+                  size: 15,
+                  color: Colors.grey[600],
+                ),
+                Text(
+                  'Lokasi Anda',
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                ),
+              ],
+            ),
 //                  Container(
 //                    height: 2,
 //                  ),
-                  InkWell(
-                      onTap: () => _modalListKota(),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              namaKecamatan == null
-                                  ? Container()
-                                  : Text(
-                                  namaKecamatan == null
-                                      ? ''
-                                      : '${kecamatan[0]
-                                      .toUpperCase()}${kecamatan.substring(1)}',
-                                  style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.red)),
-                              namaKecamatan == null ? Container() : Text(', '),
-                              namaKota == null
-                                  ? Container()
-                                  : Text(
-                                  namaKota == null
-                                      ? ''
-                                      : '${kota[0].toUpperCase()}${kota
-                                      .substring(1)}',
-                                  style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.red)),
-                            ],
-                          ),
-                          Text(
-                              namaProvinsi == null
-                                  ? 'Pilih lokasi'
-                                  : '${provinsi[0].toUpperCase()}${provinsi
-                                  .substring(1)}',
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.red)),
-                        ],
-                      ))
-                ],
-              )
-            ],
-          ),
-        ],
-      ),
+            InkWell(
+                onTap: () => _modalListKota(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        namaKecamatan == null
+                            ? Container()
+                            : Text(
+                            namaKecamatan == null
+                                ? ''
+                                : '${kecamatan[0]
+                                .toUpperCase()}${kecamatan.substring(1)}',
+                            style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.normal,
+                                color: Color(0xffb16a085))),
+                        namaKecamatan == null ? Container() : Text(', '),
+                        namaKota == null
+                            ? Container()
+                            : Text(
+                            namaKota == null
+                                ? ''
+                                : '${kota[0].toUpperCase()}${kota
+                                .substring(1)}',
+                            style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.normal,
+                                color: Color(0xffb16a085))),
+                      ],
+                    ),
+                    Text(
+                        namaProvinsi == null
+                            ? 'Pilih lokasi'
+                            : '${provinsi[0].toUpperCase()}${provinsi
+                            .substring(1)}',
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.normal,
+                            color: Color(0xffb16a085))),
+                  ],
+                ))
+          ],
+        )
+      ],
     );
   }
 

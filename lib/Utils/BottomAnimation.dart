@@ -1,15 +1,12 @@
+import 'package:apps/screen/BookingScreen.dart';
 import 'package:apps/screen/HomeScreen.dart';
 import 'package:apps/screen/KategoriScreen.dart';
-import 'package:apps/screen/KeluargaScreen.dart';
-import 'package:apps/widget/DataDiri/DataDiri.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter/material.dart';
-import 'package:apps/screen/BookingScreen.dart';
-import 'package:apps/screen/DasboardScreen.dart';
-import 'package:apps/screen/HistoryScreen.dart';
 import 'package:apps/screen/KebutuhanScreen.dart';
+import 'package:apps/screen/KeluargaScreen.dart';
 import 'package:apps/screen/ProfileScreen.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:route_transitions/route_transitions.dart';
 
 class BottomAnimateBar extends StatefulWidget {
@@ -39,23 +36,23 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
   Future<bool> _onWillPop() {
     if (currentTab == 0) {
       return showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text('Anda yakin!'),
-              content: Text('Ingin keluar dari aplikasi?'),
-              actions: <Widget>[
-                FlatButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text('No'),
-                ),
-                FlatButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  /*Navigator.of(context).pop(true)*/
-                  child: Text('Yes'),
-                ),
-              ],
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Anda yakin!'),
+          content: Text('Ingin keluar dari aplikasi?'),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text('No'),
             ),
-          ) ??
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              /*Navigator.of(context).pop(true)*/
+              child: Text('Yes'),
+            ),
+          ],
+        ),
+      ) ??
           false;
     } else {
       setState(() {
@@ -79,7 +76,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
 //          margin: EdgeInsets.only(top: 20),
 //          child: FloatingActionButton(
 //            tooltip: 'Booking',
-//            backgroundColor: Colors.red[600],
+//            backgroundColor:  Color(0xffb16a085),
 //            foregroundColor: Colors.redAccent,
 //            heroTag: Text('Book'),
 //            child: Icon(
@@ -116,16 +113,16 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                         FontAwesomeIcons.home,
                         size: 18,
                         color: currentTab == 0
-                            ? Colors.red[600]
-                            : Colors.grey[700],
+                            ? Color(0xffb16a085)
+                            : Colors.grey[500],
                       ),
                       Text(
                         'Home',
                         style: TextStyle(
                           fontSize: 11,
                           color: currentTab == 0
-                              ? Colors.red[600]
-                              : Colors.grey[700],
+                              ? Color(0xffb16a085)
+                              : Colors.grey[500],
                         ),
                       ),
                     ],
@@ -147,16 +144,16 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                         FontAwesomeIcons.layerGroup,
                         size: 18,
                         color: currentTab == 1
-                            ? Colors.red[600]
-                            : Colors.grey[700],
+                            ? Color(0xffb16a085)
+                            : Colors.grey[500],
                       ),
                       Text(
                         'Kategori',
                         style: TextStyle(
                           fontSize: 11,
                           color: currentTab == 1
-                              ? Colors.red[600]
-                              : Colors.grey[700],
+                              ? Color(0xffb16a085)
+                              : Colors.grey[500],
                         ),
                       ),
                     ],
@@ -178,16 +175,16 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                         FontAwesomeIcons.boxOpen,
                         size: 18,
                         color: currentTab == 2
-                            ? Colors.red[600]
-                            : Colors.grey[700],
+                            ? Color(0xffb16a085)
+                            : Colors.grey[500],
                       ),
                       Text(
                         'My ADS',
                         style: TextStyle(
                           fontSize: 11,
                           color: currentTab == 2
-                              ? Colors.red[600]
-                              : Colors.grey[700],
+                              ? Color(0xffb16a085)
+                              : Colors.grey[500],
                         ),
                       ),
                     ],
@@ -209,16 +206,16 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                         Icons.person,
                         size: 18,
                         color: currentTab == 3
-                            ? Colors.red[600]
-                            : Colors.grey[700],
+                            ? Color(0xffb16a085)
+                            : Colors.grey[500],
                       ),
                       Text(
                         'Profile',
                         style: TextStyle(
                           fontSize: 11,
                           color: currentTab == 3
-                              ? Colors.red[600]
-                              : Colors.grey[700],
+                              ? Color(0xffb16a085)
+                              : Colors.grey[500],
                         ),
                       ),
                     ],

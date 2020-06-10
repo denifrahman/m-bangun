@@ -6,6 +6,8 @@ import 'package:apps/models/KategoriM.dart';
 import 'package:apps/provider/Api.dart';
 import 'package:apps/screen/SubKategoriScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animations/loading_animations.dart';
+import 'package:pk_skeleton/pk_skeleton.dart';
 
 class WidgetKategoriVertical extends StatefulWidget {
   WidgetKategoriVertical({Key key}) : super(key: key);
@@ -51,7 +53,13 @@ class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Container(
+    return dataKategori.isEmpty ? Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      child: PKCardProfileSkeleton(
+        isBottomLinesActive: true,
+      ),
+    ):Container(
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(
           padding: EdgeInsets.only(left: 5, right: 5, top: 10),

@@ -8,6 +8,7 @@ import 'package:apps/screen/KategoriScreen.dart';
 import 'package:apps/screen/SubKategoriScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:loading_animations/loading_animations.dart';
 
 class WidgetKategoriHome extends StatefulWidget {
   WidgetKategoriHome({Key key}) : super(key: key);
@@ -34,6 +35,7 @@ class _WidgetKategoriHomeState extends State<WidgetKategoriHome> {
   void _getToken() async {
     Api.getToken().then((value) {
       var data = json.decode(value.body);
+      print(data);
       LocalStorage.sharedInstance
           .writeValue(key: 'token', value: data['data']['token']);
       _getKategori();
@@ -70,6 +72,12 @@ class _WidgetKategoriHomeState extends State<WidgetKategoriHome> {
             ],
           ),
         ),
+        dataKategori.isEmpty ? Container(
+          margin: EdgeInsets.only(top: 20),
+          child: Center(
+              child: LoadingDoubleFlipping.square(
+                  size: 30, backgroundColor: Colors.red)),
+        ):
         Container(
             height: 220,
             margin: EdgeInsets.only(top: 25),

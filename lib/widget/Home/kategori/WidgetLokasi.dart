@@ -99,33 +99,30 @@ class _WidgetLokasiState extends State<WidgetLokasi> {
                         namaKecamatan == null
                             ? Container()
                             : Text(
-                            namaKecamatan == null
-                                ? ''
-                                : '${kecamatan[0]
-                                .toUpperCase()}${kecamatan.substring(1)}',
-                            style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.normal,
-                                color: Color(0xffb16a085))),
+                                namaKecamatan == null
+                                    ? ''
+                                    : '${kecamatan[0].toUpperCase()}${kecamatan.substring(1)}',
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.normal,
+                                    color: Color(0xffb16a085))),
                         namaKecamatan == null ? Container() : Text(', '),
                         namaKota == null
                             ? Container()
                             : Text(
-                            namaKota == null
-                                ? ''
-                                : '${kota[0].toUpperCase()}${kota
-                                .substring(1)}',
-                            style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.normal,
-                                color: Color(0xffb16a085))),
+                                namaKota == null
+                                    ? ''
+                                    : '${kota[0].toUpperCase()}${kota.substring(1)}',
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.normal,
+                                    color: Color(0xffb16a085))),
                       ],
                     ),
                     Text(
                         namaProvinsi == null
                             ? 'Pilih lokasi'
-                            : '${provinsi[0].toUpperCase()}${provinsi
-                            .substring(1)}',
+                            : '${provinsi[0].toUpperCase()}${provinsi.substring(1)}',
                         style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.normal,
@@ -140,49 +137,56 @@ class _WidgetLokasiState extends State<WidgetLokasi> {
 
   void _getCurrentLocation(token) async {
     String currentIdProvinsi =
-    await LocalStorage.sharedInstance.readValue('idProvinsi');
-    Api.getProvinsiById(token, currentIdProvinsi).then((value) {
-      var result = json.decode(value.body);
-      setState(() {
-        namaProvinsi = result['data']['nama_propinsi'];
-      });
-    });
-    String currentIdKota =
-    await LocalStorage.sharedInstance.readValue('idKota');
-    if (currentIdKota != 'null') {
-      Api.getKotaById(token, currentIdKota).then((value) {
+        await LocalStorage.sharedInstance.readValue('idProvinsi');
+    if (currentIdProvinsi == null) {
+      print(currentIdProvinsi);
+    } else {
+      Api.getProvinsiById(token, currentIdProvinsi).then((value) {
         var result = json.decode(value.body);
         setState(() {
-          namaKota = result['data']['nama_kabkota'];
+          namaProvinsi = result['data']['nama_propinsi'];
         });
       });
-    } else {
-      setState(() {
-        namaKota = null;
-      });
-    }
-    String currentIdKecamatan =
-    await LocalStorage.sharedInstance.readValue('idKecamatan');
-    if (currentIdKecamatan != 'null') {
-      Api.getKecamatanById(token, currentIdKecamatan).then((value) {
-        var result = json.decode(value.body);
+      String currentIdKota =
+          await LocalStorage.sharedInstance.readValue('idKota');
+      if (currentIdKota != 'null') {
+        Api.getKotaById(token, currentIdKota).then((value) {
+          var result = json.decode(value.body);
+          setState(() {
+            namaKota = result['data']['nama_kabkota'];
+          });
+        });
+      } else {
         setState(() {
-          namaKecamatan = result['data']['nama_kecamatan'];
+          namaKota = null;
         });
-      });
-    } else {
-      setState(() {
-        namaKecamatan = null;
-      });
+      }
+      String currentIdKecamatan =
+          await LocalStorage.sharedInstance.readValue('idKecamatan');
+      if (currentIdKecamatan != 'null') {
+        Api.getKecamatanById(token, currentIdKecamatan).then((value) {
+          var result = json.decode(value.body);
+          setState(() {
+            namaKecamatan = result['data']['nama_kecamatan'];
+          });
+        });
+      } else {
+        setState(() {
+          namaKecamatan = null;
+        });
+      }
     }
   }
 
   _modalListKota() async {
     String currentIdProvinsi =
-    await LocalStorage.sharedInstance.readValue('idProvinsi');
+        await LocalStorage.sharedInstance.readValue('idProvinsi');
     Navigator.push(
       context,
-      SlideRightRoute(page: WidgetSelectLokasi(idProvinsi: currentIdProvinsi,)),
+      SlideRightRoute(
+          page: WidgetSelectLokasi(
+        idProvinsi: currentIdProvinsi,
+      )),
     ).then((value) {
       _getCurrentToken();
     });

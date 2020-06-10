@@ -1,8 +1,7 @@
 import 'package:apps/screen/BookingScreen.dart';
 import 'package:apps/screen/HomeScreen.dart';
+import 'package:apps/screen/InboxScreen.dart';
 import 'package:apps/screen/KategoriScreen.dart';
-import 'package:apps/screen/KebutuhanScreen.dart';
-import 'package:apps/screen/KeluargaScreen.dart';
 import 'package:apps/screen/ProfileScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +19,8 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
   int currentTab = 0; // to keep track of active tab index
   final List<Widget> screens = [
     HomeScreen(),
-    KeluargaScreen(),
-    KebutuhanScreen(),
+    HomeScreen(),
+    HomeScreen(),
     ProfileScreen(),
   ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
@@ -164,7 +163,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                   onPressed: () {
                     setState(() {
                       currentScreen =
-                          KebutuhanScreen(); // if user taps on this dashboard tab will be active
+                          InboxScreen(); // if user taps on this dashboard tab will be active
                       currentTab = 2;
                     });
                   },

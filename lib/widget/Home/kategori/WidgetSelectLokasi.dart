@@ -32,7 +32,7 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
   void initState() {
     super.initState();
     _getCurrentToken();
-    print(widget.idProvinsi);
+    // print(widget.idProvinsi);
   }
 
   @override
@@ -42,6 +42,7 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
   void _getAllProvinsi(token) async{
     Api.getAllProvinsi(token).then((value){
       var result = json.decode(value.body);
+      print(result);
       Iterable list = result['data'];
       setState(() {
         dataProvinsi =

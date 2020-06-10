@@ -5,14 +5,15 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
-const baseUrl = "http://niagatravel.com/api/api-m-bangun-jwt-token/api/";
-//const baseUrl = "http://192.168.0.6:8888/api_jwt/api/";
+// const baseUrl = "http://niagatravel.com/api/api-m-bangun-jwt-token/api/";
+// const baseUrl = "http://192.168.0.6:8888/api_jwt/api/";
+const baseUrl = "http://192.168.100.114:8888/api_jwt/api/";
 
 class Api {
   static Future getToken() {
     var map = new Map<String, dynamic>();
-    map['useremail'] = 'denifrahman@gmail.com';
-    map['userpassword'] = '123';
+    map['useremail'] = 'deni@gmail.com';
+    map['userpassword'] = '123456';
     var url = baseUrl + "users/login";
     return http.post(url, body: map);
   }
@@ -101,6 +102,12 @@ class Api {
     return http.post(url, body: body);
   }
 
+  static Future simpanDataProfile(body) {
+    var url = baseUrl + "Users/updateDataAkun";
+    print(url);
+    return http.post(url, body: body);
+  }
+
   static Future login(body) {
     var url = baseUrl + "Users/login";
     return http.post(url, body: body);
@@ -108,6 +115,14 @@ class Api {
 
   static Future getKategori(token) {
     var url = baseUrl + "kategori/getAll";
+    return http.get(
+      url,
+      headers: {HttpHeaders.authorizationHeader: token},
+    );
+  }
+
+  static Future getAllJenisPengajuan(token) {
+    var url = baseUrl + "JenisPengajuan/getAll";
     return http.get(
       url,
       headers: {HttpHeaders.authorizationHeader: token},
@@ -124,6 +139,7 @@ class Api {
 
   static Future getUserById(token, userid) {
     var url = baseUrl + "Users/getById?userid=" + userid;
+    print(url);
     return http.get(
       url,
       headers: {HttpHeaders.authorizationHeader: token},

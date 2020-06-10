@@ -5,8 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:apps/Utils/ThemeChanger.dart';
 import 'package:apps/screen/ActivityScreen.dart';
 import 'package:apps/screen/BookingScreen.dart';
-import 'package:apps/screen/DasboardScreen.dart';
-import 'package:apps/screen/HistoryScreen.dart';
 import 'package:apps/screen/ProfileScreen.dart';
 
 class BottomMenu extends StatefulWidget {
@@ -23,7 +21,7 @@ class _BottomMenuState extends State<BottomMenu> with TickerProviderStateMixin {
     new HomeScreen(),
     new ActivityScreen(),
     new BookingScreen(),
-    new HistoryScreen(),
+    new BookingScreen(),
     new ProfileScreen()
   ];
 

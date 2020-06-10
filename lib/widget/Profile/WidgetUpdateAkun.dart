@@ -8,6 +8,7 @@ import 'package:apps/provider/Api.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class WidgetUpdateAkun extends StatefulWidget {
   WidgetUpdateAkun({Key key}) : super(key: key);
@@ -24,6 +25,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String idKategori;
   String idSubKategori;
+  bool _saving = false ;
   String idSubKategoriSave;
   int currentStep = 0;
   File _imageFileSiup;
@@ -90,189 +92,191 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
       step1 = true;
     }
     var widget1 = MediaQuery.of(context).size.height - 230;
-    return Form(
-      key: _formKey,
-      autovalidate: false,
-      child: Container(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
+    return ModalProgressHUD(
+      inAsyncCall:_saving,
+      child: Form(
+        key: _formKey,
+        autovalidate: false,
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
 //          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Expanded(
-              child: Stepper(
-                  steps: [
-                    Step(
-                        isActive: step0,
-                        state: StepState.indexed,
-                        title: const Text('Pilih Kategori'),
-                        content: Container(
-                          height: MediaQuery.of(context).size.height / 2.5,
-                          child: ListView.builder(
-                              itemCount: dataKategori.length,
-                              itemBuilder: (context, index) {
-                                return Column(
-                                  children: <Widget>[
-                                    InkWell(
-                                      onTap: () => _onchangeKategori(
-                                          dataKategori[index].produkkategoriid),
-                                      child: ListTile(
-                                        leading: Image.network(
-                                          dataKategori[index]
-                                                      .produkkategorithumbnail ==
-                                                  null
-                                              ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
-                                              : dataKategori[index]
-                                                  .produkkategorithumbnail,
-                                          width: 45,
-                                        ),
-                                        title: Text(dataKategori[index]
-                                            .produkkategorinama),
-                                        trailing: Icon(
-                                          Icons.arrow_forward_ios,
-                                          size: 12,
+            children: <Widget>[
+              Expanded(
+                child: Stepper(
+                    steps: [
+                      Step(
+                          isActive: step0,
+                          state: StepState.indexed,
+                          title: const Text('Kategori'),
+                          content: Container(
+                            height: widget1,
+                            child: ListView.builder(
+                                itemCount: dataKategori.length,
+                                itemBuilder: (context, index) {
+                                  return Column(
+                                    children: <Widget>[
+                                      InkWell(
+                                        onTap: () => _onchangeKategori(
+                                            dataKategori[index].produkkategoriid),
+                                        child: ListTile(
+                                          leading: Image.network(
+                                            dataKategori[index]
+                                                        .produkkategorithumbnail ==
+                                                    null
+                                                ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
+                                                : dataKategori[index]
+                                                    .produkkategorithumbnail,
+                                            width: 45,
+                                          ),
+                                          title: Text(dataKategori[index]
+                                              .produkkategorinama),
+                                          trailing: Icon(
+                                            Icons.arrow_forward_ios,
+                                            size: 12,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Divider()
-                                  ],
-                                );
-                              }),
-                        )),
-                    Step(
-                      isActive: step1,
-                      state: StepState.indexed,
-                      title: const Text('Pilih Sub kategori'),
-                      content: Container(
-                        height: widget1,
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: <Widget>[
-                              Column(
-                                children: <Widget>[
-                                  idKategori == null
-                                      ? Container()
-                                      : Container(
-                                          height: 200,
-                                          child: ListView.builder(
-                                              itemCount: dataSubKategori.length,
-                                              itemBuilder: (context, index) {
-                                                return Column(
-                                                  children: <Widget>[
-                                                    InkWell(
-                                                      onTap: () =>
-                                                          _onchangeSubKategori(
-                                                              dataSubKategori[
-                                                                      index]
-                                                                  .produkkategorisubid),
-                                                      child: ListTile(
-                                                        leading: Image.network(
-                                                          dataSubKategori[index]
-                                                                      .produkkategorisubthubmnail ==
-                                                                  null
-                                                              ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
-                                                              : dataSubKategori[
-                                                                      index]
-                                                                  .produkkategorisubthubmnail,
-                                                          width: 45,
-                                                        ),
-                                                        title: Text(dataSubKategori[
-                                                                index]
-                                                            .produkkategorisubnama),
-                                                        trailing: idSubKategori ==
+                                      Divider()
+                                    ],
+                                  );
+                                }),
+                          )),
+                      Step(
+                        isActive: step1,
+                        state: StepState.indexed,
+                        title: const Text('Sub kategori'),
+                        content: Container(
+                          height: widget1,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: <Widget>[
+                                Column(
+                                  children: <Widget>[
+                                    idKategori == null
+                                        ? Container()
+                                        : Container(
+                                            height: 200,
+                                            child: ListView.builder(
+                                                itemCount: dataSubKategori.length,
+                                                itemBuilder: (context, index) {
+                                                  return Column(
+                                                    children: <Widget>[
+                                                      InkWell(
+                                                        onTap: () =>
+                                                            _onchangeSubKategori(
                                                                 dataSubKategori[
                                                                         index]
-                                                                    .produkkategorisubid
-                                                            ? Icon(
-                                                                Icons.check_box,
-                                                                color: Colors
-                                                                    .green,
-                                                                size: 22,
-                                                              )
-                                                            : null,
+                                                                    .produkkategorisubid),
+                                                        child: ListTile(
+                                                          leading: Image.network(
+                                                            dataSubKategori[index]
+                                                                        .produkkategorisubthubmnail ==
+                                                                    null
+                                                                ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
+                                                                : dataSubKategori[
+                                                                        index]
+                                                                    .produkkategorisubthubmnail,
+                                                            width: 45,
+                                                          ),
+                                                          title: Text(dataSubKategori[
+                                                                  index]
+                                                              .produkkategorisubnama),
+                                                          trailing: idSubKategori ==
+                                                                  dataSubKategori[
+                                                                          index]
+                                                                      .produkkategorisubid
+                                                              ? Icon(
+                                                                  Icons.check_box,
+                                                                  color: Colors
+                                                                      .green,
+                                                                  size: 22,
+                                                                )
+                                                              : null,
+                                                        ),
                                                       ),
-                                                    ),
-                                                    Divider()
-                                                  ],
-                                                );
-                                              }),
-                                        ),
-                                  Container(
-                                    height: 20,
-                                  ),
-                                ],
-                              ),
-                              idKategori == '1' || idKategori == '4'
-                                  ? Column(
-                                      children: <Widget>[
-                                        _perusahaan(),
-                                        Container(
-                                          height: 20,
-                                        ),
-                                        _fotoSiup(),
-                                        Container(
-                                          height: 20,
-                                        ),
-                                        _fotoAkte(),
-                                        Container(
-                                          height: 20,
-                                        ),
-                                      ],
-                                    )
-                                  : Container(),
-                            ],
+                                                      Divider()
+                                                    ],
+                                                  );
+                                                }),
+                                          ),
+                                    Container(
+                                      height: 20,
+                                    ),
+                                  ],
+                                ),
+                                idKategori == '1' || idKategori == '4'
+                                    ? Column(
+                                        children: <Widget>[
+                                          _perusahaan(),
+                                          Container(
+                                            height: 20,
+                                          ),
+                                          _fotoSiup(),
+                                          Container(
+                                            height: 20,
+                                          ),
+                                          _fotoAkte(),
+                                          Container(
+                                            height: 20,
+                                          ),
+                                        ],
+                                      )
+                                    : Container(),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                  currentStep: currentStep,
-                  onStepContinue: next,
-                  onStepTapped: (step) => goTo(step),
-                  onStepCancel: cancel,
-                  type: StepperType.horizontal,
-                  controlsBuilder: (BuildContext context,
-                          {VoidCallback onStepContinue,
-                          VoidCallback onStepCancel}) =>
-                      currentStep == 1 || currentStep == 2
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Container(
-                                  height: 50,
-                                  width: 130,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: Colors.red),
-                                  child: InkWell(
-                                    onTap: onStepCancel,
-                                    child: Center(
-                                        child: Text(
-                                      titleButtonKembali,
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 15),
-                                    )),
+                    ],
+                    currentStep: currentStep,
+                    onStepContinue: next,
+                    onStepTapped: (step) => goTo(step),
+                    onStepCancel: cancel,
+                    type: StepperType.horizontal,
+                    controlsBuilder: (BuildContext context,
+                            {VoidCallback onStepContinue,
+                            VoidCallback onStepCancel}) =>
+                        currentStep == 1 || currentStep == 2
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Container(
+                                    height: 50,
+                                    width: 130,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: Colors.red),
+                                    child: InkWell(
+                                      onTap: onStepCancel,
+                                      child: Center(
+                                          child: Text(
+                                        titleButtonKembali,
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 15),
+                                      )),
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  height: 50,
-                                  width: 130,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: Color(0xffb16a085)),
-                                  child: InkWell(
-                                    onTap: _simpanData,
-                                    child: Center(
-                                        child: Text(
-                                      'Simpan',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 15),
-                                    )),
+                                  Container(
+                                    height: 50,
+                                    width: 130,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: Color(0xffb16a085)),
+                                    child: InkWell(
+                                      onTap: _simpanData,
+                                      child: Center(
+                                          child: Text(
+                                        'Simpan',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 15),
+                                      )),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            )
-                          : currentStep == 3 ? Container() : Container()),
-            ),
+                                ],
+                              )
+                            : currentStep == 3 ? Container() : Container()),
+              ),
 //              new Text(
 //                'Kategori Request',
 //                style: TextStyle(
@@ -338,7 +342,8 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
 //                height: 20,
 //              ),
 //              _buttonSimpan()
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -516,12 +521,14 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
       Iterable list = json.decode(response.body)['data'];
       setState(() {
         dataKategori = list.map((model) => KategoriM.fromMap(model)).toList();
+        _saving = false;
       });
     });
   }
 
   void _onchangeKategori(String newValue) async {
     setState(() {
+      _saving = true;
       idKategori = newValue;
     });
     String token = await LocalStorage.sharedInstance.readValue('token');
@@ -532,6 +539,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
       setState(() {
         dataSubKategori =
             list.map((model) => SubKategoriM.fromMap(model)).toList();
+      _saving = false;
       });
       next();
     });
@@ -633,6 +641,9 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
   }
 
   void _simpanData() async {
+    setState(() {
+      _saving =true;
+    });
     String dataSession = await LocalStorage.sharedInstance.readValue('session');
     var userid = json.decode(dataSession)['data']['data_user']['userid'];
     if (_formKey.currentState.validate()) {
@@ -646,6 +657,9 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
             var data = json.decode(response.body);
             print(data);
             if (data['status'] == true) {
+              setState(() {
+                _saving = false;
+              });
               Navigator.pop(context);
               Flushbar(
                 title: "Sukses",
@@ -662,6 +676,9 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
             }
           });
         } else {
+          setState(() {
+            _saving = false;
+          });
           Flushbar(
             title: "Gagal",
             message: 'Pastikan Sudah melampirkan gambar akte dan siup',
@@ -675,12 +692,18 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
           )..show(context);
         }
       } else {
+        setState(() {
+          _saving = true;
+        });
         Api.updateAkun(_imageFileSiup, _imageFileAkte, idKategori,
                 idSubKategori, namaPerusahaanController.text, userid)
             .then((response) {
           var data = json.decode(response.body);
           print(data);
           if (data['status'] == true) {
+            setState(() {
+              _saving = false;
+            });
             Navigator.pop(context);
             Flushbar(
               title: "Sukses",

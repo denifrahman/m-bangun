@@ -514,6 +514,9 @@ class MapScreenState extends State<WidgetProfile>
   }
 
   void simpanFoto(image) {
+    setState(() {
+      _saving = true;
+    });
     Api.uploadImage(image, id).then((response) {
       var data = json.decode(response.body);
       print(data);
@@ -530,6 +533,9 @@ class MapScreenState extends State<WidgetProfile>
           ),
         )..show(context);
         getProfileUpdate();
+        setState(() {
+          _saving = false;
+        });
       }
     });
   }
@@ -542,9 +548,6 @@ class MapScreenState extends State<WidgetProfile>
       LocalStorage.sharedInstance
           .writeValue(key: 'session', value: json.encode(data));
       getUserData();
-//      setState(() {
-//        _saving = false;
-//      });
     });
   }
 
@@ -557,48 +560,41 @@ class MapScreenState extends State<WidgetProfile>
     return Padding(
       padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
       child: new Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(right: 10.0),
-              child: Container(
-                  child: new RaisedButton(
-                child: new Text("Simpan"),
-                textColor: Colors.white,
-                color: Colors.green,
-                onPressed: () {
-                  setState(() {
-                    _status = true;
-                    FocusScope.of(context).requestFocus(new FocusNode());
-                    simpanDataProfile();
-                  });
-                },
-                shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(20.0)),
-              )),
-            ),
+            child: Container(
+                child: new RaisedButton(
+              child: new Text("Batal"),
+              textColor: Colors.white,
+              color: Colors.red,
+              onPressed: () {
+                setState(() {
+                  _status = true;
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                });
+              },
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(20.0)),
+            )),
             flex: 2,
           ),
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(left: 10.0),
-              child: Container(
-                  child: new RaisedButton(
-                child: new Text("Batal"),
-                textColor: Colors.white,
-                color: Colors.red,
-                onPressed: () {
-                  setState(() {
-                    _status = true;
-                    FocusScope.of(context).requestFocus(new FocusNode());
-                  });
-                },
-                shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(20.0)),
-              )),
-            ),
+            child: Container(
+                child: new RaisedButton(
+              child: new Text("Simpan"),
+              textColor: Colors.white,
+              color: Color(0xffb16a085),
+              onPressed: () {
+                setState(() {
+                  _status = true;
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                  simpanDataProfile();
+                });
+              },
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(20.0)),
+            )),
             flex: 2,
           ),
         ],
@@ -624,6 +620,36 @@ class MapScreenState extends State<WidgetProfile>
       },
     );
   }
-}
 
-void simpanDataProfile() {}
+  void simpanDataProfile() {
+    setState(() {
+      _saving = true;
+    });
+    var map = new Map<String, dynamic>();
+    map['usernamalengkap'] = inputNamaController.text;
+    map['userpassword'] = inputPasswordController.text;
+    map['usertelp'] = inputNoTelpController.text;
+    map['userid'] = id;
+    Api.simpanDataProfile(map).then((response) {    
+      var data = json.decode(response.body);  
+      print(data);
+      if (data['status'] == true) {
+        Flushbar(
+          title: "Sukses",
+          message: data['message'],
+          duration: Duration(seconds: 15),
+          backgroundColor: Colors.green,
+          flushbarPosition: FlushbarPosition.TOP,
+          icon: Icon(
+            Icons.assignment_turned_in,
+            color: Colors.white,
+          ),
+        )..show(context);
+        getProfileUpdate();
+        setState(() {
+          _saving = false;
+        });
+      }
+    });
+  }
+}

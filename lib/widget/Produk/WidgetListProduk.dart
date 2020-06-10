@@ -58,7 +58,7 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
 
     /*24 is for notification bar on Android*/
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
-    final double itemWidth = size.width / 1.8;
+    final double itemWidth = size.width / 2;
 
     return GridView.count(
 //      shrinkWrap: true,
@@ -84,8 +84,8 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
             onTap: () => _openDetailNews(dataProdukList[j]),
             child: Column(
               children: <Widget>[
-                Container(
-                  height: 50,
+                Expanded(
+                  flex: 1,
                   child: ListTile(
                     title: RichText(
                       overflow: TextOverflow.ellipsis,
@@ -105,19 +105,20 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
                     ),
                   ),
                 ),
-                Container(
-                  height: 90,
+                Expanded(
+                  flex:2,
                   child: Image.network(
                     dataProdukList[j].produkthumbnail == null
                         ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
                         : dataProdukList[j].produkthumbnail,
-                    fit: BoxFit.cover,
-                    width: 200,
+                    fit: BoxFit.fitHeight,
+                    // width: 80,
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.only(top: 2),
-                  height: 75,
+                Expanded(
+                  flex:2,
+                  // margin: EdgeInsets.only(top: 2),
+                  // height: 75,
                   child: ListTile(
                     title: Row(
                       children: <Widget>[

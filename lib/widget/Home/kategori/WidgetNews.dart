@@ -7,6 +7,8 @@ import 'package:apps/provider/Api.dart';
 import 'package:apps/screen/NewsDetailScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:loading_animations/loading_animations.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class WidgetNews extends StatefulWidget {
   WidgetNews({Key key}) : super(key: key);
@@ -19,7 +21,7 @@ class WidgetNews extends StatefulWidget {
 
 class _WidgetNewsState extends State<WidgetNews> {
   var dataNews = new List<NewsM>();
-
+bool _saving = false;
   @override
   void initState() {
     super.initState();
@@ -32,8 +34,12 @@ class _WidgetNewsState extends State<WidgetNews> {
   }
 
   void _getToken() async {
+    setState(() {
+      _saving = true;
+    });
     Api.getToken().then((value) {
       var data = json.decode(value.body);
+      print(data);
       LocalStorage.sharedInstance
           .writeValue(key: 'token', value: data['data']['token']);
       _getKategori();
@@ -46,6 +52,7 @@ class _WidgetNewsState extends State<WidgetNews> {
       Iterable list = json.decode(response.body)['data'];
       setState(() {
         dataNews = list.map((model) => NewsM.fromMap(model)).toList();
+        _saving = false;
       });
     });
   }
@@ -55,6 +62,12 @@ class _WidgetNewsState extends State<WidgetNews> {
     // TODO: implement build
     return Column(
       children: <Widget>[
+        dataNews.isEmpty ? Container(
+          margin: EdgeInsets.only(top: 50),
+          child: Center(
+            child: LoadingDoubleFlipping.square(
+                size: 30, backgroundColor: Colors.red)),
+        ):
         Container(
           margin: EdgeInsets.only(top: 20),
           child: Row(

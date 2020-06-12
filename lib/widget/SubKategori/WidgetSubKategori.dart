@@ -49,7 +49,6 @@ class _WidgetSubKategoriState extends State<WidgetSubKategori> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-      color: Colors.white,
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(
           padding: EdgeInsets.only(left: 5, right: 5, top: 10),

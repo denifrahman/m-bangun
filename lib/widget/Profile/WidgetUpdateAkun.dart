@@ -25,7 +25,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String idKategori;
   String idSubKategori;
-  bool _saving = false ;
+  bool _saving = false;
   String idSubKategoriSave;
   int currentStep = 0;
   File _imageFileSiup;
@@ -93,7 +93,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
     }
     var widget1 = MediaQuery.of(context).size.height - 230;
     return ModalProgressHUD(
-      inAsyncCall:_saving,
+      inAsyncCall: _saving,
       child: Form(
         key: _formKey,
         autovalidate: false,
@@ -118,7 +118,8 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
                                     children: <Widget>[
                                       InkWell(
                                         onTap: () => _onchangeKategori(
-                                            dataKategori[index].produkkategoriid),
+                                            dataKategori[index]
+                                                .produkkategoriid),
                                         child: ListTile(
                                           leading: Image.network(
                                             dataKategori[index]
@@ -158,7 +159,8 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
                                         : Container(
                                             height: 200,
                                             child: ListView.builder(
-                                                itemCount: dataSubKategori.length,
+                                                itemCount:
+                                                    dataSubKategori.length,
                                                 itemBuilder: (context, index) {
                                                   return Column(
                                                     children: <Widget>[
@@ -169,7 +171,8 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
                                                                         index]
                                                                     .produkkategorisubid),
                                                         child: ListTile(
-                                                          leading: Image.network(
+                                                          leading:
+                                                              Image.network(
                                                             dataSubKategori[index]
                                                                         .produkkategorisubthubmnail ==
                                                                     null
@@ -179,15 +182,17 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
                                                                     .produkkategorisubthubmnail,
                                                             width: 45,
                                                           ),
-                                                          title: Text(dataSubKategori[
-                                                                  index]
-                                                              .produkkategorisubnama),
+                                                          title: Text(
+                                                              dataSubKategori[
+                                                                      index]
+                                                                  .produkkategorisubnama),
                                                           trailing: idSubKategori ==
                                                                   dataSubKategori[
                                                                           index]
                                                                       .produkkategorisubid
                                                               ? Icon(
-                                                                  Icons.check_box,
+                                                                  Icons
+                                                                      .check_box,
                                                                   color: Colors
                                                                       .green,
                                                                   size: 22,
@@ -231,7 +236,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
                     ],
                     currentStep: currentStep,
                     onStepContinue: next,
-                    onStepTapped: (step) => goTo(step),
+                    // onStepTapped: (step) => goTo(step),
                     onStepCancel: cancel,
                     type: StepperType.horizontal,
                     controlsBuilder: (BuildContext context,
@@ -239,7 +244,8 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
                             VoidCallback onStepCancel}) =>
                         currentStep == 1 || currentStep == 2
                             ? Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Container(
                                     height: 50,
@@ -366,12 +372,12 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
             decoration: const InputDecoration(
                 labelText: "Nama Perusahaan",
                 hintText: 'PT anda',
-                enabledBorder: OutlineInputBorder(
+                enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: Color(0xffb16a085),
                   ),
                 ),
-                focusedBorder: OutlineInputBorder(
+                focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: Color(0xffb16a085),
                   ),
@@ -539,7 +545,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
       setState(() {
         dataSubKategori =
             list.map((model) => SubKategoriM.fromMap(model)).toList();
-      _saving = false;
+        _saving = false;
       });
       next();
     });
@@ -641,9 +647,6 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
   }
 
   void _simpanData() async {
-    setState(() {
-      _saving =true;
-    });
     String dataSession = await LocalStorage.sharedInstance.readValue('session');
     var userid = json.decode(dataSession)['data']['data_user']['userid'];
     if (_formKey.currentState.validate()) {
@@ -651,6 +654,9 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
         if (_imageFileSiup != null &&
             _imageFileAkte != null &&
             idSubKategori != null) {
+          setState(() {
+            _saving = true;
+          });
           Api.updateAkun(_imageFileSiup, _imageFileAkte, idKategori,
                   idSubKategori, namaPerusahaanController.text, userid)
               .then((response) {
@@ -722,7 +728,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
     }
   }
 
-  Widget _buttonSimpan() {
+  Widget buttonSimpan() {
     return SizedBox(
       width: double.infinity,
       child: RaisedButton(

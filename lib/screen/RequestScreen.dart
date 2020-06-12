@@ -27,7 +27,7 @@ class _RequestScreenState extends State<RequestScreen> {
     if (session != null) {
       setState(() {
         isLogin = true;
-        title = 'Buat Permintaan';
+        title = 'Buat Pengajuan';
       });
     } else {
       setState(() {

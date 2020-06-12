@@ -88,9 +88,9 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
   }
 
   void _getAllKotaByIdprovinsi(String token) {
+    // print(dataKota.length);
     Api.getAllKotaByIdProvinsi(token,idProvinsi).then((value){
       var result = json.decode(value.body);
-//      print(result);
       Iterable list = result['data'];
       setState(() {
         dataKota =
@@ -136,6 +136,8 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
                           onChanged: (String newValue) {
                             setState(() {
                               idProvinsi = newValue;
+                              dataKota = [];
+                              idKota = null;
                             });
                             _onchangeProvinsi(newValue);
                           },
@@ -168,6 +170,8 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
                           onChanged: (String newValue) {
                             setState(() {
                               idKota = newValue;
+                               dataKecamatan = [];
+                              idKecamatan = null;
                             });
                             _onchangeKota(newValue);
                           },

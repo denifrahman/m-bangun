@@ -1,6 +1,9 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/html_parser.dart';
+import 'package:flutter_html/style.dart';
 
 class WidgetNewsDetail extends StatefulWidget {
   final String title;
@@ -91,18 +94,51 @@ class _WidgetNewsDetailState extends State<WidgetNewsDetail> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 8.0,
-                        ),
-                        child: Text(
-                          widget.deskripsi,
-                          style: Theme.of(context)
-                              .textTheme
-                              .body1
-                              .copyWith(fontSize: 16),
-                        ),
-                      ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0,
+                            vertical: 8.0,
+                          ),
+                          child: Html(
+                            style: {
+                              "html": Style(
+                                fontSize: FontSize(18)
+//              color: Colors.white,
+                                  ),
+                              "h1": Style(
+                                  textAlign: TextAlign.center,
+                                  fontSize: FontSize(20)),
+                              "table": Style(
+                                backgroundColor:
+                                    Color.fromARGB(0x50, 0xee, 0xee, 0xee),
+                              ),
+                              "tr": Style(
+                                border: Border(
+                                    bottom: BorderSide(color: Colors.grey)),
+                              ),
+                              "th": Style(
+                                padding: EdgeInsets.all(6),
+                                backgroundColor: Colors.grey,
+                              ),
+                              "td": Style(
+                                padding: EdgeInsets.all(6),
+                              ),
+                              "var": Style(fontFamily: 'serif'),
+                            },
+                            customRender: {
+                              "flutter": (RenderContext context, Widget child,
+                                  attributes, _) {
+                                return FlutterLogo(
+                                  style: (attributes['horizontal'] != null)
+                                      ? FlutterLogoStyle.horizontal
+                                      : FlutterLogoStyle.markOnly,
+                                  textColor: context.style.color,
+                                  size: context.style.fontSize.size * 5,
+                                );
+                              },
+                            },
+                            shrinkWrap: true,
+                            data: widget.deskripsi,
+                          )),
                     ),
                   ],
                 ),

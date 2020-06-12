@@ -1,6 +1,6 @@
 import 'package:apps/screen/BookingScreen.dart';
 import 'package:apps/screen/HomeScreen.dart';
-import 'package:apps/screen/InboxScreen.dart';
+import 'package:apps/screen/MyAdsScreen.dart';
 import 'package:apps/screen/KategoriScreen.dart';
 import 'package:apps/screen/ProfileScreen.dart';
 import 'package:flutter/cupertino.dart';
@@ -163,7 +163,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                   onPressed: () {
                     setState(() {
                       currentScreen =
-                          InboxScreen(); // if user taps on this dashboard tab will be active
+                          MyAdsScreen(); // if user taps on this dashboard tab will be active
                       currentTab = 2;
                     });
                   },

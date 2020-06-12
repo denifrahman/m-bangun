@@ -13,6 +13,7 @@ class SubKategoriScreen extends StatelessWidget {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: Text(this.namaKategori),
       ),
       body: WidgetSubKategori(

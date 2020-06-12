@@ -46,6 +46,8 @@ dependencies:
   expansion_tile_card: ^1.0.3
   carousel_pro: ^1.0.0
 #  firebase_admob: ^0.9.3+1
+  flutter_html: ^1.0.0
+  flutter_multi_formatter: ^1.1.6
   bezier_chart: ^1.0.16
   jiffy: ^3.0.1
   floating_search_bar: ^0.3.0

@@ -6,8 +6,8 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
 // const baseUrl = "http://niagatravel.com/api/api-m-bangun-jwt-token/api/";
-// const baseUrl = "http://192.168.0.6:8888/api_jwt/api/";
-const baseUrl = "http://192.168.100.114:8888/api_jwt/api/";
+const baseUrl = "http://localhost:8888/api_jwt/api/";
+// const baseUrl = "http://192.168.100.114:8888/api_jwt/api/";
 
 class Api {
   static Future getToken() {
@@ -97,6 +97,90 @@ class Api {
     }
   }
 
+  static Future pengajuanRqt(
+      File produkthumbnail,
+      File produkfoto1,
+      File produkfoto2,
+      File produkfoto3,
+      File produkfoto4,
+      idSubKategori,
+      idprovinsi,
+      idkota,
+      idkecamatan,
+      alamatlengkap,
+      produknama,
+      produkpanjang,
+      produklebar,
+      produktinggi,
+      produkbahan,
+      produkbudget,
+      userid) async {
+    final mimeTypeprodukthumbnail =
+        lookupMimeType(produkthumbnail.path, headerBytes: [0xFF, 0xD8])
+            .split('/');
+    final mimeTypeprodukfoto1 =
+        lookupMimeType(produkfoto1.path, headerBytes: [0xFF, 0xD8]).split('/');
+    final mimeTypeprodukfoto2 =
+        lookupMimeType(produkfoto2.path, headerBytes: [0xFF, 0xD8]).split('/');
+    final mimeTypeprodukfoto3 =
+        lookupMimeType(produkfoto3.path, headerBytes: [0xFF, 0xD8]).split('/');
+    final mimeTypeprodukfoto4 =
+        lookupMimeType(produkfoto4.path, headerBytes: [0xFF, 0xD8]).split('/');
+    // Intilize the multipart request
+    final imageUploadRequest = http.MultipartRequest(
+        'POST', Uri.parse(baseUrl + 'Pengajuan/pengajuanRqt'));
+
+    final _produkthumbnail = await http.MultipartFile.fromPath(
+        'produkthumbnail', produkthumbnail.path,
+        contentType:
+            MediaType(mimeTypeprodukthumbnail[0], mimeTypeprodukthumbnail[1]));
+    final _produkfoto1 = await http.MultipartFile.fromPath(
+        'produkfoto1', produkfoto1.path,
+        contentType: MediaType(mimeTypeprodukfoto1[0], mimeTypeprodukfoto1[1]));
+    final _produkfoto2 = await http.MultipartFile.fromPath(
+        'produkfoto2', produkfoto2.path,
+        contentType: MediaType(mimeTypeprodukfoto2[0], mimeTypeprodukfoto2[1]));
+    final _produkfoto3 = await http.MultipartFile.fromPath(
+        'produkfoto3', produkfoto3.path,
+        contentType: MediaType(mimeTypeprodukfoto3[0], mimeTypeprodukfoto3[1]));
+    final _produkfoto4 = await http.MultipartFile.fromPath(
+        'produkfoto4', produkfoto4.path,
+        contentType: MediaType(mimeTypeprodukfoto4[0], mimeTypeprodukfoto4[1]));
+// Declace data to post
+    imageUploadRequest.fields['ext'] = mimeTypeprodukthumbnail[1];
+
+    imageUploadRequest.fields['produkpanjang'] = produkpanjang;
+    imageUploadRequest.fields['produknama'] = produknama;
+    imageUploadRequest.fields['produklebar'] = produklebar;
+    imageUploadRequest.fields['produktinggi'] = produktinggi;
+    imageUploadRequest.fields['produkbahan'] = produkbahan;
+    imageUploadRequest.fields['produkbudget'] = produkbudget;
+    imageUploadRequest.fields['produkkategorisubid'] = idSubKategori;
+    imageUploadRequest.fields['produkalamat'] = alamatlengkap;
+    imageUploadRequest.fields['id_provinsi'] = idprovinsi;
+    imageUploadRequest.fields['id_kota'] = idkota;
+    imageUploadRequest.fields['id_kecamatan'] = idkecamatan;
+    imageUploadRequest.fields['userid'] = userid;
+    // Iterable iterable =  foto;
+    imageUploadRequest.files.addAll([
+      _produkthumbnail,
+      _produkfoto1,
+      _produkfoto2,
+      _produkfoto3,
+      _produkfoto4
+    ]);
+    try {
+      final streamedResponse = await imageUploadRequest.send();
+      final response = await http.Response.fromStream(streamedResponse);
+      if (response.statusCode != 200) {
+        return response;
+      }
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   static Future register(body) {
     var url = baseUrl + "Users/register";
     return http.post(url, body: body);
@@ -149,6 +233,14 @@ class Api {
   static Future getAllSubKategoriByIdKategori(token, idKategori) {
     var url = baseUrl + "SubKategori/getAllByIdKategori/" + idKategori;
     print(url);
+    return http.get(
+      url,
+      headers: {HttpHeaders.authorizationHeader: token},
+    );
+  }
+
+  static Future getAllSubKategori(token) {
+    var url = baseUrl + "SubKategori/getAll";
     return http.get(
       url,
       headers: {HttpHeaders.authorizationHeader: token},
@@ -211,8 +303,8 @@ class Api {
     );
   }
 
-  static Future getAllProdukByParam(token, idKecamatan, idKota, idProvinsi,
-      idSubKategori, Key) {
+  static Future getAllProdukByParam(
+      token, idKecamatan, idKota, idProvinsi, idSubKategori, Key) {
     var sub = (idSubKategori == '' ? '' : 'sub=' + idSubKategori);
     var kec = (idKecamatan == '' ? '' : '&kec=' + idKecamatan);
     var kota = (idKota == '' ? '' : '&kota=' + idKota);

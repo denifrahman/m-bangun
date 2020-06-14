@@ -4,6 +4,7 @@ import 'package:apps/screen/LoginScreen.dart';
 import 'package:apps/screen/ProfileScreen.dart';
 import 'package:apps/screen/RequestScreen.dart';
 import 'package:apps/screen/SplashScreen.dart';
+import 'package:apps/widget/Pengajuan/WidgetPengajuanByParamList.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +36,8 @@ class _MyAppState extends State<MyApp> {
               '/login': (context) => LoginScreen(),
               '/request': (context) => RequestScreen(),
               '/profile': (context) => ProfileScreen(),
-              '/BottomNavBar': (context) => BottomAnimateBar()
+              '/BottomNavBar': (context) => BottomAnimateBar(),
+              '/New': (context) => WidgetPengajuanByParamList(),
             },
 //            builder: (BuildContext context, Widget widget) {
 //              final mediaQuery = MediaQuery.of(context);

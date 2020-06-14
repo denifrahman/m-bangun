@@ -116,12 +116,10 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                             : Colors.grey[500],
                       ),
                       Text(
-                        'Home',
+                        'Beranda',
                         style: TextStyle(
                           fontSize: 11,
-                          color: currentTab == 0
-                              ? Color(0xffb16a085)
-                              : Colors.grey[500],
+                          color: currentTab == 0 ? Color(0xffb16a085) : Colors.grey[500],
                         ),
                       ),
                     ],
@@ -178,7 +176,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                             : Colors.grey[500],
                       ),
                       Text(
-                        'My ADS',
+                        'Aktivitas',
                         style: TextStyle(
                           fontSize: 11,
                           color: currentTab == 2
@@ -209,7 +207,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                             : Colors.grey[500],
                       ),
                       Text(
-                        'Profile',
+                        'Profil',
                         style: TextStyle(
                           fontSize: 11,
                           color: currentTab == 3

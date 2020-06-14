@@ -6,7 +6,6 @@ import 'package:apps/models/KategoriM.dart';
 import 'package:apps/provider/Api.dart';
 import 'package:apps/screen/SubKategoriScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:loading_animations/loading_animations.dart';
 import 'package:pk_skeleton/pk_skeleton.dart';
 
 class WidgetKategoriVertical extends StatefulWidget {
@@ -53,22 +52,26 @@ class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return dataKategori.isEmpty ? Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: PKCardProfileSkeleton(
-        isBottomLinesActive: true,
-      ),
-    ):Container(
-      width: MediaQuery.of(context).size.width,
-      child: ListView.builder(
-          padding: EdgeInsets.only(left: 5, right: 5, top: 10),
-          itemCount: dataKategori.length,
-          itemBuilder: (context, index) {
-            return Card(
-              child: InkWell(
-                onTap: () => openSubkategori(dataKategori[index]),
-                child: Container(
+    return dataKategori.isEmpty
+        ? SingleChildScrollView(
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: PKCardProfileSkeleton(
+                isBottomLinesActive: true,
+              ),
+            ),
+          )
+        : Container(
+            width: MediaQuery.of(context).size.width,
+            child: ListView.builder(
+                padding: EdgeInsets.only(left: 5, right: 5, top: 10),
+                itemCount: dataKategori.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    child: InkWell(
+                      onTap: () => openSubkategori(dataKategori[index]),
+                      child: Container(
                   width: 100,
                   padding: EdgeInsets.all(8),
                   child: ListTile(

@@ -45,7 +45,7 @@ class MapScreenState extends State<WidgetProfile>
   }
 
   void _getImage(BuildContext context, ImageSource source) async {
-    File image = await ImagePicker.pickImage(source: source);
+    File image = await ImagePicker.pickImage(source: source, maxWidth: 250, maxHeight: 250);
     simpanFoto(image);
     setState(() {
       _imageFile = image;

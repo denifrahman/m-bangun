@@ -320,6 +320,7 @@ class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
   }
 
   _daftar() {
+    _btnController.stop();
     var map = new Map<String, dynamic>();
     map['usernamalengkap'] = namaLengkapController.text;
     map['userpassword'] = loginPasswordController.text;
@@ -347,7 +348,7 @@ class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
         Flushbar(
           title: "Sukses",
           message:
-              "Pendaftaran berhasil, silahkan login dengan email dan password anda",
+          "Pendaftaran berhasil, silahkan login dengan email dan password anda",
           duration: Duration(seconds: 15),
           backgroundColor: Colors.green,
           flushbarPosition: FlushbarPosition.TOP,

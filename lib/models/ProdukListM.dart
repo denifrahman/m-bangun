@@ -41,6 +41,8 @@ class ProdukListM {
   String nama_propinsi;
   String nama_kabkota;
   String nama_kecamatan;
+  String statusnama;
+  String produkwaktupengerjaan;
 
   static ProdukListM fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
@@ -68,6 +70,8 @@ class ProdukListM {
     produkListMBean.nama_propinsi = map['nama_propinsi'];
     produkListMBean.nama_kabkota = map['nama_kabkota'];
     produkListMBean.nama_kecamatan = map['nama_kecamatan'];
+    produkListMBean.statusnama = map['statusnama'];
+    produkListMBean.produkwaktupengerjaan = map['produkwaktupengerjaan'];
     return produkListMBean;
   }
 
@@ -95,5 +99,7 @@ class ProdukListM {
         "nama_propinsi": nama_propinsi,
         "nama_kabkota": nama_kabkota,
         "nama_kecamatan": nama_kecamatan,
+        "statusnama": statusnama,
+        "produkwaktupengerjaan": produkwaktupengerjaan,
       };
 }

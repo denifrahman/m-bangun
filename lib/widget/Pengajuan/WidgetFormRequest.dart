@@ -1,18 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/models/KecamatanM.dart';
 import 'package:apps/models/KotaM.dart';
 import 'package:apps/models/ProvinsiM.dart';
 import 'package:apps/models/SubKategoriM.dart';
-import 'package:apps/provider/Api.dart';
+import 'package:apps/providers/Api.dart';
+import 'package:apps/providers/DataProvider.dart';
+import 'package:apps/widget/alamat/WidgetAlamat.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animations/loading_animations.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:provider/provider.dart';
 
 class WidgetFormRequest extends StatefulWidget {
   WidgetFormRequest({Key key}) : super(key: key);
@@ -72,7 +75,6 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
 
   void initState() {
     super.initState();
-    getAllSubKategori();
     getAllProvinsi();
   }
 
@@ -89,16 +91,6 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
       Iterable list = result['data'];
       setState(() {
         dataProvinsi = list.map((model) => ProvinsiM.fromMap(model)).toList();
-      });
-    });
-  }
-
-  void getAllSubKategori() async {
-    String tokenValid = await LocalStorage.sharedInstance.readValue('token');
-    Api.getAllSubKategoriByIdKategori(tokenValid, '1').then((response) {
-      Iterable list = json.decode(response.body)['data'];
-      setState(() {
-        dataSubKategori = list.map((model) => SubKategoriM.fromMap(model)).toList();
       });
     });
   }
@@ -166,16 +158,8 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
     Navigator.pop(context);
   }
 
-  void _onchangeKategori(String newValue) async {
-    String token = await LocalStorage.sharedInstance.readValue('token');
-  }
-
-  void _onchangeSubKategori(String newValue) {}
-
   void simpanFormRqt() async {
-    setState(() {
-      _saving = true;
-    });
+    DataProvider dataProvider = Provider.of<DataProvider>(context);
     String dataSession = await LocalStorage.sharedInstance.readValue('session');
     var userId = json.decode(dataSession)['data']['data_user']['userid'];
     if (_formKey.currentState.validate() &&
@@ -184,6 +168,9 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
         produkfoto2 != null &&
         produkfoto3 != null &&
         produkfoto4 != null) {
+      setState(() {
+        _saving = true;
+      });
       var budget = budgetController.text.replaceAll('Rp', '');
       var saveBudget = budget.replaceAll(',', '');
       Api.pengajuanRqt(
@@ -192,10 +179,9 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
               produkfoto2,
               produkfoto3,
               produkfoto4,
-              idSubKategori,
-              idProvinsi,
-              idKota,
-              idKecamatan,
+              dataProvider.getSelectedProvinsi,
+              dataProvider.getSelectedKota,
+              dataProvider.getSelectedKecamatan,
               alamatLengkapController.text,
               namaController.text,
               panjangController.text,
@@ -273,7 +259,7 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
             : Container(
                 child: Column(
                 children: [
-                  _buildAlamat(),
+                  WidgetAlamat(),
                   Container(
                     height: 20,
                   ),
@@ -433,7 +419,7 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
           height: 20,
         ),
         Text(
-          'Bahan',
+          'Deskripsi singkat dan bahan',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         Container(
@@ -449,10 +435,10 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
                   return null;
               },
               keyboardType: TextInputType.multiline,
-              maxLines: 4,
+              maxLines: 3,
               decoration: const InputDecoration(
 //                  labelText: "Deskripsi Singkat & Bahan",
-                  hintText: 'Hanya perbaikan, \n \nbahan : Kayu, Besi, dll',
+                  hintText: 'Hanya perbaikan, \n\nbahan : Kayu, Besi, dll',
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
                       color: Color(0xffb16a085),
@@ -466,17 +452,6 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
                   hasFloatingPlaceholder: true),
             ),
           ),
-        ),
-        Container(
-          height: 20,
-        ),
-        Text(
-          'Jenis Penyedia Jasa',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: _dropdownSubKategori(),
         ),
         Container(
           height: 20,
@@ -773,263 +748,5 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
         )
       ],
     );
-  }
-
-  Widget _dropdownSubKategori() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Container(
-          width: MediaQuery.of(context).size.width - 10,
-          child: DropdownButtonFormField<String>(
-            decoration: const InputDecoration(
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: Color(0xffb16a085),
-                ),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: Color(0xffb16a085),
-                ),
-              ),
-            ),
-            isDense: true,
-            validator: (String arg) {
-              if (arg == null)
-                return 'jenis pekerjaan harus di isi';
-              else
-                return null;
-            },
-            hint: new Text(
-              "Jenis pekerjaan",
-              style: TextStyle(color: Colors.grey, fontSize: 12),
-            ),
-            value: idSubKategori,
-            onChanged: (String newValue) {
-              setState(() {
-                idSubKategori = newValue;
-              });
-            },
-            items: dataSubKategori.map((SubKategoriM item) {
-              return DropdownMenuItem<String>(
-                value: item.produkkategorisubid.toString(),
-                child: new Text(
-                  item.produkkategorisubnama.toString(),
-                  style: TextStyle(fontSize: 12),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAlamat() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Lokasi Pekerjaan',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        Container(
-          height: 10,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width - 10,
-                child: DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xffb16a085),
-                      ),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xffb16a085),
-                      ),
-                    ),
-                  ),
-                  validator: (String arg) {
-                    if (arg == null)
-                      return 'Provinsi harus di isi';
-                    else
-                      return null;
-                  },
-                  isDense: true,
-                  hint: new Text(
-                    "Pilih Provinsi",
-                    style: TextStyle(color: Colors.grey, fontSize: 12),
-                  ),
-                  value: idProvinsi,
-                  onChanged: (String newValue) {
-                    setState(() {
-                      idProvinsi = newValue;
-                      dataKota = [];
-                      idKota = null;
-                    });
-                    _onchangeProvinsi(newValue);
-                  },
-                  items: dataProvinsi.map((ProvinsiM item) {
-                    return new DropdownMenuItem<String>(
-                      value: item.idPropinsi.toString(),
-                      child: new Text(
-                        item.namaPropinsi.toString(),
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width - 10,
-                child: DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xffb16a085),
-                      ),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xffb16a085),
-                      ),
-                    ),
-                  ),
-                  validator: (String arg) {
-                    if (arg == null)
-                      return 'Kota harus di isi';
-                    else
-                      return null;
-                  },
-                  isDense: true,
-                  hint: new Text(
-                    "Pilih Kota",
-                    style: TextStyle(color: Colors.grey, fontSize: 12),
-                  ),
-                  value: idKota,
-                  onChanged: (String newValue) {
-                    setState(() {
-                      idKota = newValue;
-                      dataKecamatan = [];
-                      idKecamatan = null;
-                    });
-                    _onchangeKota(newValue);
-                  },
-                  items: dataKota.map((KotaM item) {
-                    return new DropdownMenuItem<String>(
-                      value: item.idKabkota.toString(),
-                      child: new Text(
-                        item.namaKabkota.toString(),
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width - 10,
-                child: DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xffb16a085),
-                      ),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xffb16a085),
-                      ),
-                    ),
-                  ),
-                  validator: (String arg) {
-                    if (arg == null)
-                      return 'kecamatan harus di isi';
-                    else
-                      return null;
-                  },
-                  isDense: true,
-                  hint: new Text(
-                    "Pilih Kecamatan",
-                    style: TextStyle(color: Colors.grey, fontSize: 12),
-                  ),
-                  value: idKecamatan,
-                  onChanged: (String newValue) {
-                    setState(() {
-                      idKecamatan = newValue;
-                    });
-                  },
-                  items: dataKecamatan.map((KecamatanM item) {
-                    return new DropdownMenuItem<String>(
-                      value: item.idKecamatan.toString(),
-                      child: new Text(
-                        item.namaKecamatan.toString(),
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-              Container(
-                height: 10,
-              ),
-              new TextFormField(
-                focusNode: myFocusNodeAlamatLengkap,
-                controller: alamatLengkapController,
-                validator: (String arg) {
-                  if (arg.length < 1)
-                    return 'Harus di isi';
-                  else
-                    return null;
-                },
-                keyboardType: TextInputType.multiline,
-                maxLines: 2,
-                decoration: const InputDecoration(
-                    hintText: 'Jl. Ir Soekarno no 1 A',
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xffb16a085),
-                      ),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xffb16a085),
-                      ),
-                    ),
-                    hasFloatingPlaceholder: true),
-              ),
-            ],
-          ),
-        )
-      ],
-    );
-  }
-
-  void _onchangeProvinsi(String newValue) async {
-    String token = await LocalStorage.sharedInstance.readValue('token');
-    Api.getAllKotaByIdProvinsi(token, idProvinsi).then((value) {
-      var result = json.decode(value.body);
-      Iterable list = result['data'];
-      setState(() {
-        dataKota = list.map((model) => KotaM.fromMap(model)).toList();
-      });
-    });
-  }
-
-  void _onchangeKota(String newValue) async {
-    String token = await LocalStorage.sharedInstance.readValue('token');
-    Api.getAllKecamatanByIdKota(token, idKota).then((value) {
-      var result = json.decode(value.body);
-      Iterable list = result['data'];
-      setState(() {
-        dataKecamatan = list.map((model) => KecamatanM.fromMap(model)).toList();
-      });
-    });
   }
 }

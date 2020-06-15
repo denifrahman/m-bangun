@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/models/KategoriM.dart';
-import 'package:apps/provider/Api.dart';
+import 'package:apps/providers/Api.dart';
 import 'package:apps/screen/SubKategoriScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:pk_skeleton/pk_skeleton.dart';
@@ -41,7 +41,7 @@ class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
 
   void _getKategori() async {
     String tokenValid = await LocalStorage.sharedInstance.readValue('token');
-    Api.getKategori(tokenValid).then((response) {
+    Api.getAllKategori(tokenValid).then((response) {
       Iterable list = json.decode(response.body)['data'];
       setState(() {
         dataKategori = list.map((model) => KategoriM.fromMap(model)).toList();

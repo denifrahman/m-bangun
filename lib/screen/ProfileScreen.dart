@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:apps/Utils/BottomAnimation.dart';
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/Utils/navigation_right.dart';
-import 'package:apps/provider/Api.dart';
+import 'package:apps/providers/Api.dart';
 import 'package:apps/screen/UpdateAkunScreen.dart';
 import 'package:apps/widget/Login/LoginWidget.dart';
 import 'package:apps/widget/Profile/WidgetProfile.dart';

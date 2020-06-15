@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:apps/Utils/values/colors.dart';
 import 'package:apps/Utils/values/radii.dart';
 import 'package:apps/Utils/values/shadows.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:apps/screen/LoginScreen3.dart';
 
 class SettingWidget extends StatelessWidget {
   void darkSwitchControll(BuildContext context) {}
@@ -269,7 +268,7 @@ class SettingWidget extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
               child: FlatButton(
-                onPressed: () => _handleSignOut(context),
+//                onPressed: () => _handleSignOut(context),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -318,28 +317,5 @@ class SettingWidget extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  _handleSignOut(context) {
-    print('keluar');
-    _googleSignIn.signOut();
-    Navigator.pushAndRemoveUntil(
-        context,
-        PageRouteBuilder(pageBuilder: (BuildContext context,
-            Animation animation, Animation secondaryAnimation) {
-          return LoginScreen3();
-        }, transitionsBuilder: (BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child) {
-          return new SlideTransition(
-            position: new Tween<Offset>(
-              begin: const Offset(1.0, 0.0),
-              end: Offset.zero,
-            ).animate(animation),
-            child: child,
-          );
-        }),
-        (Route route) => false);
   }
 }

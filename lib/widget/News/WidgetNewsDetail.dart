@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:apps/Utils/LocalBindings.dart';
+import 'package:apps/providers/Api.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +13,9 @@ class WidgetNewsDetail extends StatefulWidget {
   final String title;
   final String deskripsi;
   final String tumbhnail;
+  final String id;
 
-  WidgetNewsDetail({Key key, this.deskripsi, this.title, this.tumbhnail})
-      : super(key: key);
+  WidgetNewsDetail({Key key, this.deskripsi, this.title, this.tumbhnail, this.id}) : super(key: key);
 
   @override
   _WidgetNewsDetailState createState() {
@@ -20,14 +24,27 @@ class WidgetNewsDetail extends StatefulWidget {
 }
 
 class _WidgetNewsDetailState extends State<WidgetNewsDetail> {
+  String Deskripsi = '';
+
   @override
   void initState() {
     super.initState();
+    getNewsById();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void getNewsById() async {
+    String token = await LocalStorage.sharedInstance.readValue('token');
+    Api.getNewsById(token, widget.id).then((value) {
+      var result = json.decode(value.body)['data'];
+      setState(() {
+        Deskripsi = result['newsdeskripsi'];
+      });
+    });
   }
 
   @override
@@ -101,15 +118,15 @@ class _WidgetNewsDetailState extends State<WidgetNewsDetail> {
                           child: Html(
                             style: {
                               "html": Style(
-                                fontSize: FontSize(18)
+                                  fontSize: FontSize(18)
 //              color: Colors.white,
-                                  ),
+                              ),
                               "h1": Style(
                                   textAlign: TextAlign.center,
                                   fontSize: FontSize(20)),
                               "table": Style(
                                 backgroundColor:
-                                    Color.fromARGB(0x50, 0xee, 0xee, 0xee),
+                                Color.fromARGB(0x50, 0xee, 0xee, 0xee),
                               ),
                               "tr": Style(
                                 border: Border(
@@ -137,7 +154,7 @@ class _WidgetNewsDetailState extends State<WidgetNewsDetail> {
                               },
                             },
                             shrinkWrap: true,
-                            data: widget.deskripsi,
+                            data: Deskripsi,
                           )),
                     ),
                   ],

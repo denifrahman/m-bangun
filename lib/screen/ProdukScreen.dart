@@ -1,46 +1,124 @@
 import 'package:apps/widget/Produk/WidgetListProduk.dart';
 import 'package:apps/widget/WidgetSearch.dart';
+import 'package:apps/widget/filter/WidgetButtonFilter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 
-class ProdukScreen extends StatelessWidget {
+class ProdukScreen extends StatefulWidget {
   final String namaKategori;
   final String idSubKategori;
 
-  ProdukScreen({Key key, this.namaKategori, this.idSubKategori})
-      : super(key: key);
+  ProdukScreen({Key key, this.namaKategori, this.idSubKategori}) : super(key: key);
+
+  @override
+  _ProdukScreenState createState() => _ProdukScreenState();
+}
+
+class _ProdukScreenState extends State<ProdukScreen> with TickerProviderStateMixin {
+  final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
+
+  AnimationController _hideFabAnimation;
+
+  bool _handleScrollNotification(ScrollNotification notification) {
+    if (notification.depth == 0) {
+      if (notification is UserScrollNotification) {
+        final UserScrollNotification userScroll = notification;
+        _hideFabAnimation.forward();
+        switch (userScroll.direction) {
+          case ScrollDirection.forward:
+            if (userScroll.metrics.maxScrollExtent != userScroll.metrics.minScrollExtent) {
+              _hideFabAnimation.forward();
+            }
+            break;
+          case ScrollDirection.reverse:
+            if (userScroll.metrics.maxScrollExtent != userScroll.metrics.minScrollExtent) {
+              _hideFabAnimation.reverse();
+            }
+            break;
+          case ScrollDirection.idle:
+            break;
+        }
+      }
+    }
+    return false;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _hideFabAnimation = AnimationController(vsync: this, duration: kThemeAnimationDuration);
+  }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: Text(this.namaKategori),
-        actions: <Widget>[
-          IconButton(
+    return NotificationListener<ScrollNotification>(
+      onNotification: _handleScrollNotification,
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          title: Text(this.widget.namaKategori),
+          actions: <Widget>[
+            IconButton(
               icon: Icon(
-                Icons.filter_list,
-            color: Color(0xffb16a085),
-          ), onPressed: () {  },)
-        ],
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          children: <Widget>[
-            Container(
-                height: 50,
-                padding: EdgeInsets.only(bottom: 10),
-                child: WidgetSearch()),
-            Expanded(
-//              height: 200,
-              flex: 2,
-              child: WidgetListProduk(
-                idSubKategori: this.idSubKategori,
+                Icons.info,
+                color: Colors.amber,
               ),
+              onPressed: () {},
             )
           ],
         ),
+        body: Padding(
+          padding: EdgeInsets.all(10),
+          child: Stack(
+            children: <Widget>[
+              Align(
+                alignment: Alignment.center,
+                child: Column(
+                  children: [
+                    Container(height: 50, padding: EdgeInsets.only(bottom: 10), child: WidgetSearch()),
+                    Container(
+                      height: MediaQuery.of(context).size.height - 150,
+                      width: MediaQuery.of(context).size.width,
+                      child: WidgetListProduk(
+                        idSubKategori: this.widget.idSubKategori,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              ScaleTransition(
+                scale: _hideFabAnimation,
+                child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: WidgetButtonFilter(),
+                    )),
+              )
+            ],
+          ),
+        ),
+//        floatingActionButton: ScaleTransition(
+//          scale: _hideFabAnimation,
+//          alignment: Alignment.bottomCenter,
+//          child: FloatingActionButton.extended(
+//            onPressed: () {
+//              Navigator.push(
+//                  context,
+//                  PageRouteTransition(
+//                    animationType: AnimationType.slide_up,
+//                    builder: (context) => WidgetFilter(),
+//                  ));
+//            },
+//            backgroundColor: Color(0xffb16a085),
+//            tooltip: 'Filter',
+//            icon: Icon(Icons.filter_list),
+//            label: Text("Filter", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, letterSpacing: 1)),
+//          ),
+//        ),
       ),
     );
   }

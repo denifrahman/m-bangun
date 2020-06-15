@@ -4,7 +4,7 @@ import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/models/KotaM.dart';
 import 'package:apps/models/ProvinsiM.dart';
-import 'package:apps/provider/Api.dart';
+import 'package:apps/providers/Api.dart';
 import 'package:apps/widget/Home/kategori/WidgetSelectLokasi.dart';
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';

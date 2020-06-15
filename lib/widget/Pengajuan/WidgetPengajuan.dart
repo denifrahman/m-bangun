@@ -1,20 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
+
 import 'package:apps/Utils/LocalBindings.dart';
-import 'package:apps/models/KecamatanM.dart';
-import 'package:apps/models/KotaM.dart';
-import 'package:apps/models/ProvinsiM.dart';
-import 'package:apps/models/SubKategoriM.dart';
 import 'package:apps/models/jenis_pengajuan.dart';
-import 'package:apps/provider/Api.dart';
+import 'package:apps/providers/Api.dart';
 import 'package:apps/widget/Pengajuan/WidgetFormPelatihanKerja.dart';
 import 'package:apps/widget/Pengajuan/WidgetFormRequest.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:loading_animations/loading_animations.dart';
 
 class WidgetPengajuan extends StatefulWidget {
   WidgetPengajuan({Key key}) : super(key: key);

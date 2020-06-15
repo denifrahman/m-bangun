@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/models/ProdukListM.dart';
-import 'package:apps/provider/Api.dart';
+import 'package:apps/providers/Api.dart';
 import 'package:floating_search_bar/floating_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';

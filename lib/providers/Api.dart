@@ -89,7 +89,6 @@ class Api {
       File produkfoto2,
       File produkfoto3,
       File produkfoto4,
-      idSubKategori,
       idprovinsi,
       idkota,
       idkecamatan,
@@ -113,13 +112,13 @@ class Api {
     final _produkthumbnail = await http.MultipartFile.fromPath('produkthumbnail', produkthumbnail.path,
         contentType: MediaType(mimeTypeprodukthumbnail[0], mimeTypeprodukthumbnail[1]));
     final _produkfoto1 =
-    await http.MultipartFile.fromPath('produkfoto1', produkfoto1.path, contentType: MediaType(mimeTypeprodukfoto1[0], mimeTypeprodukfoto1[1]));
+        await http.MultipartFile.fromPath('produkfoto1', produkfoto1.path, contentType: MediaType(mimeTypeprodukfoto1[0], mimeTypeprodukfoto1[1]));
     final _produkfoto2 =
-    await http.MultipartFile.fromPath('produkfoto2', produkfoto2.path, contentType: MediaType(mimeTypeprodukfoto2[0], mimeTypeprodukfoto2[1]));
+        await http.MultipartFile.fromPath('produkfoto2', produkfoto2.path, contentType: MediaType(mimeTypeprodukfoto2[0], mimeTypeprodukfoto2[1]));
     final _produkfoto3 =
-    await http.MultipartFile.fromPath('produkfoto3', produkfoto3.path, contentType: MediaType(mimeTypeprodukfoto3[0], mimeTypeprodukfoto3[1]));
+        await http.MultipartFile.fromPath('produkfoto3', produkfoto3.path, contentType: MediaType(mimeTypeprodukfoto3[0], mimeTypeprodukfoto3[1]));
     final _produkfoto4 =
-    await http.MultipartFile.fromPath('produkfoto4', produkfoto4.path, contentType: MediaType(mimeTypeprodukfoto4[0], mimeTypeprodukfoto4[1]));
+        await http.MultipartFile.fromPath('produkfoto4', produkfoto4.path, contentType: MediaType(mimeTypeprodukfoto4[0], mimeTypeprodukfoto4[1]));
 // Declace data to post
     imageUploadRequest.fields['ext'] = mimeTypeprodukthumbnail[1];
 
@@ -129,7 +128,6 @@ class Api {
     imageUploadRequest.fields['produktinggi'] = produktinggi;
     imageUploadRequest.fields['produkdeskripsi'] = produkbahan;
     imageUploadRequest.fields['produkbudget'] = produkbudget;
-    imageUploadRequest.fields['produkkategorisubid'] = idSubKategori;
     imageUploadRequest.fields['produkalamat'] = alamatlengkap;
     imageUploadRequest.fields['id_provinsi'] = idprovinsi;
     imageUploadRequest.fields['id_kota'] = idkota;
@@ -167,7 +165,7 @@ class Api {
     return http.post(url, body: body);
   }
 
-  static Future getKategori(token) {
+  static Future getAllKategori(token) {
     var url = baseUrl + "kategori/getAll";
     return http.get(
       url,
@@ -183,8 +181,10 @@ class Api {
     );
   }
 
-  static Future getAllByFilterParam(token, akses) {
-    var url = baseUrl + "kategori/getAllByFilterParam?akses=" + akses;
+  static Future getAllKategoriByFilterParam(token, akses, req) {
+    var _akses = (akses == '' ? '' : 'akses=' + akses);
+    var _req = (req == '' ? '' : '&req=' + req);
+    var url = baseUrl + "kategori/getAllByFilterParam?" + _akses + _req;
     return http.get(
       url,
       headers: {HttpHeaders.authorizationHeader: token},
@@ -203,6 +203,15 @@ class Api {
   static Future getAllSubKategoriByIdKategori(token, idKategori) {
     var url = baseUrl + "SubKategori/getAllByIdKategori/" + idKategori;
     print(url);
+    return http.get(
+      url,
+      headers: {HttpHeaders.authorizationHeader: token},
+    );
+  }
+
+  static Future getNewsById(token, id) {
+    var _id = (id == '' ? '' : 'id=' + id);
+    var url = baseUrl + "News/getById/?" + _id;
     return http.get(
       url,
       headers: {HttpHeaders.authorizationHeader: token},
@@ -291,11 +300,15 @@ class Api {
     var _userId = (userId == '' ? '' : '&userid=' + userId);
     var _status = (status == '' ? '' : '&stp=' + status);
     var url = baseUrl + "produk/getAllByParam?" + _userId + _status;
-    print(url);
-    return http.get(
-      url,
-      headers: {HttpHeaders.authorizationHeader: token},
-    );
+    try {
+      var result = http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+      return result;
+    } catch (e) {
+      print(e);
+    }
   }
 
   static Future insertPelatihanKerja(token, body) {

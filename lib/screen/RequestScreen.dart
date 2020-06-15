@@ -43,6 +43,15 @@ class _RequestScreenState extends State<RequestScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.clear,
+            color: Colors.black,
+          ),
+        ),
         title: Text(title),
       ),
       body: SingleChildScrollView(

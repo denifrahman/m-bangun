@@ -2,10 +2,9 @@ import 'dart:convert';
 
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/models/KategoriM.dart';
-import 'package:apps/provider/Api.dart';
+import 'package:apps/providers/Api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class WidgetRecentUpload extends StatefulWidget {
   WidgetRecentUpload({Key key}) : super(key: key);
@@ -40,7 +39,7 @@ class _WidgetRecentUploadState extends State<WidgetRecentUpload> {
 
   void _getKategori() async {
     String tokenValid = await LocalStorage.sharedInstance.readValue('token');
-    Api.getKategori(tokenValid).then((response) {
+    Api.getAllKategori(tokenValid).then((response) {
       Iterable list = json.decode(response.body)['data'];
       setState(() {
         dataKategori = list.map((model) => KategoriM.fromMap(model)).toList();

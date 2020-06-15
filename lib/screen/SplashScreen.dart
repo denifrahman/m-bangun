@@ -1,16 +1,11 @@
+import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/screen/HomeScreen.dart';
+import 'package:apps/screen/LoginScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
-import 'package:apps/Utils/LocalBindings.dart';
-
-//import 'package:apps/screen/DasboardScreen.dart';
-import 'package:apps/screen/LoginScreen.dart';
-
-//import 'package:custom_splash/custom_splash.dart';
 import 'package:splashscreen/splashscreen.dart';
-import 'package:apps/screen/LoginScreen3.dart';
 
 class SplaceScreen extends StatefulWidget {
   const SplaceScreen({Key key}) : super(key: key);
@@ -88,7 +83,7 @@ class IntroScreenState extends State<IntroScreen> {
             fontWeight: FontWeight.bold,
             fontFamily: 'RobotoMono'),
         description:
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
+        "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
         styleDescription: TextStyle(
             color: Color(0xfffe9c8f),
             fontSize: 20.0,
@@ -106,7 +101,7 @@ class IntroScreenState extends State<IntroScreen> {
             fontWeight: FontWeight.bold,
             fontFamily: 'RobotoMono'),
         description:
-            "Ye indulgence unreserved connection alteration appearance",
+        "Ye indulgence unreserved connection alteration appearance",
         styleDescription: TextStyle(
             color: Color(0xfffe9c8f),
             fontSize: 20.0,
@@ -124,7 +119,7 @@ class IntroScreenState extends State<IntroScreen> {
             fontWeight: FontWeight.bold,
             fontFamily: 'RobotoMono'),
         description:
-            "Much evil soon high in hope do view. Out may few northward believing attempted. Yet timed being songs marry one defer men our. Although finished blessing do of",
+        "Much evil soon high in hope do view. Out may few northward believing attempted. Yet timed being songs marry one defer men our. Although finished blessing do of",
         styleDescription: TextStyle(
             color: Color(0xfffe9c8f),
             fontSize: 20.0,

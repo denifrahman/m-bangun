@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/models/KategoriM.dart';
 import 'package:apps/models/SubKategoriM.dart';
-import 'package:apps/provider/Api.dart';
+import 'package:apps/providers/Api.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -152,53 +152,53 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
                                     idKategori == null
                                         ? Container()
                                         : Container(
-                                        width: widget1,
-                                        margin: EdgeInsets.symmetric(vertical: 10),
-                                        child: Text(
-                                          'Pilih Bidang Keahlian',
-                                          textAlign: TextAlign.start,
-                                        )),
+                                            width: widget1,
+                                            margin: EdgeInsets.symmetric(vertical: 10),
+                                            child: Text(
+                                              'Pilih Bidang Keahlian',
+                                              textAlign: TextAlign.start,
+                                            )),
                                     Container(
                                       height: 200,
                                       padding: EdgeInsets.all(15),
                                       color: Colors.grey[200],
                                       child: dataSubKategori.length == 0
                                           ? Center(
-                                          child: Text(
-                                            'Data Kosong',
-                                            style: TextStyle(color: Colors.red),
-                                          ))
+                                              child: Text(
+                                              'Data Kosong',
+                                              style: TextStyle(color: Colors.red),
+                                            ))
                                           : ListView.builder(
-                                          itemCount: dataSubKategori.length,
-                                          itemBuilder: (context, index) {
-                                            return Column(
-                                              children: <Widget>[
-                                                InkWell(
-                                                  onTap: () => _onchangeSubKategori(dataSubKategori[index].produkkategorisubid),
-                                                  child: ListTile(
-                                                    leading: Image.network(
-                                                      dataSubKategori[index].produkkategorisubthubmnail == null
-                                                          ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
-                                                          : dataSubKategori[index].produkkategorisubthubmnail,
-                                                      width: 45,
+                                              itemCount: dataSubKategori.length,
+                                              itemBuilder: (context, index) {
+                                                return Column(
+                                                  children: <Widget>[
+                                                    InkWell(
+                                                      onTap: () => _onchangeSubKategori(dataSubKategori[index].produkkategorisubid),
+                                                      child: ListTile(
+                                                        leading: Image.network(
+                                                          dataSubKategori[index].produkkategorisubthubmnail == null
+                                                              ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
+                                                              : dataSubKategori[index].produkkategorisubthubmnail,
+                                                          width: 45,
+                                                        ),
+                                                        title: Text(
+                                                          dataSubKategori[index].produkkategorisubnama,
+                                                          style: TextStyle(fontSize: 12),
+                                                        ),
+                                                        trailing: idSubKategori == dataSubKategori[index].produkkategorisubid
+                                                            ? Icon(
+                                                                Icons.check_box,
+                                                                color: Colors.green,
+                                                                size: 22,
+                                                              )
+                                                            : null,
+                                                      ),
                                                     ),
-                                                    title: Text(
-                                                      dataSubKategori[index].produkkategorisubnama,
-                                                      style: TextStyle(fontSize: 12),
-                                                    ),
-                                                    trailing: idSubKategori == dataSubKategori[index].produkkategorisubid
-                                                        ? Icon(
-                                                      Icons.check_box,
-                                                      color: Colors.green,
-                                                      size: 22,
-                                                    )
-                                                        : null,
-                                                  ),
-                                                ),
-                                                Divider()
-                                              ],
-                                            );
-                                          }),
+                                                    Divider()
+                                                  ],
+                                                );
+                                              }),
                                     ),
                                     Container(
                                       height: 20,
@@ -216,7 +216,9 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         _fotoSiup(),
-                                        Container(width: 10,),
+                                        Container(
+                                          width: 10,
+                                        ),
                                         _fotoAkte(),
                                       ],
                                     ),
@@ -269,7 +271,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
                           width: 130,
                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Color(0xffb16a085)),
                           child: InkWell(
-                            onTap: _simpanData,
+                            onTap: _validSimpan,
                             child: Center(
                                 child: Text(
                                   'Simpan',
@@ -337,17 +339,23 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
             ),
             _imageFileSiup != null
                 ? Image.file(
-                    _imageFileSiup,
-                    fit: BoxFit.cover,
-                    alignment: Alignment.topCenter,
-                    width: MediaQuery.of(context).size.width,
-                  )
+              _imageFileSiup,
+              fit: BoxFit.cover,
+              alignment: Alignment.topCenter,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width,
+            )
                 : Container(),
             Container(
               height: 20,
             ),
             Container(
-                width: MediaQuery.of(context).size.width,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
                 child: RaisedButton(
                   child: Icon(Icons.camera_alt),
                   color: Colors.white,
@@ -376,17 +384,23 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
             ),
             _imageFileAkte != null
                 ? Image.file(
-                    _imageFileAkte,
-                    fit: BoxFit.cover,
-                    alignment: Alignment.topCenter,
-                    width: MediaQuery.of(context).size.width,
-                  )
+              _imageFileAkte,
+              fit: BoxFit.cover,
+              alignment: Alignment.topCenter,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width,
+            )
                 : Container(),
             Container(
               height: 20,
             ),
             Container(
-                width: MediaQuery.of(context).size.width,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
                 child: RaisedButton(
                   child: Icon(Icons.camera_alt),
                   color: Colors.white,
@@ -445,7 +459,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
 
   void _getAllByFilterParam() async {
     String tokenValid = await LocalStorage.sharedInstance.readValue('token');
-    Api.getAllByFilterParam(tokenValid, '1').then((response) {
+    Api.getAllKategoriByFilterParam(tokenValid, '1', '').then((response) {
       Iterable list = json.decode(response.body)['data'];
       setState(() {
         dataKategori = list.map((model) => KategoriM.fromMap(model)).toList();
@@ -570,10 +584,25 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
         });
   }
 
+  void _validSimpan() {
+    print(idKategori);
+    if (idKategori == '1' || idKategori == '4') {
+      if (_imageFileAkte != null && _imageFileAkte != null) {
+        _simpanData();
+      }
+    } else if (idKategori == '2') {
+      if (_imageFileKtp != null) {
+        _simpanData();
+        print(_imageFileKtp);
+      }
+    } else {
+      _simpanData();
+    }
+  }
+
   void _simpanData() async {
     String dataSession = await LocalStorage.sharedInstance.readValue('session');
     var userid = json.decode(dataSession)['data']['data_user']['userid'];
-    print(_imageFileKtp);
     if (_formKey.currentState.validate() && idSubKategori != null) {
       setState(() {
         _saving = true;
@@ -588,7 +617,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
           userid)
           .then((response) {
         var data = json.decode(response.body);
-//        print(response.body);
+        print(response.body);
         if (data['status'] == true) {
           setState(() {
             _saving = false;
@@ -637,7 +666,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
         padding: EdgeInsets.only(left: 11, right: 11, top: 15, bottom: 15),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         onPressed: () {
-          _simpanData();
+          _validSimpan();
         },
       ),
     );

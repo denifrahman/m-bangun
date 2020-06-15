@@ -3,12 +3,11 @@ import 'dart:convert';
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/models/NewsM.dart';
-import 'package:apps/provider/Api.dart';
+import 'package:apps/providers/Api.dart';
 import 'package:apps/screen/NewsDetailScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:loading_animations/loading_animations.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class WidgetNews extends StatefulWidget {
   WidgetNews({Key key}) : super(key: key);
@@ -39,14 +38,12 @@ bool _saving = false;
     });
     Api.getToken().then((value) {
       var data = json.decode(value.body);
-      print(data);
-      LocalStorage.sharedInstance
-          .writeValue(key: 'token', value: data['data']['token']);
-      _getKategori();
+      LocalStorage.sharedInstance.writeValue(key: 'token', value: data['data']['token']);
+      _getAllNews();
     });
   }
 
-  void _getKategori() async {
+  void _getAllNews() async {
     String token = await LocalStorage.sharedInstance.readValue('token');
     Api.getAllNews(token).then((response) {
       Iterable list = json.decode(response.body)['data'];
@@ -149,6 +146,7 @@ bool _saving = false;
           title: param.newstitle,
           deskripsi: param.newsdeskripsi,
           tumbhnail: param.newsthumbnail,
+                id: param.newsid
         )));
   }
 }

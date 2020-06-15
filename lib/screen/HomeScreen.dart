@@ -1,4 +1,3 @@
-import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/screen/RequestScreen.dart';
 import 'package:apps/widget/Home/kategori/WidgetKategoriHome.dart';
 import 'package:apps/widget/Home/kategori/WidgetLokasi.dart';
@@ -7,6 +6,7 @@ import 'package:apps/widget/WidgetSearch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
+import 'package:route_transitions/route_transitions.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -105,6 +105,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   _openRequest() {
-    Navigator.push(context, SlideRightRoute(page: RequestScreen()));
+    Navigator.push(
+        context,
+        PageRouteTransition(
+          animationType: AnimationType.slide_up,
+          builder: (context) => RequestScreen(),
+        ));
   }
 }

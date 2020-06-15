@@ -1,15 +1,14 @@
 import 'dart:convert';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:flutter/material.dart';
-import 'package:local_auth/local_auth.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:apps/Utils/BottomAnimation.dart';
-import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/Utils/navigation_right.dart';
-import 'package:apps/provider/Api.dart';
 import 'package:apps/screen/PendaftaranScreen.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import "package:http/http.dart" as http;
+import 'package:local_auth/local_auth.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key key}) : super(key: key);

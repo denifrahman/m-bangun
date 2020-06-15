@@ -4,7 +4,7 @@ import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/models/KecamatanM.dart';
 import 'package:apps/models/KotaM.dart';
 import 'package:apps/models/ProvinsiM.dart';
-import 'package:apps/provider/Api.dart';
+import 'package:apps/providers/Api.dart';
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
@@ -42,7 +42,7 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
   void _getAllProvinsi(token) async{
     Api.getAllProvinsi(token).then((value){
       var result = json.decode(value.body);
-      print(result);
+//      print(result);
       Iterable list = result['data'];
       setState(() {
         dataProvinsi =
@@ -71,12 +71,12 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
     _getAllKecamatanByIdKota(token);
   }
   _simpanKota() {
-    print(idProvinsi);
+//    print(idProvinsi);
     LocalStorage.sharedInstance
         .writeValue(key: 'idProvinsi', value: idProvinsi);
     LocalStorage.sharedInstance
         .writeValue(key: 'idKota', value: idKota == null ? 'null' : idKota);
-    print(idKota);
+//    print(idKota);
     LocalStorage.sharedInstance.writeValue(
         key: 'idKecamatan', value: idKecamatan == null ? 'null' : idKecamatan);
     Navigator.pop(context);

@@ -1,5 +1,6 @@
 import 'package:apps/Utils/BottomAnimation.dart';
 import 'package:apps/Utils/ThemeChanger.dart';
+import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/LoginScreen.dart';
 import 'package:apps/screen/ProfileScreen.dart';
 import 'package:apps/screen/RequestScreen.dart';
@@ -17,28 +18,28 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
-
-
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ThemeNotifier(),
-      child: Consumer<ThemeNotifier>(
-        builder: (context, ThemeNotifier notifier, child) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Flutter Theme Provider',
-            theme: light,
-            home: BottomAnimateBar(),
-            initialRoute: '/',
-            routes: {
-              '/splace-screen': (context) => SplaceScreen(),
-              '/login': (context) => LoginScreen(),
-              '/request': (context) => RequestScreen(),
-              '/profile': (context) => ProfileScreen(),
-              '/BottomNavBar': (context) => BottomAnimateBar(),
-              '/New': (context) => WidgetPengajuanByParamList(),
-            },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<DataProvider>(
+          create: (_) => DataProvider(),
+        )
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Theme Provider',
+        theme: light,
+        home: BottomAnimateBar(),
+        initialRoute: '/',
+        routes: {
+          '/splace-screen': (context) => SplaceScreen(),
+          '/login': (context) => LoginScreen(),
+          '/request': (context) => RequestScreen(),
+          '/profile': (context) => ProfileScreen(),
+          '/BottomNavBar': (context) => BottomAnimateBar(),
+          '/New': (context) => WidgetPengajuanByParamList(),
+        },
 //            builder: (BuildContext context, Widget widget) {
 //              final mediaQuery = MediaQuery.of(context);
 //              return new Padding(
@@ -47,15 +48,7 @@ class _MyAppState extends State<MyApp> {
 //                    bottom: getSmartBannerHeight(mediaQuery)),
 //              );
 //            },
-          );
-        },
       ),
     );
   }
 }
-
-
-
-
-
-

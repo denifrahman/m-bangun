@@ -4,8 +4,10 @@ import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/models/SubKategoriM.dart';
 import 'package:apps/providers/Api.dart';
+import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/ProdukScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class WidgetSubKategori extends StatefulWidget {
   final int idKategori;
@@ -81,6 +83,8 @@ class _WidgetSubKategoriState extends State<WidgetSubKategori> {
   }
 
   _openListProdukBySubKategori(param) {
+    Provider.of<DataProvider>(context).setidSubKategori(param.produkkategorisubid);
+    Provider.of<DataProvider>(context).setProdukListByParam();
     Navigator.push(
         context,
         SlideRightRoute(

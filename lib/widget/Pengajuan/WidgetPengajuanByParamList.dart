@@ -25,14 +25,14 @@ class WidgetPengajuanByParamList extends StatefulWidget {
 class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList> {
   bool _saving = true;
 
-//  var dataProvider.getProduk = new List<ProdukListM>();
+//  var dataProvider.getProdukListByIdUser = new List<ProdukListM>();
   Timer timer;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _getProdukByUserId();
+    _getProdukListByIdUserByUserId();
   }
 
   var refreshKey = GlobalKey<RefreshIndicatorState>();
@@ -40,12 +40,12 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 2));
-    _getProdukByUserId();
+    _getProdukListByIdUserByUserId();
 
     return null;
   }
 
-  void _getProdukByUserId() async {
+  void _getProdukListByIdUserByUserId() async {
     String token = await LocalStorage.sharedInstance.readValue('token');
     String dataSession = await LocalStorage.sharedInstance.readValue('session');
     var userId = json.decode(dataSession)['data']['data_user']['userid'];
@@ -53,7 +53,7 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
       var result = json.decode(response.body);
       if (result['status'] == true) {
         Iterable list = json.decode(response.body)['data'];
-        Provider.of<DataProvider>(context).setTempDataprovince(list.map((model) => ProdukListM.fromMap(model)).toList());
+        Provider.of<DataProvider>(context).setProdukListById(list.map((model) => ProdukListM.fromMap(model)).toList());
         setState(() {
           _saving = false;
         });
@@ -86,7 +86,7 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
               child: RefreshIndicator(
                 onRefresh: refreshList,
                 key: refreshKey,
-                child: dataProvider.getProduk.length == 0
+                child: dataProvider.getProdukListByIdUser.length == 0
                     ? Center(
                         child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -101,28 +101,28 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
                         ],
                       ))
                     : ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: dataProvider.getProduk.length,
-                        itemBuilder: (context, index) {
-                          DateTime tanggal_booking = DateTime.parse(dataProvider.getProduk[index].produkcreate.toString());
-                          return dataProvider.getProduk.length != 0
-                              ? InkWell(
-//                      onTap: ()=>_getPedaftaranByPendaftaranId(dataProvider.getProduk[index].pendaftaranId),
-                                  child: Stack(
-                                  children: <Widget>[
-                                    Card(
-                                      elevation: 2,
-                                      margin: EdgeInsets.all(15),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10.0),
-                                      ),
+                    shrinkWrap: true,
+                    itemCount: dataProvider.getProdukListByIdUser.length,
+                    itemBuilder: (context, index) {
+                      DateTime tanggal_booking = DateTime.parse(dataProvider.getProdukListByIdUser[index].produkcreate.toString());
+                      return dataProvider.getProdukListByIdUser.length != 0
+                          ? InkWell(
+//                      onTap: ()=>_getPedaftaranByPendaftaranId(dataProvider.getProdukListByIdUser[index].pendaftaranId),
+                          child: Stack(
+                            children: <Widget>[
+                              Card(
+                                elevation: 2,
+                                margin: EdgeInsets.all(15),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
                                       child: Container(
                                         height: 90,
                                         decoration: BoxDecoration(color: Colors.cyan[500], borderRadius: BorderRadius.all(Radius.circular(10))),
                                         padding: EdgeInsets.all(5),
                                         child: ListTile(
                                           title: Text(
-                                            dataProvider.getProduk[index].produknama,
+                                            dataProvider.getProdukListByIdUser[index].produknama,
                                             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
                                             maxLines: 2,
                                           ),
@@ -131,20 +131,20 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
                                           trailing: Column(
                                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                             children: <Widget>[
-                                              (dataProvider.getProduk[index].statusnama == 'New' ||
-                                                      dataProvider.getProduk[index].statusnama == 'Review')
+                                              (dataProvider.getProdukListByIdUser[index].statusnama == 'New' ||
+                                                  dataProvider.getProdukListByIdUser[index].statusnama == 'Review')
                                                   ? Icon(
-                                                      FontAwesomeIcons.exclamationCircle,
-                                                      color: Colors.amber,
-                                                      size: 25,
-                                                    )
+                                                FontAwesomeIcons.exclamationCircle,
+                                                color: Colors.amber,
+                                                size: 25,
+                                              )
                                                   : Icon(
-                                                      FontAwesomeIcons.solidCheckCircle,
-                                                      color: Colors.white,
-                                                      size: 20,
-                                                    ),
+                                                FontAwesomeIcons.solidCheckCircle,
+                                                color: Colors.white,
+                                                size: 20,
+                                              ),
                                               Text(
-                                                dataProvider.getProduk[index].statusnama,
+                                                dataProvider.getProdukListByIdUser[index].statusnama,
                                                 style: TextStyle(
                                                     fontStyle: FontStyle.italic, fontWeight: FontWeight.w600, color: Colors.white, fontSize: 12),
                                               )
@@ -171,15 +171,15 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
                                               alignment: Alignment.center,
                                               child: ListTile(
                                                 title: Text(
-                                                  dataProvider.getProduk[index].produkdeskripsi == null
+                                                  dataProvider.getProdukListByIdUser[index].produkdeskripsi == null
                                                       ? ''
-                                                      : dataProvider.getProduk[index].produkdeskripsi,
+                                                      : dataProvider.getProdukListByIdUser[index].produkdeskripsi,
                                                   style: TextStyle(color: Colors.black),
                                                 ),
                                                 subtitle: Text(
-                                                    dataProvider.getProduk[index].produkwaktupengerjaan == null
+                                                    dataProvider.getProdukListByIdUser[index].produkwaktupengerjaan == null
                                                         ? ''
-                                                        : dataProvider.getProduk[index].produkwaktupengerjaan,
+                                                        : dataProvider.getProdukListByIdUser[index].produkwaktupengerjaan,
                                                     style: TextStyle(color: Colors.grey[700])),
                                                 trailing: Column(
                                                   children: [

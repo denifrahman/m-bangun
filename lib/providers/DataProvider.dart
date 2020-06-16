@@ -1,21 +1,26 @@
+import 'dart:convert';
+
+import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/models/KategoriM.dart';
 import 'package:apps/models/KecamatanM.dart';
 import 'package:apps/models/KotaM.dart';
 import 'package:apps/models/ProdukListM.dart';
 import 'package:apps/models/ProvinsiM.dart';
 import 'package:apps/models/SubKategoriM.dart';
+import 'package:apps/providers/Api.dart';
 import 'package:flutter/material.dart';
 
 class DataProvider extends ChangeNotifier {
-  List<ProdukListM> _produkListM = [];
   String _title;
-
-  List<ProdukListM> get getProduk => this._produkListM;
 
   String get getTitle => this._title;
 
-  setTempDataprovince(List<ProdukListM> param) {
-    this._produkListM = param;
+  List<ProdukListM> _produkListById = [];
+
+  List<ProdukListM> get getProdukListByIdUser => this._produkListById;
+
+  setProdukListById(List<ProdukListM> param) {
+    this._produkListById = param;
     notifyListeners();
   }
 
@@ -121,5 +126,40 @@ class DataProvider extends ChangeNotifier {
   setAlamatLengkap(String alamat) {
     _alamatLengkap = alamat;
     notifyListeners();
+  }
+
+  bool _reload = false;
+  List<ProdukListM> dataProdukListByParam = [];
+  String key = '';
+
+  String idSubKategori = '';
+
+  setidSubKategori(String id) {
+    idSubKategori = id;
+    notifyListeners();
+  }
+
+  bool get getReloadProduk => _reload;
+
+  List<ProdukListM> get getProdukListByParam => dataProdukListByParam;
+
+  setProdukListByParam() async {
+//    _reload = param;
+    String token = await LocalStorage.sharedInstance.readValue('token');
+    String currentIdProvinsi = await LocalStorage.sharedInstance.readValue('idProvinsi');
+    String currentIdKota = await LocalStorage.sharedInstance.readValue('idKota');
+    String currentIdKecamatan = await LocalStorage.sharedInstance.readValue('idKecamatan');
+    bool responsData = true;
+    Api.getAllProdukByParam(token, currentIdKecamatan == 'null' ? '' : currentIdKecamatan, currentIdKota == 'null' ? '' : currentIdKota,
+            currentIdProvinsi == 'null' ? '' : currentIdProvinsi, idSubKategori, key)
+        .then((response) {
+      var data = json.decode(response.body);
+      if (data['status'] == true) {
+        responsData = true;
+        Iterable list = json.decode(response.body)['data'];
+        dataProdukListByParam = list.map((model) => ProdukListM.fromMap(model)).toList();
+        notifyListeners();
+      }
+    });
   }
 }

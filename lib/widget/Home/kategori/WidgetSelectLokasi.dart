@@ -24,10 +24,11 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
   String idKota;
   String idProvinsi;
   String idKecamatan;
-  String namaProvinsi,namaKota,namaKecamatan;
+  String namaProvinsi, namaKota, namaKecamatan;
   var dataKota = List<KotaM>();
   var dataProvinsi = List<ProvinsiM>();
   var dataKecamatan = List<KecamatanM>();
+
   @override
   void initState() {
     super.initState();
@@ -39,65 +40,89 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
   void dispose() {
     super.dispose();
   }
-  void _getAllProvinsi(token) async{
-    Api.getAllProvinsi(token).then((value){
+
+  void _getAllProvinsi(token) async {
+    Api.getAllProvinsi(token).then((value) {
       var result = json.decode(value.body);
 //      print(result);
       Iterable list = result['data'];
       setState(() {
-        dataProvinsi =
-            list.map((model) => ProvinsiM.fromMap(model)).toList();
+        dataProvinsi = list.map((model) => ProvinsiM.fromMap(model)).toList();
       });
 //      _getCurrentProvinsi(token);
     });
   }
-  void _getAllKecamatanByIdKota(token) async{
-    Api.getAllKecamatanByIdKota(token, idKota).then((value){
+
+  void _getAllKecamatanByIdKota(token) async {
+    Api.getAllKecamatanByIdKota(token, idKota).then((value) {
       var result = json.decode(value.body);
       Iterable list = result['data'];
       setState(() {
-        dataKecamatan =
-            list.map((model) => KecamatanM.fromMap(model)).toList();
+        dataKecamatan = list.map((model) => KecamatanM.fromMap(model)).toList();
       });
 //      _getCurrentProvinsi(token);
     });
   }
-  void _getCurrentToken() async{
+
+  void _getCurrentToken() async {
     String token = await LocalStorage.sharedInstance.readValue('token');
     _getAllProvinsi(token);
+    _getCurrentLocation();
   }
-  void _onchangeKota(String newValue) async{
+
+  void _getCurrentLocation() async {
+    String currentIdProvinsi = await LocalStorage.sharedInstance.readValue('idProvinsi');
+    String currentIdKota = await LocalStorage.sharedInstance.readValue('idKota');
+    String currentIdKecamatan = await LocalStorage.sharedInstance.readValue('idKecamatan');
+    if (currentIdProvinsi != 'null') {
+      _onchangeProvinsi(currentIdProvinsi);
+      setState(() {
+        idProvinsi = currentIdProvinsi;
+      });
+    }
+    if (currentIdKota != 'null') {
+      setState(() {
+        idKota = currentIdKota;
+      });
+    }
+    if (currentIdKecamatan != 'null') {
+      _onchangeKota(currentIdKota);
+      setState(() {
+        idKecamatan = currentIdKecamatan;
+      });
+    }
+  }
+
+  void _onchangeKota(String newValue) async {
     String token = await LocalStorage.sharedInstance.readValue('token');
     _getAllKecamatanByIdKota(token);
   }
+
   _simpanKota() {
 //    print(idProvinsi);
-    LocalStorage.sharedInstance
-        .writeValue(key: 'idProvinsi', value: idProvinsi);
-    LocalStorage.sharedInstance
-        .writeValue(key: 'idKota', value: idKota == null ? 'null' : idKota);
+    LocalStorage.sharedInstance.writeValue(key: 'idProvinsi', value: idProvinsi);
+    LocalStorage.sharedInstance.writeValue(key: 'idKota', value: idKota == null ? 'null' : idKota);
 //    print(idKota);
-    LocalStorage.sharedInstance.writeValue(
-        key: 'idKecamatan', value: idKecamatan == null ? 'null' : idKecamatan);
+    LocalStorage.sharedInstance.writeValue(key: 'idKecamatan', value: idKecamatan == null ? 'null' : idKecamatan);
     Navigator.pop(context);
   }
 
-  void _onchangeProvinsi(String newValue) async{
+  void _onchangeProvinsi(String newValue) async {
     String token = await LocalStorage.sharedInstance.readValue('token');
     _getAllKotaByIdprovinsi(token);
   }
 
   void _getAllKotaByIdprovinsi(String token) {
     // print(dataKota.length);
-    Api.getAllKotaByIdProvinsi(token,idProvinsi).then((value){
+    Api.getAllKotaByIdProvinsi(token, idProvinsi).then((value) {
       var result = json.decode(value.body);
       Iterable list = result['data'];
       setState(() {
-        dataKota =
-            list.map((model) => KotaM.fromMap(model)).toList();
+        dataKota = list.map((model) => KotaM.fromMap(model)).toList();
       });
     });
   }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -108,10 +133,7 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
       body: Container(
           height: MediaQuery.of(context).size.height,
           decoration: new BoxDecoration(
-              color: Colors.white,
-              borderRadius: new BorderRadius.only(
-                  topLeft: const Radius.circular(10.0),
-                  topRight: const Radius.circular(10.0))),
+              color: Colors.white, borderRadius: new BorderRadius.only(topLeft: const Radius.circular(10.0), topRight: const Radius.circular(10.0))),
           child: Column(
             children: <Widget>[
               Expanded(
@@ -121,16 +143,12 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
                   child: Column(
                     children: <Widget>[
                       Container(
-                        width:
-                        MediaQuery.of(context).size.width -
-                            10,
+                        width: MediaQuery.of(context).size.width - 10,
                         child: DropdownButtonFormField<String>(
                           isDense: true,
                           hint: new Text(
                             "Pilih Provinsi",
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 12),
+                            style: TextStyle(color: Colors.grey, fontSize: 12),
                           ),
                           value: widget.idProvinsi,
                           onChanged: (String newValue) {
@@ -141,11 +159,9 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
                             });
                             _onchangeProvinsi(newValue);
                           },
-                          items: dataProvinsi
-                              .map((ProvinsiM item) {
+                          items: dataProvinsi.map((ProvinsiM item) {
                             return new DropdownMenuItem<String>(
-                              value:
-                              item.idPropinsi.toString(),
+                              value: item.idPropinsi.toString(),
                               child: new Text(
                                 item.namaPropinsi.toString(),
                                 style: TextStyle(fontSize: 12),
@@ -155,31 +171,28 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
                         ),
                       ),
                       Container(
-                        width:
-                        MediaQuery.of(context).size.width -
-                            10,
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width - 10,
                         child: DropdownButtonFormField<String>(
                           isDense: true,
                           hint: new Text(
                             "Pilih Kota",
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 12),
+                            style: TextStyle(color: Colors.grey, fontSize: 12),
                           ),
                           value: idKota,
                           onChanged: (String newValue) {
                             setState(() {
                               idKota = newValue;
-                               dataKecamatan = [];
+                              dataKecamatan = [];
                               idKecamatan = null;
                             });
                             _onchangeKota(newValue);
                           },
-                          items: dataKota
-                              .map((KotaM item) {
+                          items: dataKota.map((KotaM item) {
                             return new DropdownMenuItem<String>(
-                              value:
-                              item.idKabkota.toString(),
+                              value: item.idKabkota.toString(),
                               child: new Text(
                                 item.namaKabkota.toString(),
                                 style: TextStyle(fontSize: 12),
@@ -189,16 +202,15 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
                         ),
                       ),
                       Container(
-                        width:
-                        MediaQuery.of(context).size.width -
-                            10,
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width - 10,
                         child: DropdownButtonFormField<String>(
                           isDense: true,
                           hint: new Text(
                             "Pilih Kecamatan",
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 12),
+                            style: TextStyle(color: Colors.grey, fontSize: 12),
                           ),
                           value: idKecamatan,
                           onChanged: (String newValue) {
@@ -207,11 +219,9 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
                             });
                             _onchangeKecamatan(newValue);
                           },
-                          items: dataKecamatan
-                              .map((KecamatanM item) {
+                          items: dataKecamatan.map((KecamatanM item) {
                             return new DropdownMenuItem<String>(
-                              value:
-                              item.idKecamatan.toString(),
+                              value: item.idKecamatan.toString(),
                               child: new Text(
                                 item.namaKecamatan.toString(),
                                 style: TextStyle(fontSize: 12),
@@ -220,17 +230,14 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
                           }).toList(),
                         ),
                       ),
-
                     ],
                   ),
                 ),
               ),
               Expanded(
-                flex:1,
+                flex: 1,
                 child: RoundedLoadingButton(
-                  child: Text('Simpan',
-                      style:
-                      TextStyle(color: Colors.white)),
+                  child: Text('Simpan', style: TextStyle(color: Colors.white)),
                   color: Colors.red,
                   controller: _btnController,
                   onPressed: () => _simpanKota(),

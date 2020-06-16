@@ -49,6 +49,7 @@ class _ProdukScreenState extends State<ProdukScreen> with TickerProviderStateMix
     // TODO: implement initState
     super.initState();
     _hideFabAnimation = AnimationController(vsync: this, duration: kThemeAnimationDuration);
+    _hideFabAnimation.forward();
   }
 
   @override
@@ -64,7 +65,7 @@ class _ProdukScreenState extends State<ProdukScreen> with TickerProviderStateMix
             IconButton(
               icon: Icon(
                 Icons.info,
-                color: Colors.amber,
+                color: Colors.grey,
               ),
               onPressed: () {},
             )

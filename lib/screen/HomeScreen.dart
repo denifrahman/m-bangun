@@ -1,7 +1,7 @@
 import 'package:apps/screen/RequestScreen.dart';
-import 'package:apps/widget/Home/kategori/WidgetKategoriHome.dart';
-import 'package:apps/widget/Home/kategori/WidgetLokasi.dart';
-import 'package:apps/widget/Home/kategori/WidgetNews.dart';
+import 'package:apps/widget/Home/WidgetKategoriHome.dart';
+import 'package:apps/widget/Home/WidgetLokasi.dart';
+import 'package:apps/widget/Home/WidgetNews.dart';
 import 'package:apps/widget/WidgetSearch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

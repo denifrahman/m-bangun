@@ -62,16 +62,19 @@ class _WidgetNewsDetailState extends State<WidgetNewsDetail> {
               flexibleSpace: FlexibleSpaceBar(
                 centerTitle: true,
                 collapseMode: CollapseMode.parallax,
-                title: RichText(
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  strutStyle: StrutStyle(fontSize: 14.0),
-                  text: TextSpan(
-                      style: TextStyle(
-                        color: Colors.grey[800],
-                        fontSize: 14,
-                      ),
-                      text: widget.title),
+                title: Container(
+                  padding: EdgeInsets.only(left: 50, right: 20),
+                  child: RichText(
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    strutStyle: StrutStyle(fontSize: 14.0),
+                    text: TextSpan(
+                        style: TextStyle(
+                          color: Colors.grey[800],
+                          fontSize: 14,
+                        ),
+                        text: widget.title),
+                  ),
                 ),
                 background: Carousel(
                   autoplay: false,
@@ -117,20 +120,15 @@ class _WidgetNewsDetailState extends State<WidgetNewsDetail> {
                           ),
                           child: Html(
                             style: {
-                              "html": Style(
-                                  fontSize: FontSize(18)
+                              "html": Style(fontSize: FontSize(18)
 //              color: Colors.white,
-                              ),
-                              "h1": Style(
-                                  textAlign: TextAlign.center,
-                                  fontSize: FontSize(20)),
+                                  ),
+                              "h1": Style(textAlign: TextAlign.center, fontSize: FontSize(14)),
                               "table": Style(
-                                backgroundColor:
-                                Color.fromARGB(0x50, 0xee, 0xee, 0xee),
+                                backgroundColor: Color.fromARGB(0x50, 0xee, 0xee, 0xee),
                               ),
                               "tr": Style(
-                                border: Border(
-                                    bottom: BorderSide(color: Colors.grey)),
+                                border: Border(bottom: BorderSide(color: Colors.grey)),
                               ),
                               "th": Style(
                                 padding: EdgeInsets.all(6),
@@ -142,12 +140,9 @@ class _WidgetNewsDetailState extends State<WidgetNewsDetail> {
                               "var": Style(fontFamily: 'serif'),
                             },
                             customRender: {
-                              "flutter": (RenderContext context, Widget child,
-                                  attributes, _) {
+                              "flutter": (RenderContext context, Widget child, attributes, _) {
                                 return FlutterLogo(
-                                  style: (attributes['horizontal'] != null)
-                                      ? FlutterLogoStyle.horizontal
-                                      : FlutterLogoStyle.markOnly,
+                                  style: (attributes['horizontal'] != null) ? FlutterLogoStyle.horizontal : FlutterLogoStyle.markOnly,
                                   textColor: context.style.color,
                                   size: context.style.fontSize.size * 5,
                                 );

@@ -1,5 +1,5 @@
 import 'package:apps/Utils/navigation_right.dart';
-import 'package:apps/widget/Pengajuan/WidgetPengajuanByParamList.dart';
+import 'package:apps/widget/Aktivity/WidgetPengajuanByParamList.dart';
 import 'package:flutter/material.dart';
 
 class WidgetPengajuanList extends StatefulWidget {

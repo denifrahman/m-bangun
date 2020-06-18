@@ -11,6 +11,15 @@ class UpdateAkunScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         title: Text('Update Akun'),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.clear,
+            color: Colors.black,
+          ),
+        ),
       ),
       body: WidgetUpdateAkun(),
     );

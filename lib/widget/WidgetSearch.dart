@@ -1,5 +1,5 @@
 import 'package:apps/Utils/navigation_right.dart';
-import 'package:apps/widget/Home/kategori/WidgetCari.dart';
+import 'package:apps/widget/Home/WidgetCari.dart';
 import 'package:flutter/material.dart';
 
 class WidgetSearch extends StatelessWidget {

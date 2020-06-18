@@ -40,29 +40,28 @@ class _RequestScreenState extends State<RequestScreen> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.clear,
-            color: Colors.black,
-          ),
+    var appBar = AppBar(
+      elevation: 0,
+      leading: IconButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        icon: Icon(
+          Icons.clear,
+          color: Colors.black,
         ),
-        title: Text(title),
       ),
-      body: SingleChildScrollView(
-        child: !isLogin
-            ? LoginWidget(
-                primaryColor: Color(0xFFb16a085),
-                backgroundColor: Colors.white,
-                page: '/request',
-              )
-            : WidgetPengajuan(),
-      ),
+      title: Text(title),
+    );
+    return Scaffold(
+      appBar: appBar,
+      body: !isLogin
+          ? LoginWidget(
+              primaryColor: Color(0xFFb16a085),
+              backgroundColor: Colors.white,
+              page: '/request',
+            )
+          : WidgetPengajuan(height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top)),
     );
   }
 }

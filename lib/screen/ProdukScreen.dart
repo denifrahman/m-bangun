@@ -1,9 +1,10 @@
 import 'package:apps/widget/Produk/WidgetListProduk.dart';
 import 'package:apps/widget/WidgetSearch.dart';
-import 'package:apps/widget/filter/WidgetButtonFilter.dart';
+import 'package:apps/widget/filter/WIdgetFilter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
+import 'package:route_transitions/route_transitions.dart';
 
 class ProdukScreen extends StatefulWidget {
   final String namaKategori;
@@ -55,6 +56,11 @@ class _ProdukScreenState extends State<ProdukScreen> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    var size = MediaQuery.of(context).size;
+
+    /*24 is for notification bar on Android*/
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 1.5;
+    final double itemWidth = size.width / 2;
     return NotificationListener<ScrollNotification>(
       onNotification: _handleScrollNotification,
       child: Scaffold(
@@ -73,53 +79,45 @@ class _ProdukScreenState extends State<ProdukScreen> with TickerProviderStateMix
         ),
         body: Padding(
           padding: EdgeInsets.all(10),
-          child: Stack(
+          child: Column(
             children: <Widget>[
-              Align(
-                alignment: Alignment.center,
-                child: Column(
-                  children: [
-                    Container(height: 50, padding: EdgeInsets.only(bottom: 10), child: WidgetSearch()),
-                    Container(
-                      height: MediaQuery.of(context).size.height - 150,
-                      width: MediaQuery.of(context).size.width,
-                      child: WidgetListProduk(
-                        idSubKategori: this.widget.idSubKategori,
-                      ),
-                    ),
-                  ],
+              Container(height: 50, padding: EdgeInsets.only(bottom: 10), child: WidgetSearch()),
+              Expanded(
+                flex: 2,
+                child: WidgetListProduk(
+                  idSubKategori: this.widget.idSubKategori,
                 ),
               ),
-              ScaleTransition(
-                scale: _hideFabAnimation,
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: WidgetButtonFilter(),
-                    )),
-              )
+//              ScaleTransition(
+//                scale: _hideFabAnimation,
+//                child: Align(
+//                    alignment: Alignment.bottomCenter,
+//                    child: Padding(
+//                      padding: const EdgeInsets.all(8.0),
+//                      child: WidgetButtonFilter(),
+//                    )),
+//              )
             ],
           ),
         ),
-//        floatingActionButton: ScaleTransition(
-//          scale: _hideFabAnimation,
-//          alignment: Alignment.bottomCenter,
-//          child: FloatingActionButton.extended(
-//            onPressed: () {
-//              Navigator.push(
-//                  context,
-//                  PageRouteTransition(
-//                    animationType: AnimationType.slide_up,
-//                    builder: (context) => WidgetFilter(),
-//                  ));
-//            },
-//            backgroundColor: Color(0xffb16a085),
-//            tooltip: 'Filter',
-//            icon: Icon(Icons.filter_list),
-//            label: Text("Filter", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, letterSpacing: 1)),
-//          ),
-//        ),
+        floatingActionButton: ScaleTransition(
+          scale: _hideFabAnimation,
+          alignment: Alignment.bottomCenter,
+          child: FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  PageRouteTransition(
+                    animationType: AnimationType.slide_up,
+                    builder: (context) => WidgetFilter(),
+                  ));
+            },
+            backgroundColor: Color(0xffb16a085),
+            tooltip: 'Filter',
+            icon: Icon(Icons.filter_list),
+            label: Text("Filter", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, letterSpacing: 1)),
+          ),
+        ),
       ),
     );
   }

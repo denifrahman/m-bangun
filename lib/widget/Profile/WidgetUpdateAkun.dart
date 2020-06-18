@@ -192,7 +192,11 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
                                                                 color: Colors.green,
                                                                 size: 22,
                                                               )
-                                                            : null,
+                                                            : Icon(
+                                                                Icons.check_box,
+                                                                color: Colors.grey[400],
+                                                                size: 22,
+                                                              ),
                                                       ),
                                                     ),
                                                     Divider()
@@ -412,49 +416,6 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
                 ))
           ],
         ));
-  }
-
-  Widget _dropdownSubKategori() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Sub Kategori Request',
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.grey),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width - 10,
-          child: DropdownButtonFormField<String>(
-            isDense: true,
-            validator: (String arg) {
-              if (arg == null)
-                return 'Sub kategori harus di isi';
-              else
-                return null;
-            },
-            hint: new Text(
-              "Pilih Sub Kategori",
-              style: TextStyle(color: Colors.grey, fontSize: 12),
-            ),
-            value: idSubKategori,
-            onChanged: (String newValue) {
-              setState(() {
-                idSubKategoriSave = newValue;
-              });
-            },
-            items: dataSubKategori.map((SubKategoriM item) {
-              return DropdownMenuItem<String>(
-                value: item.produkkategorisubid.toString(),
-                child: new Text(
-                  item.produkkategorisubnama.toString(),
-                  style: TextStyle(fontSize: 12),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ],
-    );
   }
 
   void _getAllByFilterParam() async {

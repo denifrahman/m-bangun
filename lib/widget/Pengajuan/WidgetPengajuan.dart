@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/models/jenis_pengajuan.dart';
 import 'package:apps/providers/Api.dart';
-import 'package:apps/widget/Pengajuan/WidgetFormPelatihanKerja.dart';
-import 'package:apps/widget/Pengajuan/WidgetFormRequest.dart';
+import 'package:apps/widget/Pengajuan/component/WidgetFormPelatihanKerja.dart';
+import 'package:apps/widget/Pengajuan/component/WidgetFormRequest.dart';
 import 'package:flutter/material.dart';
 
 class WidgetPengajuan extends StatefulWidget {
-  WidgetPengajuan({Key key}) : super(key: key);
+  final double height;
+
+  WidgetPengajuan({Key key, this.height}) : super(key: key);
 
   @override
   _WidgetPengajuanState createState() {
@@ -45,19 +47,24 @@ class _WidgetPengajuanState extends State<WidgetPengajuan> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            _dropdownJenisPengajuan(),
-            Container(
-              height: 20,
-            ),
-            jenispengajuanid == '1' ? WidgetFormRequest() : jenispengajuanid == '2' ? WidgetFormPelatihanKerja() : Container()
-          ],
-        ),
-      ),
+    return Column(
+      children: [
+        Container(
+            color: Colors.white,
+            height: (widget.height) * 0.1,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Center(child: _dropdownJenisPengajuan()),
+            )),
+        Container(
+          height: (widget.height) * 0.9,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SingleChildScrollView(
+                child: jenispengajuanid == '1' ? WidgetFormRequest() : jenispengajuanid == '2' ? WidgetFormPelatihanKerja() : Container()),
+          ),
+        )
+      ],
     );
   }
 

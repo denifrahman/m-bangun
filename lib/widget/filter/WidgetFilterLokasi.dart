@@ -27,7 +27,7 @@ class _WidgetFilterLokasiState extends State<WidgetFilterLokasi> {
 
   @override
   void initState() {
-//    _getAllProvinsi();
+    _getAllProvinsi();
     _getCurrentLocation();
     super.initState();
   }

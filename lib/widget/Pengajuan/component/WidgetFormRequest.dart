@@ -247,26 +247,24 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return SafeArea(
-      child: Form(
-        key: _formKey,
-        autovalidate: false,
-        child: _saving
-            ? Container(
-                margin: EdgeInsets.only(top: 20),
-                child: Center(child: LoadingDoubleFlipping.square(size: 30, backgroundColor: Colors.red)),
-              )
-            : Container(
-                child: Column(
-                children: [
-                  WidgetAlamat(),
-                  Container(
-                    height: 20,
-                  ),
-                  _buildFormRqt(),
-                ],
-              )),
-      ),
+    return Form(
+      key: _formKey,
+      autovalidate: false,
+      child: _saving
+          ? Container(
+              margin: EdgeInsets.only(top: 20),
+              child: Center(child: LoadingDoubleFlipping.square(size: 30, backgroundColor: Colors.red)),
+            )
+          : Container(
+              child: Column(
+              children: [
+                WidgetAlamat(),
+                Container(
+                  height: 20,
+                ),
+                _buildFormRqt(),
+              ],
+            )),
     );
   }
 

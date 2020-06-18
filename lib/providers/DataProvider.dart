@@ -129,7 +129,6 @@ class DataProvider extends ChangeNotifier {
   }
 
   bool _reload = false;
-  List<ProdukListM> dataProdukListByParam = [];
   String key = '';
 
   String idSubKategori = '';
@@ -138,6 +137,8 @@ class DataProvider extends ChangeNotifier {
     idSubKategori = id;
     notifyListeners();
   }
+
+  List<ProdukListM> dataProdukListByParam = [];
 
   bool get getReloadProduk => _reload;
 
@@ -161,5 +162,45 @@ class DataProvider extends ChangeNotifier {
         notifyListeners();
       }
     });
+  }
+
+  String _namaProvinsi, _namaKecamatan, _namaKota;
+
+  String get namaProvinsi => _namaProvinsi;
+
+  String get namaKota => _namaKota;
+
+  String get namaKecamatan => _namaKecamatan;
+
+  getCurrentLocation() async {
+    String token = await LocalStorage.sharedInstance.readValue('token');
+    String currentIdProvinsi = await LocalStorage.sharedInstance.readValue('idProvinsi');
+    if (currentIdProvinsi == null) {
+      print(currentIdProvinsi);
+    } else {
+      Api.getProvinsiById(token, currentIdProvinsi).then((value) {
+        var result = json.decode(value.body);
+        _namaProvinsi = result['data']['nama_propinsi'];
+      });
+      String currentIdKota = await LocalStorage.sharedInstance.readValue('idKota');
+      if (currentIdKota != 'null') {
+        Api.getKotaById(token, currentIdKota).then((value) {
+          var result = json.decode(value.body);
+          _namaKota = result['data']['nama_kabkota'];
+        });
+      } else {
+        _namaKota = null;
+      }
+      String currentIdKecamatan = await LocalStorage.sharedInstance.readValue('idKecamatan');
+      if (currentIdKecamatan != 'null') {
+        Api.getKecamatanById(token, currentIdKecamatan).then((value) {
+          var result = json.decode(value.body);
+          _namaKecamatan = result['data']['nama_kecamatan'];
+        });
+      } else {
+        _namaKecamatan = null;
+      }
+      notifyListeners();
+    }
   }
 }

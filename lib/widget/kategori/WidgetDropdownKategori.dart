@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:apps/Utils/LocalBindings.dart';
-import 'package:apps/models/KategoriM.dart';
 import 'package:apps/models/SubKategoriM.dart';
 import 'package:apps/providers/Api.dart';
 import 'package:apps/providers/DataProvider.dart';
@@ -21,19 +20,19 @@ class _WidgetDropDownKategoriState extends State<WidgetDropDownKategori> {
   @override
   void initState() {
     super.initState();
-    _getAllKategori();
+//    _getAllKategori();
   }
 
-  void _getAllKategori() async {
-    String token = await LocalStorage.sharedInstance.readValue('token');
-    Api.getAllKategori(token).then((value) {
-      Provider.of<DataProvider>(context).setSelectedKategori(null);
-      Provider.of<DataProvider>(context).setSelectedSubKategori(null);
-      Provider.of<DataProvider>(context).setDataSubKategori([]);
-      Iterable list = json.decode(value.body)['data'];
-      Provider.of<DataProvider>(context).setDataKategori(list.map((e) => KategoriM.fromMap(e)).toList());
-    });
-  }
+//  void _getAllKategori() async {
+//    String token = await LocalStorage.sharedInstance.readValue('token');
+//    Api.getAllKategori(token).then((value) {
+//      Provider.of<DataProvider>(context).setSelectedKategori(null);
+//      Provider.of<DataProvider>(context).setSelectedSubKategori(null);
+//      Provider.of<DataProvider>(context).setDataSubKategori([]);
+//      Iterable list = json.decode(value.body)['data'];
+//      Provider.of<DataProvider>(context).setDataKategori(list.map((e) => KategoriM.fromMap(e)).toList());
+//    });
+//  }
 
   void getSubKategoriByIdKatgori(newValue) async {
     String tokenValid = await LocalStorage.sharedInstance.readValue('token');

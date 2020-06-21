@@ -1,4 +1,3 @@
-import 'package:apps/Utils/values/colors.dart';
 import 'package:apps/Utils/values/radii.dart';
 import 'package:apps/Utils/values/shadows.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +33,6 @@ class SettingWidget extends StatelessWidget {
               height: 200,
               margin: EdgeInsets.only(left: 15, top: 15, right: 15),
               decoration: BoxDecoration(
-                color: AppColors.secondaryBackground,
                 boxShadow: [
                   Shadows.primaryShadow,
                 ],
@@ -66,7 +64,6 @@ class SettingWidget extends StatelessWidget {
                             "Dark Mode",
                             textAlign: TextAlign.left,
                             style: TextStyle(
-                              color: AppColors.primaryText,
                               fontFamily: "SF Pro Display",
                               fontWeight: FontWeight.w500,
                               fontSize: 15,
@@ -124,7 +121,6 @@ class SettingWidget extends StatelessWidget {
                               "Chat Customize",
                               textAlign: TextAlign.left,
                               style: TextStyle(
-                                color: AppColors.primaryText,
                                 fontFamily: "SF Pro Display",
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
@@ -179,7 +175,6 @@ class SettingWidget extends StatelessWidget {
                               "Notification",
                               textAlign: TextAlign.left,
                               style: TextStyle(
-                                color: AppColors.primaryText,
                                 fontFamily: "SF Pro Display",
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
@@ -234,7 +229,6 @@ class SettingWidget extends StatelessWidget {
                               "Privacy",
                               textAlign: TextAlign.left,
                               style: TextStyle(
-                                color: AppColors.primaryText,
                                 fontFamily: "SF Pro Display",
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
@@ -261,7 +255,6 @@ class SettingWidget extends StatelessWidget {
               height: 50,
               margin: EdgeInsets.only(left: 15, top: 7, right: 15, bottom: 15),
               decoration: BoxDecoration(
-                color: AppColors.secondaryBackground,
                 boxShadow: [
                   Shadows.primaryShadow,
                 ],
@@ -299,7 +292,6 @@ class SettingWidget extends StatelessWidget {
                               "Keluar",
                               textAlign: TextAlign.left,
                               style: TextStyle(
-                                color: AppColors.primaryText,
                                 fontFamily: "SF Pro Display",
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,

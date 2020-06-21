@@ -39,6 +39,7 @@ class WidgetFilter extends StatelessWidget {
           LocalStorage.sharedInstance
               .writeValue(key: 'idKecamatan', value: dataProvider.getSelectedKecamatan == null ? 'null' : dataProvider.getSelectedKecamatan);
           dataProvider.setProdukListByParam();
+          dataProvider.getCurrentLocation();
           Navigator.pop(context);
         },
         backgroundColor: Color(0xffb16a085),

@@ -2,7 +2,7 @@ import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/models/ProdukListM.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/widget/Produk/WidgetDetailProduk.dart';
-import 'package:apps/widget/Produk/WidgetViewProduk.dart';
+import 'package:apps/widget/Produk/WidgetOverViewProduk.dart';
 import 'package:flutter/material.dart';
 import 'package:money2/money2.dart';
 import 'package:provider/provider.dart';
@@ -29,15 +29,12 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
   @override
   void initState() {
     super.initState();
-    _getProdukByParam();
   }
 
   @override
   void dispose() {
     super.dispose();
   }
-
-  void _getProdukByParam() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -66,8 +63,9 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
           return InkWell(
             onTap: () {
               Navigator.push(context, SlideRightRoute(page: WidgetDetailProduk()));
+              Provider.of<DataProvider>(context).getProdukById(dataProvider.getProdukListByParam[j].produkid);
             },
-            child: WidgetViewProduk(
+            child: WidgetOverViewProduk(
                 produkNama: dataProvider.getProdukListByParam[j].produknama,
                 thumbnail: dataProvider.getProdukListByParam[j].produkthumbnail,
                 prov: provinsi,
@@ -79,6 +77,4 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
       ),
     );
   }
-
-  _openDetailNews(ProdukListM dataProdukList) {}
 }

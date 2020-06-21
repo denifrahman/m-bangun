@@ -1,14 +1,11 @@
-import 'dart:convert';
-
-import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/Utils/navigation_right.dart';
-import 'package:apps/models/KategoriM.dart';
-import 'package:apps/providers/Api.dart';
+import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/KategoriScreen.dart';
 import 'package:apps/screen/SubKategoriScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:loading_animations/loading_animations.dart';
+import 'package:provider/provider.dart';
 
 class WidgetKategoriHome extends StatefulWidget {
   WidgetKategoriHome({Key key}) : super(key: key);
@@ -20,12 +17,10 @@ class WidgetKategoriHome extends StatefulWidget {
 }
 
 class _WidgetKategoriHomeState extends State<WidgetKategoriHome> {
-  var dataKategori = new List<KategoriM>();
 
   @override
   void initState() {
     super.initState();
-    _getToken();
   }
 
   @override
@@ -33,28 +28,10 @@ class _WidgetKategoriHomeState extends State<WidgetKategoriHome> {
     super.dispose();
   }
 
-  void _getToken() async {
-    Api.getToken().then((value) {
-      var data = json.decode(value.body);
-//      print(data);
-      LocalStorage.sharedInstance.writeValue(key: 'token', value: data['data']['token']);
-      _getKategori();
-    });
-  }
-
-  void _getKategori() async {
-    String tokenValid = await LocalStorage.sharedInstance.readValue('token');
-    Api.getAllKategori(tokenValid).then((response) {
-      Iterable list = json.decode(response.body)['data'];
-      setState(() {
-        dataKategori = list.map((model) => KategoriM.fromMap(model)).toList();
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    DataProvider dataProvider = Provider.of<DataProvider>(context);
     return Column(
       children: <Widget>[
         Container(
@@ -72,58 +49,58 @@ class _WidgetKategoriHomeState extends State<WidgetKategoriHome> {
             ],
           ),
         ),
-        dataKategori.isEmpty
+        dataProvider.getDataKategori.isEmpty
             ? Container(
-                margin: EdgeInsets.only(top: 20),
-                child: Center(child: LoadingDoubleFlipping.square(size: 30, backgroundColor: Colors.red)),
-              )
+          margin: EdgeInsets.only(top: 20),
+          child: Center(child: LoadingDoubleFlipping.square(size: 30, backgroundColor: Colors.red)),
+        )
             : Container(
-                height: 220,
-                margin: EdgeInsets.only(top: 25),
-                width: MediaQuery.of(context).size.width,
-                child: GridView.count(
-                  shrinkWrap: true,
-                  primary: true,
-                  physics: new NeverScrollableScrollPhysics(),
-                  crossAxisCount: 3,
-                  children: List.generate(dataKategori.length, (index) {
-                    return Container(
-                      child: Column(
-                        children: <Widget>[
-                          InkWell(
-                            onTap: () => openSubkategori(dataKategori[index]),
-                            child: new Container(
-                                height: 60,
-                                width: 60,
-                                margin: EdgeInsets.only(bottom: 6),
-                                decoration: new BoxDecoration(
-                                  borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                                  gradient: new LinearGradient(
-                                      colors: [Color(0xffb16a085).withOpacity(0.1), Colors.white],
-                                      begin: const FractionalOffset(7.0, 10.1),
-                                      end: const FractionalOffset(0.0, 0.0),
-                                      stops: [0.0, 1.0],
-                                      tileMode: TileMode.clamp),
-                                ),
-                                child: new Center(
-                                  child: Image.network(
-                                    dataKategori[index].produkkategorithumbnail == null
-                                        ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
-                                        : dataKategori[index].produkkategorithumbnail,
-                                    fit: BoxFit.cover,
-                                    width: 40,
-                                  ),
-                                )),
-                          ),
-                          Text(
-                            dataKategori[index].produkkategorinama,
-                            style: TextStyle(fontSize: 13),
-                          )
-                        ],
+            height: 220,
+            margin: EdgeInsets.only(top: 25),
+            width: MediaQuery.of(context).size.width,
+            child: GridView.count(
+              shrinkWrap: true,
+              primary: true,
+              physics: new NeverScrollableScrollPhysics(),
+              crossAxisCount: 3,
+              children: List.generate(dataProvider.getDataKategori.length, (index) {
+                return Container(
+                  child: Column(
+                    children: <Widget>[
+                      InkWell(
+                        onTap: () => openSubkategori(dataProvider.getDataKategori[index]),
+                        child: new Container(
+                            height: 60,
+                            width: 60,
+                            margin: EdgeInsets.only(bottom: 6),
+                            decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                              gradient: new LinearGradient(
+                                  colors: [Color(0xffb16a085).withOpacity(0.1), Colors.white],
+                                  begin: const FractionalOffset(7.0, 10.1),
+                                  end: const FractionalOffset(0.0, 0.0),
+                                  stops: [0.0, 1.0],
+                                  tileMode: TileMode.clamp),
+                            ),
+                            child: new Center(
+                              child: Image.network(
+                                dataProvider.getDataKategori[index].produkkategorithumbnail == null
+                                    ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
+                                    : dataProvider.getDataKategori[index].produkkategorithumbnail,
+                                fit: BoxFit.cover,
+                                width: 40,
+                              ),
+                            )),
                       ),
-                    );
-                  }),
-                ))
+                      Text(
+                        dataProvider.getDataKategori[index].produkkategorinama,
+                        style: TextStyle(fontSize: 13),
+                      )
+                    ],
+                  ),
+                );
+              }),
+            ))
       ],
     );
   }

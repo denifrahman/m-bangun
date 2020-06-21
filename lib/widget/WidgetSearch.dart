@@ -1,6 +1,8 @@
 import 'package:apps/Utils/navigation_right.dart';
+import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/widget/Home/WidgetCari.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class WidgetSearch extends StatelessWidget {
   WidgetSearch({Key key}) : super(key: key);
@@ -35,5 +37,6 @@ class WidgetSearch extends StatelessWidget {
 
   _search(BuildContext context) {
     Navigator.push(context, SlideRightRoute(page: WidgetCari()));
+    Provider.of<DataProvider>(context).setKeySearch('');
   }
 }

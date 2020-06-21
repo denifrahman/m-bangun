@@ -5,7 +5,9 @@ import 'package:apps/models/KecamatanM.dart';
 import 'package:apps/models/KotaM.dart';
 import 'package:apps/models/ProvinsiM.dart';
 import 'package:apps/providers/Api.dart';
+import 'package:apps/providers/DataProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class WidgetSelectLokasi extends StatefulWidget {
@@ -105,6 +107,7 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
 //    print(idKota);
     LocalStorage.sharedInstance.writeValue(key: 'idKecamatan', value: idKecamatan == null ? 'null' : idKecamatan);
     Navigator.pop(context);
+    Provider.of<DataProvider>(context).getCurrentLocation();
   }
 
   void _onchangeProvinsi(String newValue) async {
@@ -199,7 +202,10 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
                         ),
                       ),
                       Container(
-                        width: MediaQuery.of(context).size.width - 10,
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width - 10,
                         child: DropdownButtonFormField<String>(
                           isDense: true,
                           hint: new Text(

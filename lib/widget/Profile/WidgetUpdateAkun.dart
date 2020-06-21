@@ -211,36 +211,36 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
                                 ),
                                 idKategori == '1' || idKategori == '4'
                                     ? Column(
-                                  children: <Widget>[
-                                    _perusahaan(),
-                                    Container(
-                                      height: 20,
-                                    ),
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        _fotoSiup(),
-                                        Container(
-                                          width: 10,
-                                        ),
-                                        _fotoAkte(),
-                                      ],
-                                    ),
+                                        children: <Widget>[
+                                          _perusahaan(),
+                                          Container(
+                                            height: 20,
+                                          ),
+                                          Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              _fotoSiup(),
+                                              Container(
+                                                width: 10,
+                                              ),
+                                              _fotoAkte(),
+                                            ],
+                                          ),
 //                                          Container(
 //                                            height: 20,
 //                                          ),
-                                    Container(
-                                      height: 20,
-                                    ),
-                                  ],
-                                )
+                                          Container(
+                                            height: 20,
+                                          ),
+                                        ],
+                                      )
                                     : idKategori == '2'
-                                    ? Column(
-                                  children: [
-                                    _pemborong(),
-                                  ],
-                                )
-                                    : Container(),
+                                        ? Column(
+                                            children: [
+                                              _pemborong(),
+                                            ],
+                                          )
+                                        : Container(),
                               ],
                             ),
                           ),
@@ -546,15 +546,40 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
   }
 
   void _validSimpan() {
-    print(idKategori);
     if (idKategori == '1' || idKategori == '4') {
       if (_imageFileAkte != null && _imageFileAkte != null) {
         _simpanData();
+      } else {
+        Flushbar(
+          title: "Gagal",
+          message: 'Pastikan Sudah melampirkan gambar akte dan siup dan memilih bidang keahlian',
+          duration: Duration(seconds: 15),
+          backgroundColor: Colors.red,
+          flushbarPosition: FlushbarPosition.TOP,
+          icon: Icon(
+            Icons.assignment_turned_in,
+            color: Colors.white,
+          ),
+        )
+          ..show(context);
       }
     } else if (idKategori == '2') {
       if (_imageFileKtp != null) {
         _simpanData();
         print(_imageFileKtp);
+      } else {
+        Flushbar(
+          title: "Gagal",
+          message: 'Pastikan Sudah melampirkan gambar akte dan siup dan memilih bidang keahlian',
+          duration: Duration(seconds: 15),
+          backgroundColor: Colors.red,
+          flushbarPosition: FlushbarPosition.TOP,
+          icon: Icon(
+            Icons.assignment_turned_in,
+            color: Colors.white,
+          ),
+        )
+          ..show(context);
       }
     } else {
       _simpanData();

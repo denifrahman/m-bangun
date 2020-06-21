@@ -1,338 +1,315 @@
-import 'dart:convert';
-
-import 'package:apps/Utils/BottomAnimation.dart';
-import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/Utils/navigation_right.dart';
-import 'package:apps/providers/Api.dart';
+import 'package:apps/Utils/values/colors.dart';
+import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/UpdateAkunScreen.dart';
 import 'package:apps/widget/Login/LoginWidget.dart';
+import 'package:apps/widget/Profile/ActiveProjectCard.dart';
+import 'package:apps/widget/Profile/TopContainer.dart';
+import 'package:apps/widget/Profile/WidgetMyFavorite.dart';
 import 'package:apps/widget/Profile/WidgetProfile.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:provider/provider.dart';
+import 'package:route_transitions/route_transitions.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends StatelessWidget {
   ProfileScreen({Key key}) : super(key: key);
 
-  @override
-  _ProfileScreenState createState() {
-    return _ProfileScreenState();
-  }
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
-  @override
-  void initState() {
-    getUserData();
-    super.initState();
+  Text subheading(String title) {
+    return Text(
+      title,
+      style: TextStyle(color: AppColors.kDarkBlue, fontSize: 20.0, fontWeight: FontWeight.w700, letterSpacing: 1.2),
+    );
   }
 
-  bool isLogin = true;
-  String title = '';
-  String id;
-  String siup;
-  String akte;
-  String userKategori;
-  String produkkategoriid;
-  String useraktivasiakunpremium;
-  String userSubKategori;
-  bool verified = false;
-  bool _saving = false;
-  bool _status = true;
-  String fotoUrl = '';
-  TextEditingController inputEmailController = new TextEditingController();
-  TextEditingController inputNamaController = new TextEditingController();
-  TextEditingController inputNoTelpController = new TextEditingController();
-  TextEditingController inputPasswordController = new TextEditingController();
-  TextEditingController inputPinController = new TextEditingController();
-  TextEditingController inputAlamatController = new TextEditingController();
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  void getUserData() async {
-    String dataSession = await LocalStorage.sharedInstance.readValue('session');
-    if (dataSession != null) {
-      setState(() {
-        _saving = true;
-        isLogin = true;
-        title = 'Profile';
-      });
-      setState(() {
-        id = json.decode(dataSession)['data']['data_user']['userid'];
-        inputEmailController.text = json.decode(dataSession)['data']['data_user']['useremail'];
-        inputAlamatController.text = json.decode(dataSession)['data']['data_user']['akunpasien_email'];
-        inputNamaController.text = json.decode(dataSession)['data']['data_user']['usernamalengkap'];
-        inputNoTelpController.text = json.decode(dataSession)['data']['akunpasien_no_telpn'];
-      });
-      String fotoProfile = json.decode(dataSession)['data']['data_user']['userfoto'];
-      print(fotoProfile);
-      setState(() {
-        fotoUrl = fotoProfile;
-      });
-      getProfile();
-    } else {
-      setState(() {
-        isLogin = false;
-        title = 'Silahkan login';
-      });
-    }
-  }
-
-  getProfile() async {
-    String tokenValid = await LocalStorage.sharedInstance.readValue('token');
-    Api.getUserById(tokenValid, id).then((response) {
-      var data = json.decode(response.body);
-      print(data);
-      print(data['data']['data_user']['useraktivasiakunpremium']);
-      if (data['data']['data_user']['produkkategoriid'] != null) {
-        setState(() {
-          siup = data['data']['data_user']['usersiup'];
-          akte = data['data']['data_user']['userakteperusahaan'];
-          userKategori = data['data']['data_user']['produkkategorinama'];
-          userSubKategori = data['data']['data_user']['produkkategorisubnama'];
-          useraktivasiakunpremium = data['data']['data_user']['useraktivasiakunpremium'];
-          produkkategoriid = data['data']['data_user']['produkkategoriid'];
-          _saving = false;
-        });
-      }
-      if (data['data']['data_user']['useraktivasiakunpremium'] != '0') {
-        setState(() {
-          _saving = false;
-          verified = true;
-        });
-      } else {
-        setState(() {
-          _saving = false;
-          verified = false;
-        });
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    print(userKategori);
-    return Scaffold(
-        appBar: AppBar(
-          elevation: 0.0,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                title,
-                style: TextStyle(fontSize: 20, letterSpacing: 0.1, fontWeight: FontWeight.w700),
-              ),
-              InkWell(onTap: () => _openSetting(), child: Icon(Icons.settings))
-            ],
-          ),
-        ),
-        body: !isLogin
-            ? LoginWidget(primaryColor: Color(0xFFb16a085), backgroundColor: Colors.white, page: '/BottomNavBar')
-            : ModalProgressHUD(
-                inAsyncCall: _saving,
-                child: Container(
-                  padding: EdgeInsets.only(top: 15, left: 5, right: 5, bottom: 10),
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 1,
-                        child: ListTile(
-                          title: Row(
-                            children: [
-                              Text(
-                                inputNamaController.text + ' ',
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              !verified
-                                  ? Text('')
-                                  : Icon(
-                                      FontAwesomeIcons.checkCircle,
-                                      color: Colors.blue,
-                                      size: 14,
-                                    )
-                            ],
-                          ),
-                          trailing: IconButton(
-                            icon: Icon(
-                              Icons.mode_edit,
-                              size: 14,
-                            ),
-                            onPressed: () => _openProfile(),
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(inputEmailController.text),
-                              userKategori == null
-                                  ? Text('')
-                                  : Text(
-                                      '($userSubKategori)',
-                                      style: TextStyle(color: Colors.red[400], fontStyle: FontStyle.italic),
-                                    )
-                            ],
-                          ),
-                          leading: new Container(
-                              width: 50.0,
-                              height: 50.0,
-                              child: ClipOval(
-                                  child: Image.network(
-                                fotoUrl == null
-                                    ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
-                                    : fotoUrl,
-                                fit: BoxFit.cover,
-                                scale: 1,
-                                width: 150,
-                              ))),
-                        ),
-                      ),
-                      Align(
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                              padding: EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 20),
-                              child: Text(
-                                userKategori != null ? '' : 'Aktivasi',
-                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: Colors.grey),
-                              ))),
-                      Expanded(
-                        flex: 4,
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: <Widget>[
-                              userKategori == null
-                                  ? InkWell(
-                                      onTap: () => _openAkunPremium(),
-                                      child: ListTile(
-                                          title: Text(
-                                            'Akun Premium',
-                                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                                          ),
-                                          trailing: Icon(Icons.arrow_forward_ios, size: 14),
-                                          subtitle: Text('apa itu akun premium, selengkapnya'),
-                                          leading: Icon(
-                                            Icons.spellcheck,
-                                            size: 30,
-                                          )),
-                                    )
-                                  : Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      child: (produkkategoriid == '1' && produkkategoriid == '4') ? buildPreviewAkun() : Container()),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                          flex: 0,
-                          child: InkWell(
-                            onTap: () => keluar(),
-                            child: Container(
-                              height: 50,
-                              decoration:
-                                  new BoxDecoration(color: Colors.red.withOpacity(0.1), borderRadius: new BorderRadius.all(Radius.circular(20))),
-                              child: Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    'Keluar',
-                                    style: TextStyle(
-                                        fontSize: 15, letterSpacing: 1, fontFamily: "WorkSansBold", fontWeight: FontWeight.w700, color: Colors.red),
-                                  )),
-                            ),
-                          ))
-                    ],
-                  ),
-                ),
-              ));
-  }
-
-  Widget buildPreviewAkun() {
-    return Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
-      padding: EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            'Scan Surat Izin Usaha',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Colors.grey),
-          ),
-          Container(
-            height: 20,
-          ),
-          Image.network(
-            siup == null
-                ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
-                : siup,
-            width: MediaQuery
-                .of(context)
-                .size
-                .width,
-          ),
-          Container(
-            height: 20,
-          ),
-          Text(
-            'Scan Akte Perusahaan',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Colors.grey),
-          ),
-          Container(
-            height: 20,
-          ),
-          Image.network(
-            akte == null
-                ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
-                : akte,
-            width: MediaQuery.of(context).size.width,
-          ),
-        ],
+  static CircleAvatar calendarIcon() {
+    return CircleAvatar(
+      radius: 25.0,
+      backgroundColor: AppColors.kGreen,
+      child: Icon(
+        Icons.work,
+        size: 20.0,
+        color: Colors.white,
       ),
     );
   }
 
-  void keluar() {
-    LocalStorage.sharedInstance.deleteValue('session');
-    Navigator.pushAndRemoveUntil(
-        context,
-        PageRouteBuilder(pageBuilder: (BuildContext context, Animation animation, Animation secondaryAnimation) {
-          return BottomAnimateBar();
-        }, transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
-          return new SlideTransition(
-            position: new Tween<Offset>(
-              begin: const Offset(1.0, 0.0),
-              end: Offset.zero,
-            ).animate(animation),
-            child: child,
-          );
-        }),
-            (Route route) => false);
-  }
-
-  _openProfile() {
-    Navigator.push(
-      context,
-      SlideRightRoute(page: WidgetProfile()),
-    ).then((value) {
-      getUserData();
-      getProfile();
-    });
-  }
-
-  _openSetting() {
-//    Navigator.push(
-//      context,
-//      ScaleRoute(page: setting()),
-//    );
-  }
-
-  _openAkunPremium() {
-    Navigator.push(context, SlideRightRoute(page: UpdateAkunScreen())).then((value) {
-      getProfile();
-    });
+  @override
+  Widget build(BuildContext context) {
+    DataProvider dataProvider = Provider.of<DataProvider>(context);
+    print(dataProvider.userFoto);
+    double width = MediaQuery.of(context).size.width;
+    return Scaffold(
+      body: !dataProvider.isLogin
+          ? LoginWidget(
+              primaryColor: Color(0xFFb16a085),
+              backgroundColor: Colors.white,
+              page: '/BottomNavBar',
+            )
+          : SafeArea(
+              child: Column(
+                children: <Widget>[
+                  TopContainer(
+                    height: 200,
+                    width: width,
+                    child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            'Profil',
+                            style: TextStyle(
+                              fontSize: 22.0,
+                              color: AppColors.kDarkBlue,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(context, SlideRightRoute(page: WidgetProfile()));
+                                  dataProvider.setLoading(true);
+                                  dataProvider.getProfile();
+                                },
+                                icon: Icon(Icons.edit, color: AppColors.kDarkBlue, size: 20.0),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  dataProvider.logout(context);
+                                },
+                                icon: Icon(Icons.exit_to_app, color: Colors.grey[400], size: 20.0),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            CircularPercentIndicator(
+                              radius: 90.0,
+                              lineWidth: 5.0,
+                              animation: true,
+                              percent: 0.75,
+                              circularStrokeCap: CircularStrokeCap.round,
+                              progressColor: AppColors.kRed,
+                              backgroundColor: AppColors.kDarkYellow,
+                              center: Container(
+                                  width: 80.0,
+                                  height: 80.0,
+                                  child: ClipOval(
+                                    child: Image.network(
+                                      dataProvider.userFoto == null ? dataProvider.fotoNull : dataProvider.userFoto,
+                                      fit: BoxFit.cover,
+                                      width: 100,
+                                    ),
+                                  )),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 5),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      !dataProvider.verified
+                                          ? Container()
+                                          : Container(
+                                              child: Image(width: 18, fit: BoxFit.contain, image: new AssetImage('assets/icons/verified.png'))),
+                                      Container(
+                                        width: 200,
+                                        margin: EdgeInsets.only(left: dataProvider.verified ? 5 : 0),
+                                        child: RichText(
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          text: TextSpan(
+                                              style: TextStyle(
+                                                fontSize: 16.0,
+                                                color: AppColors.kDarkBlue,
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                              text: dataProvider.userNama),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 5),
+                                  child: Text(
+                                    dataProvider.userEmail,
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      fontSize: 14.0,
+                                      color: Colors.black45,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      )
+                    ]),
+                  ),
+                  !dataProvider.verified
+                      ? Container()
+                      : Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  color: Colors.transparent,
+                                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          subheading('Detail Akun'),
+                                          GestureDetector(
+                                            onTap: () {},
+                                            child: CircleAvatar(
+                                              radius: 25.0,
+                                              backgroundColor: AppColors.mainColor,
+                                              child: Icon(
+                                                Icons.perm_contact_calendar,
+                                                size: 20.0,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 15.0),
+                                      WidgetMyFavorite(
+                                        icon: Icons.alarm,
+                                        iconBackgroundColor: AppColors.kRed,
+                                        title: '(${dataProvider.userKategori})',
+                                        subtitle: dataProvider.userSubKategori,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  color: Colors.transparent,
+                                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          subheading('Pekerjaanku'),
+                                          GestureDetector(
+                                            onTap: () {},
+                                            child: calendarIcon(),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 15.0),
+                                      WidgetMyFavorite(
+                                        icon: Icons.alarm,
+                                        iconBackgroundColor: Colors.blue,
+                                        title: 'New',
+                                        subtitle: 'Bid pekerjaan baru anda',
+                                      ),
+                                      SizedBox(height: 15.0),
+                                      WidgetMyFavorite(
+                                        icon: Icons.blur_circular,
+                                        iconBackgroundColor: Colors.green,
+                                        title: 'Kontrak',
+                                        subtitle: 'Penandatangan kontrak kerja',
+                                      ),
+                                      SizedBox(
+                                        height: 15.0,
+                                      ),
+                                      WidgetMyFavorite(
+                                        icon: Icons.blur_circular,
+                                        iconBackgroundColor: AppColors.kDarkYellow,
+                                        title: 'In Progress',
+                                        subtitle: 'Proses Pengerjaan dan laporan pekerjaan',
+                                      ),
+                                      SizedBox(height: 15.0),
+                                      WidgetMyFavorite(
+                                        icon: Icons.check_circle_outline,
+                                        iconBackgroundColor: AppColors.kBlue,
+                                        title: 'Done',
+                                        subtitle: '18 tasks now. 13 started',
+                                      ),
+                                      SizedBox(height: 15.0),
+                                      WidgetMyFavorite(
+                                        icon: Icons.delete_outline,
+                                        iconBackgroundColor: Colors.red,
+                                        title: 'Batal',
+                                        subtitle: 'Apply di batalkan / di tolak ',
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  color: Colors.transparent,
+                                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      subheading('Perkerjaan Aktif'),
+                                      SizedBox(height: 5.0),
+                                      Row(
+                                        children: <Widget>[
+                                          ActiveProjectsCard(
+                                            cardColor: AppColors.kGreen,
+                                            loadingPercent: 0.25,
+                                            title: 'Medical App',
+                                            subtitle: '9 hours progress',
+                                          ),
+                                          SizedBox(width: 20.0),
+                                          ActiveProjectsCard(
+                                            cardColor: AppColors.kRed,
+                                            loadingPercent: 0.6,
+                                            title: 'Making History Notes',
+                                            subtitle: '20 hours progress',
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                ],
+              ),
+            ),
+      floatingActionButton: dataProvider.userKategori != null
+          ? null
+          : dataProvider.isLogin
+              ? null
+              : FloatingActionButton.extended(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        PageRouteTransition(
+                          animationType: AnimationType.slide_up,
+                          builder: (context) => UpdateAkunScreen(),
+                        )).then((value) {
+                      dataProvider.getProfile();
+                    });
+                  },
+                  backgroundColor: Color(0xffb16a085),
+                  tooltip: 'Update akun anda',
+                  icon: Icon(Icons.credit_card),
+                  label: Text("Update Akun"),
+                ),
+    );
   }
 }

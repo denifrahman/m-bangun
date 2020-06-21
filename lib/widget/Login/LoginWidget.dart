@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/Api.dart';
+import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/PendaftaranScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class LoginWidget extends StatefulWidget {
@@ -203,9 +205,9 @@ class _LoginWidgetState extends State<LoginWidget> {
       print(data);
       if (data['status']) {
         _btnController.success();
-        LocalStorage.sharedInstance
-            .writeValue(key: 'session', value: json.encode(data));
+        LocalStorage.sharedInstance.writeValue(key: 'session', value: json.encode(data));
         Navigator.popAndPushNamed(context, widget.page);
+        Provider.of<DataProvider>(context).setLoading(true);
       } else {
         _btnController.reset();
       }

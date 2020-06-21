@@ -7,7 +7,7 @@ import 'package:mime/mime.dart';
 
 //const baseUrl = "http://niagatravel.com/api/api-m-bangun-jwt-token/api/";
 const baseUrl = "http://localhost:8888/api_jwt/api/";
-// const baseUrl = "http://192.168.100.114:8888/api_jwt/api/";
+//const baseUrl = "http://192.168.0.5:8888/api_jwt/api/";
 
 class Api {
   static Future getToken() {
@@ -100,7 +100,8 @@ class Api {
       produkbahan,
       produkwaktupengerjaan,
       produkbudget,
-      userid) async {
+      userid,
+      token) async {
     final mimeTypeprodukthumbnail = lookupMimeType(produkthumbnail.path, headerBytes: [0xFF, 0xD8]).split('/');
     final mimeTypeprodukfoto1 = lookupMimeType(produkfoto1.path, headerBytes: [0xFF, 0xD8]).split('/');
     final mimeTypeprodukfoto2 = lookupMimeType(produkfoto2.path, headerBytes: [0xFF, 0xD8]).split('/');
@@ -134,6 +135,8 @@ class Api {
     imageUploadRequest.fields['id_kecamatan'] = idkecamatan;
     imageUploadRequest.fields['produkwaktupengerjaan'] = produkwaktupengerjaan;
     imageUploadRequest.fields['userid'] = userid;
+    Map<String, String> headers = { "Authorization": token};
+    imageUploadRequest.headers.addAll(headers);
     // Iterable iterable =  foto;
     imageUploadRequest.files.addAll([_produkthumbnail, _produkfoto1, _produkfoto2, _produkfoto3, _produkfoto4]);
     print('test');
@@ -202,84 +205,123 @@ class Api {
 
   static Future getAllSubKategoriByIdKategori(token, idKategori) {
     var url = baseUrl + "SubKategori/getAllByIdKategori/" + idKategori;
-    print(url);
-    return http.get(
-      url,
-      headers: {HttpHeaders.authorizationHeader: token},
-    );
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
   }
 
   static Future getNewsById(token, id) {
     var _id = (id == '' ? '' : 'id=' + id);
     var url = baseUrl + "News/getById/?" + _id;
-    return http.get(
-      url,
-      headers: {HttpHeaders.authorizationHeader: token},
-    );
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
   }
 
   static Future getAllSubKategori(token) {
     var url = baseUrl + "SubKategori/getAll";
-    return http.get(
-      url,
-      headers: {HttpHeaders.authorizationHeader: token},
-    );
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
   }
 
   static Future getAllProvinsi(token) {
     var url = baseUrl + "Provinsi/getAll";
-    return http.get(
-      url,
-      headers: {HttpHeaders.authorizationHeader: token},
-    );
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
   }
 
   static Future getProvinsiById(token, idProvinsi) {
     var url = baseUrl + "Provinsi/getById/" + idProvinsi;
-    return http.get(
-      url,
-      headers: {HttpHeaders.authorizationHeader: token},
-    );
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
   }
 
   static Future getAllKotaByIdProvinsi(token, idProvinsi) {
     var url = baseUrl + "kota/getAllByIdProvinsi/" + idProvinsi;
-    return http.get(
-      url,
-      headers: {HttpHeaders.authorizationHeader: token},
-    );
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
   }
 
   static Future getKotaById(token, idKota) {
     var url = baseUrl + "kota/getById/" + idKota;
-    return http.get(
-      url,
-      headers: {HttpHeaders.authorizationHeader: token},
-    );
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
   }
 
   static Future getAllKecamatanByIdKota(token, idKota) {
     var url = baseUrl + "kecamatan/getAllByIdKota/" + idKota;
-    return http.get(
-      url,
-      headers: {HttpHeaders.authorizationHeader: token},
-    );
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
   }
 
   static Future getKecamatanById(token, idKota) {
     var url = baseUrl + "kecamatan/getById/" + idKota;
-    return http.get(
-      url,
-      headers: {HttpHeaders.authorizationHeader: token},
-    );
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
   }
 
   static Future getAllNews(token) {
     var url = baseUrl + "news/getAll";
-    return http.get(
-      url,
-      headers: {HttpHeaders.authorizationHeader: token},
-    );
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
   }
 
   static Future getAllProdukByParam(token, idKecamatan, idKota, idProvinsi, idSubKategori, Key) {
@@ -289,11 +331,14 @@ class Api {
     var prov = (idProvinsi == '' ? '' : '&prov=' + idProvinsi);
     var key = (Key == '' ? '' : '&key=' + Key);
     var url = baseUrl + "produk/getAllByParam?" + sub + kec + kota + prov + key;
-    print(url);
-    return http.get(
-      url,
-      headers: {HttpHeaders.authorizationHeader: token},
-    );
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
   }
 
   static Future getAllProdukByUserId(token, userId, status) {
@@ -311,12 +356,83 @@ class Api {
     }
   }
 
+  static Future getProdukByIdProduk(token, produkId) {
+    var _produkId = (produkId == '' ? '' : '&pro_id=' + produkId);
+    var url = baseUrl + "produk/getAllByParam?" + _produkId;
+    try {
+      var result = http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+      return result;
+    } catch (e) {
+      print(e);
+    }
+  }
+
   static Future insertPelatihanKerja(token, body) {
     var url = baseUrl + "PelatihanKerja/insertPelatihanKerja";
-    return http.post(
-      url,
-      body: body,
-      headers: {HttpHeaders.authorizationHeader: token},
-    );
+    try {
+      return http.post(
+        url,
+        body: body,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  static Future getFavoriteByProdukIdAndUserId(token, produkId, userId) {
+    var _produkId = (produkId == '' ? '' : 'pro_id=' + produkId);
+    var _userId = (userId == '' ? '' : '&userid=' + userId);
+    var url = baseUrl + "Favorite/getAllByFilterParam?" + _produkId + _userId;
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  static Future createFavoriteByUserId(token, body) {
+    var url = baseUrl + "Favorite/createFavorite";
+    try {
+      return http.post(
+        url,
+        body: body,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  static Future deleteFavoriteByUserIdAndProdukId(token, body) {
+    var url = baseUrl + "Favorite/deleteFavorite";
+    try {
+      return http.post(
+        url,
+        body: body,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  static Future createSignature(token, body) {
+    var url = baseUrl + "Signature/base64_to_jpeg";
+    try {
+      return http.post(
+        url,
+        body: body,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
   }
 }

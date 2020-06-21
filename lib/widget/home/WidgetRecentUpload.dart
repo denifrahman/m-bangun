@@ -17,7 +17,6 @@ class WidgetRecentUpload extends StatefulWidget {
 
 class _WidgetRecentUploadState extends State<WidgetRecentUpload> {
   var dataKategori = new List<KategoriM>();
-
   @override
   void initState() {
     super.initState();
@@ -84,8 +83,7 @@ class _WidgetRecentUploadState extends State<WidgetRecentUpload> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Image.network(
-                          dataKategori[index].produkkategorithumbnail,
-                          width: 45,
+                          dataKategori[index].produkkategorithumbnail, width: 45,
                         ),
                         Divider(),
                         Text(dataKategori[index].produkkategorinama),

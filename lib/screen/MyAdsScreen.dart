@@ -1,6 +1,9 @@
+import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/widget/Aktivity/widgetPengajuanList.dart';
+import 'package:apps/widget/Login/LoginWidget.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MyAdsScreen extends StatefulWidget {
   @override
@@ -10,18 +13,25 @@ class MyAdsScreen extends StatefulWidget {
 class _MyAdsScreenState extends State<MyAdsScreen> {
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 1,
-      child: Scaffold(
+    DataProvider dataProvider = Provider.of<DataProvider>(context);
+    return !dataProvider.isLogin
+        ? LoginWidget(
+            primaryColor: Color(0xFFb16a085),
+            backgroundColor: Colors.white,
+            page: '/BottomNavBar',
+          )
+        : DefaultTabController(
+            length: 1,
+            child: Scaffold(
 //        backgroundColor: Colors.white,
-        appBar: AppBar(
-          elevation: 0.0,
+              appBar: AppBar(
+                elevation: 0.0,
 //          backgroundColor: Colors.white,
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(50),
-            child: Container(
-              padding: EdgeInsets.all(5),
-              child: Align(
+                bottom: PreferredSize(
+                  preferredSize: Size.fromHeight(50),
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    child: Align(
                 alignment: Alignment.centerLeft,
                 child: TabBar(
                   isScrollable: true,

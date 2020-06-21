@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 
-class WidgetViewProduk extends StatelessWidget {
+class WidgetOverViewProduk extends StatelessWidget {
   final String produkNama;
   final String thumbnail;
   final String kab;
@@ -9,7 +9,7 @@ class WidgetViewProduk extends StatelessWidget {
   final String tgl;
   final String harga;
 
-  WidgetViewProduk({Key key, this.produkNama, this.thumbnail, this.kab, this.prov, this.tgl, this.harga}) : super(key: key);
+  WidgetOverViewProduk({Key key, this.produkNama, this.thumbnail, this.kab, this.prov, this.tgl, this.harga}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class WidgetViewProduk extends StatelessWidget {
             thumbnail == null
                 ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
                 : thumbnail,
-            fit: BoxFit.fitHeight,
+            fit: BoxFit.cover,
             // width: 80,
           ),
           footer: Container(

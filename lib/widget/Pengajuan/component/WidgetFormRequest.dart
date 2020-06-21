@@ -133,7 +133,7 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
   }
 
   void _getImage(BuildContext context, ImageSource source, param) async {
-    File image = await ImagePicker.pickImage(source: source, maxHeight: 1000, maxWidth: 1000);
+    File image = await ImagePicker.pickImage(source: source, maxHeight: 500, maxWidth: 500);
     if (param == 'produkthumbnail') {
       setState(() {
         produkthumbnail = image;
@@ -168,9 +168,9 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
         produkfoto2 != null &&
         produkfoto3 != null &&
         produkfoto4 != null) {
-      setState(() {
-        _saving = true;
-      });
+//      setState(() {
+//        _saving = true;
+//      });
       var budget = budgetController.text.replaceAll('Rp', '');
       var saveBudget = budget.replaceAll(',', '');
       Api.pengajuanRqt(
@@ -190,8 +190,10 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
               bahanController.text,
               waktuPengerjaanController.text,
               saveBudget,
-              userId)
+              userId,
+              dataProvider.getTokenData)
           .then((value) {
+//            print(value.body);
         var data = json.decode(value.body);
         if (data['status'] == true) {
           setState(() {

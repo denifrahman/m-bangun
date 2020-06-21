@@ -141,6 +141,11 @@ class _WidgetNewsState extends State<WidgetNews> {
     Navigator.push(
         context,
         SlideRightRoute(
-            page: NewsDetailScreen(title: param.newstitle, deskripsi: param.newsdeskripsi, tumbhnail: param.newsthumbnail, id: param.newsid)));
+            page: NewsDetailScreen(
+                title: param.newstitle,
+                deskripsi: param.newsdeskripsi,
+                tumbhnail: param.newsthumbnail,
+                id: param.newsid
+            )));
   }
 }

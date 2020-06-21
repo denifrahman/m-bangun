@@ -36,13 +36,11 @@ class _WidgetSubKategoriState extends State<WidgetSubKategori> {
 
   void getSubKategoriByIdKategori() async {
     String token = await LocalStorage.sharedInstance.readValue('token');
-    Api.getAllSubKategoriByIdKategori(token, widget.idKategori.toString())
-        .then((response) {
+    Api.getAllSubKategoriByIdKategori(token, widget.idKategori.toString()).then((response) {
       print(response.body);
       Iterable list = json.decode(response.body)['data'];
       setState(() {
-        dataSubKategori =
-            list.map((model) => SubKategoriM.fromMap(model)).toList();
+        dataSubKategori = list.map((model) => SubKategoriM.fromMap(model)).toList();
       });
     });
   }
@@ -56,11 +54,12 @@ class _WidgetSubKategoriState extends State<WidgetSubKategori> {
           padding: EdgeInsets.only(left: 5, right: 5, top: 10),
           itemCount: dataSubKategori.length,
           itemBuilder: (context, index) {
-            return Column(
-              children: <Widget>[
-                InkWell(
-                  onTap: () =>
-                      _openListProdukBySubKategori(dataSubKategori[index]),
+            return Card(
+              child: InkWell(
+                onTap: () => _openListProdukBySubKategori(dataSubKategori[index]),
+                child: Container(
+                  width: 100,
+                  padding: EdgeInsets.all(8),
                   child: ListTile(
                     leading: Image.network(
                       dataSubKategori[index].produkkategorisubthubmnail == null
@@ -75,8 +74,7 @@ class _WidgetSubKategoriState extends State<WidgetSubKategori> {
                     ),
                   ),
                 ),
-                Divider()
-              ],
+              ),
             );
           }),
     );

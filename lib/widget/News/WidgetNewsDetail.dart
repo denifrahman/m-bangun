@@ -86,6 +86,7 @@ class _WidgetNewsDetailState extends State<WidgetNewsDetail> {
                           ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
                           : widget.tumbhnail,
                       width: MediaQuery.of(context).size.width,
+                      fit: BoxFit.fitWidth,
                     ),
                   ],
                   dotSize: 4.0,

@@ -19,6 +19,7 @@ class WidgetKategoriVertical extends StatefulWidget {
 
 class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
   var dataKategori = new List<KategoriM>();
+
   @override
   void initState() {
     super.initState();
@@ -33,8 +34,7 @@ class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
   void _getToken() async {
     Api.getToken().then((value) {
       var data = json.decode(value.body);
-      LocalStorage.sharedInstance
-          .writeValue(key: 'token', value: data['data']['token']);
+      LocalStorage.sharedInstance.writeValue(key: 'token', value: data['data']['token']);
       _getKategori();
     });
   }
@@ -57,21 +57,24 @@ class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
             child: Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              child: PKCardProfileSkeleton(
-                isBottomLinesActive: true,
+              child: PKCardPageSkeleton(
+                totalLines: 4,
               ),
             ),
           )
         : Container(
-            width: MediaQuery.of(context).size.width,
-            child: ListView.builder(
-                padding: EdgeInsets.only(left: 5, right: 5, top: 10),
-                itemCount: dataKategori.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: InkWell(
-                      onTap: () => openSubkategori(dataKategori[index]),
-                      child: Container(
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
+      child: ListView.builder(
+          padding: EdgeInsets.only(left: 5, right: 5, top: 10),
+          itemCount: dataKategori.length,
+          itemBuilder: (context, index) {
+            return Card(
+              child: InkWell(
+                onTap: () => openSubkategori(dataKategori[index]),
+                child: Container(
                   width: 100,
                   padding: EdgeInsets.all(8),
                   child: ListTile(
@@ -80,6 +83,10 @@ class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
                       width: 45,
                     ),
                     title: Text(dataKategori[index].produkkategorinama),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 12,
+                    ),
                   ),
                 ),
               ),

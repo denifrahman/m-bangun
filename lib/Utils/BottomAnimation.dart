@@ -1,11 +1,13 @@
+import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/BookingScreen.dart';
 import 'package:apps/screen/HomeScreen.dart';
-import 'package:apps/screen/MyAdsScreen.dart';
 import 'package:apps/screen/KategoriScreen.dart';
+import 'package:apps/screen/MyAdsScreen.dart';
 import 'package:apps/screen/ProfileScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 
 class BottomAnimateBar extends StatefulWidget {
@@ -63,6 +65,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
 
   @override
   Widget build(BuildContext context) {
+    DataProvider dataProvider = Provider.of<DataProvider>(context);
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -70,24 +73,6 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
           child: currentScreen,
           bucket: bucket,
         ),
-
-//        floatingActionButton: Container(
-//          margin: EdgeInsets.only(top: 20),
-//          child: FloatingActionButton(
-//            tooltip: 'Booking',
-//            backgroundColor:  Color(0xffb16a085),
-//            foregroundColor: Colors.redAccent,
-//            heroTag: Text('Book'),
-//            child: Icon(
-//              FontAwesomeIcons.stethoscope,
-//              color: Colors.white,
-//              size: 24,
-//            ),
-//            onPressed: () => _openBoodking(),
-//          ),
-//        ),
-//        backgroundColor: Colors.grey[100],
-//        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomAppBar(
 //          shape: CircularNotchedRectangle(),
           notchMargin: 3,
@@ -100,8 +85,8 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                   minWidth: 30,
                   onPressed: () {
                     setState(() {
-                      currentScreen =
-                          HomeScreen(); // if user taps on this dashboard tab will be active
+                      dataProvider.getAllKategori();
+                      currentScreen = HomeScreen(); // if user taps on this dashboard tab will be active
                       currentTab = 0;
                     });
                   },
@@ -160,6 +145,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                   minWidth: 30,
                   onPressed: () {
                     setState(() {
+                      dataProvider.chekSession();
                       currentScreen =
                           MyAdsScreen(); // if user taps on this dashboard tab will be active
                       currentTab = 2;
@@ -190,6 +176,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                 MaterialButton(
                   minWidth: 30,
                   onPressed: () {
+                    dataProvider.chekSession();
                     setState(() {
                       currentScreen =
                           ProfileScreen(); // if user taps on this dashboard tab will be active

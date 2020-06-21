@@ -3,24 +3,22 @@ import 'dart:io';
 
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/providers/Api.dart';
+import 'package:apps/providers/DataProvider.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:provider/provider.dart';
 
 class WidgetProfile extends StatefulWidget {
   @override
   MapScreenState createState() => MapScreenState();
 }
 
-class MapScreenState extends State<WidgetProfile>
-    with SingleTickerProviderStateMixin {
-  String id;
-  bool _saving = false;
+class MapScreenState extends State<WidgetProfile> with SingleTickerProviderStateMixin {
   bool _status = true;
   File _imageFile;
-  String fotoUrl = '';
 
   final FocusNode myFocusNode = FocusNode();
   TextEditingController inputEmailController = new TextEditingController();
@@ -93,28 +91,12 @@ class MapScreenState extends State<WidgetProfile>
   }
 
   void getUserData() async {
-    imageCache.clear();
-    String dataSession = await LocalStorage.sharedInstance.readValue('session');
+    await new Future.delayed(const Duration(seconds: 1));
+    DataProvider dataProvider = Provider.of<DataProvider>(context);
     setState(() {
-      id = json.decode(dataSession)['data']['data_user']['userid'];
-      inputEmailController.text =
-          json.decode(dataSession)['data']['data_user']['useremail'];
-      inputAlamatController.text =
-          json.decode(dataSession)['data']['data_user']['akunpasien_email'];
-      inputNamaController.text =
-          json.decode(dataSession)['data']['data_user']['usernamalengkap'];
-      inputPasswordController.text =
-          json.decode(dataSession)['data']['akunpasien_password'];
-      inputPinController.text =
-          json.decode(dataSession)['data']['akunpasien_password'];
-      inputNoTelpController.text =
-          json.decode(dataSession)['data']['data_user']['usertelp'];
-    });
-    String fotoProfile =
-        json.decode(dataSession)['data']['data_user']['userfoto'];
-    print(fotoProfile);
-    setState(() {
-      fotoUrl = fotoProfile;
+      inputEmailController.text = dataProvider.userEmail;
+      inputNamaController.text = dataProvider.userNama;
+      inputNoTelpController.text = dataProvider.userNotelp;
     });
   }
 
@@ -131,6 +113,7 @@ class MapScreenState extends State<WidgetProfile>
 
   @override
   Widget build(BuildContext context) {
+    DataProvider dataProvider = Provider.of<DataProvider>(context);
     return new Scaffold(
         appBar: AppBar(
           title: _buildTitle(),
@@ -138,9 +121,8 @@ class MapScreenState extends State<WidgetProfile>
 //          backgroundColor: Color(0xff10ac84),
         ),
         body: new ModalProgressHUD(
-            inAsyncCall: _saving,
+            inAsyncCall: dataProvider.isLoading,
             child: Container(
-//          color: Colors.white,
               child: new ListView(
                 children: <Widget>[
                   Column(
@@ -149,15 +131,12 @@ class MapScreenState extends State<WidgetProfile>
                         height: 180.0,
                         decoration: BoxDecoration(
 //                        color: Color(0xff10ac84),
-                            borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(56),
-                                bottomLeft: Radius.circular(56))),
+                            borderRadius: BorderRadius.only(bottomRight: Radius.circular(56), bottomLeft: Radius.circular(56))),
                         child: new Column(
                           children: <Widget>[
                             Padding(
                               padding: EdgeInsets.only(top: 40.0),
-                              child: new Stack(fit: StackFit.loose, children: <
-                                  Widget>[
+                              child: new Stack(fit: StackFit.loose, children: <Widget>[
                                 new Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -169,33 +148,28 @@ class MapScreenState extends State<WidgetProfile>
                                           child: _imageFile != null
                                               ? Image.file(
                                                   _imageFile,
-                                                  fit: BoxFit.cover,
-                                                  height: 100.0,
-                                                  alignment:
-                                                      Alignment.topCenter,
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                )
+                                            fit: BoxFit.cover,
+                                            height: 100.0,
+                                            alignment: Alignment.topCenter,
+                                            width: MediaQuery
+                                                .of(context)
+                                                .size
+                                                .width,
+                                          )
                                               : Image.network(
-                                                  fotoUrl == null
-                                                      ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
-                                                      : fotoUrl,
-                                                  fit: BoxFit.cover,
-                                                  width: 150,
-                                                ),
+                                            dataProvider.userFoto == null ? dataProvider.fotoNull : dataProvider.userFoto,
+                                            fit: BoxFit.cover,
+                                            width: 150,
+                                          ),
                                         )),
                                   ],
                                 ),
                                 Padding(
-                                  padding:
-                                      EdgeInsets.only(top: 70.0, right: 70.0),
+                                  padding: EdgeInsets.only(top: 70.0, right: 70.0),
                                   child: InkWell(
-                                      onTap: () =>
-                                          _openImagePickerModal(context),
+                                      onTap: () => _openImagePickerModal(context),
                                       child: new Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: <Widget>[
                                           new CircleAvatar(
                                             backgroundColor: Colors.red,
@@ -222,70 +196,48 @@ class MapScreenState extends State<WidgetProfile>
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
+                                  padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 25.0),
                                   child: new Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     mainAxisSize: MainAxisSize.max,
                                     children: <Widget>[
                                       new Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.min,
                                         children: <Widget>[
                                           new Text(
                                             'Parsonal Information',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w800,
-                                                color: Colors.grey),
+                                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: Colors.grey),
                                           ),
                                         ],
                                       ),
                                       new Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
+                                        mainAxisAlignment: MainAxisAlignment.end,
                                         mainAxisSize: MainAxisSize.min,
                                         children: <Widget>[
-                                          _status
-                                              ? _getEditIcon()
-                                              : new Container(),
+                                          _status ? _getEditIcon() : new Container(),
                                         ],
                                       )
                                     ],
                                   )),
                               Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
+                                  padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 25.0),
                                   child: new Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: <Widget>[
                                       new Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.min,
                                         children: <Widget>[
                                           _status
-                                              ? new Text('Nama',
-                                                  style: TextStyle(
-                                                      fontSize: 14.0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.grey))
-                                              : new Text('Nama',
-                                                  style: TextStyle(
-                                                      fontSize: 14.0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.black))
+                                              ? new Text('Nama', style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey))
+                                              : new Text('Nama', style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.black))
                                         ],
                                       ),
                                     ],
                                   )),
                               Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 2.0),
+                                  padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 2.0),
                                   child: new Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: <Widget>[
@@ -294,20 +246,11 @@ class MapScreenState extends State<WidgetProfile>
                                           focusNode: myFocusNodeNama,
                                           controller: inputNamaController,
                                           style: _status
-                                              ? TextStyle(
-                                                  fontSize: 14.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.grey)
-                                              : TextStyle(
-                                                  fontSize: 14.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.black),
+                                              ? TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey)
+                                              : TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.black),
                                           decoration: const InputDecoration(
                                             hintText: "Enter Your Nama",
-                                            hintStyle: TextStyle(
-                                                fontSize: 14.0,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.grey),
+                                            hintStyle: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey),
                                           ),
                                           enabled: !_status,
                                           autofocus: !_status,
@@ -316,35 +259,24 @@ class MapScreenState extends State<WidgetProfile>
                                     ],
                                   )),
                               Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
+                                  padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 25.0),
                                   child: new Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: <Widget>[
                                       new Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.min,
                                         children: <Widget>[
                                           new Text('Email ID',
                                               style: _status
-                                                  ? TextStyle(
-                                                      fontSize: 14.0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.grey)
-                                                  : TextStyle(
-                                                      fontSize: 14.0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.grey)),
+                                                  ? TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey)
+                                                  : TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey)),
                                         ],
                                       ),
                                     ],
                                   )),
                               Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 2.0),
+                                  padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 2.0),
                                   child: new Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: <Widget>[
@@ -354,55 +286,37 @@ class MapScreenState extends State<WidgetProfile>
                                           controller: inputEmailController,
                                           keyboardType: TextInputType.text,
                                           style: _status
-                                              ? TextStyle(
-                                                  fontSize: 14.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.grey)
-                                              : TextStyle(
-                                                  fontSize: 14.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.grey),
+                                              ? TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey)
+                                              : TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey),
                                           decoration: const InputDecoration(
                                               hintText: "Enter Email ID",
-                                              hintStyle: TextStyle(
-                                                  fontSize: 14.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.grey)),
+                                              hintStyle: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey)),
                                           enabled: false,
                                         ),
                                       ),
                                     ],
                                   )),
                               Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
+                                  padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 25.0),
                                   child: new Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: <Widget>[
                                       new Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.min,
                                         children: <Widget>[
                                           new Text(
                                             'No Telepon',
                                             style: _status
-                                                ? TextStyle(
-                                                    fontSize: 14.0,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.grey)
-                                                : TextStyle(
-                                                    fontSize: 14.0,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.black),
+                                                ? TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey)
+                                                : TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.black),
                                           ),
                                         ],
                                       ),
                                     ],
                                   )),
                               Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 2.0),
+                                  padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 2.0),
                                   child: new Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: <Widget>[
@@ -412,28 +326,18 @@ class MapScreenState extends State<WidgetProfile>
                                           controller: inputNoTelpController,
                                           keyboardType: TextInputType.number,
                                           style: _status
-                                              ? TextStyle(
-                                                  fontSize: 14.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.grey)
-                                              : TextStyle(
-                                                  fontSize: 14.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.black),
+                                              ? TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey)
+                                              : TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.black),
                                           decoration: const InputDecoration(
                                               hintText: "Telepon",
-                                              hintStyle: TextStyle(
-                                                  fontSize: 14.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.grey)),
+                                              hintStyle: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey)),
                                           enabled: !_status,
                                         ),
                                       ),
                                     ],
                                   )),
                               Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
+                                  padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 25.0),
                                   child: new Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -443,14 +347,8 @@ class MapScreenState extends State<WidgetProfile>
                                           child: new Text(
                                             'Password',
                                             style: _status
-                                                ? TextStyle(
-                                                    fontSize: 14.0,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.grey)
-                                                : TextStyle(
-                                                    fontSize: 14.0,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.black),
+                                                ? TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey)
+                                                : TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.black),
                                           ),
                                         ),
                                         flex: 2,
@@ -458,8 +356,7 @@ class MapScreenState extends State<WidgetProfile>
                                     ],
                                   )),
                               Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 2.0),
+                                  padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 2.0),
                                   child: new Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -472,21 +369,11 @@ class MapScreenState extends State<WidgetProfile>
                                             focusNode: myFocusNodePassword,
                                             controller: inputPasswordController,
                                             style: _status
-                                                ? TextStyle(
-                                                    fontSize: 14.0,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.grey)
-                                                : TextStyle(
-                                                    fontSize: 14.0,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.black),
+                                                ? TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey)
+                                                : TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.black),
                                             decoration: const InputDecoration(
-                                                hintText:
-                                                    "Kosongkan jika tidak ingin merubah password",
-                                                hintStyle: TextStyle(
-                                                    fontSize: 14.0,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.grey)),
+                                                hintText: "Kosongkan jika tidak ingin merubah password",
+                                                hintStyle: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey)),
                                             enabled: !_status,
                                           ),
                                         ),
@@ -514,10 +401,9 @@ class MapScreenState extends State<WidgetProfile>
   }
 
   void simpanFoto(image) {
-    setState(() {
-      _saving = true;
-    });
-    Api.uploadImage(image, id).then((response) {
+    DataProvider dataProvider = Provider.of<DataProvider>(context);
+    dataProvider.setLoading(true);
+    Api.uploadImage(image, dataProvider.userId).then((response) {
       var data = json.decode(response.body);
       print(data);
       if (data['status'] == true) {
@@ -531,23 +417,11 @@ class MapScreenState extends State<WidgetProfile>
             Icons.assignment_turned_in,
             color: Colors.white,
           ),
-        )..show(context);
-        getProfileUpdate();
-        setState(() {
-          _saving = false;
-        });
+        )
+          ..show(context);
+        dataProvider.getProfile();
+        dataProvider.setLoading(false);
       }
-    });
-  }
-
-  getProfileUpdate() async {
-    String tokenValid = await LocalStorage.sharedInstance.readValue('token');
-    Api.getUserById(tokenValid, id).then((response) {
-      var data = json.decode(response.body);
-      print(data);
-      LocalStorage.sharedInstance
-          .writeValue(key: 'session', value: json.encode(data));
-      getUserData();
     });
   }
 
@@ -565,35 +439,33 @@ class MapScreenState extends State<WidgetProfile>
           Expanded(
             child: Container(
                 child: new RaisedButton(
-              child: new Text("Batal"),
-              textColor: Colors.white,
-              color: Colors.red,
-              onPressed: () {
-                setState(() {
-                  _status = true;
-                  FocusScope.of(context).requestFocus(new FocusNode());
-                });
-              },
-              shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(20.0)),
+                  child: new Text("Batal"),
+                  textColor: Colors.white,
+                  color: Colors.red,
+                  onPressed: () {
+                    setState(() {
+                      _status = true;
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                    });
+                  },
+                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
             )),
             flex: 2,
           ),
           Expanded(
             child: Container(
                 child: new RaisedButton(
-              child: new Text("Simpan"),
-              textColor: Colors.white,
-              color: Color(0xffb16a085),
-              onPressed: () {
-                setState(() {
-                  _status = true;
-                  FocusScope.of(context).requestFocus(new FocusNode());
-                  simpanDataProfile();
-                });
-              },
-              shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(20.0)),
+                  child: new Text("Simpan"),
+                  textColor: Colors.white,
+                  color: Color(0xffb16a085),
+                  onPressed: () {
+                    setState(() {
+                      _status = true;
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                      simpanDataProfile();
+                    });
+                  },
+                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
             )),
             flex: 2,
           ),
@@ -622,16 +494,15 @@ class MapScreenState extends State<WidgetProfile>
   }
 
   void simpanDataProfile() {
-    setState(() {
-      _saving = true;
-    });
+    DataProvider dataProvider = Provider.of<DataProvider>(context);
+    dataProvider.setLoading(true);
     var map = new Map<String, dynamic>();
     map['usernamalengkap'] = inputNamaController.text;
     map['userpassword'] = inputPasswordController.text;
     map['usertelp'] = inputNoTelpController.text;
-    map['userid'] = id;
-    Api.simpanDataProfile(map).then((response) {    
-      var data = json.decode(response.body);  
+    map['userid'] = dataProvider.userId;
+    Api.simpanDataProfile(map).then((response) {
+      var data = json.decode(response.body);
       print(data);
       if (data['status'] == true) {
         Flushbar(
@@ -644,11 +515,10 @@ class MapScreenState extends State<WidgetProfile>
             Icons.assignment_turned_in,
             color: Colors.white,
           ),
-        )..show(context);
-        getProfileUpdate();
-        setState(() {
-          _saving = false;
-        });
+        )
+          ..show(context);
+        dataProvider.getProfile();
+        dataProvider.setLoading(false);
       }
     });
   }

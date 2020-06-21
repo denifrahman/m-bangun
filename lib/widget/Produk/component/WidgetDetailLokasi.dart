@@ -1,23 +1,26 @@
 import 'package:apps/providers/DataProvider.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class WidgetDetailBahanProduk extends StatelessWidget {
-  const WidgetDetailBahanProduk({
+class WidgetDetailLokasi extends StatelessWidget {
+  const WidgetDetailLokasi({
     Key key,
+    @required this.dataProvider,
   }) : super(key: key);
+
+  final DataProvider dataProvider;
 
   @override
   Widget build(BuildContext context) {
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
-    var data = dataProvider.getdataProdukById;
     return ExpansionTileCard(
       elevation: 2,
       colorCurve: Curves.easeInExpo,
       initiallyExpanded: true,
-      leading: Icon(Icons.assignment),
-      title: Text('Deskripsi & Bahan'),
+      leading: Icon(
+        Icons.place,
+        color: Colors.red,
+      ),
+      title: Text('Lokasi'),
       children: <Widget>[
         Divider(
           thickness: 1.0,
@@ -27,11 +30,10 @@ class WidgetDetailBahanProduk extends StatelessWidget {
             padding: const EdgeInsets.all(20.0),
             child: Container(
               width: MediaQuery.of(context).size.width,
-              child: data == null
+              child: dataProvider.getdataProdukById == null
                   ? Text('')
                   : Text(
-                      dataProvider.getdataProdukById['data'][0]['produkdeskripsi'],
-                      textAlign: TextAlign.start,
+                      '${dataProvider.getdataProdukById['data'][0]['produkalamat']} \n${dataProvider.getdataProdukById['data'][0]['nama_kabkota']}, ${dataProvider.getdataProdukById['data'][0]['nama_propinsi']}',
                     ),
             ))
       ],

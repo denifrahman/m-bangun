@@ -34,7 +34,6 @@ class _WidgetLokasiState extends State<WidgetLokasi> {
   void dispose() {
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -42,7 +41,6 @@ class _WidgetLokasiState extends State<WidgetLokasi> {
     var kecamatan = dataProvider.namaKecamatan == null ? '' : dataProvider.namaKecamatan.toLowerCase();
     var kota = dataProvider.namaKota == null ? '' : dataProvider.namaKota.toLowerCase();
     var provinsi = dataProvider.namaProvinsi == null ? '' : dataProvider.namaProvinsi.toLowerCase();
-    dataProvider.getCurrentLocation();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[

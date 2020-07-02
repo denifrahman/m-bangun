@@ -4,9 +4,12 @@ import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/models/KategoriM.dart';
 import 'package:apps/providers/Api.dart';
+import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/SubKategoriScreen.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:pk_skeleton/pk_skeleton.dart';
+import 'package:provider/provider.dart';
 
 class WidgetKategoriVertical extends StatefulWidget {
   WidgetKategoriVertical({Key key}) : super(key: key);
@@ -63,45 +66,57 @@ class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
             ),
           )
         : Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
-      child: ListView.builder(
-          padding: EdgeInsets.only(left: 5, right: 5, top: 10),
-          itemCount: dataKategori.length,
-          itemBuilder: (context, index) {
-            return Card(
-              child: InkWell(
-                onTap: () => openSubkategori(dataKategori[index]),
-                child: Container(
-                  width: 100,
-                  padding: EdgeInsets.all(8),
-                  child: ListTile(
-                    leading: Image.network(
-                      dataKategori[index].produkkategorithumbnail,
-                      width: 45,
+            width: MediaQuery.of(context).size.width,
+            child: ListView.builder(
+                padding: EdgeInsets.only(left: 5, right: 5, top: 10),
+                itemCount: dataKategori.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    child: InkWell(
+                      onTap: () => openSubkategori(dataKategori[index]),
+                      child: Container(
+                        width: 100,
+                        padding: EdgeInsets.all(8),
+                        child: ListTile(
+                          leading: Image.network(
+                            dataKategori[index].produkkategorithumbnail,
+                            width: 45,
+                          ),
+                          title: Text(dataKategori[index].produkkategorinama),
+                          trailing: Icon(
+                            Icons.arrow_forward_ios,
+                            size: 12,
+                          ),
+                        ),
+                      ),
                     ),
-                    title: Text(dataKategori[index].produkkategorinama),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 12,
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }),
-    );
+                  );
+                }),
+          );
   }
 
   void openSubkategori(param) {
-    Navigator.push(
-        context,
-        SlideRightRoute(
-            page: SubKategoriScreen(
-          idKategori: int.parse(param.produkkategoriid),
-          namaKategori: param.produkkategorinama,
-        )));
+    DataProvider dataProvider = Provider.of<DataProvider>(context);
+    if (dataProvider.isLogin  && dataProvider.userKategori == param.produkkategorinama) {
+      Navigator.push(
+          context,
+          SlideRightRoute(
+              page: SubKategoriScreen(
+            idKategori: int.parse(param.produkkategoriid),
+            namaKategori: param.produkkategorinama,
+          )));
+    } else {
+      Flushbar(
+        title: "Error",
+        message: "Silahkan login / member anda tidak sesuai",
+        duration: Duration(seconds: 15),
+        backgroundColor: Colors.red,
+        flushbarPosition: FlushbarPosition.BOTTOM,
+        icon: Icon(
+          Icons.assignment_turned_in,
+          color: Colors.white,
+        ),
+      )..show(context);
+    }
   }
 }

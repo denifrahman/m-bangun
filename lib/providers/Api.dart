@@ -6,8 +6,9 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
 //const baseUrl = "http://niagatravel.com/api/api-m-bangun-jwt-token/api/";
-const baseUrl = "http://localhost:8888/api_jwt/api/";
-//const baseUrl = "http://192.168.0.5:8888/api_jwt/api/";
+const baseUrl = "http://m-bangun.com/api/api/";
+//const baseUrl = "http://localhost:8888/api_jwt/api/";
+//const baseUrl = "http://192.168.0.6/api_jwt/api/";
 
 class Api {
   static Future getToken() {
@@ -15,6 +16,7 @@ class Api {
     map['useremail'] = 'deni@gmail.com';
     map['userpassword'] = '123456';
     var url = baseUrl + "users/login";
+    print(url);
     return http.post(url, body: map);
   }
 
@@ -135,7 +137,7 @@ class Api {
     imageUploadRequest.fields['id_kecamatan'] = idkecamatan;
     imageUploadRequest.fields['produkwaktupengerjaan'] = produkwaktupengerjaan;
     imageUploadRequest.fields['userid'] = userid;
-    Map<String, String> headers = { "Authorization": token};
+    Map<String, String> headers = {"Authorization": token};
     imageUploadRequest.headers.addAll(headers);
     // Iterable iterable =  foto;
     imageUploadRequest.files.addAll([_produkthumbnail, _produkfoto1, _produkfoto2, _produkfoto3, _produkfoto4]);
@@ -325,11 +327,11 @@ class Api {
   }
 
   static Future getAllProdukByParam(token, idKecamatan, idKota, idProvinsi, idSubKategori, Key) {
-    var sub = (idSubKategori == '' ? '' : 'sub=' + idSubKategori);
-    var kec = (idKecamatan == '' ? '' : '&kec=' + idKecamatan);
-    var kota = (idKota == '' ? '' : '&kota=' + idKota);
-    var prov = (idProvinsi == '' ? '' : '&prov=' + idProvinsi);
-    var key = (Key == '' ? '' : '&key=' + Key);
+    var sub = (idSubKategori == '' || idSubKategori == null ? '' : 'sub=' + idSubKategori);
+    var kec = (idKecamatan == '' || idKecamatan == null ? '' : '&kec=' + idKecamatan);
+    var kota = (idKota == '' || idKota == null ? '' : '&kota=' + idKota);
+    var prov = (idProvinsi == '' || idProvinsi == null ? '' : '&prov=' + idProvinsi);
+    var key = (Key == '' || Key == '' ? '' : '&key=' + Key);
     var url = baseUrl + "produk/getAllByParam?" + sub + kec + kota + prov + key;
     try {
       return http.get(
@@ -429,6 +431,49 @@ class Api {
       return http.post(
         url,
         body: body,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  static Future addBids(token, body) {
+    var url = baseUrl + "Bid/addBidByUserId";
+    try {
+      return http.post(
+        url,
+        body: body,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  static Future chekUserBidding(token, userId, produkId) {
+    var _produkId = (produkId == '' || produkId == null ? '' : 'produkId=' + produkId);
+    var _userId = (userId == '' || userId == null ? '' : '&userId=' + userId);
+    var url = baseUrl + "Bid/chekUserBidding?" + _produkId + _userId;
+    print(url);
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  static Future getAllBidByUserIdAndStatusId(token, userId, statusId) {
+    var _statusId = (statusId == '' ? '' : 'statusid=' + statusId);
+    var _userId = (userId == '' ? '' : '&userid=' + userId);
+    var url = baseUrl + "Bid/getByUserIdAndStatusId?" + _statusId + _userId;
+    print(url);
+    try {
+      return http.get(
+        url,
         headers: {HttpHeaders.authorizationHeader: token},
       );
     } catch (err) {

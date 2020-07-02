@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:apps/Utils/BottomAnimation.dart';
 import 'package:apps/Utils/LocalBindings.dart';
+import 'package:apps/models/BidM.dart';
 import 'package:apps/models/KategoriM.dart';
 import 'package:apps/models/KecamatanM.dart';
 import 'package:apps/models/KotaM.dart';
@@ -19,7 +20,10 @@ class DataProvider extends ChangeNotifier {
 
   bool isFavorite = false;
   bool _isLoading = false;
+  bool _isBid = false;
   bool _isLogin = false;
+
+  bool get isBid => _isBid;
 
   bool get isLogin => _isLogin;
 
@@ -36,6 +40,8 @@ class DataProvider extends ChangeNotifier {
   }
 
   String userId;
+
+  String get userId_ =>userId;
   String _title;
   String token = '';
 
@@ -92,7 +98,11 @@ class DataProvider extends ChangeNotifier {
       getProfile();
       notifyListeners();
     } else {
+      print('test');
       _isLogin = false;
+      _verified = false;
+      _userKategori = null;
+      notifyListeners();
     }
   }
 
@@ -145,7 +155,11 @@ class DataProvider extends ChangeNotifier {
       Api.getUserById(token, userId).then((response) {
         var data = json.decode(response.body);
         LocalStorage.sharedInstance.writeValue(key: 'session', value: json.encode(data));
-        print(data['data']['data_user']['useraktivasiakunpremium']);
+        _userEmail = data['data']['data_user']['useremail'];
+        _userNama = data['data']['data_user']['usernamalengkap'];
+        _userNotelp = data['data']['data_user']['usertelp'];
+        _userFoto = data['data']['data_user']['userfoto'];
+        print(data);
         if (data['data']['data_user']['produkkategoriid'] != null) {
           _userSiup = data['data']['data_user']['usersiup'];
           _userAkte = data['data']['data_user']['userakteperusahaan'];
@@ -159,7 +173,8 @@ class DataProvider extends ChangeNotifier {
           _isLoading = false;
           notifyListeners();
         }
-        if (data['data']['data_user']['useraktivasiakunpremium'] != '0') {
+        print(data['data']['data_user']['useraktivasiakunpremium'] == '1');
+        if (data['data']['data_user']['useraktivasiakunpremium'] == '1') {
           _verified = true;
           _isLoading = false;
           notifyListeners();
@@ -303,6 +318,7 @@ class DataProvider extends ChangeNotifier {
     Api.getAllProdukByParam(token, currentIdKecamatan == 'null' ? '' : currentIdKecamatan, currentIdKota == 'null' ? '' : currentIdKota,
             currentIdProvinsi == 'null' ? '' : currentIdProvinsi, idSubKategori, key)
         .then((response) {
+      print(response);
       var result = json.decode(response.body);
       if (result['status'] == true) {
         responsData = true;
@@ -313,7 +329,9 @@ class DataProvider extends ChangeNotifier {
     });
   }
 
-  String _namaProvinsi, _namaKecamatan, _namaKota;
+  String _namaProvinsi = '';
+  String _namaKecamatan;
+  String _namaKota;
 
   String get namaProvinsi => _namaProvinsi;
 
@@ -364,7 +382,7 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
     Api.getProdukByIdProduk(token, produkId).then((value) {
       var result = json.decode(value.body);
-      print(result);
+//      print(result);
       if (result['status']) {
         if (userId != null) {
           getFavoriteByProdukIdAndUserId(produkId);
@@ -442,7 +460,52 @@ class DataProvider extends ChangeNotifier {
             child: child,
           );
         }),
-            (Route route) => false);
+        (Route route) => false);
     chekSession();
+  }
+
+  void getProdukListByUserId(param) async {
+    _isLoading = true;
+    Api.getAllProdukByUserId(token, userId, param).then((response) {
+      var result = json.decode(response.body);
+      print(result);
+      if (result['status'] == true) {
+        Iterable list = json.decode(response.body)['data'];
+        _produkListById = list.map((model) => ProdukListM.fromMap(model)).toList();
+        _isLoading = false;
+        notifyListeners();
+      } else {
+        _isLoading = false;
+        notifyListeners();
+      }
+    });
+  }
+
+  List<BidM> _bidByUserIdAndStatusIdList = [];
+
+  List<BidM> get ListBidByUserIdAndStatusId => _bidByUserIdAndStatusIdList;
+
+  void getAllBidByUserIdAndStatusId(statusId) async {
+    _isLoading = true;
+    Api.getAllBidByUserIdAndStatusId(token, userId, statusId).then((response) {
+      var result = json.decode(response.body);
+      print(result);
+      if (result['status'] == true) {
+        Iterable list = json.decode(response.body)['data'];
+        _bidByUserIdAndStatusIdList = list.map((model) => BidM.fromMap(model)).toList();
+        _isLoading = false;
+        notifyListeners();
+      } else {
+        _isLoading = false;
+        notifyListeners();
+      }
+    });
+  }
+
+  void chekUserBidding(produkId) {
+    Api.chekUserBidding(token, userId, produkId).then((response) {
+      _isBid = json.decode(response.body)['data'];
+      notifyListeners();
+    });
   }
 }

@@ -1,4 +1,6 @@
+import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/DataProvider.dart';
+import 'package:apps/widget/Produk/component/WidgetViewPdf.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +19,7 @@ class WidgetDetailBahanProduk extends StatelessWidget {
       colorCurve: Curves.easeInExpo,
       initiallyExpanded: true,
       leading: Icon(Icons.assignment),
-      title: Text('Deskripsi & Bahan'),
+      title: Text('Deskripsi & Rab'),
       children: <Widget>[
         Divider(
           thickness: 1.0,
@@ -29,9 +31,29 @@ class WidgetDetailBahanProduk extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               child: data == null
                   ? Text('')
-                  : Text(
-                      dataProvider.getdataProdukById['data'][0]['produkdeskripsi'],
-                      textAlign: TextAlign.start,
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ListTile(
+                          title: Text(
+                            dataProvider.getdataProdukById['data'][0]['produkdeskripsi'],
+                            textAlign: TextAlign.start,
+                          ),
+                          leading: InkWell(
+                            onTap: (){
+                              Navigator.push(context, SlideRightRoute(page: WidgetViewPdf()));
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                 Icon(Icons.attach_file, color: Colors.blue,),
+                                Text('Buka')
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
                     ),
             ))
       ],

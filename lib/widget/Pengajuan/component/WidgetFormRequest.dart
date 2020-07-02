@@ -168,9 +168,9 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
         produkfoto2 != null &&
         produkfoto3 != null &&
         produkfoto4 != null) {
-//      setState(() {
-//        _saving = true;
-//      });
+      setState(() {
+        _saving = true;
+      });
       var budget = budgetController.text.replaceAll('Rp', '');
       var saveBudget = budget.replaceAll(',', '');
       Api.pengajuanRqt(
@@ -182,7 +182,7 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
               dataProvider.getSelectedProvinsi,
               dataProvider.getSelectedKota,
               dataProvider.getSelectedKecamatan,
-              alamatLengkapController.text,
+              dataProvider.getAlamatLengkap,
               namaController.text,
               panjangController.text,
               lebarController.text,
@@ -193,7 +193,7 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
               userId,
               dataProvider.getTokenData)
           .then((value) {
-//            print(value.body);
+        print(value.body);
         var data = json.decode(value.body);
         if (data['status'] == true) {
           setState(() {
@@ -498,34 +498,43 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
           'Waktu Pengerjaan',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
-        Container(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: new TextFormField(
-              focusNode: myFocusNodeWaktuPengerjaan,
-              controller: waktuPengerjaanController,
-              validator: (String arg) {
-                if (arg.length < 1)
-                  return 'Harus di isi';
-                else
-                  return null;
-              },
-              keyboardType: TextInputType.text,
-              decoration: const InputDecoration(
-                  hintText: '15 Hari',
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0xffb16a085),
-                    ),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0xffb16a085),
-                    ),
-                  ),
-                  hasFloatingPlaceholder: true),
+        Row(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: new TextFormField(
+                  focusNode: myFocusNodeWaktuPengerjaan,
+                  controller: waktuPengerjaanController,
+                  validator: (String arg) {
+                    if (arg.length < 1)
+                      return 'Harus di isi';
+                    else
+                      return null;
+                  },
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                      hintText: '15',
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0xffb16a085),
+                        ),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0xffb16a085),
+                        ),
+                      ),
+                      hasFloatingPlaceholder: true),
+                ),
+              ),
             ),
-          ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.1,
+              child: Text('Hari'),
+            )
+          ],
         ),
         Container(
           height: 20,

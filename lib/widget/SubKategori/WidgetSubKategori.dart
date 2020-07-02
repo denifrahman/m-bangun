@@ -6,6 +6,7 @@ import 'package:apps/models/SubKategoriM.dart';
 import 'package:apps/providers/Api.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/ProdukScreen.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -83,6 +84,8 @@ class _WidgetSubKategoriState extends State<WidgetSubKategori> {
   _openListProdukBySubKategori(param) {
     Provider.of<DataProvider>(context).setidSubKategori(param.produkkategorisubid);
     Provider.of<DataProvider>(context).setProdukListByParam();
+    DataProvider dataProvider = Provider.of<DataProvider>(context);
+    if (dataProvider.userSubKategori == param.produkkategorisubnama) {
     Navigator.push(
         context,
         SlideRightRoute(
@@ -90,5 +93,18 @@ class _WidgetSubKategoriState extends State<WidgetSubKategori> {
           namaKategori: param.produkkategorisubnama,
           idSubKategori: param.produkkategorisubid,
         )));
+    } else {
+      Flushbar(
+        title: "Error",
+        message: "Silahkan login / member anda tidak sesuai",
+        duration: Duration(seconds: 15),
+        backgroundColor: Colors.red,
+        flushbarPosition: FlushbarPosition.BOTTOM,
+        icon: Icon(
+          Icons.assignment_turned_in,
+          color: Colors.white,
+        ),
+      )..show(context);
+    }
   }
 }

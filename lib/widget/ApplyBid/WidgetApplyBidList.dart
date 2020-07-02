@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/models/ProdukListM.dart';
 import 'package:apps/providers/Api.dart';
@@ -13,16 +12,16 @@ import 'package:intl/intl.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
 
-class WidgetPengajuanByParamList extends StatefulWidget {
+class WidgetApplyBidList extends StatefulWidget {
   final param;
 
-  WidgetPengajuanByParamList({Key key, this.param}) : super(key: key);
+  WidgetApplyBidList({Key key, this.param}) : super(key: key);
 
   @override
-  _WidgetPengajuanByParamListState createState() => _WidgetPengajuanByParamListState();
+  _WidgetApplyBidListState createState() => _WidgetApplyBidListState();
 }
 
-class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList> {
+class _WidgetApplyBidListState extends State<WidgetApplyBidList> {
   Timer timer;
 
   @override
@@ -30,7 +29,6 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
     // TODO: implement initState
     super.initState();
   }
-
   var refreshKey = GlobalKey<RefreshIndicatorState>();
 
   Future<Null> refreshList() async {
@@ -52,74 +50,80 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
         elevation: 0.0,
         title: Text(widget.param),
       ),
-      body: ModalProgressHUD(
-        inAsyncCall: dataProvider.isLoading,
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              flex: 25,
-              child: RefreshIndicator(
-                onRefresh: refreshList,
-                key: refreshKey,
-                child: dataProvider.getProdukListByIdUser.length == 0
-                    ? Center(
-                        child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.watch_later,
-                            color: Colors.grey.withOpacity(0.4),
-                            size: 50,
-                          ),
-                          Text('Tidak Ada Data')
-                        ],
-                      ))
+      body: RefreshIndicator(
+        onRefresh: refreshList,
+        key: refreshKey,
+        child: ModalProgressHUD(
+          inAsyncCall: dataProvider.isLoading,
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                flex: 25,
+                child: dataProvider.ListBidByUserIdAndStatusId.length == 0
+                    ? Container(
+                      child: Center(
+                          child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.watch_later,
+                              color: Colors.grey.withOpacity(0.4),
+                              size: 50,
+                            ),
+                            Text('Tidak Ada Data')
+                          ],
+                        )),
+                    )
                     : ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: dataProvider.getProdukListByIdUser.length,
-                    itemBuilder: (context, index) {
-                      DateTime tanggal_booking = DateTime.parse(dataProvider.getProdukListByIdUser[index].produkcreate.toString());
-                      return dataProvider.getProdukListByIdUser.length != 0
-                          ? InkWell(
-//                      onTap: ()=>_getPedaftaranByPendaftaranId(dataProvider.getProdukListByIdUser[index].pendaftaranId),
-                          child: Stack(
-                            children: <Widget>[
-                              Card(
-                                elevation: 2,
-                                margin: EdgeInsets.all(15),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
+                        shrinkWrap: true,
+                        itemCount: dataProvider.ListBidByUserIdAndStatusId.length,
+                        itemBuilder: (context, index) {
+                          DateTime bidCreate = DateTime.parse(dataProvider.ListBidByUserIdAndStatusId[index].bidcreate.toString());
+                          return dataProvider.ListBidByUserIdAndStatusId.length != 0
+                              ? InkWell(
+//                      onTap: ()=>_getPedaftaranByPendaftaranId(dataProvider.ListBidByUserIdAndStatusId[index].pendaftaranId),
+                                  child: Stack(
+                                  children: <Widget>[
+                                    Card(
+                                      elevation: 2,
+                                      margin: EdgeInsets.all(15),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ),
                                       child: Container(
                                         height: 90,
                                         decoration: BoxDecoration(color: Colors.cyan[500], borderRadius: BorderRadius.all(Radius.circular(10))),
                                         padding: EdgeInsets.all(5),
                                         child: ListTile(
                                           title: Text(
-                                            dataProvider.getProdukListByIdUser[index].produknama,
+                                            dataProvider.ListBidByUserIdAndStatusId[index].produknama,
                                             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
                                             maxLines: 2,
                                           ),
-                                          subtitle: Text(DateFormat("EEE, dd MMMM yyyy", 'in').format(tanggal_booking),
+                                          subtitle: Text(DateFormat("EEE, dd MMMM yyyy", 'in').format(bidCreate),
                                               style: TextStyle(color: Colors.grey[300])),
                                           trailing: Column(
                                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                             children: <Widget>[
-                                              (dataProvider.getProdukListByIdUser[index].statusnama == 'New' ||
-                                                  dataProvider.getProdukListByIdUser[index].statusnama == 'Review')
+                                              (dataProvider.ListBidByUserIdAndStatusId[index].statusnama == 'New' ||
+                                                      dataProvider.ListBidByUserIdAndStatusId[index].statusnama == 'Review')
                                                   ? Icon(
+                                                      FontAwesomeIcons.exclamationCircle,
+                                                      color: Colors.amber,
+                                                      size: 25,
+                                                    )
+                                                  : dataProvider.ListBidByUserIdAndStatusId[index].statusnama == 'Ditolak' ? Icon(
+                                                      Icons.close,
+                                                      color: Colors.white,
+                                                      size: 20,
+                                                    ):Icon(
                                                 FontAwesomeIcons.exclamationCircle,
                                                 color: Colors.amber,
                                                 size: 25,
-                                              )
-                                                  : Icon(
-                                                FontAwesomeIcons.solidCheckCircle,
-                                                color: Colors.white,
-                                                size: 20,
                                               ),
                                               Text(
-                                                dataProvider.getProdukListByIdUser[index].statusnama,
+                                                dataProvider.ListBidByUserIdAndStatusId[index].statusnama,
                                                 style: TextStyle(
                                                     fontStyle: FontStyle.italic, fontWeight: FontWeight.w600, color: Colors.white, fontSize: 12),
                                               )
@@ -146,15 +150,15 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
                                               alignment: Alignment.center,
                                               child: ListTile(
                                                 title: Text(
-                                                  dataProvider.getProdukListByIdUser[index].produkdeskripsi == null
+                                                  dataProvider.ListBidByUserIdAndStatusId[index].bidprice == null
                                                       ? ''
-                                                      : dataProvider.getProdukListByIdUser[index].produkdeskripsi,
+                                                      : dataProvider.ListBidByUserIdAndStatusId[index].bidprice,
                                                   style: TextStyle(color: Colors.black),
                                                 ),
                                                 subtitle: Text(
-                                                    dataProvider.getProdukListByIdUser[index].produkwaktupengerjaan == null
+                                                    dataProvider.ListBidByUserIdAndStatusId[index].biddeskripsi == null
                                                         ? ''
-                                                        : dataProvider.getProdukListByIdUser[index].produkwaktupengerjaan,
+                                                        : dataProvider.ListBidByUserIdAndStatusId[index].biddeskripsi,
                                                     style: TextStyle(color: Colors.grey[700])),
                                                 trailing: Column(
                                                   children: [
@@ -167,7 +171,7 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
                                                       child: Align(
                                                         alignment: Alignment.center,
                                                         child: Text(
-                                                          '0',
+                                                          dataProvider.ListBidByUserIdAndStatusId[index].bidwaktupengerjaan,
                                                           style: TextStyle(
                                                               color: Colors.white,
                                                               fontSize: 18,
@@ -195,9 +199,9 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
                                     style: TextStyle(color: Colors.black),
                                   ));
                         }),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

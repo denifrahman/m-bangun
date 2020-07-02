@@ -101,10 +101,8 @@ class _WidgetSelectLokasiState extends State<WidgetSelectLokasi> {
   }
 
   _simpanKota() {
-//    print(idProvinsi);
     LocalStorage.sharedInstance.writeValue(key: 'idProvinsi', value: idProvinsi);
     LocalStorage.sharedInstance.writeValue(key: 'idKota', value: idKota == null ? 'null' : idKota);
-//    print(idKota);
     LocalStorage.sharedInstance.writeValue(key: 'idKecamatan', value: idKecamatan == null ? 'null' : idKecamatan);
     Navigator.pop(context);
     Provider.of<DataProvider>(context).getCurrentLocation();

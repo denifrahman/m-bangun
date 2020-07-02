@@ -2,6 +2,7 @@ import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/Utils/values/colors.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/UpdateAkunScreen.dart';
+import 'package:apps/widget/ApplyBid/WidgetApplyBidList.dart';
 import 'package:apps/widget/Login/LoginWidget.dart';
 import 'package:apps/widget/Profile/ActiveProjectCard.dart';
 import 'package:apps/widget/Profile/TopContainer.dart';
@@ -21,6 +22,7 @@ class ProfileScreen extends StatelessWidget {
       style: TextStyle(color: AppColors.kDarkBlue, fontSize: 20.0, fontWeight: FontWeight.w700, letterSpacing: 1.2),
     );
   }
+  var dataList = ['New', 'Kontrak', 'Progress', 'Finish', 'Batal'];
 
   static CircleAvatar calendarIcon() {
     return CircleAvatar(
@@ -216,41 +218,71 @@ class ProfileScreen extends StatelessWidget {
                                         ],
                                       ),
                                       SizedBox(height: 15.0),
-                                      WidgetMyFavorite(
-                                        icon: Icons.alarm,
-                                        iconBackgroundColor: Colors.blue,
-                                        title: 'New',
-                                        subtitle: 'Bid pekerjaan baru anda',
+                                      InkWell(
+                                        onTap : (){
+                                          dataProvider.getAllBidByUserIdAndStatusId('8');
+                                          Navigator.push(context, SlideRightRoute(page: WidgetApplyBidList(param: 'Kontrak',)));
+                                        },
+                                        child: WidgetMyFavorite(
+                                          icon: Icons.new_releases,
+                                          iconBackgroundColor: Colors.blue,
+                                          title: 'New',
+                                          subtitle: 'Bid pekerjaan baru anda',
+                                        ),
                                       ),
                                       SizedBox(height: 15.0),
-                                      WidgetMyFavorite(
-                                        icon: Icons.blur_circular,
-                                        iconBackgroundColor: Colors.green,
-                                        title: 'Kontrak',
-                                        subtitle: 'Penandatangan kontrak kerja',
+                                      InkWell(
+                                        onTap : (){
+                                          dataProvider.getAllBidByUserIdAndStatusId('10');
+                                          Navigator.push(context, SlideRightRoute(page: WidgetApplyBidList(param: 'Kontrak',)));
+                                        },
+                                        child: WidgetMyFavorite(
+                                          icon: Icons.event_note,
+                                          iconBackgroundColor: Colors.green,
+                                          title: 'Kontrak',
+                                          subtitle: 'Penandatangan kontrak kerja',
+                                        ),
                                       ),
                                       SizedBox(
                                         height: 15.0,
                                       ),
-                                      WidgetMyFavorite(
-                                        icon: Icons.blur_circular,
-                                        iconBackgroundColor: AppColors.kDarkYellow,
-                                        title: 'In Progress',
-                                        subtitle: 'Proses Pengerjaan dan laporan pekerjaan',
+                                      InkWell(
+                                        onTap : (){
+                                          dataProvider.getAllBidByUserIdAndStatusId('12');
+                                          Navigator.push(context, SlideRightRoute(page: WidgetApplyBidList(param: 'Progress',)));
+                                        },
+                                        child: WidgetMyFavorite(
+                                          icon: Icons.blur_circular,
+                                          iconBackgroundColor: AppColors.kDarkYellow,
+                                          title: 'Progress',
+                                          subtitle: 'Proses Pengerjaan dan laporan pekerjaan',
+                                        ),
                                       ),
                                       SizedBox(height: 15.0),
-                                      WidgetMyFavorite(
-                                        icon: Icons.check_circle_outline,
-                                        iconBackgroundColor: AppColors.kBlue,
-                                        title: 'Done',
-                                        subtitle: '18 tasks now. 13 started',
+                                      InkWell(
+                                        onTap : (){
+                                          dataProvider.getAllBidByUserIdAndStatusId('13');
+                                          Navigator.push(context, SlideRightRoute(page: WidgetApplyBidList(param: 'Done',)));
+                                        },
+                                        child: WidgetMyFavorite(
+                                          icon: Icons.check_circle_outline,
+                                          iconBackgroundColor: AppColors.kBlue,
+                                          title: 'Done',
+                                          subtitle: 'Project telah selesai',
+                                        ),
                                       ),
                                       SizedBox(height: 15.0),
-                                      WidgetMyFavorite(
-                                        icon: Icons.delete_outline,
-                                        iconBackgroundColor: Colors.red,
-                                        title: 'Batal',
-                                        subtitle: 'Apply di batalkan / di tolak ',
+                                      InkWell(
+                                        onTap : (){
+                                          dataProvider.getAllBidByUserIdAndStatusId('9');
+                                          Navigator.push(context, SlideRightRoute(page: WidgetApplyBidList(param: 'Batal',)));
+                                        },
+                                        child: WidgetMyFavorite(
+                                          icon: Icons.delete_outline,
+                                          iconBackgroundColor: Colors.red,
+                                          title: 'Batal',
+                                          subtitle: 'Apply di batalkan / di tolak ',
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -290,26 +322,24 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
             ),
-      floatingActionButton: dataProvider.userKategori != null
+      floatingActionButton: !dataProvider.isLogin ? null : dataProvider.verified
           ? null
-          : dataProvider.isLogin
-              ? null
-              : FloatingActionButton.extended(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        PageRouteTransition(
-                          animationType: AnimationType.slide_up,
-                          builder: (context) => UpdateAkunScreen(),
-                        )).then((value) {
-                      dataProvider.getProfile();
-                    });
-                  },
-                  backgroundColor: Color(0xffb16a085),
-                  tooltip: 'Update akun anda',
-                  icon: Icon(Icons.credit_card),
-                  label: Text("Update Akun"),
-                ),
+          : FloatingActionButton.extended(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    PageRouteTransition(
+                      animationType: AnimationType.slide_up,
+                      builder: (context) => UpdateAkunScreen(),
+                    )).then((value) {
+                  dataProvider.getProfile();
+                });
+              },
+              backgroundColor: Color(0xffb16a085),
+              tooltip: 'Update akun anda',
+              icon: Icon(Icons.credit_card),
+              label: Text("Update Akun"),
+            ),
     );
   }
 }

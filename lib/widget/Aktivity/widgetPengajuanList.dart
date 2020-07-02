@@ -1,6 +1,8 @@
 import 'package:apps/Utils/navigation_right.dart';
+import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/widget/Aktivity/WidgetPengajuanByParamList.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class WidgetPengajuanList extends StatefulWidget {
   WidgetPengajuanList({Key key}) : super(key: key);
@@ -12,7 +14,7 @@ class WidgetPengajuanList extends StatefulWidget {
 }
 
 class _WidgetPengajuanListState extends State<WidgetPengajuanList> {
-  var dataList = ['New', 'Review', 'Publish', 'Negosiasi', 'Progress', 'Finish'];
+  var dataList = ['New', 'Review', 'Publish', 'Negosiasi', 'Kontrak', 'Progress', 'Finish', 'Tolak'];
 
   @override
   void initState() {
@@ -59,12 +61,19 @@ class _WidgetPengajuanListState extends State<WidgetPengajuanList> {
                                       Icons.assignment,
                                       color: Color(0xffff7675),
                                     )
-                                  : dataList[index] == 'Progress'
-                                      ? Icon(
-                                          Icons.work,
-                                          color: Color(0xffff7675),
-                                        )
-                                      : Icon(Icons.done_all, color: Color(0xff00cec9)),
+                                  : dataList[index] == 'Kontrak'
+                                      ? Icon(Icons.event_note, color: Colors.red)
+                                      : dataList[index] == 'Progress'
+                                          ? Icon(
+                                              Icons.work,
+                                              color: Color(0xffff7675),
+                                            )
+                                          : dataList[index] == 'Finish'
+                                              ? Icon(
+                                                  Icons.done_all,
+                                                  color: Color(0xff00cec9),
+                                                )
+                                              : Icon(Icons.delete, color: Colors.red),
                   trailing: Icon(Icons.arrow_forward_ios)),
             ),
           );
@@ -76,6 +85,7 @@ class _WidgetPengajuanListState extends State<WidgetPengajuanList> {
   _openPengajuan(param) {
     for (int i = 0; i < dataList.length; i++) {
       if (param == dataList[i]) {
+        Provider.of<DataProvider>(context).getProdukListByUserId(param);
         Navigator.push(
             context,
             SlideRightRoute(

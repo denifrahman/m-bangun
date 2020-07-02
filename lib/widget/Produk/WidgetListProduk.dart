@@ -64,6 +64,7 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
             onTap: () {
               Navigator.push(context, SlideRightRoute(page: WidgetDetailProduk()));
               Provider.of<DataProvider>(context).getProdukById(dataProvider.getProdukListByParam[j].produkid);
+              Provider.of<DataProvider>(context).chekUserBidding(dataProvider.getProdukListByParam[j].produkid);
             },
             child: WidgetOverViewProduk(
                 produkNama: dataProvider.getProdukListByParam[j].produknama,

@@ -208,6 +208,7 @@ class _LoginWidgetState extends State<LoginWidget> {
         LocalStorage.sharedInstance.writeValue(key: 'session', value: json.encode(data));
         Navigator.popAndPushNamed(context, widget.page);
         Provider.of<DataProvider>(context).setLoading(true);
+        Provider.of<DataProvider>(context).chekSession();
       } else {
         _btnController.reset();
       }

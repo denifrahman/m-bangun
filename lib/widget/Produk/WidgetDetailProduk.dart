@@ -1,12 +1,18 @@
+import 'dart:convert';
+
 import 'package:apps/Utils/PreviewFoto.dart';
+import 'package:apps/providers/Api.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/widget/Produk/component/WidgetDeskripsiProduk.dart';
 import 'package:apps/widget/Produk/component/WidgetDetailBahanProduk.dart';
 import 'package:apps/widget/Produk/component/WidgetDetailLokasi.dart';
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:pk_skeleton/pk_skeleton.dart';
 import 'package:provider/provider.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:route_transitions/route_transitions.dart';
 
 class WidgetDetailProduk extends StatefulWidget {
@@ -19,6 +25,12 @@ class WidgetDetailProduk extends StatefulWidget {
 }
 
 class _WidgetDetailProdukState extends State<WidgetDetailProduk> {
+  TextEditingController waktuPengerjaanController = new TextEditingController();
+  TextEditingController budgetController = new TextEditingController();
+  TextEditingController deskripsiController = new TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +46,8 @@ class _WidgetDetailProdukState extends State<WidgetDetailProduk> {
     // TODO: implement build
     DataProvider dataProvider = Provider.of<DataProvider>(context);
     var data = dataProvider.getdataProdukById;
+    var budget = dataProvider.getdataProdukById['data'][0]['produkbudget'] == null ? '0' : dataProvider.getdataProdukById['data'][0]['produkbudget'];
+    budgetController.text = budget;
     return Scaffold(
       body: dataProvider.isLoading
           ? SingleChildScrollView(
@@ -253,18 +267,36 @@ class _WidgetDetailProdukState extends State<WidgetDetailProduk> {
                             } else {
                               dataProvider.setFavoriveByUserId(dataProvider.getdataProdukById['data'][0]['produkid']);
                             }
-                          } else {}
+                          } else {
+                            Flushbar(
+                              title: "Error",
+                              message: "Silahkan login / daftar member",
+                              duration: Duration(seconds: 15),
+                              backgroundColor: Colors.red,
+                              flushbarPosition: FlushbarPosition.BOTTOM,
+                              icon: Icon(
+                                Icons.assignment_turned_in,
+                                color: Colors.white,
+                              ),
+                            )..show(context);
+                          }
                         },
                       ),
                       Container(
-                        child: Center(
-                            child: Text(
-                          'Apply',
-                          style: TextStyle(color: Colors.white),
-                        )),
+                        child: InkWell(
+                          onTap: () {
+                            !dataProvider.isBid ? _showDialog() : null;
+                          },
+                          child: Center(
+                              child: Text(
+                            'Apply',
+                            style: TextStyle(color: Colors.white),
+                          )),
+                        ),
                         height: 40,
                         width: MediaQuery.of(context).size.width * 0.7,
-                        decoration: BoxDecoration(color: Colors.cyan[600], borderRadius: BorderRadius.circular(20)),
+                        decoration:
+                            BoxDecoration(color: !dataProvider.isBid ? Colors.cyan[600] : Colors.grey, borderRadius: BorderRadius.circular(20)),
                       ),
                     ],
                   ),
@@ -272,5 +304,195 @@ class _WidgetDetailProdukState extends State<WidgetDetailProduk> {
               ],
             ),
     );
+  }
+
+  void _showDialog() {
+    DataProvider dataProvider = Provider.of<DataProvider>(context);
+    if (dataProvider.userId_ == null) {
+      Flushbar(
+        title: "Error",
+        message: "Silahkan login / daftar member",
+        duration: Duration(seconds: 15),
+        backgroundColor: Colors.red,
+        flushbarPosition: FlushbarPosition.BOTTOM,
+        icon: Icon(
+          Icons.assignment_turned_in,
+          color: Colors.white,
+        ),
+      )..show(context);
+    } else {
+      showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Form(
+            key: _formKey,
+            autovalidate: false,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.58,
+              padding: EdgeInsets.all(10.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Apply Penawaran Anda',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                        ),
+                        InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Icon(Icons.clear))
+                      ],
+                    ),
+                    Divider(),
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: new TextFormField(
+                          inputFormatters: [MoneyInputFormatter(useSymbolPadding: true, mantissaLength: 0, leadingSymbol: 'Rp')],
+                          validator: (String arg) {
+                            if (arg.length < 1)
+                              return 'Harus di isi';
+                            else
+                              return null;
+                          },
+                          controller: budgetController,
+                          textAlign: TextAlign.right,
+                          keyboardType: TextInputType.number,
+                          style: TextStyle(fontSize: 18, color: Colors.green),
+                          decoration: const InputDecoration(
+                              hintText: 'Rp 100,000',
+                              labelText: 'Ajukan Budget anda',
+                              errorText: 'ganti jika anda memiliki budget penawaran',
+//                          hintStyle: TextStyle(fontSize: 12, color: Colors.grey),
+//                          labelStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xffb16a085),
+                                ),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xffb16a085),
+                                ),
+                              ),
+                              hasFloatingPlaceholder: true),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: new TextFormField(
+                          validator: (String arg) {
+                            if (arg.length < 1)
+                              return 'Harus di isi';
+                            else
+                              return null;
+                          },
+                          controller: waktuPengerjaanController,
+                          keyboardType: TextInputType.text,
+                          decoration: const InputDecoration(
+                              hintText: '15 Hari',
+                              labelText: 'Ajukan Waktu Pengerjaan',
+//                          labelStyle: TextStyle(fontSize: 14, color: Colors.grey),
+//                          hintStyle: TextStyle(fontSize: 12, color: Colors.grey),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xffb16a085),
+                                ),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xffb16a085),
+                                ),
+                              ),
+                              hasFloatingPlaceholder: true),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: new TextFormField(
+//                      focusNode: myFocusNodeBahan,
+                          controller: deskripsiController,
+                          validator: (String arg) {
+                            if (arg.length < 1)
+                              return 'Harus di isi';
+                            else
+                              return null;
+                          },
+                          keyboardType: TextInputType.multiline,
+                          decoration: const InputDecoration(
+                              labelText: "Catatan",
+                              hintText: 'Catatan',
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xffb16a085),
+                                ),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xffb16a085),
+                                ),
+                              ),
+                              hasFloatingPlaceholder: true),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    RoundedLoadingButton(
+                      child: Text('Apply', style: TextStyle(color: Colors.white)),
+                      color: Colors.red,
+                      controller: _btnController,
+                      onPressed: () => bidding(),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+  }
+
+  bidding() async {
+    if (_formKey.currentState.validate()) {
+      DataProvider dataProvider = Provider.of<DataProvider>(context);
+      var budget = budgetController.text.replaceAll('Rp', '');
+      var saveBudget = budget.replaceAll(',', '');
+      var map = new Map<String, dynamic>();
+      map['userid'] = dataProvider.userId;
+      map['bidprice'] = saveBudget;
+      map['biddeskripsi'] = deskripsiController.text;
+      map['produkid'] = dataProvider.getdataProdukById['data'][0]['produkid'];
+      map['bidwaktupengerjaan'] = waktuPengerjaanController.text;
+      Api.addBids(dataProvider.token, map).then((response) async {
+        print(response.body);
+        var result = json.decode(response.body);
+        if (result['status'] == true) {
+          _btnController.success();
+          await new Future.delayed(const Duration(seconds: 3));
+          Navigator.pop(context);
+          dataProvider.chekUserBidding(dataProvider.getdataProdukById['data'][0]['produkid']);
+        } else {
+          _btnController.error();
+          await new Future.delayed(const Duration(seconds: 3));
+          _btnController.reset();
+        }
+      });
+    } else {
+      _btnController.error();
+      await new Future.delayed(const Duration(seconds: 3));
+      _btnController.reset();
+    }
   }
 }

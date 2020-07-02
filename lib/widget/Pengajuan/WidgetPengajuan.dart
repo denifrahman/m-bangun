@@ -47,24 +47,26 @@ class _WidgetPengajuanState extends State<WidgetPengajuan> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Column(
-      children: [
-        Container(
-            color: Colors.white,
-            height: (widget.height) * 0.1,
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+              color: Colors.white,
+              height: (widget.height) * 0.1,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Center(child: _dropdownJenisPengajuan()),
+              )),
+          Container(
+            height: (widget.height) * 0.9,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Center(child: _dropdownJenisPengajuan()),
-            )),
-        Container(
-          height: (widget.height) * 0.9,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SingleChildScrollView(
-                child: jenispengajuanid == '1' ? WidgetFormRequest() : jenispengajuanid == '2' ? WidgetFormPelatihanKerja() : Container()),
-          ),
-        )
-      ],
+              padding: const EdgeInsets.all(8.0),
+              child: SingleChildScrollView(
+                  child: jenispengajuanid == '1' ? WidgetFormRequest() : jenispengajuanid == '2' ? WidgetFormPelatihanKerja() : Container()),
+            ),
+          )
+        ],
+      ),
     );
   }
 

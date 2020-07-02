@@ -94,7 +94,7 @@ class _WidgetLokasiState extends State<WidgetLokasi> {
                                 style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal, color: Color(0xffb16a085))),
                       ],
                     ),
-                    Text(dataProvider.namaProvinsi == null ? 'Pilih lokasi' : '${provinsi[0].toUpperCase()}${provinsi.substring(1)}',
+                    Text(dataProvider.namaProvinsi == null || dataProvider.namaProvinsi == '' ? 'Pilih lokasi' : '${provinsi[0].toUpperCase()}${provinsi.substring(1)}',
                         style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Color(0xffb16a085))),
                   ],
                 ))

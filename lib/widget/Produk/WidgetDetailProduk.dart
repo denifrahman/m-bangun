@@ -491,6 +491,7 @@ class _WidgetDetailProdukState extends State<WidgetDetailProduk> {
       });
     } else {
       _btnController.error();
+      FocusScope.of(context).requestFocus(FocusNode());
       await new Future.delayed(const Duration(seconds: 3));
       _btnController.reset();
     }

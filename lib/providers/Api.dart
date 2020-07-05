@@ -9,6 +9,10 @@ import 'package:mime/mime.dart';
 const baseUrl = "http://m-bangun.com/api/api/";
 //const baseUrl = "http://localhost:8888/api_jwt/api/";
 //const baseUrl = "http://192.168.0.6/api_jwt/api/";
+//const api_url = "192.168.0.3";
+//const param = '/api_jwt/api/';
+const param = '/api/api/';
+const api_url = "m-bangun.com";
 
 class Api {
   static Future getToken() {
@@ -326,13 +330,9 @@ class Api {
     }
   }
 
-  static Future getAllProdukByParam(token, idKecamatan, idKota, idProvinsi, idSubKategori, Key) {
-    var sub = (idSubKategori == '' || idSubKategori == null ? '' : 'sub=' + idSubKategori);
-    var kec = (idKecamatan == '' || idKecamatan == null ? '' : '&kec=' + idKecamatan);
-    var kota = (idKota == '' || idKota == null ? '' : '&kota=' + idKota);
-    var prov = (idProvinsi == '' || idProvinsi == null ? '' : '&prov=' + idProvinsi);
-    var key = (Key == '' || Key == '' ? '' : '&key=' + Key);
-    var url = baseUrl + "produk/getAllByParam?" + sub + kec + kota + prov + key;
+  static Future getAllProdukByParam(token, query) {
+    var url = Uri.http(api_url, param + 'produk/getAllByParam', query);
+    print(url);
     try {
       return http.get(
         url,
@@ -343,34 +343,20 @@ class Api {
     }
   }
 
-  static Future getAllProdukByUserId(token, userId, status) {
-    var _userId = (userId == '' ? '' : '&userid=' + userId);
-    var _status = (status == '' ? '' : '&stp=' + status);
-    var url = baseUrl + "produk/getAllByParam?" + _userId + _status;
-    try {
-      var result = http.get(
-        url,
-        headers: {HttpHeaders.authorizationHeader: token},
-      );
-      return result;
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  static Future getProdukByIdProduk(token, produkId) {
-    var _produkId = (produkId == '' ? '' : '&pro_id=' + produkId);
-    var url = baseUrl + "produk/getAllByParam?" + _produkId;
-    try {
-      var result = http.get(
-        url,
-        headers: {HttpHeaders.authorizationHeader: token},
-      );
-      return result;
-    } catch (e) {
-      print(e);
-    }
-  }
+//  static Future getAllProdukByUserId(token, userId, status) {
+//    var _userId = (userId == '' ? '' : '&userid=' + userId);
+//    var _status = (status == '' ? '' : '&stp=' + status);
+//    var url = baseUrl + "produk/getAllByParam?" + _userId + _status;
+//    try {
+//      var result = http.get(
+//        url,
+//        headers: {HttpHeaders.authorizationHeader: token},
+//      );
+//      return result;
+//    } catch (e) {
+//      print(e);
+//    }
+//  }
 
   static Future insertPelatihanKerja(token, body) {
     var url = baseUrl + "PelatihanKerja/insertPelatihanKerja";
@@ -451,11 +437,8 @@ class Api {
     }
   }
 
-  static Future chekUserBidding(token, userId, produkId) {
-    var _produkId = (produkId == '' || produkId == null ? '' : 'produkId=' + produkId);
-    var _userId = (userId == '' || userId == null ? '' : '&userId=' + userId);
-    var url = baseUrl + "Bid/chekUserBidding?" + _produkId + _userId;
-    print(url);
+  static Future getBidByParam(token, query) {
+    var url = Uri.http(api_url, param + '/Bid/getBidByParam', query);
     try {
       return http.get(
         url,
@@ -466,10 +449,8 @@ class Api {
     }
   }
 
-  static Future getAllBidByUserIdAndStatusId(token, userId, statusId) {
-    var _statusId = (statusId == '' ? '' : 'statusid=' + statusId);
-    var _userId = (userId == '' ? '' : '&userid=' + userId);
-    var url = baseUrl + "Bid/getByUserIdAndStatusId?" + _statusId + _userId;
+  static Future getKontrakByParam(token, query) {
+    var url = Uri.http(api_url, param + 'Kontrak/getKontrakByParam', query);
     print(url);
     try {
       return http.get(

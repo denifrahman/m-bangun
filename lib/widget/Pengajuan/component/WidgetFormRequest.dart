@@ -133,7 +133,7 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
   }
 
   void _getImage(BuildContext context, ImageSource source, param) async {
-    File image = await ImagePicker.pickImage(source: source, maxHeight: 500, maxWidth: 500);
+    File image = await ImagePicker.pickImage(source: source, maxHeight: 1000, maxWidth: 1000);
     if (param == 'produkthumbnail') {
       setState(() {
         produkthumbnail = image;
@@ -215,6 +215,7 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
           setState(() {
             _saving = false;
           });
+          FocusScope.of(context).requestFocus(FocusNode());
           Flushbar(
             title: "Gagal",
             message: 'Periksa koneksi internet anda',

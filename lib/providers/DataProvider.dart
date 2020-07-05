@@ -41,7 +41,7 @@ class DataProvider extends ChangeNotifier {
 
   String userId;
 
-  String get userId_ =>userId;
+  String get userId_ => userId;
   String _title;
   String token = '';
 
@@ -314,14 +314,17 @@ class DataProvider extends ChangeNotifier {
     String currentIdProvinsi = await LocalStorage.sharedInstance.readValue('idProvinsi');
     String currentIdKota = await LocalStorage.sharedInstance.readValue('idKota');
     String currentIdKecamatan = await LocalStorage.sharedInstance.readValue('idKecamatan');
-    bool responsData = true;
-    Api.getAllProdukByParam(token, currentIdKecamatan == 'null' ? '' : currentIdKecamatan, currentIdKota == 'null' ? '' : currentIdKota,
-            currentIdProvinsi == 'null' ? '' : currentIdProvinsi, idSubKategori, key)
-        .then((response) {
-      print(response);
+    var queryParameters = {
+      'sub': idSubKategori.toString(),
+      'kec': currentIdKecamatan.toString() == 'null' ? '' : currentIdKecamatan.toString(),
+      'kota': currentIdKota.toString() == 'null' ? '' : currentIdKota.toString(),
+      'prov': currentIdProvinsi.toString() == 'null' ? '' : currentIdProvinsi.toString(),
+      'key': key.toString(),
+    };
+    Api.getAllProdukByParam(token, queryParameters).then((response) {
+      print(response.body);
       var result = json.decode(response.body);
       if (result['status'] == true) {
-        responsData = true;
         Iterable list = json.decode(response.body)['data'];
         dataProdukListByParam = list.map((model) => ProdukListM.fromMap(model)).toList();
         notifyListeners();
@@ -378,15 +381,18 @@ class DataProvider extends ChangeNotifier {
   Map<String, dynamic> get getdataProdukById => dataProdukById;
 
   getProdukById(String produkId) {
+    imageCache.clear();
+    var queryParameters = {'pro_id': produkId.toString()};
     _isLoading = true;
     notifyListeners();
-    Api.getProdukByIdProduk(token, produkId).then((value) {
+    Api.getAllProdukByParam(token, queryParameters).then((value) {
       var result = json.decode(value.body);
-//      print(result);
+//      print(produkId);
       if (result['status']) {
         if (userId != null) {
           getFavoriteByProdukIdAndUserId(produkId);
           _isLoading = false;
+          imageCache.clear();
           notifyListeners();
         }
         _isLoading = false;
@@ -465,8 +471,12 @@ class DataProvider extends ChangeNotifier {
   }
 
   void getProdukListByUserId(param) async {
+    var queryParameters = {
+      'stp': param.toString(),
+      'userid': userId.toString(),
+    };
     _isLoading = true;
-    Api.getAllProdukByUserId(token, userId, param).then((response) {
+    Api.getAllProdukByParam(token, queryParameters).then((response) {
       var result = json.decode(response.body);
       print(result);
       if (result['status'] == true) {
@@ -487,11 +497,15 @@ class DataProvider extends ChangeNotifier {
 
   void getAllBidByUserIdAndStatusId(statusId) async {
     _isLoading = true;
-    Api.getAllBidByUserIdAndStatusId(token, userId, statusId).then((response) {
+    var queryParameters = {
+      'bidStatusId': statusId.toString(),
+      'userId': userId.toString(),
+    };
+    Api.getBidByParam(token, queryParameters).then((response) {
       var result = json.decode(response.body);
-      print(result);
+      print(result['data']);
       if (result['status'] == true) {
-        Iterable list = json.decode(response.body)['data'];
+        Iterable list = result['data'];
         _bidByUserIdAndStatusIdList = list.map((model) => BidM.fromMap(model)).toList();
         _isLoading = false;
         notifyListeners();
@@ -503,8 +517,40 @@ class DataProvider extends ChangeNotifier {
   }
 
   void chekUserBidding(produkId) {
-    Api.chekUserBidding(token, userId, produkId).then((response) {
-      _isBid = json.decode(response.body)['data'];
+    var queryParameters = {
+      'produkId': produkId.toString(),
+      'userId': userId.toString(),
+    };
+    Api.getBidByParam(token, queryParameters).then((response) {
+      _isBid = json.decode(response.body)['isBid'];
+      notifyListeners();
+    });
+  }
+
+  List<BidM> _listBidding = [];
+
+  List<BidM> get listBidding => _listBidding;
+
+  void getBiddingByProdukId(produkId) {
+    var queryParameters = {'produkId': produkId.toString(), 'statusnama': 'Negosiasi'};
+    Api.getBidByParam(token, queryParameters).then((response) {
+      var result = json.decode(response.body);
+      Iterable list = result['data'];
+      _listBidding = list.map((model) => BidM.fromMap(model)).toList();
+      notifyListeners();
+    });
+  }
+
+  Map<String, dynamic> _dataKontrak;
+
+  Map<String, dynamic> get dataKontrak => _dataKontrak;
+
+  void getKontrakByProdukId(produkId) {
+    var queryParameters = {'produkId': produkId.toString()};
+    Api.getKontrakByParam(token, queryParameters).then((response) {
+      var result = json.decode(response.body);
+      _dataKontrak = result;
+      print(response.body);
       notifyListeners();
     });
   }

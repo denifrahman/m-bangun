@@ -4,10 +4,10 @@ import 'package:jiffy/jiffy.dart';
 import 'package:money2/money2.dart';
 import 'package:provider/provider.dart';
 
-class WidgetDeskripsiProduk extends StatelessWidget {
+class WidgetDeskripsiPengajuan extends StatelessWidget {
   final String harga, created, lokasi, kategori, subKategori;
 
-  const WidgetDeskripsiProduk({Key key, this.harga, this.kategori, this.created, this.lokasi, this.subKategori}) : super(key: key);
+  const WidgetDeskripsiPengajuan({Key key, this.harga, this.kategori, this.created, this.lokasi, this.subKategori}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class WidgetDeskripsiProduk extends StatelessWidget {
                     data == null
                         ? Text('')
                         : Text(
-                      hargaFormat.toString(),
+                            hargaFormat.toString(),
                             style: TextStyle(color: Colors.green, fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                     Spacer(),

@@ -39,7 +39,6 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DataProvider dataProvider = Provider.of<DataProvider>(context);
-    print(dataProvider.userFoto);
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: !dataProvider.isLogin

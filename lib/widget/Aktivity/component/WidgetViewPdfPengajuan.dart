@@ -3,20 +3,21 @@ import 'package:apps/providers/DataProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class WidgetViewPdf extends StatefulWidget {
-  WidgetViewPdf({Key key, this.urlPdf}) : super(key: key);
-
+class WidgetViewPdfPengajuan extends StatefulWidget {
+  WidgetViewPdfPengajuan({Key key, @required this.urlPdf, @required this.title}) : super(key: key);
   final String urlPdf;
+  final String title;
 
   @override
-  _WidgetViewPdfState createState() {
-    return _WidgetViewPdfState();
+  _WidgetViewPdfPengajuanState createState() {
+    return _WidgetViewPdfPengajuanState();
   }
 }
 
-class _WidgetViewPdfState extends State<WidgetViewPdf> {
+class _WidgetViewPdfPengajuanState extends State<WidgetViewPdfPengajuan> {
   bool _isLoading = true;
   PDFDocument document;
+
   @override
   void initState() {
     loadDocument();
@@ -27,10 +28,11 @@ class _WidgetViewPdfState extends State<WidgetViewPdf> {
   void dispose() {
     super.dispose();
   }
+
   loadDocument() async {
     await new Future.delayed(const Duration(seconds: 3));
     DataProvider dataProvider = Provider.of<DataProvider>(context);
-    document = await PDFDocument.fromURL('http://m-bangun.com/api/assets/pdf/file_rab_'+dataProvider.getdataProdukById['data'][0]['produkid']+'.pdf');
+    document = await PDFDocument.fromURL(widget.urlPdf);
     setState(() => _isLoading = false);
   }
 
@@ -39,7 +41,7 @@ class _WidgetViewPdfState extends State<WidgetViewPdf> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: Text('RAB'),
+        title: Text(widget.title),
       ),
       body: Center(
         child: _isLoading

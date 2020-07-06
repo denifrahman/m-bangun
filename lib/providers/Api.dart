@@ -6,13 +6,13 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
 //const baseUrl = "http://niagatravel.com/api/api-m-bangun-jwt-token/api/";
-const baseUrl = "http://m-bangun.com/api/api/";
-//const baseUrl = "http://localhost:8888/api_jwt/api/";
+//const baseUrl = "http://m-bangun.com/api/api/";
+const baseUrl = "http://192.168.0.3/api_jwt/api/";
 //const baseUrl = "http://192.168.0.6/api_jwt/api/";
-//const api_url = "192.168.0.3";
-//const param = '/api_jwt/api/';
-const param = '/api/api/';
-const api_url = "m-bangun.com";
+const api_url = "192.168.0.3";
+const param = '/api_jwt/api/';
+//const param = '/api/api/';
+//const api_url = "m-bangun.com";
 
 class Api {
   static Future getToken() {

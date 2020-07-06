@@ -30,6 +30,7 @@ class _WidgetViewPdfPengajuanState extends State<WidgetViewPdfPengajuan> {
   }
 
   loadDocument() async {
+    imageCache.clear();
     await new Future.delayed(const Duration(seconds: 3));
     DataProvider dataProvider = Provider.of<DataProvider>(context);
     document = await PDFDocument.fromURL(widget.urlPdf);

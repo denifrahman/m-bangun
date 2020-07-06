@@ -61,14 +61,20 @@ class WidgetKontrak extends StatelessWidget {
                                   context,
                                   PageRouteTransition(
                                     animationType: AnimationType.slide_up,
-                                    builder: (context) => WidgetSignature(),
+                                    builder: (context) => WidgetSignature(
+                                      kontrakId: dataProvider.dataKontrak['data']['kontrakid'],
+                                      produkId: dataProvider.dataKontrak['data']['produkid'],
+                                      signature: 'owner',
+                                    ),
                                   ));
                             },
                           ),
                         ),
                         leading: InkWell(
                           onTap: () {
-                            var url = 'http://m-bangun.com/api/web/kontrak/pdf?id=' + dataProvider.dataKontrak['data']['produkid'];
+                            imageCache.clear();
+//                            var url = 'http://m-bangun.com/api/web/kontrak/pdf?id=' + dataProvider.dataKontrak['data']['produkid'];
+                            var url = 'http://192.168.0.3/api_jwt/web/kontrak/pdf?id=' + dataProvider.dataKontrak['data']['produkid'];
                             var title = 'Kontrak';
                             Navigator.push(context, SlideRightRoute(page: WidgetViewPdfPengajuan(urlPdf: url, title: title)));
                           },

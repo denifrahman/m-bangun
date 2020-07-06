@@ -554,4 +554,10 @@ class DataProvider extends ChangeNotifier {
       notifyListeners();
     });
   }
+
+  createSignature(map) {
+    Api.createSignature(token, map).then((value) {
+      print(value.body);
+    });
+  }
 }

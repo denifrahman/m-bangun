@@ -11,7 +11,10 @@ import 'package:flutter_signature_pad/flutter_signature_pad.dart';
 import 'package:provider/provider.dart';
 
 class WidgetSignature extends StatefulWidget {
-  WidgetSignature({Key key}) : super(key: key);
+  WidgetSignature({Key key, this.produkId, this.kontrakId, this.signature}) : super(key: key);
+  final String produkId;
+  final String kontrakId;
+  final String signature;
 
   @override
   _WidgetSignatureState createState() => _WidgetSignatureState();
@@ -73,9 +76,16 @@ class _WidgetSignatureState extends State<WidgetSignature> {
                           });
                           var map = new Map<String, dynamic>();
                           map['image_base64_string'] = encoded;
-                          Api.createSignature(dataProvider.getTokenData, map).then((value) {
-                            print(value.body);
-                          });
+                          map['kontrakid'] = widget.kontrakId;
+                          if (widget.signature == 'owner') {
+                            map['userid_owner'] = widget.signature;
+                          }
+                          if (widget.signature == 'worker') {
+                            map['userid_worker'] = widget.signature;
+                          }
+                          map['image_name'] = widget.kontrakId + '_' + widget.produkId + '_' + dataProvider.userId_;
+//                          print(widget.kontrakId + '_' + widget.produkId + '_' + dataProvider.userId_);
+                          dataProvider.createSignature(map);
                         },
                         child: Text(
                           "Save",

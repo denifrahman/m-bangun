@@ -1,9 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
-import 'package:apps/Utils/LocalBindings.dart';
+
 import 'package:apps/Utils/navigation_right.dart';
-import 'package:apps/models/ProdukListM.dart';
-import 'package:apps/providers/Api.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/widget/ApplyBid/WidgetDetailBid.dart';
 import 'package:apps/widget/Invoice/WidgetInvoice.dart';
@@ -48,6 +45,7 @@ class _WidgetApplyBidListState extends State<WidgetApplyBidList> {
   Widget build(BuildContext context) {
     DataProvider dataProvider = Provider.of<DataProvider>(context);
     var today = DateTime.now();
+
     initializeDateFormatting('in', null);
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
@@ -85,6 +83,7 @@ class _WidgetApplyBidListState extends State<WidgetApplyBidList> {
                         shrinkWrap: true,
                         itemCount: dataProvider.ListBidByUserIdAndStatusId.length,
                         itemBuilder: (context, index) {
+                          var produkId = dataProvider.ListBidByUserIdAndStatusId[index].produkid;
                           DateTime bidCreate = DateTime.parse(dataProvider.ListBidByUserIdAndStatusId[index].bidcreate.toString());
                           final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
                           var bidPrice = dataProvider.ListBidByUserIdAndStatusId[index].bidprice == null ? '' : dataProvider.ListBidByUserIdAndStatusId[index].bidprice;
@@ -92,104 +91,110 @@ class _WidgetApplyBidListState extends State<WidgetApplyBidList> {
                           return dataProvider.ListBidByUserIdAndStatusId.length != 0
                               ? InkWell(
                                   onTap: () {
-                                    var produkId = dataProvider.ListBidByUserIdAndStatusId[index].produkid;
-                                    print(widget.param);
                                     if (widget.param == 'Progress') {
-                                      Navigator.push(context, SlideRightRoute(page: WidgetInvoice()));
+                                      Navigator.push(context, SlideRightRoute(page: WidgetInvoice(flag: 'worker')));
                                       dataProvider.getAllInvoice(produkId);
                                     } else {
-                                      dataProvider.getKontrakByProdukId(produkId);
-                                      dataProvider.getProdukById(produkId);
-                                      Navigator.push(context, SlideRightRoute(page: WidgetDetailBid(param: widget.param)));
-                                    }
-                                  },
-                                  child: Stack(
-                                    children: <Widget>[
-                                      Card(
-                                        elevation: 2,
-                                        margin: EdgeInsets.all(15),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10.0),
+                                  dataProvider.getKontrakByProdukId(produkId);
+                                  dataProvider.getProdukById(produkId);
+                                  Navigator.push(context, SlideRightRoute(page: WidgetDetailBid(param: widget.param)));
+                                }
+                              },
+                              child: Stack(
+                                children: <Widget>[
+                                  Card(
+                                    elevation: 2,
+                                    margin: EdgeInsets.all(15),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: Container(
+                                      height: 90,
+                                      decoration: BoxDecoration(color: Colors.cyan[500], borderRadius: BorderRadius.all(Radius.circular(10))),
+                                      padding: EdgeInsets.all(5),
+                                      child: ListTile(
+                                        title: Text(
+                                          dataProvider.ListBidByUserIdAndStatusId[index].produknama,
+                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
+                                          maxLines: 2,
                                         ),
-                                        child: Container(
-                                          height: 90,
-                                          decoration: BoxDecoration(color: Colors.cyan[500], borderRadius: BorderRadius.all(Radius.circular(10))),
-                                          padding: EdgeInsets.all(5),
+                                        subtitle: Text(DateFormat("EEE, dd MMMM yyyy", 'in').format(bidCreate), style: TextStyle(color: Colors.grey[300])),
+                                        trailing: Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: <Widget>[
+                                            (dataProvider.ListBidByUserIdAndStatusId[index].statusnama == 'New' ||
+                                                dataProvider.ListBidByUserIdAndStatusId[index].statusnama == 'Review')
+                                                ? Icon(
+                                              FontAwesomeIcons.exclamationCircle,
+                                              color: Colors.amber,
+                                              size: 25,
+                                            )
+                                                : dataProvider.ListBidByUserIdAndStatusId[index].statusnama == 'Ditolak'
+                                                ? Icon(
+                                              Icons.close,
+                                              color: Colors.white,
+                                              size: 20,
+                                            )
+                                                : Icon(
+                                              FontAwesomeIcons.exclamationCircle,
+                                              color: Colors.amber,
+                                              size: 25,
+                                            ),
+                                            Text(
+                                              dataProvider.ListBidByUserIdAndStatusId[index].statusnama,
+                                              style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.w600, color: Colors.white, fontSize: 12),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 80.0),
+                                    child: Card(
+                                      elevation: 2,
+                                      margin: EdgeInsets.all(15),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(bottomRight: Radius.circular(10), bottomLeft: Radius.circular(10)),
+                                      ),
+                                      child: Container(
+                                        height: 120,
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey[100], borderRadius: BorderRadius.only(bottomRight: Radius.circular(10), bottomLeft: Radius.circular(10))),
+                                        padding: EdgeInsets.all(10),
+                                        child: Align(
+                                          alignment: Alignment.center,
                                           child: ListTile(
                                             title: Text(
-                                              dataProvider.ListBidByUserIdAndStatusId[index].produknama,
-                                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
-                                              maxLines: 2,
+                                              budgetFormat.toString(),
+                                              style: TextStyle(color: Colors.black),
                                             ),
-                                            subtitle: Text(DateFormat("EEE, dd MMMM yyyy", 'in').format(bidCreate), style: TextStyle(color: Colors.grey[300])),
-                                            trailing: Column(
-                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                              children: <Widget>[
-                                                (dataProvider.ListBidByUserIdAndStatusId[index].statusnama == 'New' ||
-                                                        dataProvider.ListBidByUserIdAndStatusId[index].statusnama == 'Review')
-                                                    ? Icon(
-                                                        FontAwesomeIcons.exclamationCircle,
-                                                        color: Colors.amber,
-                                                        size: 25,
-                                                      )
-                                                    : dataProvider.ListBidByUserIdAndStatusId[index].statusnama == 'Ditolak'
-                                                        ? Icon(
-                                                            Icons.close,
-                                                            color: Colors.white,
-                                                            size: 20,
-                                                          )
-                                                        : Icon(
-                                                            FontAwesomeIcons.exclamationCircle,
-                                                            color: Colors.amber,
-                                                            size: 25,
-                                                          ),
-                                                Text(
-                                                  dataProvider.ListBidByUserIdAndStatusId[index].statusnama,
-                                                  style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.w600, color: Colors.white, fontSize: 12),
-                                                )
-                                              ],
+                                            subtitle: Text(
+                                                dataProvider.ListBidByUserIdAndStatusId[index].biddeskripsi == null
+                                                    ? ''
+                                                    : dataProvider.ListBidByUserIdAndStatusId[index].biddeskripsi,
+                                                style: TextStyle(color: Colors.grey[700])),
+                                            trailing: IconButton(
+                                              onPressed: () {
+                                                dataProvider.getKontrakByProdukId(produkId);
+                                                dataProvider.getProdukById(produkId);
+                                                Navigator.push(context, SlideRightRoute(page: WidgetDetailBid(param: widget.param)));
+                                              },
+                                              icon: Icon(Icons.arrow_drop_down_circle),
                                             ),
                                           ),
                                         ),
                                       ),
-                                      Container(
-                                        margin: EdgeInsets.only(top: 80.0),
-                                        child: Card(
-                                          elevation: 2,
-                                          margin: EdgeInsets.all(15),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(bottomRight: Radius.circular(10), bottomLeft: Radius.circular(10)),
-                                          ),
-                                          child: Container(
-                                            height: 120,
-                                            decoration: BoxDecoration(
-                                                color: Colors.grey[100], borderRadius: BorderRadius.only(bottomRight: Radius.circular(10), bottomLeft: Radius.circular(10))),
-                                            padding: EdgeInsets.all(10),
-                                            child: Align(
-                                              alignment: Alignment.center,
-                                              child: ListTile(
-                                                title: Text(
-                                                  budgetFormat.toString(),
-                                                  style: TextStyle(color: Colors.black),
-                                                ),
-                                                subtitle: Text(
-                                                    dataProvider.ListBidByUserIdAndStatusId[index].biddeskripsi == null
-                                                        ? ''
-                                                        : dataProvider.ListBidByUserIdAndStatusId[index].biddeskripsi,
-                                                    style: TextStyle(color: Colors.grey[700])),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ))
+                                    ),
+                                  ),
+                                ],
+                              ))
                               : Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    'Data tidak ada',
-                                    style: TextStyle(color: Colors.black),
-                                  ));
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Data tidak ada',
+                                style: TextStyle(color: Colors.black),
+                              ));
                         }),
               )
             ],

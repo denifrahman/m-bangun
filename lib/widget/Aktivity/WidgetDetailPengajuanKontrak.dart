@@ -51,6 +51,25 @@ class WidgetDetailPengajuanKontrak extends StatelessWidget {
                           expandedHeight: 200.0,
                           floating: false,
                           pinned: true,
+                          leading: Container(
+                            margin: EdgeInsets.only(
+                              left: 10,
+                            ),
+                            padding: EdgeInsets.all(3),
+                            child: CircleAvatar(
+                              radius: 30,
+                              backgroundColor: Colors.black26,
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ),
+                          ),
                           flexibleSpace: FlexibleSpaceBar(
                             centerTitle: true,
                             collapseMode: CollapseMode.parallax,

@@ -23,57 +23,56 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
         : DefaultTabController(
             length: 1,
             child: Scaffold(
-//        backgroundColor: Colors.white,
               appBar: AppBar(
                 elevation: 0.0,
-//          backgroundColor: Colors.white,
+                backgroundColor: Colors.cyan[700],
                 bottom: PreferredSize(
                   preferredSize: Size.fromHeight(50),
                   child: Container(
                     padding: EdgeInsets.all(5),
                     child: Align(
-                alignment: Alignment.centerLeft,
-                child: TabBar(
-                  isScrollable: true,
-                  labelColor: Color(0xffb16a085),
-                  unselectedLabelColor: Colors.grey,
-                  indicatorPadding: EdgeInsets.all(10),
-                  indicatorColor: Color(0xffb16a085),
-                  indicator: new BubbleTabIndicator(
-                    indicatorHeight: 30.0,
-                    indicatorColor: Colors.grey[200],
-                    tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                  ),
-                  tabs: [
-                    Tab(
-                      child: Text(
-                        'Pengajuan Saya',
-                        style: TextStyle(fontWeight: FontWeight.w400),
+                      alignment: Alignment.centerLeft,
+                      child: TabBar(
+                        isScrollable: true,
+                        labelColor: Color(0xffb16a085),
+                        unselectedLabelColor: Colors.grey,
+                        indicatorPadding: EdgeInsets.all(10),
+                        indicatorColor: Color(0xffb16a085),
+                        indicator: new BubbleTabIndicator(
+                          indicatorHeight: 30.0,
+                          indicatorColor: Colors.grey[200],
+                          tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                        ),
+                        tabs: [
+                          Tab(
+                            child: Text(
+                              'Pengajuan Saya',
+                              style: TextStyle(fontWeight: FontWeight.w400),
+                            ),
+                          ),
+                        ],
                       ),
+                    ),
+                  ),
+                ),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'Aktivitas Saya',
+                      style: TextStyle(fontSize: 25, letterSpacing: 1, fontFamily: "WorkSansMedium", color: Colors.white),
                     ),
                   ],
                 ),
               ),
-            ),
-          ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                'Aktivitas Saya',
-                style: TextStyle(fontSize: 25, letterSpacing: 1, fontFamily: "WorkSansMedium"),
+              body: Container(
+                child: TabBarView(
+                  children: [
+                    Container(child: WidgetPengajuanList()),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-        body: Container(
-          child: TabBarView(
-            children: [
-              Container(child: WidgetPengajuanList()),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
   }
 }

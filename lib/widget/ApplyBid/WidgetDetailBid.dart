@@ -46,6 +46,25 @@ class WidgetDetailBid extends StatelessWidget {
                     headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                       return <Widget>[
                         SliverAppBar(
+                          leading: Container(
+                            margin: EdgeInsets.only(
+                              left: 10,
+                            ),
+                            padding: EdgeInsets.all(3),
+                            child: CircleAvatar(
+                              radius: 30,
+                              backgroundColor: Colors.black26,
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ),
+                          ),
                           automaticallyImplyLeading: true,
                           expandedHeight: 200.0,
                           floating: false,
@@ -89,8 +108,8 @@ class WidgetDetailBid extends StatelessWidget {
                                     data == null
                                         ? dataProvider.fotoNull
                                         : dataProvider.getdataProdukById['data'][0]['produkthumbnail'] == null
-                                            ? dataProvider.fotoNull
-                                            : dataProvider.getdataProdukById['data'][0]['produkthumbnail'],
+                                        ? dataProvider.fotoNull
+                                        : dataProvider.getdataProdukById['data'][0]['produkthumbnail'],
                                     width: MediaQuery.of(context).size.width,
                                     fit: BoxFit.fitWidth,
                                   ),
@@ -112,8 +131,8 @@ class WidgetDetailBid extends StatelessWidget {
                                     data == null
                                         ? dataProvider.fotoNull
                                         : dataProvider.getdataProdukById['data'][0]['produkfoto1'] == null
-                                            ? dataProvider.fotoNull
-                                            : dataProvider.getdataProdukById['data'][0]['produkfoto1'],
+                                        ? dataProvider.fotoNull
+                                        : dataProvider.getdataProdukById['data'][0]['produkfoto1'],
                                     width: MediaQuery.of(context).size.width,
                                     fit: BoxFit.fitWidth,
                                   ),
@@ -135,8 +154,8 @@ class WidgetDetailBid extends StatelessWidget {
                                     data == null
                                         ? dataProvider.fotoNull
                                         : dataProvider.getdataProdukById['data'][0]['produkfoto2'] == null
-                                            ? dataProvider.fotoNull
-                                            : dataProvider.getdataProdukById['data'][0]['produkfoto2'],
+                                        ? dataProvider.fotoNull
+                                        : dataProvider.getdataProdukById['data'][0]['produkfoto2'],
                                     width: MediaQuery.of(context).size.width,
                                     fit: BoxFit.fitWidth,
                                   ),
@@ -158,8 +177,8 @@ class WidgetDetailBid extends StatelessWidget {
                                     data == null
                                         ? dataProvider.fotoNull
                                         : dataProvider.getdataProdukById['data'][0]['produkfoto3'] == null
-                                            ? dataProvider.fotoNull
-                                            : dataProvider.getdataProdukById['data'][0]['produkfoto3'],
+                                        ? dataProvider.fotoNull
+                                        : dataProvider.getdataProdukById['data'][0]['produkfoto3'],
                                     width: MediaQuery.of(context).size.width,
                                     fit: BoxFit.fitWidth,
                                   ),
@@ -181,8 +200,8 @@ class WidgetDetailBid extends StatelessWidget {
                                     data == null
                                         ? dataProvider.fotoNull
                                         : dataProvider.getdataProdukById['data'][0]['produkfoto4'] == null
-                                            ? dataProvider.fotoNull
-                                            : dataProvider.getdataProdukById['data'][0]['produkfoto4'],
+                                        ? dataProvider.fotoNull
+                                        : dataProvider.getdataProdukById['data'][0]['produkfoto4'],
                                     width: MediaQuery.of(context).size.width,
                                     fit: BoxFit.fitWidth,
                                   ),

@@ -6,13 +6,13 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
 //const baseUrl = "http://niagatravel.com/api/api-m-bangun-jwt-token/api/";
-//const baseUrl = "http://m-bangun.com/api/api/";
-const baseUrl = "http://192.168.0.3/api_jwt/api/";
+const baseUrl = "http://m-bangun.com/api/api/";
+//const baseUrl = "http://192.168.0.7/api_jwt/api/";
 //const baseUrl = "http://192.168.0.6/api_jwt/api/";
-const api_url = "192.168.0.3";
-const param = '/api_jwt/api/';
-//const param = '/api/api/';
-//const api_url = "m-bangun.com";
+//const api_url = "192.168.0.7";
+//const param = '/api_jwt/api/';
+const param = '/api/api/';
+const api_url = "m-bangun.com";
 
 class Api {
   static Future getToken() {
@@ -451,6 +451,18 @@ class Api {
 
   static Future getKontrakByParam(token, query) {
     var url = Uri.http(api_url, param + 'Kontrak/getKontrakByParam', query);
+    print(url);
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
+  }
+  static Future getAllInvoiceByParam(token, query) {
+    var url = Uri.http(api_url, param + 'Invoice/getAllInvoiceByParam', query);
     print(url);
     try {
       return http.get(

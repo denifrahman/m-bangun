@@ -36,7 +36,7 @@ class _WidgetSignatureState extends State<WidgetSignature> {
         title: Text('Signature'),
       ),
       body: SafeArea(
-        child: Column(
+        child: dataProvider.isLoading ? Center(child: CircularProgressIndicator()) : Column(
           children: <Widget>[
             Expanded(
               child: Container(

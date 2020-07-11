@@ -1,6 +1,5 @@
 import 'package:apps/Utils/PreviewFoto.dart';
 import 'package:apps/providers/DataProvider.dart';
-import 'package:apps/widget/Aktivity/component/WidgetListPekerja.dart';
 import 'package:apps/widget/Kontrak/WidgetKontrak.dart';
 import 'package:apps/widget/Produk/component/WidgetDeskripsiProduk.dart';
 import 'package:apps/widget/Produk/component/WidgetDetailBahanProduk.dart';
@@ -11,8 +10,8 @@ import 'package:pk_skeleton/pk_skeleton.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 
-class WidgetDetailPengajuanKontrak extends StatelessWidget {
-  WidgetDetailPengajuanKontrak({Key key, @required this.param}) : super(key: key);
+class WidgetDetailBid extends StatelessWidget {
+  WidgetDetailBid({Key key, @required this.param}) : super(key: key);
 
   final String param;
 
@@ -219,16 +218,10 @@ class WidgetDetailPengajuanKontrak extends StatelessWidget {
                                     child: WidgetDetailBahanProduk(),
                                   )
                                 : Container(),
-                            param == 'Negosiasi' || param == 'Kontrak'
-                                ? Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                                    child: WidgetListPekerja(),
-                                  )
-                                : Container(),
                             param == 'Kontrak' || param == 'Negosiasi'
                                 ? Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                                    child: WidgetKontrak(param: 'owner',),
+                                    child: WidgetKontrak(param: 'worker',),
                                   )
                                 : Container()
                           ],

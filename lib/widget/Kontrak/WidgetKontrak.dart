@@ -10,9 +10,9 @@ import 'package:route_transitions/route_transitions.dart';
 
 class WidgetKontrak extends StatelessWidget {
   const WidgetKontrak({
-    Key key,
+    Key key,this.param
   }) : super(key: key);
-
+  final String param;
   @override
   Widget build(BuildContext context) {
     DataProvider dataProvider = Provider.of<DataProvider>(context);
@@ -64,7 +64,7 @@ class WidgetKontrak extends StatelessWidget {
                                     builder: (context) => WidgetSignature(
                                       kontrakId: dataProvider.dataKontrak['data']['kontrakid'],
                                       produkId: dataProvider.dataKontrak['data']['produkid'],
-                                      signature: 'owner',
+                                      signature: this.param,
                                     ),
                                   ));
                             },
@@ -73,8 +73,9 @@ class WidgetKontrak extends StatelessWidget {
                         leading: InkWell(
                           onTap: () {
                             imageCache.clear();
-//                            var url = 'http://m-bangun.com/api/web/kontrak/pdf?id=' + dataProvider.dataKontrak['data']['produkid'];
-                            var url = 'http://192.168.0.3/api_jwt/web/kontrak/pdf?id=' + dataProvider.dataKontrak['data']['produkid'];
+                            var url = 'http://m-bangun.com/api/web/kontrak/pdf?id=' + dataProvider.dataKontrak['data']['produkid'];
+//                            var url = 'http://192.168.0.7/api_jwt/web/kontrak/pdf?id=' + dataProvider.dataKontrak['data']['produkid'];
+                            print(url);
                             var title = 'Kontrak';
                             Navigator.push(context, SlideRightRoute(page: WidgetViewPdfPengajuan(urlPdf: url, title: title)));
                           },

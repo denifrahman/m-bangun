@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:apps/Utils/BottomAnimation.dart';
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/models/BidM.dart';
+import 'package:apps/models/InvoiceM.dart';
 import 'package:apps/models/KategoriM.dart';
 import 'package:apps/models/KecamatanM.dart';
 import 'package:apps/models/KotaM.dart';
@@ -14,7 +15,6 @@ import 'package:flutter/material.dart';
 
 class DataProvider extends ChangeNotifier {
   DataProvider() {
-    chekSession();
     getToken();
   }
 
@@ -80,10 +80,14 @@ class DataProvider extends ChangeNotifier {
   }
 
   void getToken() async {
-    Api.getToken().then((value) {
+    Api.getToken().then((value) async{
       var data = json.decode(value.body);
       LocalStorage.sharedInstance.writeValue(key: 'token', value: data['data']['token']);
+      token = await LocalStorage.sharedInstance.readValue('token');
+      if(token != null){
       getAllKategori();
+      chekSession();
+      }
       notifyListeners();
     });
   }
@@ -91,6 +95,7 @@ class DataProvider extends ChangeNotifier {
   chekSession() async {
     token = await LocalStorage.sharedInstance.readValue('token');
     String dataSession = await LocalStorage.sharedInstance.readValue('session');
+    print(dataSession);
     if (dataSession != null) {
       userId = json.decode(dataSession)['data']['data_user']['userid'];
       getCurrentLocation();
@@ -555,9 +560,32 @@ class DataProvider extends ChangeNotifier {
     });
   }
 
+  List<InvoiceM> _invoiceListData = [];
+  List<InvoiceM> get invoiceListData =>_invoiceListData;
+
+  void getAllInvoice(produkId) {
+    _isLoading = true;
+    var queryParameters = {
+      'produkId': produkId.toString(),
+      'userId':userId.toString()
+    };
+    Api.getAllInvoiceByParam(token, queryParameters).then((response) {
+      var result = json.decode(response.body);
+      Iterable list = result['data'];
+      _invoiceListData = list.map((model) => InvoiceM.fromMap(model)).toList();
+      _isLoading = false;
+      notifyListeners();
+    });
+  }
+
   createSignature(map) {
-    Api.createSignature(token, map).then((value) {
-      print(value.body);
+    _isLoading = true;
+    Api.createSignature(token, map).then((response) {
+      var result = json.decode(response.body);
+      if(result['status']){
+        _isLoading = false;
+        notifyListeners();
+      }
     });
   }
 }

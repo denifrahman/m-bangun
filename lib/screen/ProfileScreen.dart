@@ -22,6 +22,7 @@ class ProfileScreen extends StatelessWidget {
       style: TextStyle(color: AppColors.kDarkBlue, fontSize: 20.0, fontWeight: FontWeight.w700, letterSpacing: 1.2),
     );
   }
+
   var dataList = ['New', 'Kontrak', 'Progress', 'Finish', 'Batal'];
 
   static CircleAvatar calendarIcon() {
@@ -85,14 +86,15 @@ class ProfileScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0.0),
+                      Container(
+//                        color: Colors.red,
+//                            width: 200,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             CircularPercentIndicator(
-                              radius: 90.0,
+                              radius: 70.0,
                               lineWidth: 5.0,
                               animation: true,
                               percent: 0.75,
@@ -100,13 +102,13 @@ class ProfileScreen extends StatelessWidget {
                               progressColor: AppColors.kRed,
                               backgroundColor: AppColors.kDarkYellow,
                               center: Container(
-                                  width: 80.0,
-                                  height: 80.0,
+                                  width: 60.0,
+                                  height: 60.0,
                                   child: ClipOval(
                                     child: Image.network(
                                       dataProvider.userFoto == null ? dataProvider.fotoNull : dataProvider.userFoto,
                                       fit: BoxFit.cover,
-                                      width: 100,
+                                      width: 80,
                                     ),
                                   )),
                             ),
@@ -115,16 +117,16 @@ class ProfileScreen extends StatelessWidget {
                               children: <Widget>[
                                 Container(
                                   padding: EdgeInsets.symmetric(horizontal: 5),
+                                  width: MediaQuery.of(context).size.width * 0.5,
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       !dataProvider.verified
                                           ? Container()
-                                          : Container(
-                                              child: Image(width: 18, fit: BoxFit.contain, image: new AssetImage('assets/icons/verified.png'))),
+                                          : Container(child: Image(width: 18, fit: BoxFit.contain, image: new AssetImage('assets/icons/verified.png'))),
                                       Container(
-                                        width: 200,
+                                        width: 100,
                                         margin: EdgeInsets.only(left: dataProvider.verified ? 5 : 0),
                                         child: RichText(
                                           overflow: TextOverflow.ellipsis,
@@ -143,13 +145,15 @@ class ProfileScreen extends StatelessWidget {
                                 ),
                                 Container(
                                   padding: EdgeInsets.symmetric(horizontal: 5),
-                                  child: Text(
-                                    dataProvider.userEmail,
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      fontSize: 14.0,
-                                      color: Colors.black45,
-                                      fontWeight: FontWeight.w400,
+                                  child: RichText(
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    strutStyle: StrutStyle(fontSize: 12.0),
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                        color: Colors.grey[800],
+                                      ),
+                                      text: dataProvider.userEmail,
                                     ),
                                   ),
                                 ),
@@ -218,9 +222,15 @@ class ProfileScreen extends StatelessWidget {
                                       ),
                                       SizedBox(height: 15.0),
                                       InkWell(
-                                        onTap : (){
+                                        onTap: () {
                                           dataProvider.getAllBidByUserIdAndStatusId('8');
-                                          Navigator.push(context, SlideRightRoute(page: WidgetApplyBidList(param: 'Kontrak',)));
+                                          Navigator.push(
+                                              context,
+                                              SlideRightRoute(
+                                                  page: WidgetApplyBidList(
+                                                param: 'Kontrak',
+                                                statusId: '8',
+                                              )));
                                         },
                                         child: WidgetMyFavorite(
                                           icon: Icons.new_releases,
@@ -231,9 +241,9 @@ class ProfileScreen extends StatelessWidget {
                                       ),
                                       SizedBox(height: 15.0),
                                       InkWell(
-                                        onTap : (){
+                                        onTap: () {
                                           dataProvider.getAllBidByUserIdAndStatusId('10');
-                                          Navigator.push(context, SlideRightRoute(page: WidgetApplyBidList(param: 'Kontrak',)));
+                                          Navigator.push(context, SlideRightRoute(page: WidgetApplyBidList(param: 'Kontrak', statusId: '10')));
                                         },
                                         child: WidgetMyFavorite(
                                           icon: Icons.event_note,
@@ -246,22 +256,22 @@ class ProfileScreen extends StatelessWidget {
                                         height: 15.0,
                                       ),
                                       InkWell(
-                                        onTap : (){
+                                        onTap: () {
                                           dataProvider.getAllBidByUserIdAndStatusId('12');
-                                          Navigator.push(context, SlideRightRoute(page: WidgetApplyBidList(param: 'Progress',)));
+                                          Navigator.push(context, SlideRightRoute(page: WidgetApplyBidList(param: 'Progress', statusId: '12')));
                                         },
                                         child: WidgetMyFavorite(
                                           icon: Icons.blur_circular,
                                           iconBackgroundColor: AppColors.kDarkYellow,
                                           title: 'Progress',
-                                          subtitle: 'Proses Pengerjaan dan laporan pekerjaan',
+                                          subtitle: 'Proses Pengerjaan dan laporan',
                                         ),
                                       ),
                                       SizedBox(height: 15.0),
                                       InkWell(
-                                        onTap : (){
+                                        onTap: () {
                                           dataProvider.getAllBidByUserIdAndStatusId('13');
-                                          Navigator.push(context, SlideRightRoute(page: WidgetApplyBidList(param: 'Done',)));
+                                          Navigator.push(context, SlideRightRoute(page: WidgetApplyBidList(param: 'Done', statusId: '13')));
                                         },
                                         child: WidgetMyFavorite(
                                           icon: Icons.check_circle_outline,
@@ -272,9 +282,9 @@ class ProfileScreen extends StatelessWidget {
                                       ),
                                       SizedBox(height: 15.0),
                                       InkWell(
-                                        onTap : (){
+                                        onTap: () {
                                           dataProvider.getAllBidByUserIdAndStatusId('9');
-                                          Navigator.push(context, SlideRightRoute(page: WidgetApplyBidList(param: 'Batal',)));
+                                          Navigator.push(context, SlideRightRoute(page: WidgetApplyBidList(param: 'Batal', statusId: '9')));
                                         },
                                         child: WidgetMyFavorite(
                                           icon: Icons.delete_outline,
@@ -286,34 +296,44 @@ class ProfileScreen extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                Container(
-                                  color: Colors.transparent,
-                                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      subheading('Perkerjaan Aktif'),
-                                      SizedBox(height: 5.0),
-                                      Row(
-                                        children: <Widget>[
-                                          ActiveProjectsCard(
-                                            cardColor: AppColors.kGreen,
-                                            loadingPercent: 0.25,
-                                            title: 'Medical App',
-                                            subtitle: '9 hours progress',
-                                          ),
-                                          SizedBox(width: 20.0),
-                                          ActiveProjectsCard(
-                                            cardColor: AppColors.kRed,
-                                            loadingPercent: 0.6,
-                                            title: 'Making History Notes',
-                                            subtitle: '20 hours progress',
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
+//                                Container(
+//                                  color: Colors.transparent,
+//                                  padding: EdgeInsets.symmetric(
+//                                      horizontal: 20.0, vertical: 10.0),
+//                                  child: Column(
+//                                    crossAxisAlignment:
+//                                        CrossAxisAlignment.start,
+//                                    children: <Widget>[
+//                                      subheading('Perkerjaan Aktif'),
+//                                      SizedBox(height: 5.0),
+//                                      Container(
+//                                        height: 240,
+////                                        width: MediaQuery.of(context).size.width,
+//                                        child: ListView.builder(
+//                                            scrollDirection: Axis.horizontal,
+//                                            itemCount: 12,
+//                                            itemBuilder: (context, index) {
+//                                              return Column(
+//                                                children: [
+//                                                  Container(
+//                                                    margin: EdgeInsets.only
+//                                                      (right: 5),
+//                                                    child: ActiveProjectsCard(
+//                                                      cardColor:
+//                                                          AppColors.kGreen,
+//                                                      loadingPercent: 0.25,
+//                                                      title: 'Medical App',
+//                                                      subtitle:
+//                                                          '9 hours progress',
+//                                                    ),
+//                                                  ),
+//                                                ],
+//                                              );
+//                                            }),
+//                                      ),
+//                                    ],
+//                                  ),
+//                                ),
                               ],
                             ),
                           ),
@@ -321,24 +341,26 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
             ),
-      floatingActionButton: !dataProvider.isLogin ? null : dataProvider.verified
+      floatingActionButton: !dataProvider.isLogin
           ? null
-          : FloatingActionButton.extended(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    PageRouteTransition(
-                      animationType: AnimationType.slide_up,
-                      builder: (context) => UpdateAkunScreen(),
-                    )).then((value) {
-                  dataProvider.getProfile();
-                });
-              },
-              backgroundColor: Color(0xffb16a085),
-              tooltip: 'Update akun anda',
-              icon: Icon(Icons.credit_card),
-              label: Text("Update Akun"),
-            ),
+          : dataProvider.verified
+              ? null
+              : FloatingActionButton.extended(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        PageRouteTransition(
+                          animationType: AnimationType.slide_up,
+                          builder: (context) => UpdateAkunScreen(),
+                        )).then((value) {
+                      dataProvider.getProfile();
+                    });
+                  },
+                  backgroundColor: Color(0xffb16a085),
+                  tooltip: 'Update akun anda',
+                  icon: Icon(Icons.credit_card),
+                  label: Text("Update Akun"),
+                ),
     );
   }
 }

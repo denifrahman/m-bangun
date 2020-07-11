@@ -7,6 +7,7 @@ import 'package:apps/models/ProdukListM.dart';
 import 'package:apps/providers/Api.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/widget/Aktivity/WidgetDetailPengajuanKontrak.dart';
+import 'package:apps/widget/Invoice/WidgetInvoice.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -80,114 +81,120 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
                         ],
                       ))
                     : ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: dataProvider.getProdukListByIdUser.length,
-                    itemBuilder: (context, index) {
-                      DateTime tanggal_booking = DateTime.parse(dataProvider.getProdukListByIdUser[index].produkcreate.toString());
-                      var budget = dataProvider.getProdukListByIdUser[index].produkbudget;
-                      var accBudget = dataProvider.getProdukListByIdUser[index].produkharga;
-                      var budgetFormat = Money.fromInt(budget == null ? 0 : int.parse(budget), IDR);
-                      var accBudgetFormat = Money.fromInt(accBudget == null ? 0 : int.parse(accBudget), IDR);
-                      return dataProvider.getProdukListByIdUser.length != 0
-                          ? InkWell(
-                        onTap: () {
-//                                    dataProvider.getBiddingByProdukId(dataProvider.getProdukListByIdUser[index].produkid);
-                          dataProvider.getKontrakByProdukId(dataProvider.getProdukListByIdUser[index].produkid);
-                          dataProvider.getProdukById(dataProvider.getProdukListByIdUser[index].produkid);
-                          Navigator.push(context, SlideRightRoute(page: WidgetDetailPengajuanKontrak(param: widget.param)));
-                        },
-                        child: Stack(
-                          children: <Widget>[
-                            Card(
-                              elevation: 2,
-                              margin: EdgeInsets.all(15),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Container(
-                                height: 90,
-                                decoration: BoxDecoration(color: Colors.cyan[500], borderRadius: BorderRadius.all(Radius.circular(10))),
-                                padding: EdgeInsets.all(5),
-                                child: ListTile(
-                                  title: Text(
-                                    dataProvider.getProdukListByIdUser[index].produknama,
-                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
-                                    maxLines: 2,
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text('Budget ' + budgetFormat.toString(), style: TextStyle(color: Colors.white)),
-                                      accBudget == null ? Text('-', style: TextStyle(color: Colors.white),) : Text(
-                                          'Acc Budget ' + accBudgetFormat.toString(), style: TextStyle(color: Colors.white)),
-                                    ],
-                                  ),
-                                  trailing: Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        shrinkWrap: true,
+                        itemCount: dataProvider.getProdukListByIdUser.length,
+                        itemBuilder: (context, index) {
+                          DateTime tanggal_booking = DateTime.parse(dataProvider.getProdukListByIdUser[index].produkcreate.toString());
+                          var budget = dataProvider.getProdukListByIdUser[index].produkbudget;
+                          var accBudget = dataProvider.getProdukListByIdUser[index].produkharga;
+                          var budgetFormat = Money.fromInt(budget == null ? 0 : int.parse(budget), IDR);
+                          var accBudgetFormat = Money.fromInt(accBudget == null ? 0 : int.parse(accBudget), IDR);
+                          return dataProvider.getProdukListByIdUser.length != 0
+                              ? InkWell(
+                                  onTap: () {
+                                    var produkId = dataProvider.getProdukListByIdUser[index].produkid;
+                                    if (widget.param == 'Progress') {
+                                      Navigator.push(context, SlideRightRoute(page: WidgetInvoice()));
+                                      dataProvider.getAllInvoice(produkId);
+                                    } else {
+                                      dataProvider.getKontrakByProdukId(produkId);
+                                      dataProvider.getProdukById(produkId);
+                                      Navigator.push(context, SlideRightRoute(page: WidgetDetailPengajuanKontrak(param: widget.param)));
+                                    }
+                                  },
+                                  child: Stack(
                                     children: <Widget>[
-                                      (dataProvider.getProdukListByIdUser[index].statusnama == 'New' ||
-                                          dataProvider.getProdukListByIdUser[index].statusnama == 'Review')
-                                          ? Icon(
-                                        FontAwesomeIcons.exclamationCircle,
-                                        color: Colors.amber,
-                                        size: 25,
-                                      )
-                                          : Icon(
-                                        FontAwesomeIcons.solidCheckCircle,
-                                        color: Colors.white,
-                                        size: 20,
+                                      Card(
+                                        elevation: 2,
+                                        margin: EdgeInsets.all(15),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        child: Container(
+                                          height: 90,
+                                          decoration: BoxDecoration(color: Colors.cyan[500], borderRadius: BorderRadius.all(Radius.circular(10))),
+                                          padding: EdgeInsets.all(5),
+                                          child: ListTile(
+                                            title: Text(
+                                              dataProvider.getProdukListByIdUser[index].produknama,
+                                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
+                                              maxLines: 2,
+                                            ),
+                                            subtitle: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Text('Budget ' + budgetFormat.toString(), style: TextStyle(color: Colors.white)),
+                                                accBudget == null
+                                                    ? Text(
+                                                        '-',
+                                                        style: TextStyle(color: Colors.white),
+                                                      )
+                                                    : Text('Acc Budget ' + accBudgetFormat.toString(), style: TextStyle(color: Colors.white)),
+                                              ],
+                                            ),
+                                            trailing: Column(
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              children: <Widget>[
+                                                (dataProvider.getProdukListByIdUser[index].statusnama == 'New' || dataProvider.getProdukListByIdUser[index].statusnama == 'Review')
+                                                    ? Icon(
+                                                        FontAwesomeIcons.exclamationCircle,
+                                                        color: Colors.amber,
+                                                        size: 25,
+                                                      )
+                                                    : Icon(
+                                                        FontAwesomeIcons.solidCheckCircle,
+                                                        color: Colors.white,
+                                                        size: 20,
+                                                      ),
+                                                Text(
+                                                  dataProvider.getProdukListByIdUser[index].statusnama,
+                                                  style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.w600, color: Colors.white, fontSize: 12),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                      Text(
-                                        dataProvider.getProdukListByIdUser[index].statusnama,
-                                        style: TextStyle(
-                                            fontStyle: FontStyle.italic, fontWeight: FontWeight.w600, color: Colors.white, fontSize: 12),
-                                      )
+                                      Container(
+                                        margin: EdgeInsets.only(top: 80.0),
+                                        child: Card(
+                                          elevation: 2,
+                                          margin: EdgeInsets.all(15),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.only(bottomRight: Radius.circular(10), bottomLeft: Radius.circular(10)),
+                                          ),
+                                          child: Container(
+                                              height: 120,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.grey[100], borderRadius: BorderRadius.only(bottomRight: Radius.circular(10), bottomLeft: Radius.circular(10))),
+                                              padding: EdgeInsets.all(10),
+                                              child: Align(
+                                                alignment: Alignment.center,
+                                                child: ListTile(
+                                                  title: Text(
+                                                    dataProvider.getProdukListByIdUser[index].produkdeskripsi == null
+                                                        ? ''
+                                                        : dataProvider.getProdukListByIdUser[index].produkdeskripsi,
+                                                    style: TextStyle(color: Colors.black),
+                                                  ),
+                                                  subtitle: Text(
+                                                    DateFormat("EEE, dd MMMM yyyy", 'in').format(tanggal_booking),
+                                                  ),
+                                                ),
+                                              )),
+                                        ),
+                                      ),
                                     ],
                                   ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 80.0),
-                              child: Card(
-                                elevation: 2,
-                                margin: EdgeInsets.all(15),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(10), bottomLeft: Radius.circular(10)),
-                                ),
-                                child: Container(
-                                    height: 120,
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey[100],
-                                        borderRadius: BorderRadius.only(bottomRight: Radius.circular(10), bottomLeft: Radius.circular(10))),
-                                    padding: EdgeInsets.all(10),
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: ListTile(
-                                        title: Text(
-                                          dataProvider.getProdukListByIdUser[index].produkdeskripsi == null
-                                              ? ''
-                                              : dataProvider.getProdukListByIdUser[index].produkdeskripsi,
-                                          style: TextStyle(color: Colors.black),
-                                        ),
-                                        subtitle: Text(
-                                          DateFormat("EEE, dd MMMM yyyy", 'in').format(tanggal_booking),
-                                        ),
-                                      ),
-                                    )),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                          : Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'Data tidak ada',
-                            style: TextStyle(color: Colors.black),
-                          ));
-                    }),
+                                )
+                              : Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    'Data tidak ada',
+                                    style: TextStyle(color: Colors.black),
+                                  ));
+                        }),
               ),
             )
           ],

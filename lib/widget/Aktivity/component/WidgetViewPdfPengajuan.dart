@@ -1,6 +1,7 @@
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:provider/provider.dart';
 
 class WidgetViewPdfPengajuan extends StatefulWidget {
@@ -17,9 +18,10 @@ class WidgetViewPdfPengajuan extends StatefulWidget {
 class _WidgetViewPdfPengajuanState extends State<WidgetViewPdfPengajuan> {
   bool _isLoading = true;
   PDFDocument document;
-
+  Stream<FileResponse> fileStream;
   @override
   void initState() {
+    DefaultCacheManager().emptyCache();
     loadDocument();
     super.initState();
   }
@@ -30,9 +32,7 @@ class _WidgetViewPdfPengajuanState extends State<WidgetViewPdfPengajuan> {
   }
 
   loadDocument() async {
-    imageCache.clear();
     await new Future.delayed(const Duration(seconds: 3));
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
     document = await PDFDocument.fromURL(widget.urlPdf);
     setState(() => _isLoading = false);
   }

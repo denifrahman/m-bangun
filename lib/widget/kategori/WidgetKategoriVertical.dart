@@ -5,6 +5,7 @@ import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/models/KategoriM.dart';
 import 'package:apps/providers/Api.dart';
 import 'package:apps/providers/DataProvider.dart';
+import 'package:apps/screen/LoginScreen.dart';
 import 'package:apps/screen/SubKategoriScreen.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,8 @@ class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
       var data = json.decode(value.body);
       LocalStorage.sharedInstance.writeValue(key: 'token', value: data['data']['token']);
       _getKategori();
+    }).catchError((onError) {
+      print(onError);
     });
   }
 
@@ -97,7 +100,8 @@ class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
 
   void openSubkategori(param) {
     DataProvider dataProvider = Provider.of<DataProvider>(context);
-    if (dataProvider.isLogin  && dataProvider.userKategori == param.produkkategorinama) {
+    print(param.produkkategorinama == 'Bahan Bangunan');
+    if (param.produkkategorinama == 'Bahan Bangunan') {
       Navigator.push(
           context,
           SlideRightRoute(
@@ -106,17 +110,32 @@ class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
             namaKategori: param.produkkategorinama,
           )));
     } else {
-      Flushbar(
-        title: "Error",
-        message: "Silahkan login / member anda tidak sesuai",
-        duration: Duration(seconds: 15),
-        backgroundColor: Colors.red,
-        flushbarPosition: FlushbarPosition.BOTTOM,
-        icon: Icon(
-          Icons.assignment_turned_in,
-          color: Colors.white,
-        ),
-      )..show(context);
+      print(dataProvider.isLogin);
+      if (dataProvider.isLogin) {
+        if (dataProvider.userKategori == param.produkkategorinama) {
+          Navigator.push(
+              context,
+              SlideRightRoute(
+                  page: SubKategoriScreen(
+                idKategori: int.parse(param.produkkategoriid),
+                namaKategori: param.produkkategorinama,
+              )));
+        } else {
+          Flushbar(
+            title: "Error",
+            message: "Silahkan login / member anda tidak sesuai",
+            duration: Duration(seconds: 15),
+            backgroundColor: Colors.red,
+            flushbarPosition: FlushbarPosition.BOTTOM,
+            icon: Icon(
+              Icons.assignment_turned_in,
+              color: Colors.white,
+            ),
+          )..show(context);
+        }
+      } else {
+        Navigator.push(context, SlideRightRoute(page: LoginScreen()));
+      }
     }
   }
 }

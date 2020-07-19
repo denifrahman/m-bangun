@@ -1,7 +1,7 @@
 import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/BookingScreen.dart';
+import 'package:apps/screen/FavoriteScreen.dart';
 import 'package:apps/screen/HomeScreen.dart';
-import 'package:apps/screen/KategoriScreen.dart';
 import 'package:apps/screen/MyAdsScreen.dart';
 import 'package:apps/screen/ProfileScreen.dart';
 import 'package:flutter/cupertino.dart';
@@ -85,7 +85,8 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                   minWidth: 30,
                   onPressed: () {
                     setState(() {
-                      dataProvider.getAllKategori();
+//                      dataProvider.getKategoriGroupFlag();
+                      dataProvider.getGroupKatgori();
                       currentScreen = HomeScreen(); // if user taps on this dashboard tab will be active
                       currentTab = 0;
                     });
@@ -114,8 +115,8 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                   minWidth: 30,
                   onPressed: () {
                     setState(() {
-                      currentScreen =
-                          KategoriScreen(); // if user taps on this dashboard tab will be active
+                      dataProvider.getAllFavoriteProdukByUserId();
+                      currentScreen = FavoriteScreen(); // if user taps on this dashboard tab will be active
                       currentTab = 1;
                     });
                   },
@@ -123,14 +124,14 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Icon(
-                        FontAwesomeIcons.layerGroup,
+                        Icons.favorite,
                         size: 18,
                         color: currentTab == 1
                             ? Color(0xffb16a085)
                             : Colors.grey[500],
                       ),
                       Text(
-                        'Kategori',
+                        'Favorit',
                         style: TextStyle(
                           fontSize: 11,
                           color: currentTab == 1

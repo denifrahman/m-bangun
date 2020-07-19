@@ -65,19 +65,22 @@ class _WidgetNewsState extends State<WidgetNews> {
                 margin: EdgeInsets.only(top: 50),
                 child: Center(child: LoadingDoubleFlipping.square(size: 30, backgroundColor: Colors.red)),
               )
-            : Container(
-                margin: EdgeInsets.only(top: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text('News', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
-                    InkWell(
-                      child: Text(
-                        'Semua',
-                        style: TextStyle(fontSize: 12, color: Color(0xffb16a085)),
+            : Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  margin: EdgeInsets.only(top: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('News', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, fontFamily: 'SUNDAY')),
+                      InkWell(
+                        child: Text(
+                          'Semua',
+                          style: TextStyle(fontSize: 12, color: Color(0xffb16a085)),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
         Container(
@@ -96,27 +99,28 @@ class _WidgetNewsState extends State<WidgetNews> {
                     child: Column(
                       children: <Widget>[
                         Expanded(
-                          flex: 3,
+                          flex: 2,
                           child: Image.network(
                             dataNews[index].newsthumbnail == null
                                 ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
                                 : dataNews[index].newsthumbnail,
                             fit: BoxFit.cover,
-                            width: 180,
+                            width: 150,
                           ),
                         ),
                         Expanded(
                           flex: 1,
                           child: Container(
-                            width: 180,
+                            width: 150,
                             padding: EdgeInsets.all(10),
                             child: RichText(
                               overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              strutStyle: StrutStyle(fontSize: 12.0),
+                              maxLines: 3,
+                              strutStyle: StrutStyle(fontSize: 10.0),
                               text: TextSpan(
                                   style: TextStyle(
-                                    color: Colors.grey[800],
+                                      color: Colors.grey[800],
+                                      fontSize: 12
                                   ),
                                   text: dataNews[index].newstitle),
                             ),

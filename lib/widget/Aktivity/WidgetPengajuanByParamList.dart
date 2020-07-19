@@ -63,19 +63,22 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
                 onRefresh: refreshList,
                 key: refreshKey,
                 child: dataProvider.getProdukListByIdUser.length == 0
-                    ? Center(
-                        child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    ? ListView(
                         children: [
+                          Container(
+                            height: 50,
+                          ),
                           Icon(
                             Icons.watch_later,
                             color: Colors.grey.withOpacity(0.4),
                             size: 50,
                           ),
-                          Text('Tidak Ada Data')
+                          Text(
+                            'Tidak Ada Data',
+                            textAlign: TextAlign.center,
+                          )
                         ],
-                      ))
+                      )
                     : ListView.builder(
                         shrinkWrap: true,
                         itemCount: dataProvider.getProdukListByIdUser.length,
@@ -86,18 +89,17 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
                           var accBudget = dataProvider.getProdukListByIdUser[index].produkharga;
                           var budgetFormat = Money.fromInt(budget == null ? 0 : int.parse(budget), IDR);
                           var accBudgetFormat = Money.fromInt(accBudget == null ? 0 : int.parse(accBudget), IDR);
-                          return dataProvider.getProdukListByIdUser.length != 0
-                              ? InkWell(
-                                  onTap: () {
-                                    if (widget.param == 'Progress') {
-                                      Navigator.push(
-                                          context,
-                                          SlideRightRoute(
-                                              page: WidgetInvoice(
-                                            flag: 'owner',
-                                          )));
-                                      dataProvider.getAllInvoice(produkId);
-                                    } else {
+                          return InkWell(
+                            onTap: () {
+                              if (widget.param == 'Progress') {
+                                Navigator.push(
+                                    context,
+                                    SlideRightRoute(
+                                        page: WidgetInvoice(
+                                          flag: 'owner',
+                                        )));
+                                dataProvider.getAllInvoice(produkId);
+                              } else {
                                 dataProvider.getKontrakByProdukId(produkId);
                                 dataProvider.getProdukById(produkId);
                                 Navigator.push(context, SlideRightRoute(page: WidgetDetailPengajuanKontrak(param: widget.param)));
@@ -174,9 +176,7 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
                                           alignment: Alignment.center,
                                           child: ListTile(
                                             title: Text(
-                                              dataProvider.getProdukListByIdUser[index].produkdeskripsi == null
-                                                  ? ''
-                                                  : dataProvider.getProdukListByIdUser[index].produkdeskripsi,
+                                              dataProvider.getProdukListByIdUser[index].produkdeskripsi == null ? '' : dataProvider.getProdukListByIdUser[index].produkdeskripsi,
                                               style: TextStyle(color: Colors.black),
                                             ),
                                             subtitle: Text(
@@ -196,13 +196,7 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
                                 ),
                               ],
                             ),
-                          )
-                              : Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Data tidak ada',
-                                style: TextStyle(color: Colors.black),
-                              ));
+                          );
                         }),
               ),
             )

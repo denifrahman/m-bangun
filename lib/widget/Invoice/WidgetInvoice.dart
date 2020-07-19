@@ -39,6 +39,8 @@ class WidgetInvoice extends StatelessWidget {
                           Navigator.push(context, SlideRightRoute(page: WidgetProgress()));
                         } else {
                           if (dataProvider.invoiceListData[index].invoiceStatus == 'Pending') {
+                            dataProvider.getAllBank();
+                            dataProvider.getAllMetodeTransfer();
                             Navigator.push(context, SlideRightRoute(page: WidgetTagihan()));
                           } else {
                             Navigator.push(context, SlideRightRoute(page: WidgetProgress()));
@@ -50,9 +52,7 @@ class WidgetInvoice extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: ListTile(
                             title: Text(
-                              invoiceNominal.toString(),
-                              style: TextStyle(color: Colors.green),
-                            ),
+                                invoiceNominal.toString()),
                             subtitle: Text(dataProvider.invoiceListData[index].invoiceDeskripsi),
                             trailing: Text(
                               dataProvider.invoiceListData[index].invoiceStatus,

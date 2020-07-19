@@ -4,7 +4,6 @@ import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/UpdateAkunScreen.dart';
 import 'package:apps/widget/ApplyBid/WidgetApplyBidList.dart';
 import 'package:apps/widget/Login/LoginWidget.dart';
-import 'package:apps/widget/Profile/ActiveProjectCard.dart';
 import 'package:apps/widget/Profile/TopContainer.dart';
 import 'package:apps/widget/Profile/WidgetMyFavorite.dart';
 import 'package:apps/widget/Profile/WidgetProfile.dart';
@@ -355,6 +354,7 @@ class ProfileScreen extends StatelessWidget {
                         )).then((value) {
                       dataProvider.getProfile();
                     });
+                    dataProvider.getKategoriByFlag('1');
                   },
                   backgroundColor: Color(0xffb16a085),
                   tooltip: 'Update akun anda',

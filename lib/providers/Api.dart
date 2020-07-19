@@ -7,9 +7,9 @@ import 'package:mime/mime.dart';
 
 //const baseUrl = "http://niagatravel.com/api/api-m-bangun-jwt-token/api/";
 const baseUrl = "http://m-bangun.com/api/api/";
-//const baseUrl = "http://192.168.0.7/api_jwt/api/";
+//const baseUrl = "http://192.168.0.8/api_jwt/api/";
 //const baseUrl = "http://192.168.0.6/api_jwt/api/";
-//const api_url = "192.168.0.7";
+//const api_url = "192.168.0.8";
 //const param = '/api_jwt/api/';
 const param = '/api/api/';
 const api_url = "m-bangun.com";
@@ -371,10 +371,10 @@ class Api {
     }
   }
 
-  static Future getFavoriteByProdukIdAndUserId(token, produkId, userId) {
-    var _produkId = (produkId == '' ? '' : 'pro_id=' + produkId);
-    var _userId = (userId == '' ? '' : '&userid=' + userId);
-    var url = baseUrl + "Favorite/getAllByFilterParam?" + _produkId + _userId;
+  static Future getAllFavoriteByParam(token, query) {
+    var url = Uri.http(api_url, param + '/Favorite/getAllByFilterParam', query);
+//    var url = baseUrl + "Favorite/getAllByFilterParam?" + _produkId + _userId;
+    print(url);
     try {
       return http.get(
         url,
@@ -461,8 +461,87 @@ class Api {
       print(err);
     }
   }
+
+  static Future getAllGroupKategori(token, query) {
+    var url = Uri.http(api_url, param + 'GroupKategori/getAllByParam', query);
+    print(url);
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
+  }
+
   static Future getAllInvoiceByParam(token, query) {
     var url = Uri.http(api_url, param + 'Invoice/getAllInvoiceByParam', query);
+    print(url);
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  static Future getAllKategoriByParam(token, query) {
+    var url = Uri.http(api_url, param + 'Kategori/getAllByParam', query);
+    print(url);
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  static Future getAllGroupByParam(token, query) {
+    var url = Uri.http(api_url, param + 'Kategori/getAllGroupByParam', query);
+    print(url);
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  static Future getNewVersion(token) {
+    var url = Uri.http(api_url, param + 'ChekVersion/getLastVersion');
+    print(url);
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  static Future getAllBank(token) {
+    var url = Uri.http(api_url, param + 'Sistem/getAllBank');
+    print(url);
+    try {
+      return http.get(
+        url,
+        headers: {HttpHeaders.authorizationHeader: token},
+      );
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  static Future getAllMetodeTransfer(token) {
+    var url = Uri.http(api_url, param + 'Sistem/getAllMetodeTransfer');
     print(url);
     try {
       return http.get(

@@ -177,9 +177,11 @@ class _WidgetApplyBidListState extends State<WidgetApplyBidList> {
                                             trailing: IconButton(
                                               onPressed: () {
                                                 dataProvider.getKontrakByProdukId(produkId);
-                                                dataProvider.getProdukById(produkId);
-                                                Navigator.push(context, SlideRightRoute(page: WidgetDetailBid(param: widget.param)));
-                                              },
+                                                    dataProvider.getProdukById(produkId);
+                                                    widget.param == 'Kontrak'
+                                                        ? null
+                                                        : Navigator.push(context, SlideRightRoute(page: WidgetDetailBid(param: widget.param == 'Kontral' ? '' : 'Kontrak')));
+                                                  },
                                               icon: Icon(Icons.arrow_drop_down_circle),
                                             ),
                                           ),

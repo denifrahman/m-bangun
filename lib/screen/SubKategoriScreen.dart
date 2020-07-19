@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 class SubKategoriScreen extends StatelessWidget {
   final int idKategori;
   final String namaKategori;
+  final String flag;
 
-  SubKategoriScreen({Key key, this.idKategori, this.namaKategori})
-      : super(key: key);
+  SubKategoriScreen({Key key, this.idKategori, this.namaKategori, this.flag}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+//    print(this.flag);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -18,6 +19,7 @@ class SubKategoriScreen extends StatelessWidget {
       ),
       body: WidgetSubKategori(
         idKategori: this.idKategori,
+        flag: this.flag,
       ),
     );
   }

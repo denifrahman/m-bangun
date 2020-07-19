@@ -12,8 +12,9 @@ import 'package:provider/provider.dart';
 
 class WidgetSubKategori extends StatefulWidget {
   final int idKategori;
+  final flag;
 
-  WidgetSubKategori({Key key, this.idKategori}) : super(key: key);
+  WidgetSubKategori({Key key, this.idKategori, this.flag}) : super(key: key);
 
   @override
   _WidgetSubKategoriState createState() {
@@ -85,14 +86,22 @@ class _WidgetSubKategoriState extends State<WidgetSubKategori> {
     Provider.of<DataProvider>(context).setidSubKategori(param.produkkategorisubid);
     Provider.of<DataProvider>(context).setProdukListByParam();
     DataProvider dataProvider = Provider.of<DataProvider>(context);
-    if (dataProvider.userSubKategori == param.produkkategorisubnama) {
-    Navigator.push(
-        context,
-        SlideRightRoute(
-            page: ProdukScreen(
-          namaKategori: param.produkkategorisubnama,
-          idSubKategori: param.produkkategorisubid,
-        )));
+    if (widget.flag == '2' || widget.flag == '3' || widget.flag == '4') {
+      Navigator.push(
+          context,
+          SlideRightRoute(
+              page: ProdukScreen(
+            namaKategori: param.produkkategorisubnama,
+            idSubKategori: param.produkkategorisubid,
+          )));
+    } else if (dataProvider.userSubKategori == param.produkkategorisubnama) {
+      Navigator.push(
+          context,
+          SlideRightRoute(
+              page: ProdukScreen(
+            namaKategori: param.produkkategorisubnama,
+            idSubKategori: param.produkkategorisubid,
+          )));
     } else {
       Flushbar(
         title: "Error",

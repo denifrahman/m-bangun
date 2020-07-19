@@ -8,6 +8,7 @@ class KategoriM {
   String produkkategorinama;
   String produkkategoriaktif;
   String produkkategorithumbnail;
+  String produkkategoriflag;
 
   static KategoriM fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
@@ -16,13 +17,16 @@ class KategoriM {
     kategoriMBean.produkkategorinama = map['produkkategorinama'];
     kategoriMBean.produkkategoriaktif = map['produkkategoriaktif'];
     kategoriMBean.produkkategorithumbnail = map['produkkategorithumbnail'];
+    kategoriMBean.produkkategoriflag = map['produkkategoriflag'];
     return kategoriMBean;
   }
 
-  Map toJson() => {
-    "produkkategoriid": produkkategoriid,
-    "produkkategorinama": produkkategorinama,
-    "produkkategoriaktif": produkkategoriaktif,
-    "produkkategorithumbnail": produkkategorithumbnail,
-  };
+  Map toJson() =>
+      {
+        "produkkategoriid": produkkategoriid,
+        "produkkategorinama": produkkategorinama,
+        "produkkategoriaktif": produkkategoriaktif,
+        "produkkategorithumbnail": produkkategorithumbnail,
+        "produkkategoriflag": produkkategoriflag,
+      };
 }

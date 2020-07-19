@@ -5,10 +5,12 @@ import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/models/KategoriM.dart';
 import 'package:apps/models/SubKategoriM.dart';
 import 'package:apps/providers/Api.dart';
+import 'package:apps/providers/DataProvider.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:provider/provider.dart';
 
 class WidgetUpdateAkun extends StatefulWidget {
   WidgetUpdateAkun({Key key}) : super(key: key);
@@ -42,7 +44,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
   void initState() {
     super.initState();
     _showDialog();
-    _getAllByFilterParam();
+//    _getAllByFilterParam();
   }
 
   @override
@@ -80,7 +82,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    print(idKategori);
+    DataProvider dataProvider = Provider.of<DataProvider>(context);
     bool step0 = false;
     bool step1 = false;
     if (currentStep == 0) {
@@ -112,20 +114,20 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
                           content: Container(
                             height: widget1,
                             child: ListView.builder(
-                                itemCount: dataKategori.length,
+                                itemCount: dataProvider.dataKategoriFlag.length,
                                 itemBuilder: (context, index) {
                                   return Column(
                                     children: <Widget>[
                                       InkWell(
-                                        onTap: () => _onchangeKategori(dataKategori[index].produkkategoriid),
+                                        onTap: () => _onchangeKategori(dataProvider.dataKategoriFlag[index].produkkategoriid),
                                         child: ListTile(
                                           leading: Image.network(
-                                            dataKategori[index].produkkategorithumbnail == null
+                                            dataProvider.dataKategoriFlag[index].produkkategorithumbnail == null
                                                 ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
-                                                : dataKategori[index].produkkategorithumbnail,
+                                                : dataProvider.dataKategoriFlag[index].produkkategorithumbnail,
                                             width: 45,
                                           ),
-                                          title: Text(dataKategori[index].produkkategorinama),
+                                          title: Text(dataProvider.dataKategoriFlag[index].produkkategorinama),
                                           trailing: Icon(
                                             Icons.arrow_forward_ios,
                                             size: 12,
@@ -418,17 +420,6 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
         ));
   }
 
-  void _getAllByFilterParam() async {
-    String tokenValid = await LocalStorage.sharedInstance.readValue('token');
-    Api.getAllKategoriByFilterParam(tokenValid, '1', '').then((response) {
-      Iterable list = json.decode(response.body)['data'];
-      setState(() {
-        dataKategori = list.map((model) => KategoriM.fromMap(model)).toList();
-        _saving = false;
-      });
-    });
-  }
-
   void _onchangeKategori(String newValue) async {
     setState(() {
       _saving = true;
@@ -600,8 +591,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
           idKategori,
           idSubKategori,
           namaPerusahaanController.text,
-          userid)
-          .then((response) {
+          userid).then((response) {
         var data = json.decode(response.body);
         print(response.body);
         if (data['status'] == true) {

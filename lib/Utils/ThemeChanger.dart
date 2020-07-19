@@ -6,10 +6,7 @@ ThemeData light = ThemeData(
   inputDecorationTheme: const InputDecorationTheme(
     labelStyle: TextStyle(color: Colors.black, fontSize: 12),
     hintStyle: TextStyle(
-        color: Colors.grey,
-        fontSize: 15,
-        fontFamily: 'OpenSans-Regular',
-        fontWeight: FontWeight.w500),
+        color: Colors.grey, fontSize: 12, fontFamily: 'OpenSans-Regular', fontWeight: FontWeight.w500),
   ),
   fontFamily: 'OpenSans-Regular',
   primaryColor: Colors.green[600],
@@ -19,7 +16,7 @@ ThemeData light = ThemeData(
       iconTheme: IconThemeData(color: Colors.black),
       textTheme: TextTheme(
           title: TextStyle(
-              fontSize: 14,
+              fontSize: 15,
               color: Colors.black,
               fontFamily: 'OpenSans-Regular',
               fontWeight: FontWeight.bold))),

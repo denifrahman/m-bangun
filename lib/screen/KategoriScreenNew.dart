@@ -63,6 +63,7 @@ class KategoriScreenNew extends StatelessWidget {
 
   void openSubkategori(context, param) {
     DataProvider dataProvider = Provider.of<DataProvider>(context);
+    print(param.produkkategoriflag);
     if (param.produkkategoriflag == '2' || param.produkkategoriflag == '3' || param.produkkategoriflag == '4') {
       Navigator.push(
           context,
@@ -75,15 +76,16 @@ class KategoriScreenNew extends StatelessWidget {
     } else {
       print(dataProvider.isLogin);
       if (dataProvider.isLogin) {
+        print(dataProvider.userKategori);
         if (dataProvider.userKategori == param.produkkategorinama) {
           Navigator.push(
               context,
               SlideRightRoute(
                   page: SubKategoriScreen(
-                flag: param.produkkategoriflag,
-                idKategori: int.parse(param.produkkategoriid),
-                namaKategori: param.produkkategorinama,
-              )));
+                    flag: param.produkkategoriflag,
+                    idKategori: int.parse(param.produkkategoriid),
+                    namaKategori: param.produkkategorinama,
+                  )));
         } else {
           Flushbar(
             title: "Error",

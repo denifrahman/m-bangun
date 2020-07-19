@@ -138,12 +138,19 @@ class ProfileWorkerScreen extends StatelessWidget {
                                   ],
                                 ),
                                 SizedBox(height: 15.0),
-                                WidgetMyFavorite(
-                                  icon: Icons.alarm,
-                                  iconBackgroundColor: AppColors.kRed,
-                                  title: '(${dataProvider.userKategori})',
-                                  subtitle: dataProvider.userSubKategori,
-                                ),
+                                dataProvider.userKategori == null
+                                    ? WidgetMyFavorite(
+                                        icon: Icons.alarm,
+                                        iconBackgroundColor: AppColors.kRed,
+                                        title: '(Belum terdaftar)',
+                                        subtitle: 'Belum terdaftar',
+                                      )
+                                    : WidgetMyFavorite(
+                                        icon: Icons.alarm,
+                                        iconBackgroundColor: AppColors.kRed,
+                                        title: '(${dataProvider.userKategori})',
+                                        subtitle: dataProvider.userSubKategori,
+                                      ),
                               ],
                             ),
                           ),

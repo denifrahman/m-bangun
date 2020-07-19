@@ -238,13 +238,15 @@ class WidgetDetailPengajuanKontrak extends StatelessWidget {
                                     child: WidgetDetailBahanProduk(),
                                   )
                                 : Container(),
-                            param == 'Negosiasi' || param == 'Kontrak'
+                            param == 'Negosiasi' || param == 'Kontrak' || param == 'Progress'
                                 ? Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                                    child: WidgetListPekerja(),
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                                    child: WidgetListPekerja(
+                                      param: param,
+                                    ),
                                   )
                                 : Container(),
-                            param == 'Kontrak' || param == 'Negosiasi'
+                            param == 'Kontrak' || param == 'Progress'
                                 ? Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 10),
                                     child: WidgetKontrak(param: 'owner',),

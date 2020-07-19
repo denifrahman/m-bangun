@@ -166,9 +166,9 @@ class _WidgetApplyBidListState extends State<WidgetApplyBidList> {
                                           alignment: Alignment.center,
                                           child: ListTile(
                                             title: Text(
-                                              budgetFormat.toString(),
-                                              style: TextStyle(color: Colors.black),
-                                            ),
+                                              'Bid ' + budgetFormat.toString(),
+                                                  style: TextStyle(color: Colors.black),
+                                                ),
                                             subtitle: Text(
                                                 dataProvider.ListBidByUserIdAndStatusId[index].biddeskripsi == null
                                                     ? ''

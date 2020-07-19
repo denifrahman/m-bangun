@@ -216,6 +216,47 @@ class DataProvider extends ChangeNotifier {
     }
   }
 
+  getProfileWorker(workerId) async {
+    try {
+      imageCache.clear();
+      Api.getUserById(token, workerId.toString()).then((response) {
+//        print(response.body);
+        var data = json.decode(response.body);
+//        LocalStorage.sharedInstance.writeValue(key: 'session', value: json.encode(data));
+        _userEmail = data['data']['data_user']['useremail'];
+        _userNama = data['data']['data_user']['usernamalengkap'];
+        _userNotelp = data['data']['data_user']['usertelp'];
+        _userFoto = data['data']['data_user']['userfoto'];
+//        print(data);
+        if (data['data']['data_user']['produkkategoriid'] != null) {
+          _userSiup = data['data']['data_user']['usersiup'];
+          _userAkte = data['data']['data_user']['userakteperusahaan'];
+          _userKategori = data['data']['data_user']['produkkategorinama'];
+          _userSubKategori = data['data']['data_user']['produkkategorisubnama'];
+          _userEmail = data['data']['data_user']['useremail'];
+          _userNama = data['data']['data_user']['usernamalengkap'];
+          _userNotelp = data['data']['data_user']['usertelp'];
+          _userFoto = data['data']['data_user']['userfoto'];
+          _userPengalamanKerja = data['data']['data_user']['userpengalamankerja'];
+          _isLoading = false;
+          notifyListeners();
+        }
+//        print(data['data']['data_user']['useraktivasiakunpremium'] == '1');
+        if (data['data']['data_user']['useraktivasiakunpremium'] == '1') {
+          _verified = true;
+          _isLoading = false;
+          notifyListeners();
+        } else {
+          _verified = false;
+          _isLoading = false;
+          notifyListeners();
+        }
+      });
+    } catch (err) {
+      print(err);
+    }
+  }
+
   String _selectedKategori = null;
 
   String get getSelectedKategori => _selectedKategori;
@@ -605,11 +646,12 @@ class DataProvider extends ChangeNotifier {
   List<BidM> get listBidding => _listBidding;
 
   void getBiddingByProdukId(produkId) {
-    var queryParameters = {'produkId': produkId.toString(), 'statusnama': 'Negosiasi'};
+    var queryParameters = {'produkId': produkId.toString()};
     Api.getBidByParam(token, queryParameters).then((response) {
       var result = json.decode(response.body);
       Iterable list = result['data'];
       _listBidding = list.map((model) => BidM.fromMap(model)).toList();
+      _isLoading = false;
       notifyListeners();
     });
   }
@@ -731,6 +773,20 @@ class DataProvider extends ChangeNotifier {
         notifyListeners();
       }
       notifyListeners();
+    });
+  }
+
+  updateToKontrak(body) {
+    _isLoading = true;
+    notifyListeners();
+    Api.updateBidToKontrakByIdUser(token, body).then((response) {
+      final result = json.decode(response.body);
+      if (result['status']) {
+        _isLoading = false;
+        print(body);
+        getBiddingByProdukId(body['produkid']);
+        notifyListeners();
+      }
     });
   }
 }

@@ -227,7 +227,7 @@ class ProfileScreen extends StatelessWidget {
                                               context,
                                               SlideRightRoute(
                                                   page: WidgetApplyBidList(
-                                                param: 'Kontrak',
+                                                param: 'New',
                                                 statusId: '8',
                                               )));
                                         },

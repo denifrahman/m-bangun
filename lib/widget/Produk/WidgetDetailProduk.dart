@@ -25,9 +25,7 @@ class WidgetDetailProduk extends StatefulWidget {
 }
 
 class _WidgetDetailProdukState extends State<WidgetDetailProduk> {
-  TextEditingController waktuPengerjaanController = new TextEditingController();
-  TextEditingController budgetController = new TextEditingController();
-  TextEditingController deskripsiController = new TextEditingController();
+  TextEditingController waktuPengerjaanController, deskripsiController, budgetController = new TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
 
@@ -341,13 +339,17 @@ class _WidgetDetailProdukState extends State<WidgetDetailProduk> {
       )..show(context);
     } else {
       showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         builder: (BuildContext context) {
           return Form(
             key: _formKey,
             autovalidate: false,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.58,
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height * 0.58,
               padding: EdgeInsets.all(10.0),
               child: SingleChildScrollView(
                 child: Column(

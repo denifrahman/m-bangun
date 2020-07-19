@@ -52,12 +52,10 @@ class Api {
       if (idKategori == '1' || idKategori == '4') {
         print('kontraktor');
         final mimeTypeData1 = lookupMimeType(_imageFileSiup.path, headerBytes: [0xFF, 0xD8]).split('/');
-        final fileSiup =
-            await http.MultipartFile.fromPath('imageFileSiup', _imageFileSiup.path, contentType: MediaType(mimeTypeData1[0], mimeTypeData1[1]));
+        final fileSiup = await http.MultipartFile.fromPath('imageFileSiup', _imageFileSiup.path, contentType: MediaType(mimeTypeData1[0], mimeTypeData1[1]));
 
         final mimeTypeData2 = lookupMimeType(_imageFileAkte.path, headerBytes: [0xFF, 0xD8]).split('/');
-        final fileAkte =
-            await http.MultipartFile.fromPath('imageFileAkte', _imageFileAkte.path, contentType: MediaType(mimeTypeData2[0], mimeTypeData2[1]));
+        final fileAkte = await http.MultipartFile.fromPath('imageFileAkte', _imageFileAkte.path, contentType: MediaType(mimeTypeData2[0], mimeTypeData2[1]));
 
         imageUploadRequest.fields['ext'] = mimeTypeData1[1];
         imageUploadRequest.files.add(fileSiup);
@@ -67,8 +65,7 @@ class Api {
       if (idKategori == '2') {
         print('pemborong');
         final mimeTypeData1 = lookupMimeType(_imageFileKtp.path, headerBytes: [0xFF, 0xD8]).split('/');
-        final fileKtp =
-            await http.MultipartFile.fromPath('imageFileKtp', _imageFileKtp.path, contentType: MediaType(mimeTypeData1[0], mimeTypeData1[1]));
+        final fileKtp = await http.MultipartFile.fromPath('imageFileKtp', _imageFileKtp.path, contentType: MediaType(mimeTypeData1[0], mimeTypeData1[1]));
 
         imageUploadRequest.fields['ext'] = mimeTypeData1[1];
         imageUploadRequest.files.add(fileKtp);
@@ -89,25 +86,8 @@ class Api {
     }
   }
 
-  static Future pengajuanRqt(
-      File produkthumbnail,
-      File produkfoto1,
-      File produkfoto2,
-      File produkfoto3,
-      File produkfoto4,
-      idprovinsi,
-      idkota,
-      idkecamatan,
-      alamatlengkap,
-      produknama,
-      produkpanjang,
-      produklebar,
-      produktinggi,
-      produkbahan,
-      produkwaktupengerjaan,
-      produkbudget,
-      userid,
-      token) async {
+  static Future pengajuanRqt(File produkthumbnail, File produkfoto1, File produkfoto2, File produkfoto3, File produkfoto4, idprovinsi, idkota, idkecamatan, alamatlengkap,
+      produknama, produkpanjang, produklebar, produktinggi, produkbahan, produkwaktupengerjaan, produkbudget, userid, token) async {
     final mimeTypeprodukthumbnail = lookupMimeType(produkthumbnail.path, headerBytes: [0xFF, 0xD8]).split('/');
     final mimeTypeprodukfoto1 = lookupMimeType(produkfoto1.path, headerBytes: [0xFF, 0xD8]).split('/');
     final mimeTypeprodukfoto2 = lookupMimeType(produkfoto2.path, headerBytes: [0xFF, 0xD8]).split('/');
@@ -116,16 +96,12 @@ class Api {
     // Intilize the multipart request
     final imageUploadRequest = http.MultipartRequest('POST', Uri.parse(baseUrl + 'Pengajuan/pengajuanRqt'));
 
-    final _produkthumbnail = await http.MultipartFile.fromPath('produkthumbnail', produkthumbnail.path,
-        contentType: MediaType(mimeTypeprodukthumbnail[0], mimeTypeprodukthumbnail[1]));
-    final _produkfoto1 =
-        await http.MultipartFile.fromPath('produkfoto1', produkfoto1.path, contentType: MediaType(mimeTypeprodukfoto1[0], mimeTypeprodukfoto1[1]));
-    final _produkfoto2 =
-        await http.MultipartFile.fromPath('produkfoto2', produkfoto2.path, contentType: MediaType(mimeTypeprodukfoto2[0], mimeTypeprodukfoto2[1]));
-    final _produkfoto3 =
-        await http.MultipartFile.fromPath('produkfoto3', produkfoto3.path, contentType: MediaType(mimeTypeprodukfoto3[0], mimeTypeprodukfoto3[1]));
-    final _produkfoto4 =
-        await http.MultipartFile.fromPath('produkfoto4', produkfoto4.path, contentType: MediaType(mimeTypeprodukfoto4[0], mimeTypeprodukfoto4[1]));
+    final _produkthumbnail =
+        await http.MultipartFile.fromPath('produkthumbnail', produkthumbnail.path, contentType: MediaType(mimeTypeprodukthumbnail[0], mimeTypeprodukthumbnail[1]));
+    final _produkfoto1 = await http.MultipartFile.fromPath('produkfoto1', produkfoto1.path, contentType: MediaType(mimeTypeprodukfoto1[0], mimeTypeprodukfoto1[1]));
+    final _produkfoto2 = await http.MultipartFile.fromPath('produkfoto2', produkfoto2.path, contentType: MediaType(mimeTypeprodukfoto2[0], mimeTypeprodukfoto2[1]));
+    final _produkfoto3 = await http.MultipartFile.fromPath('produkfoto3', produkfoto3.path, contentType: MediaType(mimeTypeprodukfoto3[0], mimeTypeprodukfoto3[1]));
+    final _produkfoto4 = await http.MultipartFile.fromPath('produkfoto4', produkfoto4.path, contentType: MediaType(mimeTypeprodukfoto4[0], mimeTypeprodukfoto4[1]));
 // Declace data to post
     imageUploadRequest.fields['ext'] = mimeTypeprodukthumbnail[1];
 
@@ -182,8 +158,19 @@ class Api {
     );
   }
 
+  static Future updateBidToKontrakByIdUser(token, body) {
+    var url = baseUrl + "Bid/updateBids";
+    print(url);
+    return http.post(
+      url,
+      body: body,
+      headers: {HttpHeaders.authorizationHeader: token},
+    );
+  }
+
   static Future getAllJenisPengajuan(token) {
     var url = baseUrl + "JenisPengajuan/getAll";
+
     return http.get(
       url,
       headers: {HttpHeaders.authorizationHeader: token},
@@ -439,6 +426,7 @@ class Api {
 
   static Future getBidByParam(token, query) {
     var url = Uri.http(api_url, param + '/Bid/getBidByParam', query);
+    print(url);
     try {
       return http.get(
         url,

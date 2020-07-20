@@ -712,7 +712,7 @@ class DataProvider extends ChangeNotifier {
     _isLoading = true;
     Api.getAllBank(token).then((response) {
       var result = json.decode(response.body);
-      print(response.body);
+      imageCache.clear();
       Iterable list = result['data'];
       _dataBank = list.map((model) => BankM.fromMap(model)).toList();
       _isLoading = false;

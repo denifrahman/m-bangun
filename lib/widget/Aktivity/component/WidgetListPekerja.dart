@@ -126,7 +126,7 @@ class _WidgetListPekerjaState extends State<WidgetListPekerja> {
             key: _formKey,
             autovalidate: false,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.32,
+              height: MediaQuery.of(context).size.height * 0.3,
               padding: EdgeInsets.only(top: 10, left: 20, right: 20),
               child: SingleChildScrollView(
                 child: Column(
@@ -153,23 +153,35 @@ class _WidgetListPekerjaState extends State<WidgetListPekerja> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Pilih Sebgai pekerja?'),
+                        Text('Pilih Sebagai pekerja?'),
                         Container(
-                          child: InkWell(
-                            onTap: () {
-                              dataProvider.getProfileWorker(param.userid);
-                              Navigator.push(context, SlideRightRoute(page: ProfileWorkerScreen())).then((value) {
-                                dataProvider.getProfile();
-                              });
-                            },
-                            child: Column(
-                              children: [
-                                Icon(
-                                  Icons.perm_contact_calendar,
-                                  color: Colors.orange,
-                                ),
-                                Text('Lihat Profile')
-                              ],
+                          child: Container(
+                            height: 40.0,
+                            width: 120,
+                            decoration: BoxDecoration(
+                              color: Colors.amber,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: FlatButton(
+                              onPressed: () {
+                                dataProvider.getProfileWorker(param.userid);
+                                Navigator.push(context, SlideRightRoute(page: ProfileWorkerScreen())).then((value) {
+                                  dataProvider.getProfile();
+                                });
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Icon(Icons.perm_contact_calendar, color: Colors.white,),
+                                  Text(
+                                    'Profile',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),

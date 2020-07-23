@@ -1,15 +1,18 @@
 import 'dart:io';
 
 import 'package:apps/providers/DataProvider.dart';
+import 'package:apps/screen/Properti.dart';
 import 'package:apps/screen/RequestScreen.dart';
 import 'package:apps/widget/Home/WidgetLokasi.dart';
 import 'package:apps/widget/Home/WidgetNews.dart';
-import 'package:apps/widget/WidgetSearch.dart';
 import 'package:apps/widget/home/WidgetHomeKategoriGroupFlag.dart';
+import 'package:apps/widget/home/WidgetRecentProduk.dart';
+import 'package:apps/widget/home/WidgetRecentProject.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:package_info/package_info.dart';
+import 'package:pk_skeleton/pk_skeleton.dart';
 import 'package:provider/provider.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:route_transitions/route_transitions.dart';
@@ -27,7 +30,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
   AnimationController _hideFabAnimation;
-  String PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.bangun.apps';
+  String PLAY_STORE_URL = 'https://play.google.com/apps';
   String APP_STORE_URL = 'https://play.google.com/store/apps/details?id=com.bangun.apps';
   String namaProfile;
   String deskripsi;
@@ -82,53 +85,83 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           elevation: 0,
           title: WidgetLokasi(),
         ),
-        body: !dataProvider.connection
-            ? Center(
-                child: InkWell(
-                    onTap: () {
-                      dataProvider.getToken();
-                    },
-                    child: Text(
-                      'Periksa koneksi anda \n Klik untuk Coba Lagi!',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.red),
-                    )),
+        body: dataProvider.isLoading
+            ? SingleChildScrollView(
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: PKCardListSkeleton(),
+                ),
               )
-            : Padding(
-                padding: const EdgeInsets.only(left: 10.0, right: 10),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(top: 10),
-                        child: WidgetSearch(),
+            : !dataProvider.connection
+                ? Center(
+                    child: InkWell(
+                        onTap: () {
+                          dataProvider.getToken();
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.network_check,
+                              color: Colors.grey,
+                              size: 50,
+                            ),
+                            Text('Tidak Ada Koneksi Internet'),
+                            Container(
+                              height: 10,
+                            ),
+                            Container(
+                              height: 35.0,
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: FlatButton(
+                                onPressed: () {
+                                  dataProvider.getToken();
+                                },
+                                child: Text(
+                                  'Coba Lagi',
+                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )),
+                  )
+                : Container(
+                    margin: EdgeInsets.only(bottom: 50),
+                    color: Colors.white10.withOpacity(0.2),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          WidgetHomeKategoriGroupFlag(),
+                          WidgetRecentProduk(),
+                          dataProvider.userProdukKategoriSubId == null ? Container() : WidhetRecentProject(),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          PropertiAds(),
+                          WidgetNews(),
+                        ],
                       ),
-//                      Padding(
-//                        padding: const EdgeInsets.all(8.0),
-//                        child: WidgetKategoriHome(),
-//                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: WidgetHomeKategoriGroupFlag(),
-                      ),
-                      WidgetNews(),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-        floatingActionButton: !dataProvider.connection
-            ? null
-            : ScaleTransition(
-                scale: _hideFabAnimation,
-                alignment: Alignment.bottomCenter,
-                child: FloatingActionButton.extended(
-                  onPressed: () => _openRequest(),
-                  backgroundColor: Color(0xffb16a085),
-                  tooltip: 'Posting Iklan Anda',
-                  icon: Icon(Icons.add_a_photo),
-                  label: Text("Request"),
-                ),
-              ),
+//        floatingActionButton: !dataProvider.connection
+//            ? null
+//            : ScaleTransition(
+//                scale: _hideFabAnimation,
+//                alignment: Alignment.bottomCenter,
+//                child: FloatingActionButton.extended(
+//                  onPressed: () => _openRequest(),
+//                  backgroundColor: Color(0xffb16a085),
+//                  tooltip: 'Posting Iklan Anda',
+//                  icon: Icon(Icons.add_a_photo),
+//                  label: Text("Request"),
+//                ),
+//              ),
       ),
     );
   }

@@ -73,9 +73,6 @@ class _WidgetLokasiState extends State<WidgetLokasi> {
                 ),
               ],
             ),
-//                  Container(
-//                    height: 2,
-//                  ),
             InkWell(
                 onTap: () => _modalListKota(),
                 child: Column(

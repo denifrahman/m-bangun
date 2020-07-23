@@ -36,9 +36,8 @@ class WidgetFilter extends StatelessWidget {
         onPressed: () async {
           LocalStorage.sharedInstance.writeValue(key: 'idProvinsi', value: dataProvider.getSelectedProvinsi);
           LocalStorage.sharedInstance.writeValue(key: 'idKota', value: dataProvider.getSelectedKota == null ? 'null' : dataProvider.getSelectedKota);
-          LocalStorage.sharedInstance
-              .writeValue(key: 'idKecamatan', value: dataProvider.getSelectedKecamatan == null ? 'null' : dataProvider.getSelectedKecamatan);
-          dataProvider.setProdukListByParam();
+          LocalStorage.sharedInstance.writeValue(key: 'idKecamatan', value: dataProvider.getSelectedKecamatan == null ? 'null' : dataProvider.getSelectedKecamatan);
+          dataProvider.getAllProdukListByParam();
           dataProvider.getCurrentLocation();
           Navigator.pop(context);
         },

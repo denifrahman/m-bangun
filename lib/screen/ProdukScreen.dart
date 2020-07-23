@@ -1,9 +1,10 @@
+import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/widget/Produk/WidgetListProduk.dart';
-import 'package:apps/widget/WidgetSearch.dart';
 import 'package:apps/widget/filter/WIdgetFilter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:rounded_loading_button/rounded_loading_button.dart';
+import 'package:pk_skeleton/pk_skeleton.dart';
+import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 
 class ProdukScreen extends StatefulWidget {
@@ -17,7 +18,6 @@ class ProdukScreen extends StatefulWidget {
 }
 
 class _ProdukScreenState extends State<ProdukScreen> with TickerProviderStateMixin {
-  final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
 
   AnimationController _hideFabAnimation;
 
@@ -56,11 +56,7 @@ class _ProdukScreenState extends State<ProdukScreen> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    var size = MediaQuery.of(context).size;
-
-    /*24 is for notification bar on Android*/
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 1.5;
-    final double itemWidth = size.width / 2;
+    DataProvider dataProvider = Provider.of<DataProvider>(context);
     return NotificationListener<ScrollNotification>(
       onNotification: _handleScrollNotification,
       child: Scaffold(
@@ -77,28 +73,28 @@ class _ProdukScreenState extends State<ProdukScreen> with TickerProviderStateMix
             )
           ],
         ),
-        body: Padding(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            children: <Widget>[
-              Container(height: 50, padding: EdgeInsets.only(bottom: 10), child: WidgetSearch()),
-              Expanded(
-                flex: 2,
-                child: WidgetListProduk(
-                  idSubKategori: this.widget.idSubKategori,
+        body: dataProvider.isLoading
+            ? SingleChildScrollView(
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: PKCardListSkeleton(
+//              totalLines: 1,
+                      ),
                 ),
-              ),
-//              ScaleTransition(
-//                scale: _hideFabAnimation,
-//                child: Align(
-//                    alignment: Alignment.bottomCenter,
-//                    child: Padding(
-//                      padding: const EdgeInsets.all(8.0),
-//                      child: WidgetButtonFilter(),
-//                    )),
-//              )
-            ],
-          ),
+              )
+            : Padding(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 2,
+                      child: WidgetListProduk(
+                        idSubKategori: this.widget.idSubKategori,
+                      ),
+                    ),
+                  ],
+                ),
         ),
         floatingActionButton: ScaleTransition(
           scale: _hideFabAnimation,

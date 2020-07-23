@@ -14,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:loading_animations/loading_animations.dart';
 import 'package:provider/provider.dart';
 
 class WidgetFormRequest extends StatefulWidget {
@@ -162,15 +161,8 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
     DataProvider dataProvider = Provider.of<DataProvider>(context);
     String dataSession = await LocalStorage.sharedInstance.readValue('session');
     var userId = json.decode(dataSession)['data']['data_user']['userid'];
-    if (_formKey.currentState.validate() &&
-        produkthumbnail != null &&
-        produkfoto1 != null &&
-        produkfoto2 != null &&
-        produkfoto3 != null &&
-        produkfoto4 != null) {
-      setState(() {
-        _saving = true;
-      });
+    if (_formKey.currentState.validate() && produkthumbnail != null && produkfoto1 != null && produkfoto2 != null && produkfoto3 != null && produkfoto4 != null) {
+      dataProvider.setLoading(true);
       var budget = budgetController.text.replaceAll('Rp', '');
       var saveBudget = budget.replaceAll(',', '');
       Api.pengajuanRqt(
@@ -196,14 +188,12 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
         print(value.body);
         var data = json.decode(value.body);
         if (data['status'] == true) {
-          setState(() {
-            _saving = false;
-          });
+          dataProvider.setLoading(false);
           Navigator.pop(context);
           Flushbar(
             title: "Sukses",
             message: 'Pengajuan berhasil',
-            duration: Duration(seconds: 15),
+            duration: Duration(seconds: 5),
             backgroundColor: Colors.green,
             flushbarPosition: FlushbarPosition.TOP,
             icon: Icon(
@@ -212,14 +202,12 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
             ),
           )..show(context);
         } else {
-          setState(() {
-            _saving = false;
-          });
+          dataProvider.setLoading(false);
           FocusScope.of(context).requestFocus(FocusNode());
           Flushbar(
             title: "Gagal",
             message: 'Periksa koneksi internet anda',
-            duration: Duration(seconds: 15),
+            duration: Duration(seconds: 5),
             backgroundColor: Colors.red,
             flushbarPosition: FlushbarPosition.TOP,
             icon: Icon(
@@ -231,9 +219,9 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
       });
     } else {
       Flushbar(
-        title: "Gagal",
-        message: 'Pastikan foto sudah memilih foto',
-        duration: Duration(seconds: 15),
+        title: "Kesalahan",
+        message: 'Silahkan lengkapi form yang sudah tersedia',
+        duration: Duration(seconds: 5),
         backgroundColor: Colors.red,
         flushbarPosition: FlushbarPosition.TOP,
         icon: Icon(
@@ -253,21 +241,16 @@ class _WidgetFormRequestState extends State<WidgetFormRequest> {
     return Form(
       key: _formKey,
       autovalidate: false,
-      child: _saving
-          ? Container(
-              margin: EdgeInsets.only(top: 20),
-              child: Center(child: LoadingDoubleFlipping.square(size: 30, backgroundColor: Colors.red)),
-            )
-          : Container(
-              child: Column(
-              children: [
-                WidgetAlamat(),
-                Container(
-                  height: 20,
-                ),
-                _buildFormRqt(),
-              ],
-            )),
+      child: Container(
+          child: Column(
+            children: [
+              WidgetAlamat(),
+              Container(
+                height: 20,
+              ),
+              _buildFormRqt(),
+            ],
+          )),
     );
   }
 

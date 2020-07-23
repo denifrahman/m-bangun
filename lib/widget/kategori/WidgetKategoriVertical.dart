@@ -106,7 +106,6 @@ class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
           context,
           SlideRightRoute(
               page: SubKategoriScreen(
-            idKategori: int.parse(param.produkkategoriid),
             namaKategori: param.produkkategorinama,
           )));
     } else {
@@ -117,14 +116,13 @@ class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
               context,
               SlideRightRoute(
                   page: SubKategoriScreen(
-                idKategori: int.parse(param.produkkategoriid),
                 namaKategori: param.produkkategorinama,
               )));
         } else {
           Flushbar(
             title: "Error",
             message: "Silahkan login / member anda tidak sesuai",
-            duration: Duration(seconds: 15),
+            duration: Duration(seconds: 5),
             backgroundColor: Colors.red,
             flushbarPosition: FlushbarPosition.BOTTOM,
             icon: Icon(

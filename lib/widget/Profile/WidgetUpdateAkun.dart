@@ -37,7 +37,9 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
   String titleButtonLanjut = "Lanjut";
   String titleButtonSimpan = "Simpan";
   String titleButtonKembali = "Kembali";
-  final FocusNode myFocusNodeNamaPerusahaan = FocusNode();
+  FocusNode myFocusNodeNamaPerusahaan, myFocusNodeNIB, myFocusNodeNIK = FocusNode();
+  TextEditingController NIKController = new TextEditingController();
+  TextEditingController NIBController = new TextEditingController();
   TextEditingController namaPerusahaanController = new TextEditingController();
 
   @override
@@ -70,6 +72,9 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
       goTo(currentStep - 1);
       setState(() => complete = true);
       setState(() {
+        NIBController.text = '';
+        namaPerusahaanController.text = '';
+        NIKController.text = '';
         idSubKategori = null;
       });
     }
@@ -211,23 +216,23 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
                                     ),
                                   ],
                                 ),
-                                idKategori == '1' || idKategori == '4'
+                                idKategori == '1'
                                     ? Column(
                                         children: <Widget>[
                                           _perusahaan(),
                                           Container(
                                             height: 20,
                                           ),
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              _fotoSiup(),
-                                              Container(
-                                                width: 10,
-                                              ),
-                                              _fotoAkte(),
-                                            ],
-                                          ),
+//                                          Row(
+//                                            crossAxisAlignment: CrossAxisAlignment.center,
+//                                            children: [
+//                                              _fotoSiup(),
+//                                              Container(
+//                                                width: 10,
+//                                              ),
+//                                              _fotoAkte(),
+//                                            ],
+//                                          ),
 //                                          Container(
 //                                            height: 20,
 //                                          ),
@@ -277,7 +282,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
                           width: 130,
                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Color(0xffb16a085)),
                           child: InkWell(
-                            onTap: _validSimpan,
+                            onTap: _simpanData,
                             child: Center(
                                 child: Text(
                                   'Simpan',
@@ -306,13 +311,39 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
             controller: namaPerusahaanController,
             validator: (String arg) {
               if (arg.length < 1)
-                return 'Silahkan pilih terbelih dahulu';
+                return 'Wajib Di Isi';
               else
                 return null;
             },
             decoration: const InputDecoration(
                 labelText: "Nama Perusahaan",
                 hintText: 'PT anda',
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xffb16a085),
+                  ),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xffb16a085),
+                  ),
+                ),
+                hasFloatingPlaceholder: true),
+          ),
+        ),
+        Container(
+          child: new TextFormField(
+            focusNode: myFocusNodeNIB,
+            controller: NIBController,
+            validator: (String arg) {
+              if (arg.length < 1)
+                return 'Wajib Di Isi';
+              else
+                return null;
+            },
+            decoration: const InputDecoration(
+                labelText: "NIB Perusahaan",
+                hintText: 'NOMOR INDUK BERUSAHA (NIB)',
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: Color(0xffb16a085),
@@ -421,6 +452,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
   }
 
   void _onchangeKategori(String newValue) async {
+    print(newValue);
     setState(() {
       _saving = true;
       idKategori = newValue;
@@ -481,7 +513,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
   }
 
   void _getImage(BuildContext context, ImageSource source, param) async {
-    File image = await ImagePicker.pickImage(source: source, maxHeight: 1000, maxWidth: 1000);
+    File image = await ImagePicker.pickImage(source: source, maxHeight: 750, maxWidth: 750);
     if (param == 'akte') {
       setState(() {
         _imageFileAkte = image;
@@ -544,7 +576,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
         Flushbar(
           title: "Gagal",
           message: 'Pastikan Sudah melampirkan gambar akte dan siup dan memilih bidang keahlian',
-          duration: Duration(seconds: 15),
+          duration: Duration(seconds: 5),
           backgroundColor: Colors.red,
           flushbarPosition: FlushbarPosition.TOP,
           icon: Icon(
@@ -562,7 +594,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
         Flushbar(
           title: "Gagal",
           message: 'Pastikan Sudah melampirkan gambar akte dan siup dan memilih bidang keahlian',
-          duration: Duration(seconds: 15),
+          duration: Duration(seconds: 5),
           backgroundColor: Colors.red,
           flushbarPosition: FlushbarPosition.TOP,
           icon: Icon(
@@ -584,14 +616,15 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
       setState(() {
         _saving = true;
       });
-      Api.updateAkun(
-          _imageFileSiup,
-          _imageFileAkte,
-          _imageFileKtp,
-          idKategori,
-          idSubKategori,
-          namaPerusahaanController.text,
-          userid).then((response) {
+      var map = new Map<String, dynamic>();
+      map['produkkategoriid'] = idKategori;
+      map['userid'] = userid;
+      map['produkkategorisubid'] = idSubKategori;
+      map['userperusahaan'] = namaPerusahaanController.text;
+      map['userktp'] = NIKController.text;
+      map['usersiup'] = NIBController.text;
+//      print(namaPerusahaanController.text);
+      Api.updateAkunPremium(map).then((response) {
         var data = json.decode(response.body);
         print(response.body);
         if (data['status'] == true) {
@@ -602,7 +635,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
           Flushbar(
             title: "Sukses",
             message: data['message'],
-            duration: Duration(seconds: 15),
+            duration: Duration(seconds: 1),
             backgroundColor: Colors.green,
             flushbarPosition: FlushbarPosition.TOP,
             icon: Icon(
@@ -620,7 +653,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
       Flushbar(
         title: "Gagal",
         message: 'Pastikan Sudah melampirkan gambar akte dan siup dan memilih bidang keahlian',
-        duration: Duration(seconds: 15),
+        duration: Duration(seconds: 5),
         backgroundColor: Colors.red,
         flushbarPosition: FlushbarPosition.TOP,
         icon: Icon(
@@ -657,41 +690,67 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            new Text(
-              'Foto Ktp',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.grey),
-            ),
+//            new Text(
+//              'Foto Ktp',
+//              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.grey),
+//            ),
+//            Container(
+//              height: 20,
+//            ),
+//            _imageFileKtp != null
+//                ? Image.file(
+//              _imageFileKtp,
+//              fit: BoxFit.cover,
+//              alignment: Alignment.topCenter,
+//              width: MediaQuery
+//                  .of(context)
+//                  .size
+//                  .width,
+//            )
+//                : Container(),
+//            Container(
+//              height: 20,
+//            ),
+//            Container(
+//                width: MediaQuery
+//                    .of(context)
+//                    .size
+//                    .width,
+//                child: RaisedButton(
+//                  child: Icon(Icons.camera_alt),
+//                  color: Colors.white,
+//                  padding: EdgeInsets.only(left: 11, right: 11, top: 15, bottom: 15),
+//                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+//                  onPressed: () {
+//                    _openImagePickerModal(context, 'ktp');
+//                  },
+//                ))
             Container(
-              height: 20,
+              child: new TextFormField(
+                focusNode: myFocusNodeNIK,
+                controller: NIKController,
+                validator: (String arg) {
+                  if (arg.length < 1)
+                    return 'Wajib Di Isi';
+                  else
+                    return null;
+                },
+                decoration: const InputDecoration(
+                    labelText: "Nomor NIK",
+                    hintText: 'Nomor NIK',
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xffb16a085),
+                      ),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xffb16a085),
+                      ),
+                    ),
+                    hasFloatingPlaceholder: true),
+              ),
             ),
-            _imageFileKtp != null
-                ? Image.file(
-              _imageFileKtp,
-              fit: BoxFit.cover,
-              alignment: Alignment.topCenter,
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width,
-            )
-                : Container(),
-            Container(
-              height: 20,
-            ),
-            Container(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width,
-                child: RaisedButton(
-                  child: Icon(Icons.camera_alt),
-                  color: Colors.white,
-                  padding: EdgeInsets.only(left: 11, right: 11, top: 15, bottom: 15),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                  onPressed: () {
-                    _openImagePickerModal(context, 'ktp');
-                  },
-                ))
           ],
         ));
   }

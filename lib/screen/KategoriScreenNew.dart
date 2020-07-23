@@ -2,6 +2,7 @@ import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/LoginScreen.dart';
 import 'package:apps/screen/SubKategoriScreen.dart';
+import 'package:apps/widget/bantuan/WidgetBantuan.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:pk_skeleton/pk_skeleton.dart';
@@ -20,14 +21,12 @@ class KategoriScreenNew extends StatelessWidget {
         elevation: 0,
         title: Text(title),
       ),
-      body: dataProvider.dataKategoriFlag == []
+      body: dataProvider.isLoading
           ? SingleChildScrollView(
               child: Container(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
-                child: PKCardPageSkeleton(
-                  totalLines: 4,
-                ),
+                child: PKCardListSkeleton(),
               ),
             )
           : Container(
@@ -63,45 +62,48 @@ class KategoriScreenNew extends StatelessWidget {
 
   void openSubkategori(context, param) {
     DataProvider dataProvider = Provider.of<DataProvider>(context);
-    print(param.produkkategoriflag);
-    if (param.produkkategoriflag == '2' || param.produkkategoriflag == '3' || param.produkkategoriflag == '4') {
-      Navigator.push(
+    dataProvider.getSubKategoriByIdKategori(param.produkkategoriid);
+
+    if (dataProvider.isLogin) {
+      if (param.produkkategoriflag == '2' || param.produkkategoriflag == '3' || param.produkkategoriflag == '4') {
+        Navigator.push(
+            context,
+            SlideRightRoute(
+                page: SubKategoriScreen(
+                  flag: param.produkkategoriflag,
+                  namaKategori: param.produkkategorinama,
+                )));
+      } else if (dataProvider.userKategori == param.produkkategorinama) {
+        Navigator.push(
+            context,
+            SlideRightRoute(
+                page: SubKategoriScreen(
+                  flag: param.produkkategoriflag,
+                  namaKategori: param.produkkategorinama,
+                )));
+      } else {
+        Navigator.push(
           context,
           SlideRightRoute(
-              page: SubKategoriScreen(
-            flag: param.produkkategoriflag,
-            idKategori: int.parse(param.produkkategoriid),
-            namaKategori: param.produkkategorinama,
-          )));
-    } else {
-      print(dataProvider.isLogin);
-      if (dataProvider.isLogin) {
-        print(dataProvider.userKategori);
-        if (dataProvider.userKategori == param.produkkategorinama) {
-          Navigator.push(
-              context,
-              SlideRightRoute(
-                  page: SubKategoriScreen(
-                    flag: param.produkkategoriflag,
-                    idKategori: int.parse(param.produkkategoriid),
-                    namaKategori: param.produkkategorinama,
-                  )));
-        } else {
-          Flushbar(
-            title: "Error",
-            message: "Silahkan login / member anda tidak sesuai",
-            duration: Duration(seconds: 15),
-            backgroundColor: Colors.red,
-            flushbarPosition: FlushbarPosition.BOTTOM,
-            icon: Icon(
-              Icons.assignment_turned_in,
-              color: Colors.white,
+            page: WidgetBantuan(
             ),
-          )..show(context);
+          ),
+        );
+        Flushbar(
+          title: "Error",
+          message: "Silahkan login / member anda tidak sesuai",
+          duration: Duration(seconds: 5),
+          backgroundColor: Colors.red,
+          flushbarPosition: FlushbarPosition.BOTTOM,
+          icon: Icon(
+            Icons.assignment_turned_in,
+            color: Colors.white,
+          ),
+        )
+          ..show(context);
         }
       } else {
-        Navigator.push(context, SlideRightRoute(page: LoginScreen()));
-      }
+      Navigator.push(context, SlideRightRoute(page: LoginScreen()));
     }
   }
 }

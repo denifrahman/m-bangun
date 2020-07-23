@@ -31,8 +31,9 @@ class _WidgetPengajuanListState extends State<WidgetPengajuanList> {
     // TODO: implement build
     return Container(
       width: MediaQuery.of(context).size.height,
+      margin: EdgeInsets.only(bottom: 50),
       child: ListView.builder(
-        shrinkWrap: true,
+//        shrinkWrap: true,
         itemCount: dataList.length,
         padding: EdgeInsets.all(10),
         itemBuilder: (context, index) {

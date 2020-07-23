@@ -146,8 +146,8 @@ class _WidgetCariState extends State<WidgetCari> {
             icon: Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.pop(context);
-              Provider.of<DataProvider>(context).setProdukListByParam();
-            },
+          Provider.of<DataProvider>(context).getAllProdukListByParam();
+        },
           ),
           onChanged: (String query) => _getProdukByParam(query),
           onTap: () {},

@@ -44,7 +44,7 @@ class _WidgetDetailProdukState extends State<WidgetDetailProduk> {
     // TODO: implement build
     DataProvider dataProvider = Provider.of<DataProvider>(context);
     var data = dataProvider.getdataProdukById;
-    var budget = dataProvider.getdataProdukById['data'][0]['produkbudget'] == null ? '0' : dataProvider.getdataProdukById['data'][0]['produkbudget'];
+    var budget = dataProvider.getdataProdukById == null ? '0' : dataProvider.getdataProdukById['data'][0]['produkbudget'];
     budgetController.text = budget;
     return Scaffold(
       body: dataProvider.isLoading
@@ -265,10 +265,15 @@ class _WidgetDetailProdukState extends State<WidgetDetailProduk> {
                   ),
                 ),
                 Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white, borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20))),
-                  height: MediaQuery.of(context).size.height * 0.1,
-                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20))),
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.1,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -288,38 +293,68 @@ class _WidgetDetailProdukState extends State<WidgetDetailProduk> {
                             Flushbar(
                               title: "Error",
                               message: "Silahkan login / daftar member",
-                              duration: Duration(seconds: 15),
+                              duration: Duration(seconds: 5),
                               backgroundColor: Colors.red,
                               flushbarPosition: FlushbarPosition.BOTTOM,
                               icon: Icon(
                                 Icons.assignment_turned_in,
                                 color: Colors.white,
                               ),
-                            )..show(context);
+                            )
+                              ..show(context);
                           }
                         },
                       ),
-                      Container(
-                        child: InkWell(
-                          onTap: () {
-                            !dataProvider.isBid ? _showDialog() : null;
-                          },
-                          child: Center(
-                              child: Text(
-                            'Apply',
-                            style: TextStyle(color: Colors.white),
-                          )),
-                        ),
-                        height: 40,
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        decoration:
-                            BoxDecoration(color: !dataProvider.isBid ? Colors.cyan[600] : Colors.grey, borderRadius: BorderRadius.circular(20)),
-                      ),
+                      dataProvider.getdataProdukById['data'][0]['produkkategoriflag'] == '2' ? _buttonBuy() : _buttonBid()
                     ],
                   ),
                 )
               ],
-            ),
+      ),
+    );
+  }
+
+  Widget _buttonBid() {
+    DataProvider dataProvider = Provider.of<DataProvider>(context);
+    return Container(
+      child: InkWell(
+        onTap: () {
+          !dataProvider.isBid ? _showDialog() : null;
+        },
+        child: Center(
+            child: Text(
+              'Bid',
+              style: TextStyle(color: Colors.white),
+            )),
+      ),
+      height: 40,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width * 0.7,
+      decoration: BoxDecoration(color: !dataProvider.isBid ? Colors.cyan[600] : Colors.grey, borderRadius: BorderRadius.circular(20)),
+    );
+  }
+
+  Widget _buttonBuy() {
+    DataProvider dataProvider = Provider.of<DataProvider>(context);
+    return Container(
+      child: InkWell(
+        onTap: () {
+          !dataProvider.isBid ? _showDialog() : null;
+        },
+        child: Center(
+            child: Text(
+              'Beli',
+              style: TextStyle(color: Colors.white),
+            )),
+      ),
+      height: 40,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width * 0.7,
+      decoration: BoxDecoration(color: !dataProvider.isBid ? Colors.cyan[600] : Colors.grey, borderRadius: BorderRadius.circular(20)),
     );
   }
 
@@ -329,7 +364,7 @@ class _WidgetDetailProdukState extends State<WidgetDetailProduk> {
       Flushbar(
         title: "Error",
         message: "Silahkan login / daftar member",
-        duration: Duration(seconds: 15),
+        duration: Duration(seconds: 5),
         backgroundColor: Colors.red,
         flushbarPosition: FlushbarPosition.BOTTOM,
         icon: Icon(

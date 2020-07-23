@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/models/jenis_pengajuan.dart';
 import 'package:apps/providers/Api.dart';
+import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/widget/Pengajuan/component/WidgetFormPelatihanKerja.dart';
 import 'package:apps/widget/Pengajuan/component/WidgetFormRequest.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class WidgetPengajuan extends StatefulWidget {
   final double height;
@@ -46,6 +48,7 @@ class _WidgetPengajuanState extends State<WidgetPengajuan> {
 
   @override
   Widget build(BuildContext context) {
+    DataProvider dataProvider = Provider.of<DataProvider>(context);
     // TODO: implement build
     return SingleChildScrollView(
       child: Column(

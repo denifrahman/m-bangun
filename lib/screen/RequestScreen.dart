@@ -2,6 +2,7 @@ import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/widget/Login/LoginWidget.dart';
 import 'package:apps/widget/Pengajuan/WidgetPengajuan.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
 
 class RequestScreen extends StatefulWidget {
@@ -62,7 +63,9 @@ class _RequestScreenState extends State<RequestScreen> {
               backgroundColor: Colors.white,
               page: '/request',
             )
-          : WidgetPengajuan(height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top)),
+          : ModalProgressHUD(
+              inAsyncCall: dataProvider.isLoading,
+              child: WidgetPengajuan(height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top))),
     );
   }
 }

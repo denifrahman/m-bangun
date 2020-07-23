@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:apps/providers/Api.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
@@ -15,8 +14,7 @@ class WidgetPendaftaran extends StatefulWidget {
 }
 
 class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
-  final RoundedLoadingButtonController _btnController =
-      new RoundedLoadingButtonController();
+  final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final FocusNode myFocusNodeEmailLogin = FocusNode();
@@ -71,13 +69,11 @@ class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
                   ),
                   borderRadius: BorderRadius.circular(20.0),
                 ),
-                margin: const EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: 20.0),
+                margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                 child: Row(
                   children: <Widget>[
                     new Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 15.0),
+                      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                       child: Icon(
                         Icons.person_outline,
                         color: Colors.grey,
@@ -125,13 +121,11 @@ class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
                   ),
                   borderRadius: BorderRadius.circular(20.0),
                 ),
-                margin: const EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: 20.0),
+                margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                 child: Row(
                   children: <Widget>[
                     new Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 15.0),
+                      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                       child: Icon(
                         Icons.phone,
                         color: Colors.grey,
@@ -157,8 +151,7 @@ class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Enter your phone',
-                          errorText:
-                              !validTelp ? null : 'Telpon sudah di gunakan',
+                          errorText: !validTelp ? null : 'Telpon sudah di gunakan',
                           hintStyle: TextStyle(color: Colors.grey),
                         ),
                       ),
@@ -181,13 +174,11 @@ class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
                   ),
                   borderRadius: BorderRadius.circular(20.0),
                 ),
-                margin: const EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: 20.0),
+                margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                 child: Row(
                   children: <Widget>[
                     new Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 15.0),
+                      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                       child: Icon(
                         Icons.email,
                         color: Colors.grey,
@@ -207,8 +198,7 @@ class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
                         validator: validateEmail,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          errorText:
-                              !validEmail ? null : 'Email sudah di gunakan',
+                          errorText: !validEmail ? null : 'Email sudah di gunakan',
                           hintText: 'Enter your email',
                           hintStyle: TextStyle(color: Colors.grey),
                         ),
@@ -232,13 +222,11 @@ class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
                   ),
                   borderRadius: BorderRadius.circular(20.0),
                 ),
-                margin: const EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: 20.0),
+                margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                 child: Row(
                   children: <Widget>[
                     new Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 15.0),
+                      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                       child: Icon(
                         Icons.lock_open,
                         color: Colors.grey,
@@ -279,8 +267,7 @@ class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
                   children: <Widget>[
                     new Expanded(
                         child: RoundedLoadingButton(
-                      child:
-                          Text('DAFTAR', style: TextStyle(color: Colors.white)),
+                      child: Text('DAFTAR', style: TextStyle(color: Colors.white)),
                       color: Color(0xFFb16a085),
                       controller: _btnController,
                       onPressed: () => _daftar(),
@@ -295,8 +282,7 @@ class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
                   children: <Widget>[
                     new Expanded(
                       child: FlatButton(
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0)),
+                        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
                         color: Colors.transparent,
                         child: Container(
                           padding: const EdgeInsets.only(left: 20.0),
@@ -319,14 +305,14 @@ class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
     );
   }
 
-  _daftar() {
+  _daftar() async {
     _btnController.stop();
     var map = new Map<String, dynamic>();
     map['usernamalengkap'] = namaLengkapController.text;
     map['userpassword'] = loginPasswordController.text;
     map['useremail'] = loginEmailController.text;
     map['usertelp'] = usertelpController.text;
-    Api.register(map).then((value) {
+    Api.register(map).then((value) async {
       var data = json.decode(value.body);
       print(data);
       if (data['error'] != null) {
@@ -334,31 +320,39 @@ class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
           setState(() {
             validEmail = true;
           });
+          _btnController.error();
+          await new Future.delayed(const Duration(seconds: 1));
           _btnController.stop();
+          _btnController.reset();
         }
         if (data['error']['usertelp'] != null) {
           setState(() {
             validTelp = true;
           });
+          _btnController.error();
+          await new Future.delayed(const Duration(seconds: 1));
           _btnController.stop();
+          _btnController.reset();
         }
       } else {
-        _btnController.success();
-        _openLogin(data['data']);
-        Flushbar(
-          title: "Sukses",
-          message:
-          "Pendaftaran berhasil, silahkan login dengan email dan password anda",
-          duration: Duration(seconds: 15),
-          backgroundColor: Colors.green,
-          flushbarPosition: FlushbarPosition.TOP,
-          icon: Icon(
-            Icons.assignment_turned_in,
-            color: Colors.white,
-          ),
-        )..show(context);
+        if (data['status']) {
+          _btnController.success();
+          _showToast('Pendaftaran berhasil, silahkan login dengan email dan password anda');
+          await new Future.delayed(const Duration(seconds: 1));
+          _openLogin(data['data']);
+        }
       }
     });
+  }
+
+  void _showToast(String message) {
+    final scaffold = Scaffold.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(message),
+      ),
+    );
   }
 
   _openLogin(prop) {
@@ -366,8 +360,7 @@ class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
   }
 
   String validateEmail(String value) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
     if (!regex.hasMatch(value)) return 'Format Email tidak valid';
   }

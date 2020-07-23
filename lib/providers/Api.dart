@@ -6,13 +6,13 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
 //const baseUrl = "http://niagatravel.com/api/api-m-bangun-jwt-token/api/";
-const baseUrl = "http://m-bangun.com/api/api/";
-//const baseUrl = "http://192.168.0.8/api_jwt/api/";
+//const baseUrl = "http://m-bangun.com/api/api/";
+const baseUrl = "http://192.168.0.3/api_jwt/api/";
 //const baseUrl = "http://192.168.0.6/api_jwt/api/";
-//const api_url = "192.168.0.8";
-//const param = '/api_jwt/api/';
-const param = '/api/api/';
-const api_url = "m-bangun.com";
+const api_url = "192.168.0.3";
+const param = '/api_jwt/api/';
+//const param = '/api/api/';
+//const api_url = "m-bangun.com";
 
 class Api {
   static Future getToken() {
@@ -84,6 +84,11 @@ class Api {
         return null;
       }
     }
+  }
+
+  static Future updateAkunPremium(body) {
+    var url = baseUrl + "Users/updateDataAkunPremium";
+    return http.post(url, body: body);
   }
 
   static Future pengajuanRqt(File produkthumbnail, File produkfoto1, File produkfoto2, File produkfoto3, File produkfoto4, idprovinsi, idkota, idkecamatan, alamatlengkap,

@@ -29,10 +29,10 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Theme Provider',
         theme: light,
-        home: BottomAnimateBar(),
+        home: SplashScreen(),
         initialRoute: '/',
         routes: {
-          '/splace-screen': (context) => SplaceScreen(),
+//          '/splace-screen': (context) => SplaceScreen(),
           '/login': (context) => LoginScreen(),
           '/request': (context) => RequestScreen(),
           '/profile': (context) => ProfileScreen(),

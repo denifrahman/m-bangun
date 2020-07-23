@@ -118,7 +118,7 @@ class WidgetTagihan extends StatelessWidget {
       Flushbar(
         title: "Error",
         message: "Silahkan login / daftar member",
-        duration: Duration(seconds: 15),
+        duration: Duration(seconds: 5),
         backgroundColor: Colors.red,
         flushbarPosition: FlushbarPosition.BOTTOM,
         icon: Icon(

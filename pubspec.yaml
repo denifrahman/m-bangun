@@ -11,7 +11,7 @@ description: Aplikasi m-bangun
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.7+7
+version: 1.0.9+9
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -60,6 +60,9 @@ dependencies:
   pinch_zoom_image_last: ^0.3.1
   flutter_signature_pad: ^2.0.2
   advance_pdf_viewer: ^1.1.6
+  webview_flutter: ^0.3.22+1
+  random_color: ^1.0.5
+  flutter_wordpress: ^0.2.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -84,7 +87,9 @@ flutter:
   assets:
     - assets/logo.png
     - assets/icons/verified.png
+    - assets/icons/worker.png
     - assets/test.pdf
+    - assets/images/splace-background.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

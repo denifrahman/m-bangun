@@ -245,7 +245,7 @@ class _WidgetFormPelatihanKerjaState extends State<WidgetFormPelatihanKerja> {
           Flushbar(
             title: "Sukses",
             message: 'Pengajuan berhasil',
-            duration: Duration(seconds: 15),
+            duration: Duration(seconds: 5),
             backgroundColor: Colors.green,
             flushbarPosition: FlushbarPosition.TOP,
             icon: Icon(
@@ -260,7 +260,7 @@ class _WidgetFormPelatihanKerjaState extends State<WidgetFormPelatihanKerja> {
           Flushbar(
             title: "Gagal",
             message: 'Periksa koneksi internet anda',
-            duration: Duration(seconds: 15),
+            duration: Duration(seconds: 5),
             backgroundColor: Colors.red,
             flushbarPosition: FlushbarPosition.TOP,
             icon: Icon(

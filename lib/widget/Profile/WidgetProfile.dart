@@ -410,7 +410,7 @@ class MapScreenState extends State<WidgetProfile> with SingleTickerProviderState
         Flushbar(
           title: "Sukses",
           message: data['message'],
-          duration: Duration(seconds: 15),
+          duration: Duration(seconds: 5),
           backgroundColor: Colors.green,
           flushbarPosition: FlushbarPosition.TOP,
           icon: Icon(
@@ -508,7 +508,7 @@ class MapScreenState extends State<WidgetProfile> with SingleTickerProviderState
         Flushbar(
           title: "Sukses",
           message: data['message'],
-          duration: Duration(seconds: 15),
+          duration: Duration(seconds: 5),
           backgroundColor: Colors.green,
           flushbarPosition: FlushbarPosition.TOP,
           icon: Icon(

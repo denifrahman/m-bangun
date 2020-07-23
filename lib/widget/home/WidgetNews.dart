@@ -1,13 +1,9 @@
-import 'dart:convert';
-
-import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/Utils/navigation_right.dart';
-import 'package:apps/models/NewsM.dart';
-import 'package:apps/providers/Api.dart';
 import 'package:apps/screen/NewsDetailScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:loading_animations/loading_animations.dart';
+import 'package:flutter_wordpress/flutter_wordpress.dart' as wp;
+import 'package:jiffy/jiffy.dart';
 
 class WidgetNews extends StatefulWidget {
   WidgetNews({Key key}) : super(key: key);
@@ -19,13 +15,41 @@ class WidgetNews extends StatefulWidget {
 }
 
 class _WidgetNewsState extends State<WidgetNews> {
-  var dataNews = new List<NewsM>();
-  bool _saving = false;
+  wp.WordPress wordPress = wp.WordPress(
+    baseUrl: 'https://m-bangun.com',
+  );
+
+  fetchPost() {
+    Future<List<wp.Post>> posts = wordPress.fetchPosts(
+      postParams: wp.ParamsPostList(
+        context: wp.WordPressContext.view,
+        pageNum: 1,
+        includeCategories: [1],
+        perPage: 20,
+        order: wp.Order.desc,
+        orderBy: wp.PostOrderBy.date,
+      ),
+      fetchAuthor: true,
+      fetchFeaturedMedia: true,
+      fetchComments: true,
+    );
+    return posts;
+  }
+
+  getPostImages(wp.Post post) {
+    if (post.featuredMedia == null) {
+      return SizedBox();
+    }
+    return Image.network(
+      post.featuredMedia.sourceUrl,
+      fit: BoxFit.cover,
+      width: 270,
+    );
+  }
 
   @override
   void initState() {
     super.initState();
-    _getToken();
   }
 
   @override
@@ -33,123 +57,139 @@ class _WidgetNewsState extends State<WidgetNews> {
     super.dispose();
   }
 
-  void _getToken() async {
-    setState(() {
-      _saving = true;
-    });
-    Api.getToken().then((value) {
-      var data = json.decode(value.body);
-      LocalStorage.sharedInstance.writeValue(key: 'token', value: data['data']['token']);
-      _getAllNews();
-    });
-  }
-
-  void _getAllNews() async {
-    String token = await LocalStorage.sharedInstance.readValue('token');
-    Api.getAllNews(token).then((response) {
-      Iterable list = json.decode(response.body)['data'];
-      setState(() {
-        dataNews = list.map((model) => NewsM.fromMap(model)).toList();
-        _saving = false;
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Column(
       children: <Widget>[
-        dataNews.isEmpty
-            ? Container(
-                margin: EdgeInsets.only(top: 50),
-                child: Center(child: LoadingDoubleFlipping.square(size: 30, backgroundColor: Colors.red)),
-              )
-            : Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  margin: EdgeInsets.only(top: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text('News', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, fontFamily: 'SUNDAY')),
-                      InkWell(
-                        child: Text(
-                          'Semua',
-                          style: TextStyle(fontSize: 12, color: Color(0xffb16a085)),
-                        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            margin: EdgeInsets.only(top: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.6,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Berita terbaru',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                          )),
+                      Text(
+                        'Berita terbaru tentang teknologi',
+                        style: TextStyle(fontSize: 12),
                       ),
                     ],
                   ),
                 ),
-              ),
+                InkWell(
+                  child: Text(
+                    '',
+                    style: TextStyle(fontSize: 12, color: Color(0xffb16a085)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
         Container(
-          height: 250,
-          width: MediaQuery.of(context).size.width,
-          child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.only(left: 5, right: 5, top: 10),
-              itemCount: dataNews.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  semanticContainer: true,
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  child: InkWell(
-                    onTap: () => _openDetailNews(dataNews[index]),
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          flex: 2,
-                          child: Image.network(
-                            dataNews[index].newsthumbnail == null
-                                ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
-                                : dataNews[index].newsthumbnail,
-                            fit: BoxFit.cover,
-                            width: 150,
+          height: 300,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
+          child: FutureBuilder(
+            future: fetchPost(),
+            builder: (BuildContext context, AsyncSnapshot<List<wp.Post>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.none) {
+                return Container();
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.only(left: 5, right: 5, top: 10),
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  wp.Post post = snapshot.data[index];
+                  return Card(
+                    semanticContainer: true,
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    child: InkWell(
+                      onTap: () => _openDetailNews(post.link, post.title.rendered),
+                      child: Column(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 2,
+                            child: getPostImages(post),
                           ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            width: 150,
-                            padding: EdgeInsets.all(10),
-                            child: RichText(
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 3,
-                              strutStyle: StrutStyle(fontSize: 10.0),
-                              text: TextSpan(
-                                  style: TextStyle(
-                                      color: Colors.grey[800],
-                                      fontSize: 12
+                          Expanded(
+                            flex: 1,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Container(
+                                    width: 250,
+                                    child: RichText(
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 4,
+                                      strutStyle: StrutStyle(fontSize: 10.0),
+                                      text: TextSpan(style: TextStyle(color: Colors.grey[800], fontSize: 12, fontWeight: FontWeight.bold), text: post.title.rendered),
+                                    ),
                                   ),
-                                  text: dataNews[index].newstitle),
+                                  Container(
+                                    width: 250,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          post.author.name,
+                                          style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+                                        ),
+                                        Text(
+                                          Jiffy(post.date).fromNow(),
+                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.grey),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  elevation: 5,
-                  margin: EdgeInsets.all(10),
-                );
-              }),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    elevation: 2,
+                    margin: EdgeInsets.all(10),
+                  );
+                },
+              );
+            },
+          ),
         )
       ],
     );
   }
 
-  _openDetailNews(param) {
-    Navigator.push(
-        context,
-        SlideRightRoute(
-            page: NewsDetailScreen(
-                title: param.newstitle,
-                deskripsi: param.newsdeskripsi,
-                tumbhnail: param.newsthumbnail,
-                id: param.newsid
-            )));
+  _openDetailNews(link, title) {
+    Navigator.push(context, SlideRightRoute(page: NewsDetailScreen(link: link, title: title,)));
   }
 }

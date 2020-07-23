@@ -9,6 +9,7 @@ class LoginScreen extends StatelessWidget {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: Text('Login'),
       ),
       body: LoginWidget(

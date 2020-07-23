@@ -3,24 +3,27 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class WidgetNewDetail extends StatelessWidget {
-  WidgetNewDetail({Key key, this.title, this.link}) : super(key: key);
-  final link;
-  final title;
+class WidgetBantuan extends StatefulWidget {
+  @override
+  _WidgetBantuanState createState() => _WidgetBantuanState();
+}
+
+class _WidgetBantuanState extends State<WidgetBantuan> {
   final Completer<WebViewController> _controller = Completer<WebViewController>();
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        title: Text(title),
+        title: const Text('Bantuan'),
+        // This drop down menu demonstrates that Flutter widgets can be shown over the web view.
       ),
+      // We're using a Builder here so we have a context that is below the Scaffold
+      // to allow calling Scaffold.of(context) so we can show a snackbar.
       body: Builder(
         builder: (BuildContext context) {
           return WebView(
-            initialUrl: link,
+            initialUrl: 'https://m-bangun.com/service',
             javascriptMode: JavascriptMode.unrestricted,
             onWebViewCreated: (WebViewController webViewController) {
               _controller.complete(webViewController);

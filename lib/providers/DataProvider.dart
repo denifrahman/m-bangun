@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:apps/Utils/BottomAnimation.dart';
 import 'package:apps/Utils/LocalBindings.dart';
@@ -11,6 +12,7 @@ import 'package:apps/models/KategoriM.dart';
 import 'package:apps/models/KecamatanM.dart';
 import 'package:apps/models/KotaM.dart';
 import 'package:apps/models/MetodeTransferM.dart';
+import 'package:apps/models/NewsM.dart';
 import 'package:apps/models/ProdukListM.dart';
 import 'package:apps/models/ProvinsiM.dart';
 import 'package:apps/models/SubKategoriM.dart';
@@ -20,7 +22,7 @@ import 'package:package_info/package_info.dart';
 
 class DataProvider extends ChangeNotifier {
   DataProvider() {
-    versionCheck();
+//    versionCheck();
     getToken();
   }
 
@@ -91,26 +93,34 @@ class DataProvider extends ChangeNotifier {
   void getToken() async {
     _connection = true;
     notifyListeners();
-    Api.getToken().then((value) async {
-      if (value.statusCode == 200) {
-        var data = json.decode(value.body);
-        LocalStorage.sharedInstance.writeValue(key: 'token', value: data['data']['token']);
-        token = await LocalStorage.sharedInstance.readValue('token');
-        if (token != null) {
-//          getKategoriByFlag('proyek');
-//          getKategoriByFlag('toko');
-//          getKategoriGroupFlag();
-          chekSession();
-          versionCheck();
-          getGroupKatgori();
-          _connection = true;
-          notifyListeners();
-        }
-      } else {
-        _connection = false;
-        notifyListeners();
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        Api.getToken().then((value) async {
+//          print(value);
+          if (value.statusCode == 200) {
+            var data = json.decode(value.body);
+            LocalStorage.sharedInstance.writeValue(key: 'token', value: data['data']['token']);
+            token = await LocalStorage.sharedInstance.readValue('token');
+            if (token != null) {
+              chekSession();
+              getAllNews();
+              versionCheck();
+              getGroupKatgori();
+              _connection = true;
+              notifyListeners();
+            }
+          } else {
+            _connection = false;
+            notifyListeners();
+          }
+        });
       }
-    });
+    } on SocketException catch (_) {
+      print('not connected');
+      _connection = false;
+      notifyListeners();
+    }
   }
 
   chekSession() async {
@@ -122,6 +132,7 @@ class DataProvider extends ChangeNotifier {
       getCurrentLocation();
       _isLogin = true;
       getProfile();
+      getRecentProduk();
       notifyListeners();
     } else {
 //      print('test');
@@ -129,6 +140,7 @@ class DataProvider extends ChangeNotifier {
       _verified = false;
       _userKategori = null;
       notifyListeners();
+      getRecentProduk();
     }
   }
 
@@ -160,7 +172,7 @@ class DataProvider extends ChangeNotifier {
 //    notifyListeners();
 //  }
 
-  String _userSiup, _userAkte, _userKategori, _userSubKategori, _userPremium;
+  String _userSiup, _userAkte, _userKategori, _userProdukKategoriSubId, _userSubKategori, _userPremium;
   bool _verified = false;
 
   String get userSiup => _userSiup;
@@ -168,6 +180,8 @@ class DataProvider extends ChangeNotifier {
   String get userAkte => _userAkte;
 
   String get userKategori => _userKategori;
+
+  String get userProdukKategoriSubId => _userProdukKategoriSubId;
 
   String get userSubKategori => _userSubKategori;
 
@@ -179,8 +193,8 @@ class DataProvider extends ChangeNotifier {
     try {
       imageCache.clear();
       Api.getUserById(token, userId).then((response) {
-        print(response.body);
         var data = json.decode(response.body);
+        print(data['data']['data_user']['produkkategorisubid']);
         LocalStorage.sharedInstance.writeValue(key: 'session', value: json.encode(data));
         _userEmail = data['data']['data_user']['useremail'];
         _userNama = data['data']['data_user']['usernamalengkap'];
@@ -191,12 +205,14 @@ class DataProvider extends ChangeNotifier {
         _userSiup = data['data']['data_user']['usersiup'];
         _userAkte = data['data']['data_user']['userakteperusahaan'];
         _userKategori = data['data']['data_user']['produkkategorinama'];
+        _userProdukKategoriSubId = data['data']['data_user']['produkkategorisubid'];
         _userSubKategori = data['data']['data_user']['produkkategorisubnama'];
         _userEmail = data['data']['data_user']['useremail'];
         _userNama = data['data']['data_user']['usernamalengkap'];
         _userNotelp = data['data']['data_user']['usertelp'];
         _userFoto = data['data']['data_user']['userfoto'];
         _userPengalamanKerja = data['data']['data_user']['userpengalamankerja'];
+        getRecentProject();
         _isLoading = false;
         notifyListeners();
 //        }
@@ -270,6 +286,17 @@ class DataProvider extends ChangeNotifier {
   List<SubKategoriM> _dataSubKategori = [];
 
   List<SubKategoriM> get getDataSubKategori => _dataSubKategori;
+
+  void getSubKategoriByIdKategori(idKategori) async {
+    _isLoading = true;
+    notifyListeners();
+    Api.getAllSubKategoriByIdKategori(token, idKategori).then((response) {
+      Iterable list = json.decode(response.body)['data'];
+      _dataSubKategori = list.map((model) => SubKategoriM.fromMap(model)).toList();
+      _isLoading = false;
+      notifyListeners();
+    });
+  }
 
   setDataSubKategori(List<SubKategoriM> data) {
     _dataSubKategori = data;
@@ -360,7 +387,7 @@ class DataProvider extends ChangeNotifier {
       key = '';
       notifyListeners();
     } else {
-      setProdukListByParam();
+      getAllProdukListByParam();
       notifyListeners();
     }
   }
@@ -378,11 +405,13 @@ class DataProvider extends ChangeNotifier {
 
   List<ProdukListM> get getProdukListByParam => dataProdukListByParam;
 
-  setProdukListByParam() async {
+  getAllProdukListByParam() async {
     imageCache.clear();
+    _isLoading = true;
     String currentIdProvinsi = await LocalStorage.sharedInstance.readValue('idProvinsi');
     String currentIdKota = await LocalStorage.sharedInstance.readValue('idKota');
     String currentIdKecamatan = await LocalStorage.sharedInstance.readValue('idKecamatan');
+    notifyListeners();
     var queryParameters = {
       'sub': idSubKategori.toString(),
       'kec': currentIdKecamatan.toString() == 'null' ? '' : currentIdKecamatan.toString(),
@@ -396,16 +425,64 @@ class DataProvider extends ChangeNotifier {
       if (result['status'] == true) {
         Iterable list = json.decode(response.body)['data'];
         dataProdukListByParam = list.map((model) => ProdukListM.fromMap(model)).toList();
+        _isLoading = false;
         notifyListeners();
       }
     });
   }
 
+  List<ProdukListM> _dataRecentProject = [];
+
+  List<ProdukListM> get dataRecentProject => _dataRecentProject;
+
+  getRecentProject() async {
+    imageCache.clear();
+    _isLoading = true;
+    String currentIdProvinsi = await LocalStorage.sharedInstance.readValue('idProvinsi');
+    String currentIdKota = await LocalStorage.sharedInstance.readValue('idKota');
+    String currentIdKecamatan = await LocalStorage.sharedInstance.readValue('idKecamatan');
+    notifyListeners();
+    var queryParameters = {
+      'sub': _userProdukKategoriSubId.toString(),
+      'kec': currentIdKecamatan.toString() == 'null' ? '' : currentIdKecamatan.toString(),
+      'kota': currentIdKota.toString() == 'null' ? '' : currentIdKota.toString(),
+      'prov': currentIdProvinsi.toString() == 'null' ? '' : currentIdProvinsi.toString(),
+      'key': key.toString(),
+      'limit': '5'
+    };
+    Api.getAllProdukByParam(token, queryParameters).then((response) {
+//      print(response.body);
+      var result = json.decode(response.body);
+      if (result['status'] == true) {
+        Iterable list = json.decode(response.body)['data'];
+        _dataRecentProject = list.map((model) => ProdukListM.fromMap(model)).toList();
+        _isLoading = false;
+        notifyListeners();
+      }
+    });
+  }
+
+  List<KategoriM> _dataRecentProduk = [];
+
+  List<KategoriM> get dataRecentProduk => _dataRecentProduk;
+
+  getRecentProduk() async {
+    imageCache.clear();
+    _isLoading = true;
+    _isLoading = true;
+    notifyListeners();
+    var queryParameters = {'produkkategoriflag': '2', 'produkkategoriaktif': '1'};
+    Api.getAllKategoriByParam(token, queryParameters).then((response) {
+      Iterable list = json.decode(response.body)['data'];
+      _dataRecentProduk = list.map((model) => KategoriM.fromMap(model)).toList();
+      _isLoading = false;
+      notifyListeners();
+    });
+  }
+
   getAllFavoriteProdukByUserId() async {
     imageCache.clear();
-    var queryParameters = {
-      'userid': userId,
-    };
+    var queryParameters = {'userid': userId, 'produkaktif': '1'};
     Api.getAllFavoriteByParam(token, queryParameters).then((response) {
       var result = json.decode(response.body);
       print(result);
@@ -553,8 +630,9 @@ class DataProvider extends ChangeNotifier {
             child: child,
           );
         }),
-        (Route route) => false);
+            (Route route) => false);
     chekSession();
+    _userProdukKategoriSubId = null;
   }
 
   void getProdukListByUserId(param) async {
@@ -608,11 +686,13 @@ class DataProvider extends ChangeNotifier {
   List<KategoriM> get dataKategoriFlag => kategoriFlag;
 
   void getKategoriByFlag(flag) async {
+    _isLoading = true;
+    notifyListeners();
     var queryParameters = {'produkkategoriflag': flag.toString(), 'produkkategoriaktif': '1'};
     Api.getAllKategoriByParam(token, queryParameters).then((response) {
-      print(response.body);
       Iterable list = json.decode(response.body)['data'];
       kategoriFlag = list.map((model) => KategoriM.fromMap(model)).toList();
+      _isLoading = false;
       notifyListeners();
     });
   }
@@ -695,7 +775,7 @@ class DataProvider extends ChangeNotifier {
     _isLoading = true;
     var queryParameters = {'group_aktif': '1'};
     Api.getAllGroupKategori(token, queryParameters).then((response) {
-      versionCheck();
+//      versionCheck();
       var result = json.decode(response.body);
       Iterable list = result['data'];
       _groupData = list.map((model) => GroupKategoriM.fromMap(model)).toList();
@@ -728,7 +808,7 @@ class DataProvider extends ChangeNotifier {
     _isLoading = true;
     Api.getAllMetodeTransfer(token).then((response) {
       var result = json.decode(response.body);
-      print(response.body);
+//      print(response.body);
       Iterable list = result['data'];
       _dataMetodeTransfer = list.map((model) => MetodeTransferM.fromMap(model)).toList();
       _isLoading = false;
@@ -761,6 +841,19 @@ class DataProvider extends ChangeNotifier {
     _showVersionDialog = bool;
   }
 
+  var _dataNews = new List<NewsM>();
+
+  List<NewsM> get dataNews => _dataNews;
+
+  void getAllNews() async {
+    String token = await LocalStorage.sharedInstance.readValue('token');
+    Api.getAllNews(token).then((response) {
+      Iterable list = json.decode(response.body)['data'];
+      _dataNews = list.map((model) => NewsM.fromMap(model)).toList();
+      notifyListeners();
+    });
+  }
+
   versionCheck() async {
     //Get Current installed version of app
     final PackageInfo info = await PackageInfo.fromPlatform();
@@ -784,7 +877,7 @@ class DataProvider extends ChangeNotifier {
       final result = json.decode(response.body);
       if (result['status']) {
         _isLoading = false;
-        print(body);
+//        print(body);
         getBiddingByProdukId(body['produkid']);
         notifyListeners();
       }

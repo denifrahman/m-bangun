@@ -261,7 +261,7 @@ class SettingWidget extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
               child: FlatButton(
-//                onPressed: () => _handleSignOut(context),
+                onPressed: () {},
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [

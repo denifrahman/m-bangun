@@ -277,15 +277,14 @@ class _WidgetKategoriHomeState extends State<WidgetKategoriHome> {
 
   void openSubkategori(param) {
     DataProvider dataProvider = Provider.of<DataProvider>(context);
-    print(param.produkkategoriflag);
+    dataProvider.getSubKategoriByIdKategori(param.produkkategoriid);
     if (param.produkkategoriflag == 'toko') {
       Navigator.push(
           context,
           SlideRightRoute(
               page: SubKategoriScreen(
-                idKategori: int.parse(param.produkkategoriid),
-                namaKategori: param.produkkategorinama,
-              )));
+            namaKategori: param.produkkategorinama,
+          )));
     } else {
       print(dataProvider.isLogin);
       if (dataProvider.isLogin) {
@@ -294,14 +293,13 @@ class _WidgetKategoriHomeState extends State<WidgetKategoriHome> {
               context,
               SlideRightRoute(
                   page: SubKategoriScreen(
-                    idKategori: int.parse(param.produkkategoriid),
                     namaKategori: param.produkkategorinama,
                   )));
         } else {
           Flushbar(
             title: "Error",
             message: "Silahkan login / member anda tidak sesuai",
-            duration: Duration(seconds: 15),
+            duration: Duration(seconds: 5),
             backgroundColor: Colors.red,
             flushbarPosition: FlushbarPosition.BOTTOM,
             icon: Icon(

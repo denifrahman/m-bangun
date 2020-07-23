@@ -39,17 +39,22 @@ class WidgetDetailBahanProduk extends StatelessWidget {
                             dataProvider.getdataProdukById['data'][0]['produkdeskripsi'],
                             textAlign: TextAlign.start,
                           ),
-                          leading: InkWell(
-                            onTap: (){
-                              Navigator.push(context, SlideRightRoute(page: WidgetViewPdf()));
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                 Icon(Icons.attach_file, color: Colors.blue,),
-                                Text('Buka')
-                              ],
+                          leading: dataProvider.getdataProdukById['data'][0]['produkkategoriflag'] == '2'
+                              ? null
+                              : InkWell(
+                                  onTap: () {
+                                    Navigator.push(context, SlideRightRoute(page: WidgetViewPdf()));
+                                  },
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.attach_file,
+                                        color: Colors.blue,
+                                      ),
+                                      Text('Buka')
+                                    ],
                             ),
                           ),
                         )

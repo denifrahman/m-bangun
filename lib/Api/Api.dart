@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -6,22 +7,52 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
 //const baseUrl = "http://niagatravel.com/api/api-m-bangun-jwt-token/api/";
-//const baseUrl = "http://m-bangun.com/api/api/";
-const baseUrl = "http://192.168.0.3/api_jwt/api/";
+const baseUrl = "http://m-bangun.com/api-v2/api/";
 //const baseUrl = "http://192.168.0.6/api_jwt/api/";
-const api_url = "192.168.0.3";
-const param = '/api_jwt/api/';
-//const param = '/api/api/';
-//const api_url = "m-bangun.com";
+//const baseUrl = "http://192.168.0.6/api_jwt/api/";
+//const api_url = "192.168.0.6";
+//const param = '/api_jwt/api/';
+const param = '/wp-json/wc/v3/';
+const wp = '/wp-json/wp/v2/';
+const wc = '/wp-json/wc/v3/';
+const api_url = "m-bangun.com";
+String basicAuth = 'Basic ' + base64Encode(utf8.encode('${'m-bangun'}:${'admin9876'}'));
 
 class Api {
   static Future getToken() {
     var map = new Map<String, dynamic>();
-    map['useremail'] = 'deni@gmail.com';
-    map['userpassword'] = '123456';
+    map['user_email'] = 'deni@gmail.com';
+    map['user_password'] = '123456';
     var url = baseUrl + "users/login";
     print(url);
     return http.post(url, body: map);
+  }
+
+  static Future createUser(body) {
+    var url = Uri.https(api_url, wp + 'users');
+    try {
+      return http.post(
+        url,
+        body: body,
+        headers: {"Content-Type": "application/json", HttpHeaders.authorizationHeader: "$basicAuth"},
+      );
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  static Future getUser(email) {
+//    var url = Uri.https('m-bangun.com/wp-json/wp/v2/users?search' + email);
+    var url = 'https://m-bangun.com/wp-json/wp/v2/users?search=' + email;
+    print(url);
+    try {
+      return http.get(
+        url,
+        headers: {"Content-Type": "application/json", HttpHeaders.authorizationHeader: "$basicAuth"},
+      );
+    } catch (err) {
+      print(err);
+    }
   }
 
   static Future uploadImage(File image, userid) async {
@@ -481,13 +512,13 @@ class Api {
     }
   }
 
-  static Future getAllKategoriByParam(token, query) {
-    var url = Uri.http(api_url, param + 'Kategori/getAllByParam', query);
-    print(url);
+  static Future getCategories(token, req) {
+    String basicAuth = 'Basic ' + base64Encode(utf8.encode('${token['username']}:${token['password']}'));
+    var url = Uri.http(api_url, param + 'products/categories', req);
     try {
       return http.get(
         url,
-        headers: {HttpHeaders.authorizationHeader: token},
+        headers: {HttpHeaders.authorizationHeader: "$basicAuth"},
       );
     } catch (err) {
       print(err);

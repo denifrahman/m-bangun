@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'package:apps/Api/Api.dart';
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/models/KategoriM.dart';
-import 'package:apps/providers/Api.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/LoginScreen.dart';
 import 'package:apps/screen/SubKategoriScreen.dart';
@@ -82,10 +82,10 @@ class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
                         padding: EdgeInsets.all(8),
                         child: ListTile(
                           leading: Image.network(
-                            dataKategori[index].produkkategorithumbnail,
+                            dataKategori[index].kategoriThumbnail,
                             width: 45,
                           ),
-                          title: Text(dataKategori[index].produkkategorinama),
+                          title: Text(dataKategori[index].kategoriNama),
                           trailing: Icon(
                             Icons.arrow_forward_ios,
                             size: 12,

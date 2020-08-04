@@ -1,4 +1,4 @@
-import 'package:apps/providers/DataProvider.dart';
+import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/widget/Produk/WidgetListProduk.dart';
 import 'package:apps/widget/filter/WIdgetFilter.dart';
 import 'package:flutter/material.dart';
@@ -56,13 +56,13 @@ class _ProdukScreenState extends State<ProdukScreen> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
+    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
     return NotificationListener<ScrollNotification>(
       onNotification: _handleScrollNotification,
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          title: Text(this.widget.namaKategori),
+          title: Text(widget.namaKategori),
           actions: <Widget>[
             IconButton(
               icon: Icon(
@@ -73,7 +73,7 @@ class _ProdukScreenState extends State<ProdukScreen> with TickerProviderStateMix
             )
           ],
         ),
-        body: dataProvider.isLoading
+        body: blocProduk.isLoading
             ? SingleChildScrollView(
                 child: Container(
                   height: MediaQuery.of(context).size.height,

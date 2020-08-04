@@ -67,11 +67,8 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
             child: WidgetOverViewProduk(
                 produkNama: dataProvider.getProdukListByParam[j].produknama,
                 thumbnail: dataProvider.getProdukListByParam[j].produkthumbnail,
-                prov: provinsi,
-                kab: kota,
                 harga: harga == null ? '-' : hargaFormat.toString(),
-                tgl: dataProvider.getProdukListByParam[j].produkcreate),
-          );
+              ));
         },
       ),
     );

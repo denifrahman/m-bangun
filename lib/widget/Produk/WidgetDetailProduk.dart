@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:apps/Api/Api.dart';
 import 'package:apps/Utils/PreviewFoto.dart';
-import 'package:apps/providers/Api.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/widget/Produk/component/WidgetDeskripsiProduk.dart';
 import 'package:apps/widget/Produk/component/WidgetDetailBahanProduk.dart';

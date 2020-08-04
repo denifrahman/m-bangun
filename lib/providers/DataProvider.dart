@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:apps/Api/Api.dart';
 import 'package:apps/Utils/BottomAnimation.dart';
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/models/BankM.dart';
@@ -12,33 +12,69 @@ import 'package:apps/models/KategoriM.dart';
 import 'package:apps/models/KecamatanM.dart';
 import 'package:apps/models/KotaM.dart';
 import 'package:apps/models/MetodeTransferM.dart';
-import 'package:apps/models/NewsM.dart';
 import 'package:apps/models/ProdukListM.dart';
 import 'package:apps/models/ProvinsiM.dart';
 import 'package:apps/models/SubKategoriM.dart';
-import 'package:apps/providers/Api.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:package_info/package_info.dart';
 
 class DataProvider extends ChangeNotifier {
   DataProvider() {
 //    versionCheck();
     getToken();
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
+      _currentUser = account;
+      notifyListeners();
+    });
+    _googleSignIn.signInSilently();
   }
 
   bool isFavorite = false;
   bool _isLoading = false;
   bool _isBid = false;
-  bool _isLogin = false;
   bool _connection = true;
 
   bool get connection => _connection;
 
   bool get isBid => _isBid;
 
+  bool _isLogin = false;
+
   bool get isLogin => _isLogin;
+  static String username = 'm-bangun';
+  static String password = 'admin9876s';
+  static String str = '$username:$password';
+  static String basicAuth = base64Encode(utf8.encode(str));
 
   bool get isLoading => _isLoading;
+
+  GoogleSignInAccount _currentUser;
+
+  GoogleSignInAccount get currentUser => _currentUser;
+
+  Future<void> handleSignIn() async {
+    try {
+      await _googleSignIn.signIn();
+      chekSession();
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: <String>['email'],
+  );
+
+  Future<void> handleSignOut() async {
+    _googleSignIn.disconnect().then((value) {
+      _googleSignIn.isSignedIn().then((value) {
+        if (!value) {
+          chekSession();
+        }
+      });
+    });
+  }
 
   setLoading(bool Boolean) {
     _isLoading = Boolean;
@@ -83,65 +119,72 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getAllKategori() async {
-    Api.getAllKategori(token).then((response) {
-      Iterable list = json.decode(response.body)['data'];
-      setDataKategori(list.map((e) => KategoriM.fromMap(e)).toList());
-    });
-  }
-
   void getToken() async {
     _connection = true;
-    notifyListeners();
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        Api.getToken().then((value) async {
-//          print(value);
-          if (value.statusCode == 200) {
-            var data = json.decode(value.body);
-            LocalStorage.sharedInstance.writeValue(key: 'token', value: data['data']['token']);
-            token = await LocalStorage.sharedInstance.readValue('token');
-            if (token != null) {
-              chekSession();
-              getAllNews();
-              versionCheck();
-              getGroupKatgori();
-              _connection = true;
-              notifyListeners();
-            }
-          } else {
-            _connection = false;
-            notifyListeners();
-          }
-        });
-      }
-    } on SocketException catch (_) {
-      print('not connected');
-      _connection = false;
-      notifyListeners();
-    }
+//    notifyListeners();
+//    try {
+//      final result = await InternetAddress.lookup('google.com');
+//      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+//        Api.getToken().then((value) async {
+////          print(value);
+//          if (value.statusCode == 200) {
+//            var data = json.decode(value.body);
+//            LocalStorage.sharedInstance.writeValue(key: 'token', value: data['data']['token']);
+//            token = await LocalStorage.sharedInstance.readValue('token');
+//            if (token != null) {
+//              chekSession();
+////              versionCheck();
+////              getGroupKatgori();
+//              _connection = true;
+//              notifyListeners();
+//            }
+//          } else {
+//            _connection = false;
+//            notifyListeners();
+//          }
+//        });
+//      }
+//    } on SocketException catch (_) {
+//      print('not connected');
+//      _connection = false;
+//      notifyListeners();
+//    }
   }
 
   chekSession() async {
-    token = await LocalStorage.sharedInstance.readValue('token');
-    String dataSession = await LocalStorage.sharedInstance.readValue('session');
-//    print(dataSession);
-    if (dataSession != null) {
-      userId = json.decode(dataSession)['data']['data_user']['userid'];
-      getCurrentLocation();
-      _isLogin = true;
-      getProfile();
-      getRecentProduk();
-      notifyListeners();
-    } else {
-//      print('test');
-      _isLogin = false;
-      _verified = false;
-      _userKategori = null;
-      notifyListeners();
-      getRecentProduk();
-    }
+    _googleSignIn.isSignedIn().then((value) {
+      print(value);
+      if (value) {
+        _currentUser = _googleSignIn.currentUser;
+        getCurrentLocation();
+        _isLogin = true;
+        getProfile();
+        notifyListeners();
+      } else {
+        _isLogin = false;
+        _verified = false;
+        _userKategori = null;
+        notifyListeners();
+      }
+    });
+//    token = await LocalStorage.sharedInstance.readValue('token');
+//    String dataSession = await LocalStorage.sharedInstance.readValue('session');
+////    print(dataSession);
+//    if (dataSession != null) {
+//      userId = json.decode(dataSession)['data']['data_user']['userid'];
+//      getCurrentLocation();
+//      _isLogin = true;
+//      getProfile();
+//      getAllKategori();
+//      notifyListeners();
+//    } else {
+////      print('test');
+//      _isLogin = false;
+//      _verified = false;
+//      _userKategori = null;
+//      notifyListeners();
+//      getAllKategori();
+//    }
   }
 
   String _userNama, _userEmail, _userNotelp, _userFoto, _userPengalamanKerja;
@@ -462,24 +505,6 @@ class DataProvider extends ChangeNotifier {
     });
   }
 
-  List<KategoriM> _dataRecentProduk = [];
-
-  List<KategoriM> get dataRecentProduk => _dataRecentProduk;
-
-  getRecentProduk() async {
-    imageCache.clear();
-    _isLoading = true;
-    _isLoading = true;
-    notifyListeners();
-    var queryParameters = {'produkkategoriflag': '2', 'produkkategoriaktif': '1'};
-    Api.getAllKategoriByParam(token, queryParameters).then((response) {
-      Iterable list = json.decode(response.body)['data'];
-      _dataRecentProduk = list.map((model) => KategoriM.fromMap(model)).toList();
-      _isLoading = false;
-      notifyListeners();
-    });
-  }
-
   getAllFavoriteProdukByUserId() async {
     imageCache.clear();
     var queryParameters = {'userid': userId, 'produkaktif': '1'};
@@ -630,7 +655,7 @@ class DataProvider extends ChangeNotifier {
             child: child,
           );
         }),
-            (Route route) => false);
+        (Route route) => false);
     chekSession();
     _userProdukKategoriSubId = null;
   }
@@ -681,21 +706,21 @@ class DataProvider extends ChangeNotifier {
     });
   }
 
-  var kategoriFlag = new List<KategoriM>();
-
-  List<KategoriM> get dataKategoriFlag => kategoriFlag;
-
-  void getKategoriByFlag(flag) async {
-    _isLoading = true;
-    notifyListeners();
-    var queryParameters = {'produkkategoriflag': flag.toString(), 'produkkategoriaktif': '1'};
-    Api.getAllKategoriByParam(token, queryParameters).then((response) {
-      Iterable list = json.decode(response.body)['data'];
-      kategoriFlag = list.map((model) => KategoriM.fromMap(model)).toList();
-      _isLoading = false;
-      notifyListeners();
-    });
-  }
+//  var kategoriFlag = new List<KategoriM>();
+//
+//  List<KategoriM> get dataKategoriFlag => kategoriFlag;
+//
+//  void getKategoriByFlag(flag) async {
+//    _isLoading = true;
+//    notifyListeners();
+//    var queryParameters = {'produkkategoriflag': flag.toString(), 'produkkategoriaktif': '1'};
+//    Api.getAllKategoriByParam(token).then((response) {
+//      Iterable list = json.decode(response.body)['data'];
+//      kategoriFlag = list.map((model) => KategoriM.fromMap(model)).toList();
+//      _isLoading = false;
+//      notifyListeners();
+//    });
+//  }
 
 //  var kategoriFlag = new List<KategoriFlagM>();
   var kategoriGroupByFlag = new List<KategoriFlagM>();
@@ -839,19 +864,6 @@ class DataProvider extends ChangeNotifier {
 
   setShowVersionDialog(bool) {
     _showVersionDialog = bool;
-  }
-
-  var _dataNews = new List<NewsM>();
-
-  List<NewsM> get dataNews => _dataNews;
-
-  void getAllNews() async {
-    String token = await LocalStorage.sharedInstance.readValue('token');
-    Api.getAllNews(token).then((response) {
-      Iterable list = json.decode(response.body)['data'];
-      _dataNews = list.map((model) => NewsM.fromMap(model)).toList();
-      notifyListeners();
-    });
   }
 
   versionCheck() async {

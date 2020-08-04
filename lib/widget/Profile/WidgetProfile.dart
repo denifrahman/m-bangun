@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:apps/Api/Api.dart';
 import 'package:apps/Utils/LocalBindings.dart';
-import 'package:apps/providers/Api.dart';
+import 'package:apps/providers/BlocAuth.dart';
+import 'package:apps/providers/BlocProfile.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
@@ -43,7 +45,7 @@ class MapScreenState extends State<WidgetProfile> with SingleTickerProviderState
   }
 
   void _getImage(BuildContext context, ImageSource source) async {
-    File image = await ImagePicker.pickImage(source: source, maxWidth: 250, maxHeight: 250);
+    File image = await ImagePicker.pickImage(source: source, maxWidth: 250, maxHeight: 250, imageQuality: 50);
     simpanFoto(image);
     setState(() {
       _imageFile = image;
@@ -92,11 +94,11 @@ class MapScreenState extends State<WidgetProfile> with SingleTickerProviderState
 
   void getUserData() async {
     await new Future.delayed(const Duration(seconds: 1));
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
+    BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     setState(() {
-      inputEmailController.text = dataProvider.userEmail;
-      inputNamaController.text = dataProvider.userNama;
-      inputNoTelpController.text = dataProvider.userNotelp;
+//      inputEmailController.text = blocProfile;
+//      inputNamaController.text = dataProvider.userNama;
+//      inputNoTelpController.text = dataProvider.userNotelp;
     });
   }
 
@@ -114,6 +116,8 @@ class MapScreenState extends State<WidgetProfile> with SingleTickerProviderState
   @override
   Widget build(BuildContext context) {
     DataProvider dataProvider = Provider.of<DataProvider>(context);
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+    BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     return new Scaffold(
         appBar: AppBar(
           title: _buildTitle(),
@@ -136,53 +140,45 @@ class MapScreenState extends State<WidgetProfile> with SingleTickerProviderState
                           children: <Widget>[
                             Padding(
                               padding: EdgeInsets.only(top: 40.0),
-                              child: new Stack(fit: StackFit.loose, children: <Widget>[
-                                new Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    new Container(
-                                        width: 100.0,
-                                        height: 100.0,
-                                        child: ClipOval(
-                                          child: _imageFile != null
-                                              ? Image.file(
-                                                  _imageFile,
-                                            fit: BoxFit.cover,
-                                            height: 100.0,
-                                            alignment: Alignment.topCenter,
-                                            width: MediaQuery
-                                                .of(context)
-                                                .size
-                                                .width,
-                                          )
-                                              : Image.network(
-                                            dataProvider.userFoto == null ? dataProvider.fotoNull : dataProvider.userFoto,
-                                            fit: BoxFit.cover,
-                                            width: 150,
-                                          ),
-                                        )),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: 70.0, right: 70.0),
-                                  child: InkWell(
-                                      onTap: () => _openImagePickerModal(context),
-                                      child: new Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          new CircleAvatar(
-                                            backgroundColor: Colors.red,
-                                            radius: 25.0,
-                                            child: new Icon(
-                                              Icons.camera_alt,
-                                              color: Colors.white,
+                              child: new Stack(
+                                fit: StackFit.loose,
+                                children: <Widget>[
+                                  new Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      new Container(
+                                          width: 100.0,
+                                          height: 100.0,
+                                          child: ClipOval(
+                                            child: Image.network(
+                                              blocAuth.currentUser.photoUrl,
+                                              fit: BoxFit.cover,
+                                              width: 150,
                                             ),
-                                          )
-                                        ],
-                                      )),
-                                )
-                              ]),
+                                          )),
+                                    ],
+                                  ),
+//              Padding(
+//                padding: EdgeInsets.only(top: 70.0, right: 70.0),
+//                child: InkWell(
+//                    onTap: () => _openImagePickerModal(context),
+//                    child: new Row(
+//                      mainAxisAlignment: MainAxisAlignment.center,
+//                      children: <Widget>[
+//                        new CircleAvatar(
+//                          backgroundColor: Colors.red,
+//                          radius: 25.0,
+//                          child: new Icon(
+//                            Icons.camera_alt,
+//                            color: Colors.white,
+//                          ),
+//                        )
+//                      ],
+//                    )),
+//              )
+                                ],
+                              ),
                             )
                           ],
                         ),
@@ -289,8 +285,7 @@ class MapScreenState extends State<WidgetProfile> with SingleTickerProviderState
                                               ? TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey)
                                               : TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey),
                                           decoration: const InputDecoration(
-                                              hintText: "Enter Email ID",
-                                              hintStyle: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey)),
+                                              hintText: "Enter Email ID", hintStyle: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey)),
                                           enabled: false,
                                         ),
                                       ),
@@ -328,9 +323,8 @@ class MapScreenState extends State<WidgetProfile> with SingleTickerProviderState
                                           style: _status
                                               ? TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey)
                                               : TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.black),
-                                          decoration: const InputDecoration(
-                                              hintText: "Telepon",
-                                              hintStyle: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey)),
+                                          decoration:
+                                              const InputDecoration(hintText: "Telepon", hintStyle: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.grey)),
                                           enabled: !_status,
                                         ),
                                       ),
@@ -449,7 +443,7 @@ class MapScreenState extends State<WidgetProfile> with SingleTickerProviderState
                     });
                   },
                   shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
-            )),
+                )),
             flex: 2,
           ),
           Expanded(
@@ -466,7 +460,7 @@ class MapScreenState extends State<WidgetProfile> with SingleTickerProviderState
                     });
                   },
                   shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
-            )),
+                )),
             flex: 2,
           ),
         ],

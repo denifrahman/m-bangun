@@ -22,6 +22,7 @@ dependencies:
   http: ^0.12.0+2
   flushbar: ^1.5.0
   modal_progress_hud: ^0.1.3
+  http_auth: ^0.3.0
   bubble_tab_indicator: ^0.1.4
   font_awesome_flutter: ^8.0.1
   image_picker: ^0.6.7+1
@@ -63,7 +64,13 @@ dependencies:
   webview_flutter: ^0.3.22+1
   random_color: ^1.0.5
   flutter_wordpress: ^0.2.1
-
+  carousel_slider: ^2.2.1
+  multi_image_picker: ^4.6.9
+  woocommerce: ^0.9.6
+  gender_selection: ^0.0.8
+  sliverbar_with_card: ^0.1.5
+  smooth_star_rating: 1.1.1
+  palette_generator: ^0.2.3
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
@@ -89,7 +96,19 @@ flutter:
     - assets/icons/verified.png
     - assets/icons/worker.png
     - assets/test.pdf
+    - assets/img/a.png
+    - assets/icons/store.png
     - assets/images/splace-background.png
+    - assets/bottom_yellow.png
+    - assets/kategori/bahan_bangunan.png
+    - assets/kategori/bata_merah.png
+    - assets/kategori/bata_putih.png
+    - assets/kategori/besi.png
+    - assets/kategori/beton.png
+    - assets/kategori/kayu.png
+    - assets/kategori/pasir.png
+    - assets/kategori/semen.png
+    - assets/kategori/perkakas.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

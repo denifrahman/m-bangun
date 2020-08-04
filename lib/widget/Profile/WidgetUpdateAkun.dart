@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:apps/Api/Api.dart';
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/models/KategoriM.dart';
 import 'package:apps/models/SubKategoriM.dart';
-import 'package:apps/providers/Api.dart';
-import 'package:apps/providers/DataProvider.dart';
+import 'package:apps/providers/Categories.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -87,7 +87,7 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
+    BlogCategories dataProvider = Provider.of<BlogCategories>(context);
     bool step0 = false;
     bool step1 = false;
     if (currentStep == 0) {
@@ -119,20 +119,18 @@ class _WidgetUpdateAkunState extends State<WidgetUpdateAkun> {
                           content: Container(
                             height: widget1,
                             child: ListView.builder(
-                                itemCount: dataProvider.dataKategoriFlag.length,
+                                itemCount: dataProvider.dataKategoriHome.length,
                                 itemBuilder: (context, index) {
                                   return Column(
                                     children: <Widget>[
                                       InkWell(
-                                        onTap: () => _onchangeKategori(dataProvider.dataKategoriFlag[index].produkkategoriid),
+                                        onTap: () => _onchangeKategori(dataProvider.dataKategoriHome[index].id.toString()),
                                         child: ListTile(
                                           leading: Image.network(
-                                            dataProvider.dataKategoriFlag[index].produkkategorithumbnail == null
-                                                ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
-                                                : dataProvider.dataKategoriFlag[index].produkkategorithumbnail,
+                                            dataProvider.dataKategoriHome[index].icon,
                                             width: 45,
                                           ),
-                                          title: Text(dataProvider.dataKategoriFlag[index].produkkategorinama),
+                                          title: Text(dataProvider.dataKategoriHome[index].nama),
                                           trailing: Icon(
                                             Icons.arrow_forward_ios,
                                             size: 12,

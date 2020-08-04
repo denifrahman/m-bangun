@@ -3,10 +3,11 @@ import 'package:apps/screen/NewsDetailScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_wordpress/flutter_wordpress.dart' as wp;
-import 'package:jiffy/jiffy.dart';
+import 'package:pk_skeleton/pk_skeleton.dart';
 
 class WidgetNews extends StatefulWidget {
-  WidgetNews({Key key}) : super(key: key);
+  WidgetNews({Key key, this.kategoriId}) : super(key: key);
+  final int kategoriId;
 
   @override
   _WidgetNewsState createState() {
@@ -43,7 +44,7 @@ class _WidgetNewsState extends State<WidgetNews> {
     return Image.network(
       post.featuredMedia.sourceUrl,
       fit: BoxFit.cover,
-      width: 270,
+      width: 170,
     );
   }
 
@@ -65,15 +66,12 @@ class _WidgetNewsState extends State<WidgetNews> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
-            margin: EdgeInsets.only(top: 20),
+            margin: EdgeInsets.only(top: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Container(
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width * 0.6,
+                  width: MediaQuery.of(context).size.width * 0.6,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -100,7 +98,7 @@ class _WidgetNewsState extends State<WidgetNews> {
           ),
         ),
         Container(
-          height: 300,
+          height: 150,
           width: MediaQuery
               .of(context)
               .size
@@ -113,7 +111,36 @@ class _WidgetNewsState extends State<WidgetNews> {
               }
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: Container(
+                    height: 200,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        Container(
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width * 0.5,
+                          child: SingleChildScrollView(
+                            child: PKCardPageSkeleton(
+//                                isCircularImage: true,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width * 0.5,
+                          child: SingleChildScrollView(
+                            child: PKCardPageSkeleton(
+//                                isCircularImage: true,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 );
               }
               return ListView.builder(
@@ -142,29 +169,11 @@ class _WidgetNewsState extends State<WidgetNews> {
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   Container(
-                                    width: 250,
+                                    width: 150,
                                     child: RichText(
                                       overflow: TextOverflow.ellipsis,
-                                      maxLines: 4,
-                                      strutStyle: StrutStyle(fontSize: 10.0),
-                                      text: TextSpan(style: TextStyle(color: Colors.grey[800], fontSize: 12, fontWeight: FontWeight.bold), text: post.title.rendered),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 250,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          post.author.name,
-                                          style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
-                                        ),
-                                        Text(
-                                          Jiffy(post.date).fromNow(),
-                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.grey),
-                                        )
-                                      ],
+                                      maxLines: 2,
+                                      text: TextSpan(style: TextStyle(color: Colors.grey[800], fontSize: 9, fontWeight: FontWeight.normal), text: post.title.rendered),
                                     ),
                                   ),
                                 ],

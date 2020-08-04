@@ -1,11 +1,11 @@
-import 'package:apps/screen/HomeScreen.dart';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:apps/Utils/ThemeChanger.dart';
 import 'package:apps/screen/ActivityScreen.dart';
 import 'package:apps/screen/BookingScreen.dart';
+import 'package:apps/screen/HomeScreen.dart';
 import 'package:apps/screen/ProfileScreen.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class BottomMenu extends StatefulWidget {
   static const routeName = '/mengajar-screen';
@@ -113,7 +113,7 @@ class _BottomMenuState extends State<BottomMenu> with TickerProviderStateMixin {
             backgroundColor:
                 notifier.darkTheme ? Colors.black : Colors.cyan[900],
             onTap: (index) {
-              print(index);
+//              print(index);
               setState(() {
                 _pState = i;
                 i = index;

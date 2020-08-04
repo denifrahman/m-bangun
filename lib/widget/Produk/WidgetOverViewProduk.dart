@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:jiffy/jiffy.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class WidgetOverViewProduk extends StatelessWidget {
   final String produkNama;
   final String thumbnail;
-  final String kab;
-  final String prov;
-  final String tgl;
   final String harga;
+  final String namaToko;
+  final String jenisToko;
 
-  WidgetOverViewProduk({Key key, this.produkNama, this.thumbnail, this.kab, this.prov, this.tgl, this.harga}) : super(key: key);
+  WidgetOverViewProduk({Key key, this.produkNama, this.thumbnail, this.harga, this.namaToko, this.jenisToko}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,60 +16,57 @@ class WidgetOverViewProduk extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GridTile(
-          child: Image.network(
-            thumbnail == null
-                ? 'https://previews.123rf.com/images/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg'
-                : thumbnail,
-            fit: BoxFit.cover,
-            // width: 80,
-          ),
+          child: getPostImages(thumbnail),
           footer: Container(
-            height: 107,
+            height: 90,
             color: Colors.black87.withOpacity(0.7),
             child: Padding(
               padding: const EdgeInsets.all(5.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   RichText(
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
-                    strutStyle: StrutStyle(fontSize: 12.0),
                     text: TextSpan(
                       style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700),
                       text: produkNama,
                     ),
                   ),
-                  Text(harga, style: TextStyle(color: Colors.green, fontSize: 14, fontWeight: FontWeight.w700)),
+                  Text(harga, style: TextStyle(color: Colors.greenAccent, fontSize: 14, fontWeight: FontWeight.w700)),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          Icon(
-                            Icons.access_time,
-                            color: Colors.grey,
-                            size: 11,
-                          ),
-                          Text(' '),
                           Text(
-                            Jiffy(tgl).fromNow(),
-                            style: TextStyle(fontSize: 11, color: Colors.grey),
+                            namaToko + ' ',
+                            style: TextStyle(color: Colors.white, fontSize: 10),
                           ),
+                          jenisToko == 'official_store'
+                              ? Image.asset(
+                                  'assets/icons/verified.png',
+                                  height: 12,
+                                )
+                              : Container()
                         ],
                       ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.place,
-                            color: Colors.grey,
-                            size: 11,
-                          ),
-                          Text(' '),
-                          Text(kab, style: TextStyle(fontSize: 11, color: Colors.white)),
-                          Text(', '),
-                          Text(prov, style: TextStyle(fontSize: 11, color: Colors.white))
-                        ],
+                      SmoothStarRating(
+                        rating: 3,
+                        isReadOnly: true,
+                        size: 8,
+                        color: Colors.amber,
+                        filledIconData: Icons.star,
+                        halfFilledIconData: Icons.star_half,
+                        defaultIconData: Icons.star_border,
+                        starCount: 5,
+                        allowHalfRating: true,
+                        spacing: 2.0,
+                        onRated: (value) {
+                          print("rating value -> $value");
+                          // print("rating value dd -> ${value.truncate()}");
+                        },
                       ),
                     ],
                   ),
@@ -78,6 +74,21 @@ class WidgetOverViewProduk extends StatelessWidget {
               ),
             ),
           )),
+    );
+  }
+
+  getPostImages(String url) {
+    var urlImage = 'http://m-bangun.com/api-v2/assets/toko/' + url;
+    if (url == null) {
+      return SizedBox();
+    }
+    return Image.network(
+      urlImage,
+      fit: BoxFit.cover,
+      errorBuilder: (context, urlImage, error) {
+        print(error.hashCode);
+        return Image.asset('assets/logo.png');
+      },
     );
   }
 }

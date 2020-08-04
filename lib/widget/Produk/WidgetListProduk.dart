@@ -1,7 +1,7 @@
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/models/ProdukListM.dart';
-import 'package:apps/providers/DataProvider.dart';
-import 'package:apps/widget/Produk/WidgetDetailProduk.dart';
+import 'package:apps/providers/BlocProduk.dart';
+import 'package:apps/screen/ProdukDetailScreen.dart';
 import 'package:apps/widget/Produk/WidgetOverViewProduk.dart';
 import 'package:flutter/material.dart';
 import 'package:money2/money2.dart';
@@ -39,7 +39,7 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
+    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
     var size = MediaQuery.of(context).size;
 
     /*24 is for notification bar on Android*/
@@ -51,28 +51,22 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
       crossAxisCount: 2,
       childAspectRatio: 0.8,
       children: List.generate(
-        dataProvider.getProdukListByParam.length,
-        (j) {
-          var harga = dataProvider.getProdukListByParam[j].produkharga;
+        blocProduk.listProducts.length,
+            (j) {
+          var harga = blocProduk.listProducts[j].harga;
           var hargaFormat = Money.fromInt(harga == null ? 0 : int.parse(harga), IDR);
-          var kecamatan =
-              dataProvider.getProdukListByParam[j].nama_kecamatan == null ? '' : dataProvider.getProdukListByParam[j].nama_kecamatan.toLowerCase();
-          var kota = dataProvider.getProdukListByParam[j].nama_kabkota == null ? '' : dataProvider.getProdukListByParam[j].nama_kabkota.toLowerCase();
-          var provinsi =
-              dataProvider.getProdukListByParam[j].nama_propinsi == null ? '' : dataProvider.getProdukListByParam[j].nama_propinsi.toLowerCase();
           return InkWell(
             onTap: () {
-              Navigator.push(context, SlideRightRoute(page: WidgetDetailProduk()));
-              Provider.of<DataProvider>(context).getProdukById(dataProvider.getProdukListByParam[j].produkid);
-              Provider.of<DataProvider>(context).chekUserBidding(dataProvider.getProdukListByParam[j].produkid);
+              blocProduk.getProductById(blocProduk.listProducts[j].id);
+              Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
             },
             child: WidgetOverViewProduk(
-                produkNama: dataProvider.getProdukListByParam[j].produknama,
-                thumbnail: dataProvider.getProdukListByParam[j].produkthumbnail,
-                prov: provinsi,
-                kab: kota,
-                harga: harga == null ? '-' : hargaFormat.toString(),
-                tgl: dataProvider.getProdukListByParam[j].produkcreate),
+              produkNama: blocProduk.listProducts[j].nama,
+              namaToko: blocProduk.listProducts[j].namaToko,
+              jenisToko: blocProduk.listProducts[j].jenisToko,
+              thumbnail: blocProduk.listProducts[j].foto,
+              harga: hargaFormat.toString(),
+            ),
           );
         },
       ),

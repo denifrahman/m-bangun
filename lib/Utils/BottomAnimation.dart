@@ -1,12 +1,13 @@
-import 'package:apps/providers/DataProvider.dart';
-import 'package:apps/screen/FavoriteScreen.dart';
+import 'package:apps/providers/BlocAuth.dart';
+import 'package:apps/providers/BlocOrder.dart';
+import 'package:apps/providers/BlocProduk.dart';
+import 'package:apps/screen/ChekListScreen.dart';
 import 'package:apps/screen/HomeScreen.dart';
 import 'package:apps/screen/MyAdsScreen.dart';
 import 'package:apps/screen/ProfileScreen.dart';
 import 'package:apps/screen/RequestScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 
@@ -68,7 +69,9 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
 
   @override
   Widget build(BuildContext context) {
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
+    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -78,22 +81,34 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
           bucket: bucket,
         ),
         floatingActionButton: Container(
-          margin: EdgeInsets.only(top: 0),
           child: FloatingActionButton(
             tooltip: 'Panggil Tukang',
-            backgroundColor: Color(0xfff9cf39),
+            backgroundColor: Colors.white,
             foregroundColor: Colors.redAccent,
             heroTag: Text('Book'),
-            child: Image.asset(
-              'assets/icons/worker.png',
-              width: 25,
+            child: Container(
+              height: 50,
+              width: 50,
+              margin: EdgeInsets.only(bottom: 6, top: 6),
+              decoration: new BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                gradient: new LinearGradient(
+                    colors: [Color(0xffb16a085).withOpacity(0.1), Colors.white],
+                    begin: const FractionalOffset(7.0, 10.1),
+                    end: const FractionalOffset(0.0, 0.0),
+                    stops: [0.0, 1.0],
+                    tileMode: TileMode.clamp),
+              ),
+              child: new Center(
+                child: InkWell(onTap: () => _openRequest(), child: Image(width: 35, fit: BoxFit.fill, image: new AssetImage('assets/logo.png'))),
+              ),
             ),
-            onPressed: () => _openRequest(),
           ),
         ),
         backgroundColor: Colors.grey.withOpacity(0.3),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomAppBar(
+          color: Colors.cyan[700],
           shape: CircularNotchedRectangle(),
           notchMargin: 5,
           child: Container(
@@ -110,7 +125,9 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                         minWidth: 30,
                         onPressed: () {
                           setState(() {
-                            dataProvider.getToken();
+                            blocAuth.checkSession();
+                            blocProduk.initLoad();
+                            blocOrder.setIdUser();
                             currentScreen = HomeScreen(); // if user taps on this dashboard tab will be active
                             currentTab = 0;
                           });
@@ -118,44 +135,77 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Icon(
-                              FontAwesomeIcons.home,
-                              size: 18,
-                              color: currentTab == 0 ? Color(0xffb16a085) : Colors.grey[500],
+                            Stack(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.home,
+                                  size: 25,
+                                  color: currentTab == 0 ? Colors.white : Colors.grey[400],
+                                ),
+//                                new Positioned(
+//                                  top: 0.0,
+//                                  right: 0.0,
+//                                  child: Container(
+//                                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+//                                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+//                                    alignment: Alignment.center,
+//                                    child: Text('2', style: TextStyle(color: Colors.white, fontSize: 8),),
+//                                  ),
+//                                )
+                              ],
                             ),
                             Text(
                               'Beranda',
                               style: TextStyle(
                                 fontSize: 11,
-                                color: currentTab == 0 ? Color(0xffb16a085) : Colors.grey[500],
+                                color: currentTab == 0 ? Colors.white : Colors.grey[400],
                               ),
-                            ),
+                            )
                           ],
                         ),
                       ),
                       MaterialButton(
                         minWidth: 30,
                         onPressed: () {
+                          blocAuth.checkSession();
+                          blocOrder.setIdUser();
                           setState(() {
-                            dataProvider.getToken();
-                            dataProvider.getAllFavoriteProdukByUserId();
-                            currentScreen = FavoriteScreen(); // if user taps on this dashboard tab will be active
+                            currentScreen = CheckListScreen(); // if user taps on this dashboard tab will be active
                             currentTab = 1;
                           });
                         },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Icon(
-                              Icons.favorite,
-                              size: 18,
-                              color: currentTab == 1 ? Color(0xffb16a085) : Colors.grey[500],
+                            Stack(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.shopping_cart,
+                                  size: 25,
+                                  color: currentTab == 1 ? Colors.white : Colors.grey[400],
+                                ),
+                                blocOrder.listCart.isEmpty
+                                    ? Container()
+                                    : Positioned(
+                                        top: 0.0,
+                                        right: 0.0,
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            blocOrder.listCart.length.toString(),
+                                            style: TextStyle(color: Colors.white, fontSize: 8),
+                                          ),
+                                        ),
+                                      )
+                              ],
                             ),
                             Text(
-                              'Favorit',
+                              'Keranjang',
                               style: TextStyle(
                                 fontSize: 11,
-                                color: currentTab == 1 ? Color(0xffb16a085) : Colors.grey[500],
+                                color: currentTab == 1 ? Colors.white : Colors.grey[400],
                               ),
                             ),
                           ],
@@ -173,7 +223,8 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                         minWidth: 30,
                         onPressed: () {
                           setState(() {
-                            dataProvider.getToken();
+                            blocAuth.checkSession();
+                            blocOrder.setIdUser();
                             currentScreen = MyAdsScreen(); // if user taps on this dashboard tab will be active
                             currentTab = 2;
                           });
@@ -181,16 +232,20 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Icon(
-                              FontAwesomeIcons.boxOpen,
-                              size: 18,
-                              color: currentTab == 2 ? Color(0xffb16a085) : Colors.grey[500],
+                            Stack(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.local_activity,
+                                  size: 25,
+                                  color: currentTab == 2 ? Colors.white : Colors.grey[400],
+                                ),
+                              ],
                             ),
                             Text(
                               'Aktivitas',
                               style: TextStyle(
                                 fontSize: 11,
-                                color: currentTab == 2 ? Color(0xffb16a085) : Colors.grey[500],
+                                color: currentTab == 2 ? Colors.white : Colors.grey[400],
                               ),
                             ),
                           ],
@@ -199,7 +254,8 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                       MaterialButton(
                         minWidth: 30,
                         onPressed: () {
-                          dataProvider.getToken();
+                          blocAuth.checkSession();
+                          blocOrder.setIdUser();
                           setState(() {
                             currentScreen = ProfileScreen(); // if user taps on this dashboard tab will be active
                             currentTab = 3;
@@ -208,16 +264,30 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Icon(
-                              Icons.person,
-                              size: 18,
-                              color: currentTab == 3 ? Color(0xffb16a085) : Colors.grey[500],
+                            Stack(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.person,
+                                  size: 28,
+                                  color: currentTab == 3 ? Colors.white : Colors.grey[400],
+                                ),
+//                                new Positioned(
+//                                  top: 0.0,
+//                                  right: 0.0,
+//                                  child: Container(
+//                                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+//                                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+//                                    alignment: Alignment.center,
+//                                    child: Text('2', style: TextStyle(color: Colors.white, fontSize: 8),),
+//                                  ),
+//                                )
+                              ],
                             ),
                             Text(
                               'Profil',
                               style: TextStyle(
                                 fontSize: 11,
-                                color: currentTab == 3 ? Color(0xffb16a085) : Colors.grey[500],
+                                color: currentTab == 3 ? Colors.white : Colors.grey[400],
                               ),
                             ),
                           ],

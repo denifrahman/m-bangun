@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:apps/Api/Api.dart';
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/models/SubKategoriM.dart';
-import 'package:apps/providers/Api.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -89,9 +89,9 @@ class _WidgetDropDownKategoriState extends State<WidgetDropDownKategori> {
               },
               items: dataProvider.getDataKategori
                   .map((kategori) => DropdownMenuItem<String>(
-                        value: kategori.produkkategoriid.toString(),
+                value: kategori.kategoriId.toString(),
                         child: new Text(
-                          kategori.produkkategorinama.toString(),
+                          kategori.kategoriNama.toString(),
                           style: TextStyle(fontSize: 12),
                         ),
                       ))

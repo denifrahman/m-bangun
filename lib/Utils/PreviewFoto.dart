@@ -8,6 +8,7 @@ class PreviewFoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(urlFoto);
     // TODO: implement build
     return GestureDetector(
       child: Scaffold(
@@ -29,7 +30,10 @@ class PreviewFoto extends StatelessWidget {
         ),
         body: Center(
           child: PinchZoomImage(
-            image: Image.network(urlFoto),
+            image: Image.network(urlFoto, errorBuilder: (context, urlImage, error) {
+              print(error.hashCode);
+              return Image.asset('assets/logo.png');
+            }),
             zoomedBackgroundColor: Color.fromRGBO(240, 240, 240, 1.0),
             hideStatusBarWhileZooming: true,
             onZoomStart: () {

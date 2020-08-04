@@ -1,4 +1,5 @@
 import 'package:apps/Utils/LocalBindings.dart';
+import 'package:apps/Utils/TitleHeader.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/models/KotaM.dart';
 import 'package:apps/models/ProvinsiM.dart';
@@ -47,13 +48,29 @@ class _WidgetLokasiState extends State<WidgetLokasi> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Image(width: 35, fit: BoxFit.fill, image: new AssetImage('assets/logo.png')),
+            Container(
+              height: 50,
+              width: 50,
+              margin: EdgeInsets.only(bottom: 6, top: 6),
+              decoration: new BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                gradient: new LinearGradient(
+                    colors: [Color(0xffb16a085).withOpacity(0.1), Colors.white],
+                    begin: const FractionalOffset(7.0, 10.1),
+                    end: const FractionalOffset(0.0, 0.0),
+                    stops: [0.0, 1.0],
+                    tileMode: TileMode.clamp),
+              ),
+              child: new Center(
+                child: Image(width: 35, fit: BoxFit.fill, image: new AssetImage('assets/logo.png')),
+              ),
+            ),
             Container(
               width: 5,
             ),
-            Text(
-              'm-Bangun',
-              style: TextStyle(fontSize: 20, fontFamily: 'SUNDAY', letterSpacing: 2, fontWeight: FontWeight.bold),
+            TitleHeader(
+              title: "m-Bangun",
+              color: Colors.white,
             )
           ],
         ),
@@ -65,11 +82,11 @@ class _WidgetLokasiState extends State<WidgetLokasi> {
                 Icon(
                   Icons.place,
                   size: 15,
-                  color: Colors.grey[600],
+                  color: Colors.white,
                 ),
                 Text(
                   'Lokasi Anda',
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  style: TextStyle(fontSize: 12, color: Colors.white),
                 ),
               ],
             ),
@@ -83,16 +100,16 @@ class _WidgetLokasiState extends State<WidgetLokasi> {
                         dataProvider.namaKecamatan == null
                             ? Container()
                             : Text(dataProvider.namaKecamatan == null ? '' : '${kecamatan[0].toUpperCase()}${kecamatan.substring(1)}',
-                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal, color: Color(0xffb16a085))),
+                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal, color: Color(0xffb16a085))),
                         dataProvider.namaKecamatan == null ? Container() : Text(', '),
                         dataProvider.namaKota == null
                             ? Container()
                             : Text(dataProvider.namaKota == null ? '' : '${kota[0].toUpperCase()}${kota.substring(1)}',
-                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal, color: Color(0xffb16a085))),
+                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal, color: Color(0xffb16a085))),
                       ],
                     ),
                     Text(dataProvider.namaProvinsi == null || dataProvider.namaProvinsi == '' ? 'Pilih lokasi' : '${provinsi[0].toUpperCase()}${provinsi.substring(1)}',
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Color(0xffb16a085))),
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.white)),
                   ],
                 ))
           ],

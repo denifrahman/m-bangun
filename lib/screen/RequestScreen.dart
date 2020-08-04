@@ -1,3 +1,4 @@
+import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/widget/Login/LoginWidget.dart';
 import 'package:apps/widget/Pengajuan/WidgetPengajuan.dart';
@@ -29,7 +30,7 @@ class _RequestScreenState extends State<RequestScreen> {
     dataProvider.chekSession();
     if (dataProvider.isLogin) {
       setState(() {
-        title = 'Form Pengajuan';
+        title = 'Hai! Apa yang anda butuhkan?';
       });
     } else {
       setState(() {
@@ -42,6 +43,7 @@ class _RequestScreenState extends State<RequestScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
     DataProvider dataProvider = Provider.of<DataProvider>(context);
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     var appBar = AppBar(
       elevation: 0,
       leading: IconButton(
@@ -57,11 +59,14 @@ class _RequestScreenState extends State<RequestScreen> {
     );
     return Scaffold(
       appBar: appBar,
-      body: !dataProvider.isLogin
-          ? LoginWidget(
-              primaryColor: Color(0xFFb16a085),
-              backgroundColor: Colors.white,
-              page: '/request',
+      body: !blocAuth.isLogin
+          ? Container(
+              color: Colors.white,
+              child: LoginWidget(
+                primaryColor: Color(0xFFb16a085),
+                backgroundColor: Colors.white,
+                page: '/request',
+              ),
             )
           : ModalProgressHUD(
               inAsyncCall: dataProvider.isLoading,

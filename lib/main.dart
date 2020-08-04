@@ -1,5 +1,10 @@
 import 'package:apps/Utils/BottomAnimation.dart';
 import 'package:apps/Utils/ThemeChanger.dart';
+import 'package:apps/providers/BlocAuth.dart';
+import 'package:apps/providers/BlocOrder.dart';
+import 'package:apps/providers/BlocProduk.dart';
+import 'package:apps/providers/BlocProfile.dart';
+import 'package:apps/providers/Categories.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/LoginScreen.dart';
 import 'package:apps/screen/ProfileScreen.dart';
@@ -23,6 +28,21 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider<DataProvider>(
           create: (_) => DataProvider(),
+        ),
+        ChangeNotifierProvider<BlogCategories>(
+          create: (_) => BlogCategories(),
+        ),
+        ChangeNotifierProvider<BlocAuth>(
+          create: (_) => BlocAuth(),
+        ),
+        ChangeNotifierProvider<BlocProduk>(
+          create: (_) => BlocProduk(),
+        ),
+        ChangeNotifierProvider<BlocProfile>(
+          create: (_) => BlocProfile(),
+        ),
+        ChangeNotifierProvider<BlocOrder>(
+          create: (_) => BlocOrder(),
         )
       ],
       child: MaterialApp(

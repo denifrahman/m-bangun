@@ -1,4 +1,5 @@
 import 'package:apps/Utils/navigation_right.dart';
+import 'package:apps/providers/Categories.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/LoginScreen.dart';
 import 'package:apps/screen/SubKategoriScreen.dart';
@@ -15,7 +16,7 @@ class KategoriScreenNew extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
+    BlogCategories dataProvider = Provider.of<BlogCategories>(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -33,20 +34,20 @@ class KategoriScreenNew extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               child: ListView.builder(
                   padding: EdgeInsets.only(left: 5, right: 5, top: 10),
-                  itemCount: dataProvider.dataKategoriFlag.length,
+                  itemCount: dataProvider.dataKategoriHome.length,
                   itemBuilder: (context, index) {
                     return Card(
                       child: InkWell(
-                        onTap: () => openSubkategori(context, dataProvider.dataKategoriFlag[index]),
+                        onTap: () => openSubkategori(context, dataProvider.dataKategoriHome[index]),
                         child: Container(
                           width: 100,
                           padding: EdgeInsets.all(8),
                           child: ListTile(
                             leading: Image.network(
-                              dataProvider.dataKategoriFlag[index].produkkategorithumbnail,
+                              dataProvider.dataKategoriHome[index].icon,
                               width: 45,
                             ),
-                            title: Text(dataProvider.dataKategoriFlag[index].produkkategorinama),
+                            title: Text(dataProvider.dataKategoriHome[index].nama),
                             trailing: Icon(
                               Icons.arrow_forward_ios,
                               size: 12,

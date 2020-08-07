@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 class WidgetListAddress extends StatelessWidget {
   WidgetListAddress({Key key}) : super(key: key);
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -31,19 +32,23 @@ class WidgetListAddress extends StatelessWidget {
                       child: ListTile(
                         title: Row(
                           children: [
-                            Text(blocProfile.listUserAddress[index].namaAlamat),
+                            Text('#' + blocProfile.listUserAddress[index].namaAlamat, style: TextStyle(fontSize: 14)),
                             SizedBox(
-                              width: 10,
+                              width: 2,
+                            ),
+                            Text(
+                              '(' + blocProfile.listUserAddress[index].namaPenerima + ')  ',
+                              style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12, color: Colors.grey),
                             ),
                             blocProfile.listUserAddress[index].defaultAlamat == '1'
                                 ? Container(
-                                    decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)), color: Colors.green),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Text(
-                                        'default',
-                                        style: TextStyle(fontSize: 8, color: Colors.white),
-                                      ),
+                              decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)), color: Colors.green),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(
+                                  'default',
+                                  style: TextStyle(fontSize: 8, color: Colors.white),
+                                ),
                                     ),
                                   )
                                 : Container()
@@ -51,33 +56,94 @@ class WidgetListAddress extends StatelessWidget {
                         ),
                         subtitle: Row(
                           children: [
-                            Text('#' + blocProfile.listUserAddress[index].namaPenerima),
                             SizedBox(
                               width: 10,
                             ),
-                            Text(blocProfile.listUserAddress[index].alamatLengkap),
+                            Container(
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width * 0.6,
+                              child: RichText(
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                strutStyle: StrutStyle(fontSize: 10.0),
+                                text: TextSpan(
+                                    style: TextStyle(color: Colors.grey[500], fontSize: 12, fontWeight: FontWeight.normal), text: blocProfile.listUserAddress[index].alamatLengkap),
+                              ),
+                            ),
                           ],
                         ),
                         selected: blocProfile.listUserAddress[index].defaultAlamat == '1' ? true : false,
-                        trailing: IconButton(
-                          icon: Icon(
-                            Icons.edit,
-                            size: 20,
-                          ),
-                          onPressed: () {
-                            blocProfile.clearDataCity();
-                            blocProfile.getUserAddressById(blocProfile.listUserAddress[index].id);
-                            blocProfile.getSubDistrictById(blocProfile.listUserAddress[index].idKecamatan);
-                            Navigator.push(context, SlideRightRoute(page: WidgetUpdateAddress())).then((value) {
-                              blocProfile.getUserAddress(blocAuth.idUser);
-                              blocProfile.clearDataCity();
-                            });
+                        trailing: PopupMenuButton(
+                          elevation: 3.2,
+                          itemBuilder: (BuildContext context) {
+                            return [
+                              PopupMenuItem(
+                                child: InkWell(
+                                  child: Text("Jadikan alamat utama"),
+                                  onTap: () {
+                                    Navigator.pop(context, "Replay Game");
+                                    var body = {"id": blocProfile.listUserAddress[index].id.toString(), "id_user": blocAuth.idUser.toString()};
+                                    var result = blocProfile.setDefaultAlamat(body);
+                                    result.then((value) async {
+                                      if (value) {
+                                        blocProfile.getAllUserAddress(blocAuth.idUser);
+                                        blocProfile.getUserAddressDefault();
+                                      } else {}
+                                    });
+                                  },
+                                ),
+                              ),
+                              PopupMenuItem(
+                                value: "Replay Game",
+                                child: InkWell(
+                                  child: Container(width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width * 0.5, child: Text("Ubah")),
+                                  onTap: () {
+                                    Navigator.pop(context, "Replay Game");
+                                    blocProfile.clearDataCity();
+                                    blocProfile.getUserAddressById(blocProfile.listUserAddress[index].id);
+                                    blocProfile.getSubDistrictById(blocProfile.listUserAddress[index].idKecamatan);
+                                    Navigator.push(context, SlideRightRoute(page: WidgetUpdateAddress(id: blocProfile.listUserAddress[index].id))).then((value) {
+                                      blocProfile.getAllUserAddress(blocAuth.idUser);
+                                      blocProfile.clearDataCity();
+                                    });
+                                  },
+                                ),
+                              ),
+                              PopupMenuItem(
+                                value: "Replay Game",
+                                child: InkWell(
+                                  child: Container(width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width * 0.5, child: Text("Hapus")),
+                                  onTap: () {
+                                    Navigator.pop(context, "Replay Game");
+                                  },
+                                ),
+                              ),
+                            ];
                           },
                         ),
                       ),
                     );
                   }),
-            ),
+      ),
     );
   }
+
+  void _showToast(String message, context) {
+    final scaffold = Scaffold.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(message),
+      ),
+    );
+  }
+
 }

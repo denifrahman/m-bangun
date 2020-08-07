@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:apps/Utils/HeaderAnimation.dart';
+import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/providers/Categories.dart';
 import 'package:apps/providers/DataProvider.dart';
@@ -155,12 +156,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   _showVersionDialog() async {
     await new Future.delayed(const Duration(seconds: 1));
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     final PackageInfo info = await PackageInfo.fromPlatform();
     var currentVersion = info.version;
-    var newVersion = dataProvider.newVersion;
-    if (dataProvider.showVersionDialog) {
-      dataProvider.setShowVersionDialog(false);
+    var newVersion = blocAuth.newVersion;
+    if (blocAuth.showVersionDialog) {
+      blocAuth.setShowVersionDialog(false);
       await showDialog<String>(
         context: context,
         barrierDismissible: false,
@@ -171,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           String btnLabelCancel = "Nanti";
           return Platform.isIOS
               ? WillPopScope(
-            onWillPop: () {},
+                  onWillPop: () {},
             child: new CupertinoAlertDialog(
               title: Text(title),
               content: Column(

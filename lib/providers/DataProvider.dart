@@ -21,13 +21,13 @@ import 'package:package_info/package_info.dart';
 
 class DataProvider extends ChangeNotifier {
   DataProvider() {
-//    versionCheck();
-    getToken();
-    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
-      _currentUser = account;
-      notifyListeners();
-    });
-    _googleSignIn.signInSilently();
+////    versionCheck();
+//    getToken();
+//    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
+//      _currentUser = account;
+//      notifyListeners();
+//    });
+//    _googleSignIn.signInSilently();
   }
 
   bool isFavorite = false;

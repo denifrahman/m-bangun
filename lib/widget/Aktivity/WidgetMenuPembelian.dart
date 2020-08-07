@@ -1,5 +1,10 @@
+import 'package:apps/Utils/navigation_right.dart';
+import 'package:apps/providers/BlocAuth.dart';
+import 'package:apps/providers/BlocOrder.dart';
+import 'package:apps/widget/Aktivity/component/WidgetListPembelian.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class WidgetMenuPembelian extends StatelessWidget {
   WidgetMenuPembelian({Key key}) : super(key: key);
@@ -8,6 +13,8 @@ class WidgetMenuPembelian extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     return Container(
       width: MediaQuery.of(context).size.height,
       margin: EdgeInsets.only(bottom: 50),
@@ -17,35 +24,149 @@ class WidgetMenuPembelian extends StatelessWidget {
         itemBuilder: (context, index) {
           return Card(
             child: InkWell(
-              onTap: () => _openPengajuan(dataList[index]),
+              onTap: () => _openPembelian(dataList[index], blocAuth.idUser, context),
               child: ListTile(
-                  title: Text(dataList[index]),
+                  title: Text(
+                    dataList[index],
+                    style: TextStyle(fontSize: 16),
+                  ),
                   leading: dataList[index] == 'Menunggu Pembayaran'
-                      ? Icon(
-                          Icons.new_releases,
-                          color: Colors.blue,
+                      ? Stack(
+                          children: <Widget>[
+                            Icon(
+                              Icons.new_releases,
+                              size: 33,
+                              color: Colors.blue,
+                            ),
+                            Positioned(
+                              top: 0.0,
+                              right: 0.0,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  blocOrder.countMenunggu.toString() == '0' ? '' : blocOrder.countMenunggu.toString(),
+                                  style: TextStyle(color: Colors.white, fontSize: 10),
+                                ),
+                              ),
+                            )
+                          ],
                         )
                       : dataList[index] == 'Menunggu Konfirmasi'
-                          ? Icon(
-                              Icons.watch_later,
-                              color: Colors.amber,
+                          ? Stack(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.watch_later,
+                                  size: 33,
+                                  color: Colors.amber,
+                                ),
+                                Positioned(
+                                  top: 0.0,
+                                  right: 0.0,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      blocOrder.countMenungguKonfirmasi.toString() == '0' ? '' : blocOrder.countMenungguKonfirmasi.toString(),
+                                      style: TextStyle(color: Colors.white, fontSize: 10),
+                                    ),
+                                  ),
+                                )
+                              ],
                             )
                           : dataList[index] == 'Dikemas'
-                              ? Icon(
-                                  FontAwesomeIcons.shoppingBag,
-                                  color: Colors.deepOrange,
+                              ? Stack(
+                                  children: <Widget>[
+                                    Icon(
+                                      FontAwesomeIcons.shoppingBag,
+                                      color: Colors.deepOrange,
+                                      size: 33,
+                                    ),
+                                    Positioned(
+                                      top: 0.0,
+                                      right: 0.0,
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          blocOrder.countDikemas.toString() == '0' ? '' : blocOrder.countDikemas.toString(),
+                                          style: TextStyle(color: Colors.white, fontSize: 10),
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 )
                               : dataList[index] == 'Dikirim'
-                                  ? Icon(
-                                      FontAwesomeIcons.truckPickup,
-                                      color: Colors.cyan,
+                                  ? Stack(
+                                      children: <Widget>[
+                                        Icon(
+                                          FontAwesomeIcons.truckPickup,
+                                          color: Colors.cyan,
+                                          size: 33,
+                                        ),
+                                        Positioned(
+                                          top: 0.0,
+                                          right: 0.0,
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              blocOrder.countDikirim.toString() == '0' ? '' : blocOrder.countDikirim.toString(),
+                                              style: TextStyle(color: Colors.white, fontSize: 10),
+                                            ),
+                                          ),
+                                        )
+                                      ],
                                     )
                                   : dataList[index] == 'Ulasan'
-                                      ? Icon(Icons.comment, color: Colors.red)
+                                      ? Stack(
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.comment,
+                                              color: Colors.red,
+                                              size: 33,
+                                            ),
+                                            Positioned(
+                                              top: 0.0,
+                                              right: 0.0,
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  blocOrder.countUlasan.toString() == '0' ? '' : blocOrder.countUlasan.toString(),
+                                                  style: TextStyle(color: Colors.white, fontSize: 10),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        )
                                       : dataList[index] == 'Selesai'
-                                          ? Icon(
-                                              Icons.assignment_turned_in,
-                                              color: Colors.green,
+                                          ? Stack(
+                                              children: <Widget>[
+                                                Icon(
+                                                  Icons.assignment_turned_in,
+                                                  size: 33,
+                                                  color: Colors.green,
+                                                ),
+                                                Positioned(
+                                                  top: 0.0,
+                                                  right: 0.0,
+                                                  child: Container(
+                                                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      blocOrder.countSelesai.toString() == '0' ? '' : blocOrder.countSelesai.toString(),
+                                                      style: TextStyle(color: Colors.white, fontSize: 10),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
                                             )
                                           : Icon(Icons.delete, color: Colors.red),
                   trailing: Icon(Icons.arrow_forward_ios)),
@@ -56,5 +177,21 @@ class WidgetMenuPembelian extends StatelessWidget {
     );
   }
 
-  _openPengajuan(String dataList) {}
+  _openPembelian(String title, idUser, context) {
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+    if (title == 'Menunggu Pembayaran') {
+      var param = {'id_pembeli': idUser.toString(), 'status_pembayaran': title == 'Menunggu Pembayaran' ? 'menunggu' : 'terbayar'};
+      blocOrder.getOrderByParam(param);
+    } else {
+      var param = {'id_pembeli': idUser.toString(), 'status_order': title.toString() == 'Menunggu Konfirmasi' ? 'menunggu_konfirmasi' : title.toString()};
+      blocOrder.getOrderByParam(param);
+    }
+
+    Navigator.push(
+        context,
+        SlideRightRoute(
+            page: WidgetListPembelian(
+          title: title,
+        )));
+  }
 }

@@ -1,20 +1,10 @@
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
-import 'package:money2/money2.dart';
 import 'package:provider/provider.dart';
 
-class WidgetLisCourier extends StatelessWidget {
-  WidgetLisCourier({Key key}) : super(key: key);
-  List _elements = [
-    {'name': 'OKE', 'group': 'jne'},
-    {'name': 'REG', 'group': 'jne'},
-    {'name': 'OKE', 'group': 'jnt'},
-    {'name': 'OKE', 'group': 'jnt'},
-    {'name': 'OKE', 'group': 'wahana'},
-    {'name': 'OKE', 'group': 'wahana'},
-  ];
-  final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
+class WidgetListPembayaran extends StatelessWidget {
+  WidgetListPembayaran({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,18 +12,17 @@ class WidgetLisCourier extends StatelessWidget {
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        title: Text('Pilih jasa pengiriman'),
+        title: Text('Metode pembayaran'),
       ),
       body: GroupedListView<dynamic, String>(
-        groupBy: (element) => element['code'],
-        elements: blocOrder.listCost,
+        groupBy: (element) => element['nama'],
+        elements: blocOrder.listMetodePembayaran,
         order: GroupedListOrder.DESC,
         useStickyGroupSeparators: true,
         groupSeparatorBuilder: (String value) => Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            value.toUpperCase(),
+            value,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
@@ -41,14 +30,8 @@ class WidgetLisCourier extends StatelessWidget {
         itemBuilder: (c, element) {
           return InkWell(
             onTap: () {
-              var body = {
-                'kode_kurir': element['code'],
-                'nama_kurir': element['name'],
-                'estimasi_pengiriman': element['etd'],
-                'total_ongkir': element['cost'],
-                'jenis_service': element['service']
-              };
-              blocOrder.onChangeCost(body);
+              var body = {'metode_pembayaran': element['nama'], 'no_rekening': element['no_rekening'], 'nama_rekening': element['atas_nama'], 'nama_bank': element['nama_bank']};
+              blocOrder.onChangeMetodePembayaran(body);
               Navigator.pop(context);
             },
             child: Card(
@@ -59,14 +42,14 @@ class WidgetLisCourier extends StatelessWidget {
                   contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                   leading: Icon(Icons.account_circle),
                   title: Text(
-                    element['service'],
+                    element['nama_bank'],
                     style: TextStyle(fontWeight: FontWeight.normal, color: Colors.grey, fontSize: 12),
                   ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(Money.fromInt(int.parse(element['cost'].toString()), IDR).toString(), style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 12)),
-                      Text('Estimasi ' + element['etd'], style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontSize: 12)),
+                      Text(element['no_rekening'], style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 12)),
+                      Text('a.n ' + element['atas_nama'], style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontSize: 12)),
                     ],
                   ),
                   trailing: Icon(

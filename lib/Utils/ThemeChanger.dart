@@ -5,21 +5,15 @@ ThemeData light = ThemeData(
   scaffoldBackgroundColor: Colors.grey[100],
   inputDecorationTheme: const InputDecorationTheme(
     labelStyle: TextStyle(color: Colors.black, fontSize: 12),
-    hintStyle: TextStyle(
-        color: Colors.grey, fontSize: 12, fontFamily: 'OpenSans-Regular', fontWeight: FontWeight.w500),
+    hintStyle: TextStyle(color: Colors.grey, fontSize: 12, fontFamily: 'OpenSans-Regular', fontWeight: FontWeight.w500),
   ),
-  fontFamily: 'OpenSans-Regular',
+  fontFamily: 'WorkSansMedium',
   primaryColor: Colors.green[600],
   appBarTheme: AppBarTheme(
       brightness: Brightness.light,
       color: Colors.white,
       iconTheme: IconThemeData(color: Colors.black),
-      textTheme: TextTheme(
-          title: TextStyle(
-              fontSize: 15,
-              color: Colors.black,
-              fontFamily: 'OpenSans-Regular',
-              fontWeight: FontWeight.bold))),
+      textTheme: TextTheme(title: TextStyle(fontSize: 15, color: Colors.black, fontFamily: 'OpenSans-Regular', fontWeight: FontWeight.bold))),
 );
 
 ThemeData dark = ThemeData(

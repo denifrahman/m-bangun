@@ -3,6 +3,7 @@ import 'package:apps/Repository/UserRepository.dart';
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:package_info/package_info.dart';
 
 class BlocAuth extends ChangeNotifier {
   BlocAuth() {
@@ -76,17 +77,17 @@ class BlocAuth extends ChangeNotifier {
   }
 
   checkSession() async {
-    print(_googleSignIn.isSignedIn());
+//    checkVersionApp();
     _isLoading = false;
-    _googleSignIn.isSignedIn().then((value) async {
-      _isLoading = true;
-      if (value) {
-        print('false');
+    _googleSignIn.signInSilently();
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) async {
+      if (account != null) {
+        _currentUser = account;
+        _isLoading = true;
         _isLogin = true;
         _isLoading = false;
-        _currentUser = _googleSignIn.currentUser;
         notifyListeners();
-        var queryString = {'username': _currentUser.email, 'id_google': _currentUser.id};
+        var queryString = {'username': account.email, 'id_google': account.id};
         var result = await AuthRepository().googleSign(queryString);
         if (result.toString() == '111' || result.toString() == '101') {
           _connection = true;
@@ -115,6 +116,32 @@ class BlocAuth extends ChangeNotifier {
         return false;
       }
     });
-    _googleSignIn.signInSilently();
+  }
+
+  double _currentVersion;
+  double _newVersion;
+  bool _showVersionDialog = false;
+
+  bool get showVersionDialog => _showVersionDialog;
+
+  double get currentVersion => _currentVersion;
+
+  double get newVersion => _newVersion;
+
+  setShowVersionDialog(bool) {
+    _showVersionDialog = bool;
+  }
+
+  checkVersionApp() async {
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    _currentVersion = double.parse(info.version.trim().replaceAll(".", ""));
+    notifyListeners();
+    var param = {'': ''};
+    var result = await AuthRepository().checkVersionApp(param);
+    _newVersion = double.parse(result['data'][0]['versi_nomor'].trim().replaceAll(".", ""));
+    if (newVersion > currentVersion) {
+      _showVersionDialog = true;
+      notifyListeners();
+    }
   }
 }

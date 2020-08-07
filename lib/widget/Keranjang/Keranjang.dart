@@ -4,7 +4,6 @@ import 'package:apps/providers/BlocProfile.dart';
 import 'package:apps/screen/CheckoutScreen.dart';
 import 'package:apps/widget/Keranjang/components/shop_item_list.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:money2/money2.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +21,7 @@ class _KeranjangState extends State<Keranjang> {
   Widget build(BuildContext context) {
     // TODO: implement build
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+    BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     AppBar appBar = AppBar(
       elevation: 0,
       title: Text('Keranjang'),
@@ -54,7 +54,11 @@ class _KeranjangState extends State<Keranjang> {
                                     title: Text(blocOrder.listCart[i].flag),
                                     leading: Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: Icon(FontAwesomeIcons.personBooth),
+                                      child: Image.network(
+                                        'https://m-bangun.com/api-v2/assets/toko/' + blocOrder.listCart[i].chilrdern[0].fotoToko,
+                                        width: 40,
+                                        height: 80,
+                                      ),
                                     ),
                                     subtitle: Row(
                                       children: [
@@ -127,10 +131,24 @@ class _KeranjangState extends State<Keranjang> {
                                   decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)), color: Colors.deepOrange),
                                   child: InkWell(
                                     onTap: () {
-                                      Provider.of<BlocProfile>(context).getProvince();
-                                      Provider.of<BlocProfile>(context).getUserAddressDefault();
-                                      Provider.of<BlocProfile>(context).getSubDistrictById(blocOrder.listCart[i].chilrdern[0].idKecamatan);
-
+                                      blocProfile.getProvince();
+                                      blocProfile.getUserAddressDefault();
+                                      var idKecamatanToko = blocOrder.listCart[i].chilrdern[0].idKecamatan;
+                                      blocProfile.getSubDistrictById(idKecamatanToko);
+                                      blocOrder.getMetodePembayaran();
+                                      blocOrder.clearCost();
+                                      int total = 0;
+                                      for (var k = 0; k < blocOrder.listCart[i].chilrdern.length; k++) {
+                                        var beratTotal =
+                                            int.parse(blocOrder.listCart[i].chilrdern[k].berat.toString()) * int.parse(blocOrder.listCart[i].chilrdern[k].jumlah.toString());
+                                        total += beratTotal;
+                                      }
+                                      var param = {
+                                        'origin': idKecamatanToko.toString(),
+                                        'destination': blocProfile.listUserAddressDefault.isEmpty ? '0' : blocProfile.listUserAddressDefault[0].idKecamatan,
+                                        'weight': total.toString()
+                                      };
+                                      blocOrder.getCost(param);
                                       Navigator.push(
                                           context,
                                           SlideRightRoute(

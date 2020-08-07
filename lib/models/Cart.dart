@@ -1,5 +1,5 @@
-/// flag : "Toko Anugerah"
-/// chilrdern : [{"id":"27","created_at":"2020-08-03 16:29:04.128076","id_produk":"1","id_user_login":"35","jumlah":"3","harga":"100000","subtotal":"300000","id_toko":"1","jenis_ongkir":"iclude","catatan":"","foto":"beton.png","nama":"Beton Adhimix terbaik jawa timur","nama_toko":"Toko Anugerah"},{"id":"1","created_at":"2020-08-02 13:29:34.506997","id_produk":"1","id_user_login":"1","jumlah":"2","harga":"10000","subtotal":"20000","id_toko":"1","jenis_ongkir":"1","catatan":null,"foto":"beton.png","nama":"Beton Adhimix terbaik jawa timur","nama_toko":"Toko Anugerah"}]
+/// flag : "Pasir"
+/// chilrdern : [{"id":"35","created_at":"2020-08-04 11:54:53.283426","id_produk":"5","id_user_login":"35","jumlah":"2","harga":"100","subtotal":"200","id_toko":"3","jenis_ongkir":"iclude","catatan":"warna merah muda","foto":"ramayana.png","nama":"Pasir","nama_toko":"Pasir","id_kecamatan":"6133","foto_toko":"pasir.png"}]
 
 class Cart {
   String flag;
@@ -19,19 +19,21 @@ class Cart {
       };
 }
 
-/// id : "27"
-/// created_at : "2020-08-03 16:29:04.128076"
-/// id_produk : "1"
+/// id : "35"
+/// created_at : "2020-08-04 11:54:53.283426"
+/// id_produk : "5"
 /// id_user_login : "35"
-/// jumlah : "3"
-/// harga : "100000"
-/// subtotal : "300000"
-/// id_toko : "1"
+/// jumlah : "2"
+/// harga : "100"
+/// subtotal : "200"
+/// id_toko : "3"
 /// jenis_ongkir : "iclude"
-/// catatan : ""
-/// foto : "beton.png"
-/// nama : "Beton Adhimix terbaik jawa timur"
-/// nama_toko : "Toko Anugerah"
+/// catatan : "warna merah muda"
+/// foto : "ramayana.png"
+/// nama : "Pasir"
+/// nama_toko : "Pasir"
+/// id_kecamatan : "6133"
+/// foto_toko : "pasir.png"
 
 class ChilrdernBean {
   String id;
@@ -48,6 +50,8 @@ class ChilrdernBean {
   String nama;
   String namaToko;
   String idKecamatan;
+  String fotoToko;
+  String berat;
 
   static ChilrdernBean fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
@@ -66,10 +70,13 @@ class ChilrdernBean {
     chilrdernBean.nama = map['nama'];
     chilrdernBean.namaToko = map['nama_toko'];
     chilrdernBean.idKecamatan = map['id_kecamatan'];
+    chilrdernBean.fotoToko = map['foto_toko'];
+    chilrdernBean.berat = map['berat'];
     return chilrdernBean;
   }
 
-  Map toJson() => {
+  Map toJson() =>
+      {
         "id": id,
         "created_at": createdAt,
         "id_produk": idProduk,
@@ -84,5 +91,7 @@ class ChilrdernBean {
         "nama": nama,
         "nama_toko": namaToko,
         "id_kecamatan": idKecamatan,
+        "foto_toko": fotoToko,
+        "berat": berat,
       };
 }

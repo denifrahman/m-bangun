@@ -8,6 +8,11 @@ class AuthRepository {
     return response;
   }
 
+  Future checkVersionApp(param) async {
+    final response = await _helper.get("version/getAllByParam", param);
+    return response;
+  }
+
   Future create(body) async {
     final response = await _helper.post("user/insert", body);
     return response;

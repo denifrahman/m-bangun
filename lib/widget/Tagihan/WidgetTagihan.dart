@@ -1,16 +1,22 @@
-import 'package:apps/providers/DataProvider.dart';
-import 'package:flushbar/flushbar.dart';
+import 'package:apps/providers/BlocOrder.dart';
+import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fw_ticket/fw_ticket.dart';
+import 'package:intl/intl.dart';
+import 'package:money2/money2.dart';
 import 'package:provider/provider.dart';
 
 class WidgetTagihan extends StatelessWidget {
-  WidgetTagihan({Key key}) : super(key: key);
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final String param;
+
+  WidgetTagihan({Key key, this.param}) : super(key: key);
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
+    final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     // TODO: implement build
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
@@ -20,217 +26,350 @@ class WidgetTagihan extends StatelessWidget {
       iconTheme: IconThemeData(color: Colors.white),
       backgroundColor: Colors.cyan[600],
       title: Text(
-        'Metode Pembayaran',
+        'Tagihan',
         style: TextStyle(color: Colors.white, fontSize: 16),
+      ),
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back_ios,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          if (this.param == 'checkout') {
+            Navigator.of(context).pushNamedAndRemoveUntil('/BottomNavBar', (Route<dynamic> route) => false);
+          } else {
+            Navigator.pop(context);
+          }
+        },
       ),
     );
     return Scaffold(
+      key: _scaffoldKey,
       appBar: appBar,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              color: Colors.cyan[600],
-              height: (height * 0.29) - appBar.preferredSize.height - statusBarHeight,
-              width: width,
+      body: blocOrder.listOrderDetail.isEmpty
+          ? Center(
+        child: CircularProgressIndicator(),
+      )
+          : Column(
+        children: [
+          Container(
+            color: Colors.cyan[600],
+            height: (height * 0.29) - appBar.preferredSize.height - statusBarHeight,
+            width: width,
+            child: Column(
+              children: [
+                Card(
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(color: Colors.white70, width: 1),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    elevation: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Image(width: 40, height: 40, image: new AssetImage('assets/logo.png')),
+                    )),
+                Text(
+                  'm-Bangun',
+                  style: TextStyle(fontFamily: 'SUNDAY', color: Colors.white, fontSize: 16),
+                )
+              ],
+            ),
+          ),
+          Container(
+            color: Colors.yellow.withOpacity(0.1),
+            height: height * 0.71,
+            child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Card(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(color: Colors.white70, width: 1),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      elevation: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Image(width: 40, fit: BoxFit.fill, image: new AssetImage('assets/logo.png')),
+                  Container(
+                    child: StreamBuilder(
+                      stream: Stream.periodic(Duration(seconds: 1), (i) => i),
+                      builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                        int estimateTs = DateTime
+                            .parse(blocOrder.listOrderDetail[0].batasBayar)
+                            .millisecondsSinceEpoch; // set needed date
+                        DateFormat format = DateFormat("mm:ss");
+                        int now = DateTime
+                            .now()
+                            .millisecondsSinceEpoch;
+                        Duration remaining = Duration(milliseconds: estimateTs - now);
+                        var hourse = '${remaining.inHours}';
+                        var menit = '${format.format(DateTime.fromMillisecondsSinceEpoch(remaining.inMilliseconds))}';
+                        return Container(
+                          padding: EdgeInsets.all(15),
+                          alignment: Alignment.center,
+                          child: Column(
+                            children: [
+                              Container(
+                                child: Text(
+                                  'Sisa waktu yang harus dibayar',
+                                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                                ),
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        hourse,
+                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25, fontFamily: 'WorkSansMedium'),
+                                      ),
+                                      Text(
+                                        'Jam',
+                                        style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12, fontFamily: 'WorkSansMedium'),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(':', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25, fontFamily: 'WorkSansMedium')),
+                                      SizedBox(
+                                        height: 18,
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        menit,
+                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25, fontFamily: 'WorkSansMedium'),
+                                      ),
+                                      Text(
+                                        "Menit",
+                                        style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12, fontFamily: 'WorkSansMedium'),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Container(
+                                child: Text(
+                                  'Jumlah yang harus dibayar',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      Money.fromInt((int.parse(blocOrder.listOrderDetail[0].total)), IDR).toString(),
+                                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.redAccent, fontSize: 15),
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    GestureDetector(
+                                      child: Icon(
+                                        Icons.content_copy,
+                                        color: Colors.grey,
+                                        size: 14,
+                                      ),
+                                      onTap: () {
+                                        Clipboard.setData(new ClipboardData(text: blocOrder.listOrderDetail[0].total));
+                                        _scaffoldKey.currentState.showSnackBar(new SnackBar(
+                                          content: Text('Salin ' + "'" + blocOrder.listOrderDetail[0].total + "'"),
+                                          backgroundColor: Colors.green,
+                                        ));
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Container(
+                                width: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * 0.8,
+//                                      height: 100,
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.all(Radius.circular(8))),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Harap transfer sesuai jumlah pembayaran \n hingga 3 digit terakhir',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(letterSpacing: 0.5,
+                                          height: 1.5,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      'Jika jumlah yang ditransfer tidak sesuai, proses verifikasi pembayaran akan terhambat',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(letterSpacing: 0.5,
+                                          height: 1.5,
+                                          fontSize: 11,
+                                          fontStyle: FontStyle.italic,
+                                          color: Colors.white),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width * 0.9,
+//                        height: 250,
+//                            color: Colors.grey[100],
+                      child: Ticket(
+                        innerRadius: BorderRadius.only(topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
+                        outerRadius: BorderRadius.all(Radius.circular(10.0)),
+                        boxShadow: [
+                          BoxShadow(
+                            offset: Offset(0, 4),
+                            blurRadius: 2.0,
+                            spreadRadius: 2.0,
+                            color: Color.fromRGBO(196, 196, 196, .76),
+                          )
+                        ],
+                        child: Container(
+                          color: Colors.white,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.more_vert,
+                                      color: Colors.lightBlue,
+                                    ),
+                                    Text(
+                                      'INV: ' + blocOrder.listOrderDetail[0].noOrder,
+                                      style: TextStyle(color: Colors.black, fontSize: 16.0, fontFamily: 'WorkSansBold', fontWeight: FontWeight.bold),
+                                    ),
+                                    Icon(
+                                      Icons.more_vert,
+                                      color: Colors.lightBlue,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(left: 2),
+                                child: DottedLine(
+                                  dashColor: Colors.grey,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 30),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Container(
+                                      height: 80,
+//                                      width: MediaQuery.of(context).size.width,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: FittedBox(
+                                          child: Text(
+                                            blocOrder.listOrderDetail[0].namaBank,
+                                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13.0),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Text(blocOrder.listOrderDetail[0].namaRekening),
+                                              FittedBox(
+                                                child: Text(
+                                                  blocOrder.listOrderDetail[0].noRekening,
+                                                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        )),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                width: double.infinity,
+                                color: Colors.cyan[700],
+                                padding: EdgeInsets.symmetric(vertical: 8.0),
+                                child: Center(
+                                  child: GestureDetector(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        new Text(
+                                          'Salin rekening ',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        Icon(
+                                          Icons.content_copy,
+                                          color: Colors.white,
+                                          size: 14,
+                                        )
+                                      ],
+                                    ),
+                                    onTap: () {
+                                      Clipboard.setData(new ClipboardData(text: blocOrder.listOrderDetail[0].noRekening));
+                                      _scaffoldKey.currentState.showSnackBar(new SnackBar(
+                                        content: Text('Salin ' + "'" + blocOrder.listOrderDetail[0].noRekening + "'"),
+                                        backgroundColor: Colors.green,
+                                      ));
+                                    },
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                       )),
-                  Text(
-                    'm-Bangun',
-                    style: TextStyle(fontFamily: 'SUNDAY', color: Colors.white, fontSize: 16),
-                  )
+                  SizedBox(
+                    height: 10,
+                  ),
                 ],
               ),
             ),
-            Container(
-              height: height * 0.71,
-              child: dataProvider.isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: dataProvider.dataMetodeTransfer.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        dataProvider.getAllBank();
-                        _showDialog(context, dataProvider.dataMetodeTransfer[index]);
-                      },
-                      child: Card(
-                        elevation: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-                          child: ListTile(
-                            title: Text(dataProvider.dataMetodeTransfer[index].metodeTransferNama),
-                            subtitle: Text(
-                              dataProvider.dataMetodeTransfer[index].metodeTransferDeskripsi,
-                              style: TextStyle(fontSize: 12),
-                            ),
-                            leading: Container(
-                              height: 50,
-                              width: 50,
-                              margin: EdgeInsets.only(bottom: 6),
-                              decoration: new BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                                gradient: new LinearGradient(
-                                    colors: [Color(0xffb16a085).withOpacity(0.1), Colors.white],
-                                    begin: const FractionalOffset(7.0, 10.1),
-                                    end: const FractionalOffset(0.0, 0.0),
-                                    stops: [0.0, 1.0],
-                                    tileMode: TileMode.clamp),
-                              ),
-                              child: new Center(
-                                child: Image.network(
-                                  dataProvider.dataMetodeTransfer[index].metodeTransferIcon,
-                                  fit: BoxFit.cover,
-                                  width: 25,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
-  }
-
-  void _showDialog(context, param) {
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
-    if (dataProvider.userId_ == null) {
-      Flushbar(
-        title: "Error",
-        message: "Silahkan login / daftar member",
-        duration: Duration(seconds: 5),
-        backgroundColor: Colors.red,
-        flushbarPosition: FlushbarPosition.BOTTOM,
-        icon: Icon(
-          Icons.assignment_turned_in,
-          color: Colors.white,
-        ),
-      )
-        ..show(context);
-    } else {
-      showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (BuildContext context) {
-          return Form(
-            key: _formKey,
-            autovalidate: false,
-            child: Container(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height * 0.7,
-              padding: EdgeInsets.only(top: 0,),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Daftar Rekening Bank',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                          ),
-                          InkWell(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Icon(Icons.clear))
-                        ],
-                      ),
-                    ),
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: dataProvider.dataBank.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            elevation: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-                              child: ListTile(
-                                title: Text(dataProvider.dataBank[index].bankNama),
-                                subtitle: Text(
-                                  dataProvider.dataBank[index].bankNomorRek,
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                                leading: Container(
-                                  height: 50,
-                                  width: 50,
-                                  margin: EdgeInsets.only(bottom: 6),
-                                  decoration: new BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                                    gradient: new LinearGradient(
-                                        colors: [Color(0xffb16a085).withOpacity(0.1), Colors.white],
-                                        begin: const FractionalOffset(7.0, 10.1),
-                                        end: const FractionalOffset(0.0, 0.0),
-                                        stops: [0.0, 1.0],
-                                        tileMode: TileMode.clamp),
-                                  ),
-                                  child: new Center(
-                                    child: Image.network(
-                                      dataProvider.dataBank[index].bankLogo,
-                                      fit: BoxFit.cover,
-                                      width: 35,
-                                    ),
-                                  ),
-                                ),
-                                trailing: IconButton(
-                                  icon: Icon(Icons.content_copy),
-                                  onPressed: () {
-                                    Clipboard.setData(new ClipboardData(text: dataProvider.dataBank[index].bankNomorRek));
-                                    Flushbar(
-                                      title: "Copied",
-                                      message: "Rekening telah di copy",
-                                      duration: Duration(seconds: 2),
-                                      backgroundColor: Colors.grey,
-                                      flushbarPosition: FlushbarPosition.BOTTOM,
-                                      icon: Icon(
-                                        Icons.content_copy,
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                      ..show(context);
-                                  },
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      );
-    }
   }
 }

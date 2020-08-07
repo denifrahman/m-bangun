@@ -35,7 +35,7 @@ class _WidgetAddAddressState extends State<WidgetAddAddress> {
           padding: const EdgeInsets.all(10.0),
           child: Form(
             key: _formKey,
-            autovalidate: true,
+            autovalidate: false,
             child: Column(
               children: [
                 Container(

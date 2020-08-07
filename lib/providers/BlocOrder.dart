@@ -1,6 +1,7 @@
 import 'package:apps/Repository/OrderRepository.dart';
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/models/Cart.dart';
+import 'package:apps/models/Order.dart';
 import 'package:flutter/cupertino.dart';
 
 class BlocOrder extends ChangeNotifier {
@@ -8,9 +9,32 @@ class BlocOrder extends ChangeNotifier {
     setIdUser();
   }
 
+  getOrderByIdUser(idUser) async {
+    getCountOrderByParam();
+  }
+
   String _id_user_login;
 
   String get id_user_login => _id_user_login;
+
+  bool _errorShippingAddres = false;
+
+  bool get errorShippingAddres => _errorShippingAddres;
+
+  bool _errorMethodeTransfer = false;
+
+  bool get errorMethodeTransfer => _errorMethodeTransfer;
+
+  setErrorShippingAddres(bool value) {
+    _errorShippingAddres = value;
+    // print(_errorShippingAddres);
+    notifyListeners();
+  }
+
+  setErrorMethodeTransfer(bool value) {
+    _errorMethodeTransfer = value;
+    notifyListeners();
+  }
 
   setIdUser() async {
     var id = await LocalStorage.sharedInstance.readValue('id_user_login');
@@ -19,6 +43,7 @@ class BlocOrder extends ChangeNotifier {
     } else {
       _id_user_login = '0';
     }
+    getOrderByIdUser(id);
     getCart();
     notifyListeners();
   }
@@ -34,7 +59,6 @@ class BlocOrder extends ChangeNotifier {
 
   setJumlah(int value) {
     _jumlah = value;
-    print(value);
     notifyListeners();
   }
 
@@ -46,9 +70,6 @@ class BlocOrder extends ChangeNotifier {
   bool get connection => _connection;
 
   bool get isLoading => _isLoading;
-  List<Cart> _listCart = [];
-
-  List<Cart> get listCart => _listCart;
 
   removeCart(id) async {
     var body = new Map<String, String>();
@@ -62,7 +83,6 @@ class BlocOrder extends ChangeNotifier {
 
   updateCart(body) async {
     var result = await OrderRepository().updateCart(body);
-    print(result);
     if (result['meta']['success']) {
       getCart();
       notifyListeners();
@@ -95,12 +115,15 @@ class BlocOrder extends ChangeNotifier {
     }
   }
 
+  List<Cart> _listCart = [];
+
+  List<Cart> get listCart => _listCart;
+
   getCart() async {
     _isLoading = true;
     notifyListeners();
     var param = {'id_user_login': _id_user_login.toString()};
     var result = await OrderRepository().getCart(param);
-    print(result);
     if (result.toString() == '111' || result.toString() == '101') {
       _connection = false;
       _isLoading = false;
@@ -111,6 +134,7 @@ class BlocOrder extends ChangeNotifier {
       if (result['meta']['success']) {
         _isLoading = false;
         _connection = true;
+        _listCart = [];
         Iterable list = result['data'];
         _listCart = list.map((model) => Cart.fromMap(model)).toList();
         notifyListeners();
@@ -122,6 +146,172 @@ class BlocOrder extends ChangeNotifier {
         notifyListeners();
         return false;
       }
+    }
+  }
+
+  List _listMetodePembayaran = [];
+
+  List get listMetodePembayaran => _listMetodePembayaran;
+
+  getMetodePembayaran() async {
+    var param = {'': ''};
+    var result = await OrderRepository().getMetodePembayaran(param);
+//    Iterable list = result['data'];
+    _listMetodePembayaran = result['data'];
+    notifyListeners();
+  }
+
+  List _listCost = [];
+
+  List get listCost => _listCost;
+
+  getCost(param) async {
+    _isLoading = true;
+    notifyListeners();
+    var result = await OrderRepository().getCost(param);
+    if (result != null) {
+      _listCost = result;
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Map<String, dynamic> _listMetodePembayaranSelected = {};
+
+  Map<String, dynamic> get listMetodePembayaranSelected => _listMetodePembayaranSelected;
+
+  onChangeMetodePembayaran(Map<String, dynamic> body) {
+    _listMetodePembayaranSelected = body;
+  }
+
+  Map<String, dynamic> _listCostSelected = {};
+
+  Map<String, dynamic> get listCostSelected => _listCostSelected;
+
+  onChangeCost(Map<String, dynamic> body) {
+    _listCostSelected = body;
+    notifyListeners();
+  }
+
+  clearCost() {
+    _listCostSelected = {};
+    notifyListeners();
+  }
+
+  insert(body) async {
+    _isLoading = true;
+    notifyListeners();
+    var result = await OrderRepository().insert(body);
+    if (result['meta']['success']) {
+      _isLoading = false;
+      notifyListeners();
+      return result;
+    } else {
+      _isLoading = false;
+      notifyListeners();
+      return result;
+    }
+  }
+
+  List<Order> _listOrder = [];
+
+  List<Order> get listOrder => _listOrder;
+
+  List<Order> _listCountOrder = [];
+
+  List<Order> get listCountOrder => _listCountOrder;
+
+  int _countMenunggu = 0;
+  int _countTerbayar = 0;
+  int _countMenungguKonfirmasi = 0;
+  int _countDikemas = 0;
+  int _countDikirim = 0;
+  int _countUlasan = 0;
+  int _countSelesai = 0;
+
+  int get countMenunggu => _countMenunggu;
+
+  int get countMenungguKonfirmasi => _countMenungguKonfirmasi;
+
+  int get countDikemas => _countDikemas;
+
+  int get countDikirim => _countDikirim;
+
+  int get countUlasan => _countUlasan;
+
+  int get countSelesai => _countSelesai;
+
+  int get countTerbayar => _countTerbayar;
+
+  setCountPembelian() {
+    _countMenunggu = _listCountOrder.where((element) => element.statusPembayaran == 'menunggu').length;
+    _countTerbayar = _listCountOrder.where((element) => element.statusPembayaran == 'terbayar').length;
+    _countMenungguKonfirmasi = _listCountOrder.where((element) => element.statusOrder == 'menunggu_konfirmasi').length;
+    _countDikemas = _listCountOrder.where((element) => element.statusPembayaran == 'dikemas').length;
+    _countDikirim = _listCountOrder.where((element) => element.statusPembayaran == 'dikirim').length;
+    _countUlasan = _listCountOrder.where((element) => element.statusPembayaran == 'ulasan').length;
+    _countSelesai = _listCountOrder.where((element) => element.statusPembayaran == 'selesai').length;
+    notifyListeners();
+  }
+
+  getCountOrderByParam() async {
+    _isLoading = true;
+    notifyListeners();
+    var param = {'': ''};
+    var result = await OrderRepository().getOrderByParam(param);
+    if (result['meta']['success']) {
+      _isLoading = false;
+      Iterable list = result['data'];
+      _listCountOrder = list.map((model) => Order.fromMap(model)).toList();
+      setCountPembelian();
+      notifyListeners();
+      return true;
+    } else {
+      _listCountOrder = [];
+      _isLoading = false;
+      setCountPembelian();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  getOrderByParam(param) async {
+    _isLoading = true;
+    notifyListeners();
+    var result = await OrderRepository().getOrderByParam(param);
+    if (result['meta']['success']) {
+      _isLoading = false;
+      Iterable list = result['data'];
+      _listOrder = list.map((model) => Order.fromMap(model)).toList();
+      notifyListeners();
+      return true;
+    } else {
+      _listOrder = [];
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  List<Order> _listOrderDetail = [];
+
+  List<Order> get listOrderDetail => _listOrderDetail;
+
+  getOrderDetailByParam(param) async {
+    _isLoading = true;
+    notifyListeners();
+    var result = await OrderRepository().getOrderByParam(param);
+    if (result['meta']['success']) {
+      _isLoading = false;
+      Iterable list = result['data'];
+      _listOrderDetail = list.map((model) => Order.fromMap(model)).toList();
+      notifyListeners();
+      return true;
+    } else {
+      _listOrderDetail = [];
+      _isLoading = false;
+      notifyListeners();
+      return false;
     }
   }
 }

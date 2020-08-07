@@ -32,7 +32,7 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Text('Daftar a lamat'),
+        title: Text('Daftar alamat'),
         actions: [
           IconButton(
             icon: Icon(Icons.add_circle),

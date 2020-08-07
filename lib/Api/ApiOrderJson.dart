@@ -4,19 +4,18 @@ import 'dart:io';
 import 'package:apps/Utils/appException.dart';
 import 'package:http/http.dart' as http;
 
-class ApiBaseHelperRajaOngkir {
+class ApiOrderJson {
 //  final _baseUrl = 'm-bangun.com';
-  final _baseUrl = 'pro.rajaongkir.com';
+  final _baseUrl = 'localhost';
 
 //  final _path = 'api-v2/';
-  final _path = 'api/';
+  final _path = 'api-mbangun/';
 
   Future<dynamic> get(String url, param) async {
     var responseJson;
     try {
-      final _url = Uri.https(_baseUrl, _path + url, param);
-      var header = {'key': "e99ff50191d54f9bc76c9c00e43cd158"};
-      final response = await http.get(_url, headers: header);
+      final _url = Uri.http(_baseUrl, _path + url, param);
+      final response = await http.get(_url);
       responseJson = _returnResponse(response);
     } on SocketException catch (err) {
       return AppException(err.osError.errorCode, err.message);
@@ -27,10 +26,10 @@ class ApiBaseHelperRajaOngkir {
   Future<dynamic> post(String url, body) async {
     var responseJson;
     try {
-      final _url = Uri.https(_baseUrl, _path + url);
-      print(_url);
-      var header = {'key': "e99ff50191d54f9bc76c9c00e43cd158"};
+      final _url = Uri.http(_baseUrl, _path + url);
+      var header = {"Content-Type": "application/json"};
       final response = await http.post(_url, body: body, headers: header);
+      print(response.body);
       responseJson = _returnResponse(response);
     } on SocketException catch (err) {
       return FetchDataException(err.osError.errorCode.toString());

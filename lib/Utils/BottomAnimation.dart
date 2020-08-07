@@ -72,6 +72,9 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
     BlocProduk blocProduk = Provider.of<BlocProduk>(context);
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+    int countAktivitas = 0;
+    countAktivitas =
+        blocOrder.countMenunggu + blocOrder.countMenungguKonfirmasi + blocOrder.countDikemas + blocOrder.countDikirim + blocOrder.countDikirim + blocOrder.countSelesai;
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -224,6 +227,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                         onPressed: () {
                           setState(() {
                             blocAuth.checkSession();
+                            blocOrder.setCountPembelian();
                             blocOrder.setIdUser();
                             currentScreen = MyAdsScreen(); // if user taps on this dashboard tab will be active
                             currentTab = 2;
@@ -239,6 +243,25 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                                   size: 25,
                                   color: currentTab == 2 ? Colors.white : Colors.grey[400],
                                 ),
+                                countAktivitas == 0
+                                    ? Icon(
+                                        Icons.local_activity,
+                                        size: 25,
+                                        color: currentTab == 2 ? Colors.white : Colors.grey[400],
+                                      )
+                                    : new Positioned(
+                                        top: 0.0,
+                                        right: 0.0,
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            countAktivitas.toString(),
+                                            style: TextStyle(color: Colors.white, fontSize: 8),
+                                          ),
+                                        ),
+                                      )
                               ],
                             ),
                             Text(

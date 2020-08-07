@@ -17,4 +17,9 @@ class RajaOngkirRepository {
     final response = await _helper.get("subdistrict", param);
     return response;
   }
+
+  Future getCost(body) async {
+    final response = await _helper.post("cost", body);
+    return response;
+  }
 }

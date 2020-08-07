@@ -55,8 +55,18 @@ class UserRepository {
     return response;
   }
 
+  Future updateShippingAddress(body) async {
+    final response = await _helper.post("user/updateAlamat", body);
+    return response;
+  }
+
   Future getUserAddress(param) async {
     final response = await _helper.get("user/getAllAlamatByParam", param);
+    return response;
+  }
+
+  Future setDefaultAlamat(body) async {
+    final response = await _helper.post("user/updateDefaultAlamat", body);
     return response;
   }
 }

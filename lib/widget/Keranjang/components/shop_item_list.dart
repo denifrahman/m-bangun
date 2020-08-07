@@ -40,7 +40,7 @@ class _ShopItemListState extends State<ShopItemList> {
                       margin: EdgeInsets.only(top: 0),
                       child: Image.network(
                         'https://m-bangun.com/api-v2/assets/toko/' + widget.chilrdern.foto,
-                        width: 50,
+                        width: 80,
                         height: 80,
                       ),
                     ),
@@ -115,7 +115,7 @@ class _ShopItemListState extends State<ShopItemList> {
                       ],
                     ),
                     Container(
-                      margin: const EdgeInsets.only(left: 0.0, top: 0, bottom: 60.0),
+                      margin: const EdgeInsets.only(left: 0.0, top: 0, bottom: 55.0),
                       child: Theme(
                         data: ThemeData(
                             accentColor: Colors.black,
@@ -146,6 +146,15 @@ class _ShopItemListState extends State<ShopItemList> {
                         ),
                       ),
                     ),
+                    Container(
+                        child: InkWell(
+                            onTap: () {
+                              widget.onRemove();
+                            },
+                            child: Icon(
+                              Icons.delete,
+                              color: Colors.redAccent,
+                            )))
                   ],
                 ),
               ),

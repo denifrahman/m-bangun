@@ -131,7 +131,7 @@ class BlocProfile extends ChangeNotifier {
 
   List<UserAddress> get listUserAddress => _listUserAddress;
 
-  getUserAddress(id_user) async {
+  getAllUserAddress(id_user) async {
     _isLoading = true;
     notifyListeners();
     var param = {'id_user': id_user.toString()};
@@ -154,13 +154,17 @@ class BlocProfile extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<UserAddress> _listUserAddressDefault = [];
+
+  List<UserAddress> get listUserAddressDefault => _listUserAddressDefault;
+
   getUserAddressDefault() async {
     _isLoading = true;
     notifyListeners();
     var param = {'default': "1"};
     var result = await UserRepository().getUserAddress(param);
     Iterable list = result['data'];
-    _listUserAddress = list.map((model) => UserAddress.fromMap(model)).toList();
+    _listUserAddressDefault = list.map((model) => UserAddress.fromMap(model)).toList();
     _isLoading = false;
     notifyListeners();
   }
@@ -177,6 +181,36 @@ class BlocProfile extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       return result;
+    }
+  }
+
+  Future<bool> updateShippingAddress(body) async {
+    _isLoading = true;
+    notifyListeners();
+    var result = await UserRepository().updateShippingAddress(body);
+    if (result['meta']['success']) {
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } else {
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> setDefaultAlamat(body) async {
+    _isLoading = true;
+    notifyListeners();
+    var result = await UserRepository().setDefaultAlamat(body);
+    if (result['meta']['success']) {
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } else {
+      _isLoading = false;
+      notifyListeners();
+      return false;
     }
   }
 }

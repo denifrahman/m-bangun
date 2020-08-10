@@ -80,18 +80,18 @@ class CheckoutScreen extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
-                          title: Text('Alamat Pengiriman', style: TextStyle(fontSize: 12)),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                  blocProfile.listUserAddressDefault.isEmpty
-                                      ? ''
-                                      : '#' + blocProfile.listUserAddressDefault[0].namaPenerima + ' ' + '(' + blocProfile.listUserAddressDefault[0].namaAlamat + ')',
-                                  style: TextStyle(fontSize: 10)),
-                              Text(blocProfile.listUserAddressDefault.isEmpty ? '' : blocProfile.listUserAddressDefault[0].alamatLengkap, style: TextStyle(fontSize: 10)),
-                            ],
-                          ),
+                          title: Text('Alamat Penerima', style: TextStyle(fontSize: 12)),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        blocProfile.listUserAddressDefault.isEmpty
+                                            ? ''
+                                            : '#' + blocProfile.listUserAddressDefault[0].namaPenerima + ' ' + '(' + blocProfile.listUserAddressDefault[0].namaAlamat + ')',
+                                        style: TextStyle(fontSize: 10)),
+                                    Text(blocProfile.listUserAddressDefault.isEmpty ? '' : blocProfile.listUserAddressDefault[0].alamatLengkap, style: TextStyle(fontSize: 10)),
+                                  ],
+                                ),
                           leading: Icon(FontAwesomeIcons.addressBook),
                           trailing: Container(
                             height: 30,
@@ -316,6 +316,14 @@ class CheckoutScreen extends StatelessWidget {
                             'nama_rekening': blocOrder.listMetodePembayaranSelected['nama_rekening'].toString(),
                             'nama_bank': blocOrder.listMetodePembayaranSelected['nama_bank'].toString(),
                           };
+                          Map data_penerima = {
+                            'id_user_login': blocAuth.idUser.toString(),
+                            'nama_penerima': blocProfile.listUserAddressDefault[0].namaPenerima.toString(),
+                            'no_hp_penerima': blocProfile.listUserAddressDefault[0].noHp.toString(),
+                            'nama_alamat': blocProfile.listUserAddressDefault[0].namaAlamat.toString(),
+                            'id_kecamatan': blocProfile.listUserAddressDefault[0].idKecamatan.toString(),
+                            'alamat_lengkap': blocProfile.listUserAddressDefault[0].alamatLengkap.toString(),
+                          };
                           List data_produk = [];
                           for (var i = 0; i < listCart.chilrdern.length; i++) {
                             Map dataProduk = {
@@ -333,7 +341,7 @@ class CheckoutScreen extends StatelessWidget {
                           blocOrder.setErrorShippingAddres(false);
                           blocOrder.setErrorMethodeTransfer(false);
 
-                          Map body = {'data_order': data_order, 'data_produk': data_produk};
+                          Map body = {'data_order': data_order, 'data_produk': data_produk, 'data_penerima': data_penerima};
                           Navigator.push(context, SlideRightRoute(page: WidgetWaitingPayment(body: body)));
                           _btnController.reset();
                         }

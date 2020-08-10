@@ -1,7 +1,8 @@
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/DataProvider.dart';
-import 'package:apps/widget/Aktivity/WidgetMenuPembelian.dart';
-import 'package:apps/widget/Aktivity/widgetPengajuanList.dart';
+import 'package:apps/widget/Aktivity/Pembelian/WidgetMenuPembelian.dart';
+import 'package:apps/widget/Aktivity/Pengajuan/widgetPengajuanList.dart';
+import 'package:apps/widget/Aktivity/Penjualan/WidgetMenuPenjualan.dart';
 import 'package:apps/widget/Login/LoginWidget.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,12 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
                 Tab(
                   child: Text(
                     'Pembelian',
+                    style: TextStyle(fontWeight: FontWeight.w400),
+                  ),
+                ),
+                Tab(
+                  child: Text(
+                    'Penjualan',
                     style: TextStyle(fontWeight: FontWeight.w400),
                   ),
                 ),
@@ -113,13 +120,14 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
       ),
     )
         : DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: appBar,
         body: Container(
           child: TabBarView(
             children: [
               Container(child: WidgetMenuPembelian()),
+              Container(child: WidgetMenuPenjualan()),
               Container(child: WidgetPengajuanList()),
             ],
           ),

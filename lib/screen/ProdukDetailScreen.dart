@@ -41,8 +41,10 @@ class ProdukDetailScreen extends StatelessWidget {
                   appBar: AppBar(
                     title: Text('Waiting'),
                   ),
-                  body: PKCardPageSkeleton(
-                    totalLines: 3,
+                  body: Center(
+                    child: PKCardPageSkeleton(
+                      totalLines: 3,
+                    ),
                   ),
                 ),
               ),

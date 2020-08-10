@@ -1,6 +1,7 @@
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
+import 'package:apps/widget/Aktivity/Pembelian/component/WidgetDetailOrderProduk.dart';
 import 'package:apps/widget/Tagihan/WidgetTagihan.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
@@ -35,20 +36,38 @@ class WidgetListPembelian extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
-                      var param = {
-                        'id': blocOrder.listOrder[index].id,
-                      };
-                      blocOrder.getOrderDetailByParam(param);
-                      Navigator.push(context, SlideRightRoute(page: WidgetTagihan()));
+                      if (blocOrder.listOrder[index].statusOrder == null || blocOrder.listOrder[index].statusPembayaran == 'menunggu_pembayaran') {
+                        var param = {
+                          'id': blocOrder.listOrder[index].id,
+                        };
+                        blocOrder.getOrderTagihanByParam(param);
+                        Navigator.push(context, SlideRightRoute(page: WidgetTagihan()));
+                      }
+                      if (blocOrder.listOrder[index].statusOrder == 'menunggu_konfirmasi' || blocOrder.listOrder[index].statusPembayaran == 'terbayar') {
+                        var param = {
+                          'id_order': blocOrder.listOrder[index].id,
+                        };
+                        blocOrder.getOrderProdukByParam(param);
+                        Navigator.push(
+                            context,
+                            SlideRightRoute(
+                                page: WidgetDetailOrderProduk(
+                              title: blocOrder.listOrder[index].statusOrder,
+                            )));
+                      }
                     },
                     child: Card(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
                           leading: Image.network(
-                            'https://m-bangun.com/api-v2/assets/toko/' + blocOrder.listOrder[index].foto,
-                            width: 100,
-                            height: 100,
+                              'https://m-bangun.com/api-v2/assets/toko/' + blocOrder.listOrder[index].foto,
+                              width: 100,
+                              height: 100,
+                              errorBuilder: (context, urlImage, error) {
+                                print(error.hashCode);
+                                return Image.asset('assets/logo.png');
+                              }
                           ),
                           title: Text(blocOrder.listOrder[index].namaToko, style: TextStyle(fontSize: 14)),
                           subtitle: Column(

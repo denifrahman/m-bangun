@@ -1,5 +1,9 @@
+import 'package:apps/Utils/navigation_right.dart';
+import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
+import 'package:apps/screen/ProdukDetailScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class WidgetProdukTerjual extends StatelessWidget {
@@ -58,7 +62,7 @@ class WidgetProdukTerjual extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             children: List.generate(
               blocProduk.listProdukTerjual.isEmpty ? 1 : blocProduk.listProdukTerjual.length,
-              (j) {
+                  (j) {
                 if (blocProduk.listProdukTerjual.isEmpty) {
                   return Center(
                     child: Text('Tidak ada data'),
@@ -68,7 +72,11 @@ class WidgetProdukTerjual extends StatelessWidget {
                     semanticContainer: true,
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     child: InkWell(
-//                                    onTap: () => _openDetailNews(post.link, post.title.rendered),
+                      onTap: () {
+                        blocProduk.getProductById(blocProduk.listRecentProduct[j].id);
+                        Provider.of<BlocOrder>(context).getCart();
+                        Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
+                      },
                       child: Column(
                         children: <Widget>[
                           Expanded(

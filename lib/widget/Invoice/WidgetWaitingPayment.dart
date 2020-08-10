@@ -35,7 +35,7 @@ class _WidgetWaitingPaymentState extends State<WidgetWaitingPayment> {
         var param = {
           'id': value['data']['id_order'].toString(),
         };
-        blocOrder.getOrderDetailByParam(param);
+        blocOrder.getOrderTagihanByParam(param);
         blocOrder.setIdUser();
         Navigator.push(
             context,

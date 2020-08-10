@@ -42,6 +42,11 @@ class OrderRepository {
     return response;
   }
 
+  Future getOrderProdukByParam(param) async {
+    final response = await _helper.get("order/getOrderProdukByParam", param);
+    return response;
+  }
+
   Future insert(body) async {
     final response = await _helperOrderJson.post("order/insert", body);
     return response;

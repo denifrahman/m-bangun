@@ -10,7 +10,7 @@ import 'package:apps/screen/LoginScreen.dart';
 import 'package:apps/screen/ProfileScreen.dart';
 import 'package:apps/screen/RequestScreen.dart';
 import 'package:apps/screen/SplashScreen.dart';
-import 'package:apps/widget/Aktivity/WidgetPengajuanByParamList.dart';
+import 'package:apps/widget/Aktivity/Pengajuan/WidgetPengajuanByParamList.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -2,6 +2,7 @@ import 'package:apps/Repository/OrderRepository.dart';
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/models/Cart.dart';
 import 'package:apps/models/Order.dart';
+import 'package:apps/models/OrderProduk.dart';
 import 'package:flutter/cupertino.dart';
 
 class BlocOrder extends ChangeNotifier {
@@ -40,11 +41,11 @@ class BlocOrder extends ChangeNotifier {
     var id = await LocalStorage.sharedInstance.readValue('id_user_login');
     if (id != null) {
       _id_user_login = id;
+      getOrderByIdUser(id);
+      getCart();
     } else {
       _id_user_login = '0';
     }
-    getOrderByIdUser(id);
-    getCart();
     notifyListeners();
   }
 
@@ -156,7 +157,6 @@ class BlocOrder extends ChangeNotifier {
   getMetodePembayaran() async {
     var param = {'': ''};
     var result = await OrderRepository().getMetodePembayaran(param);
-//    Iterable list = result['data'];
     _listMetodePembayaran = result['data'];
     notifyListeners();
   }
@@ -228,6 +228,7 @@ class BlocOrder extends ChangeNotifier {
   int _countDikirim = 0;
   int _countUlasan = 0;
   int _countSelesai = 0;
+  int _countBatal = 0;
 
   int get countMenunggu => _countMenunggu;
 
@@ -243,14 +244,30 @@ class BlocOrder extends ChangeNotifier {
 
   int get countTerbayar => _countTerbayar;
 
+  int get countBatal => _countBatal;
+
   setCountPembelian() {
     _countMenunggu = _listCountOrder.where((element) => element.statusPembayaran == 'menunggu').length;
     _countTerbayar = _listCountOrder.where((element) => element.statusPembayaran == 'terbayar').length;
     _countMenungguKonfirmasi = _listCountOrder.where((element) => element.statusOrder == 'menunggu_konfirmasi').length;
-    _countDikemas = _listCountOrder.where((element) => element.statusPembayaran == 'dikemas').length;
-    _countDikirim = _listCountOrder.where((element) => element.statusPembayaran == 'dikirim').length;
-    _countUlasan = _listCountOrder.where((element) => element.statusPembayaran == 'ulasan').length;
-    _countSelesai = _listCountOrder.where((element) => element.statusPembayaran == 'selesai').length;
+    _countDikemas = _listCountOrder.where((element) => element.statusOrder == 'dikemas').length;
+    _countDikirim = _listCountOrder.where((element) => element.statusOrder == 'dikirim').length;
+    _countUlasan = _listCountOrder.where((element) => element.statusOrder == 'ulasan').length;
+    _countSelesai = _listCountOrder.where((element) => element.statusOrder == 'selesai').length;
+    _countBatal = _listCountOrder.where((element) => element.statusOrder == 'batal').length;
+    notifyListeners();
+  }
+
+  clearCountOrder() {
+    _countMenunggu = 0;
+    _countTerbayar = 0;
+    _countMenungguKonfirmasi = 0;
+    _countDikemas = 0;
+    _countDikirim = 0;
+    _countUlasan = 0;
+    _countSelesai = 0;
+    _countBatal = 0;
+    _listCountOrder = [];
     notifyListeners();
   }
 
@@ -297,14 +314,38 @@ class BlocOrder extends ChangeNotifier {
 
   List<Order> get listOrderDetail => _listOrderDetail;
 
-  getOrderDetailByParam(param) async {
+  getOrderTagihanByParam(param) async {
     _isLoading = true;
     notifyListeners();
     var result = await OrderRepository().getOrderByParam(param);
+    print(result);
     if (result['meta']['success']) {
       _isLoading = false;
       Iterable list = result['data'];
       _listOrderDetail = list.map((model) => Order.fromMap(model)).toList();
+      notifyListeners();
+      return true;
+    } else {
+      _listOrderDetail = [];
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  List<OrderProduk> _listOrderDetailProduk = [];
+
+  List<OrderProduk> get listOrderDetailProduk => _listOrderDetailProduk;
+
+  getOrderProdukByParam(param) async {
+    _isLoading = true;
+    notifyListeners();
+    var result = await OrderRepository().getOrderProdukByParam(param);
+    print(result);
+    if (result['meta']['success']) {
+      _isLoading = false;
+      Iterable list = result['data'];
+      _listOrderDetailProduk = list.map((model) => OrderProduk.fromMap(model)).toList();
       notifyListeners();
       return true;
     } else {

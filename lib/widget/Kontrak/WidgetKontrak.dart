@@ -1,7 +1,7 @@
 import 'package:apps/Utils/Signature.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/DataProvider.dart';
-import 'package:apps/widget/Aktivity/component/WidgetViewPdfPengajuan.dart';
+import 'package:apps/widget/Aktivity/Pengajuan/component/WidgetViewPdfPengajuan.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:money2/money2.dart';

@@ -1,5 +1,8 @@
+import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocProduk.dart';
+import 'package:apps/screen/ProdukScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class WidgetGridKategoriByToko extends StatelessWidget {
   const WidgetGridKategoriByToko({
@@ -26,7 +29,7 @@ class WidgetGridKategoriByToko extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 InkWell(
-//                  onTap: () => _openKategori(context, dataProvider.groupData[j]),
+                  onTap: () => _openListProduk(context, blocProduk.listCategoryByToko[j]),
                   child: new Container(
                     height: 40,
                     width: 40,
@@ -67,5 +70,15 @@ class WidgetGridKategoriByToko extends StatelessWidget {
         }),
       ),
     );
+  }
+
+  _openListProduk(BuildContext context, listCategoryByToko) {
+    Provider.of<BlocProduk>(context).getAllProductByCategory(listCategoryByToko.id);
+    Navigator.push(
+        context,
+        SlideRightRoute(
+            page: ProdukScreen(
+          namaKategori: listCategoryByToko.nama,
+        )));
   }
 }

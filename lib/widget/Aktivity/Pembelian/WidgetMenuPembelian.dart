@@ -1,14 +1,14 @@
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
-import 'package:apps/widget/Aktivity/component/WidgetListPembelian.dart';
+import 'package:apps/widget/Aktivity/Pembelian/WidgetListPembelian.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class WidgetMenuPembelian extends StatelessWidget {
   WidgetMenuPembelian({Key key}) : super(key: key);
-  var dataList = ['Menunggu Pembayaran', 'Menunggu Konfirmasi', 'Dikemas', 'Dikirim', 'Ulasan', 'Selesai'];
+  var dataList = ['Menunggu Pembayaran', 'Menunggu Konfirmasi', 'Dikemas', 'Dikirim', 'Ulasan', 'Selesai', 'Batal'];
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +81,7 @@ class WidgetMenuPembelian extends StatelessWidget {
                                   children: <Widget>[
                                     Icon(
                                       FontAwesomeIcons.shoppingBag,
-                                      color: Colors.deepOrange,
+                                      color: Colors.orange,
                                       size: 33,
                                     ),
                                     Positioned(
@@ -127,7 +127,7 @@ class WidgetMenuPembelian extends StatelessWidget {
                                           children: <Widget>[
                                             Icon(
                                               Icons.comment,
-                                              color: Colors.red,
+                                              color: Colors.blue,
                                               size: 33,
                                             ),
                                             Positioned(
@@ -168,7 +168,30 @@ class WidgetMenuPembelian extends StatelessWidget {
                                                 )
                                               ],
                                             )
-                                          : Icon(Icons.delete, color: Colors.red),
+                                          : dataList[index] == 'Batal'
+                                              ? Stack(
+                                                  children: <Widget>[
+                                                    Icon(
+                                                      Icons.backspace,
+                                                      size: 33,
+                                                      color: Colors.red,
+                                                    ),
+                                                    Positioned(
+                                                      top: 0.0,
+                                                      right: 0.0,
+                                                      child: Container(
+                                                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                                        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                                        alignment: Alignment.center,
+                                                        child: Text(
+                                                          blocOrder.countBatal.toString() == '0' ? '' : blocOrder.countBatal.toString(),
+                                                          style: TextStyle(color: Colors.white, fontSize: 10),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                )
+                                              : Icon(Icons.backspace, color: Colors.red),
                   trailing: Icon(Icons.arrow_forward_ios)),
             ),
           );

@@ -103,6 +103,9 @@ flutter:
     - assets/test.pdf
     - assets/img/a.png
     - assets/img/waiting.png
+    - assets/img/packing.png
+    - assets/img/dikirim.png
+    - assets/shipping_background.png
     - assets/icons/store.png
     - assets/images/splace-background.png
     - assets/bottom_yellow.png

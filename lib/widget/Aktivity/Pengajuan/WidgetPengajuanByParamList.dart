@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/DataProvider.dart';
-import 'package:apps/widget/Aktivity/WidgetDetailPengajuanKontrak.dart';
+import 'package:apps/widget/Aktivity/Pengajuan/WidgetDetailPengajuanKontrak.dart';
 import 'package:apps/widget/Invoice/WidgetInvoice.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

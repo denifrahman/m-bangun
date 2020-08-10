@@ -1,8 +1,6 @@
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
-import 'package:apps/providers/DataProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:provider/provider.dart';
 
 class WidgetViewPdfPengajuan extends StatefulWidget {
   WidgetViewPdfPengajuan({Key key, @required this.urlPdf, @required this.title}) : super(key: key);

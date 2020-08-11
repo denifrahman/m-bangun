@@ -93,19 +93,19 @@ class BlocAuth extends ChangeNotifier {
       if (value) {
         var queryString = {'username': _currentUser.email, 'id_google': _currentUser.id};
         var result = await AuthRepository().googleSign(queryString);
-        if (result['data']['aktif'] != '1') {
-          _isNonActive = true;
-          _isLogin = false;
-          notifyListeners();
-          await Future.delayed(Duration(seconds: 5), () {
-            handleSignOut();
-          });
+        if (result.toString() == '111' || result.toString() == '101') {
+          _connection = true;
+          return false;
         } else {
-          if (result.toString() == '111' || result.toString() == '101') {
-            _connection = true;
-            return false;
-          } else {
-            if (result['meta']['success']) {
+          if (result['meta']['success']) {
+            if (result['data']['aktif'] != '1') {
+              _isNonActive = true;
+              _isLogin = false;
+              notifyListeners();
+              await Future.delayed(Duration(seconds: 5), () {
+                handleSignOut();
+              });
+            } else {
               _connection = true;
               _token = result['token'];
               LocalStorage.sharedInstance.writeValue(key: 'id_user_login', value: result['data']['id']);
@@ -115,11 +115,11 @@ class BlocAuth extends ChangeNotifier {
               _isLogin = true;
               notifyListeners();
               return true;
-            } else {
-              _isRegister = true;
-              _isLogin = false;
-              notifyListeners();
             }
+          } else {
+            _isRegister = true;
+            _isLogin = false;
+            notifyListeners();
           }
         }
       } else {

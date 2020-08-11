@@ -41,7 +41,7 @@ class _LoginWidgetState extends State<LoginWidget> {
       child: Form(
         key: _formKey,
                   autovalidate: false,
-                  child: !blocAuth.isNonActive
+                  child: blocAuth.isNonActive
                       ? Container(
                           height: MediaQuery.of(context).size.height,
                           child: Column(

@@ -95,9 +95,9 @@ class WidgetProdukTerjual extends StatelessWidget {
                                     width: 150,
                                     child: RichText(
                                       overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
+                                      maxLines: 1,
                                       text: TextSpan(
-                                          style: TextStyle(color: Colors.grey[800], fontSize: 14, fontWeight: FontWeight.normal), text: blocProduk.listProdukTerjual[j].nama),
+                                          style: TextStyle(color: Colors.grey[800], fontSize: 13, fontWeight: FontWeight.normal), text: blocProduk.listProdukTerjual[j].nama),
                                     ),
                                   ),
                                   Container(

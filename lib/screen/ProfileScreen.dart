@@ -2,9 +2,10 @@ import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/Utils/values/colors.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
+import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/providers/BlocProfile.dart';
 import 'package:apps/providers/DataProvider.dart';
-import 'package:apps/widget/ApplyBid/WidgetApplyBidList.dart';
+import 'package:apps/screen/TokoSayaScreen.dart';
 import 'package:apps/widget/Login/LoginWidget.dart';
 import 'package:apps/widget/Profile/TopContainer.dart';
 import 'package:apps/widget/Profile/WidgetMyFavorite.dart';
@@ -42,6 +43,7 @@ class ProfileScreen extends StatelessWidget {
     DataProvider dataProvider = Provider.of<DataProvider>(context);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
+    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: !blocAuth.connection
@@ -135,8 +137,6 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
                 Container(
-//                        color: Colors.red,
-//                            width: 200,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -218,7 +218,7 @@ class ProfileScreen extends StatelessWidget {
                 )
               ]),
             ),
-            !dataProvider.verified
+            blocAuth.statusToko != '0'
                 ? Container()
                 : Expanded(
               child: SingleChildScrollView(
@@ -226,21 +226,23 @@ class ProfileScreen extends StatelessWidget {
                   children: <Widget>[
                     Container(
                       color: Colors.transparent,
-                      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                      padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                       child: Column(
                         children: <Widget>[
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              subheading('Detail Akun'),
+                              subheading('Toko Saya'),
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(context, SlideRightRoute(page: TokoSayaScreen()));
+                                },
                                 child: CircleAvatar(
                                   radius: 25.0,
                                   backgroundColor: AppColors.mainColor,
                                   child: Icon(
-                                    Icons.perm_contact_calendar,
+                                    Icons.shop,
                                     size: 20.0,
                                     color: Colors.white,
                                   ),
@@ -249,102 +251,18 @@ class ProfileScreen extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: 15.0),
-                          WidgetMyFavorite(
-                            icon: Icons.alarm,
-                            iconBackgroundColor: AppColors.kRed,
-                            title: '(${dataProvider.userKategori})',
-                            subtitle: dataProvider.userSubKategori,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      color: Colors.transparent,
-                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              subheading('Pekerjaanku'),
-                              GestureDetector(
-                                onTap: () {},
-                                child: calendarIcon(),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 15.0),
                           InkWell(
                             onTap: () {
-                              dataProvider.getAllBidByUserIdAndStatusId('8');
-                              Navigator.push(
-                                  context,
-                                  SlideRightRoute(
-                                      page: WidgetApplyBidList(
-                                        param: 'New',
-                                        statusId: '8',
-                                      )));
-                            },
+                              blocProfile.getTokoByParam({'id_user': blocAuth.idUser.toString()});
+                              blocProduk.getAllProductByParam({'id_toko': blocAuth.idToko.toString()});
+                              Navigator.push(context, SlideRightRoute(page: TokoSayaScreen()));
+                            }
+                            ,
                             child: WidgetMyFavorite(
-                              icon: Icons.new_releases,
-                              iconBackgroundColor: Colors.blue,
-                              title: 'New',
-                              subtitle: 'Bid pekerjaan baru anda',
-                            ),
-                          ),
-                          SizedBox(height: 15.0),
-                          InkWell(
-                            onTap: () {
-                              dataProvider.getAllBidByUserIdAndStatusId('10');
-                              Navigator.push(context, SlideRightRoute(page: WidgetApplyBidList(param: 'Kontrak', statusId: '10')));
-                            },
-                            child: WidgetMyFavorite(
-                              icon: Icons.event_note,
-                              iconBackgroundColor: Colors.green,
-                              title: 'Kontrak',
-                              subtitle: 'Penandatangan kontrak kerja',
-                            ),
-                          ),
-                          SizedBox(
-                            height: 15.0,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              dataProvider.getAllBidByUserIdAndStatusId('12');
-                              Navigator.push(context, SlideRightRoute(page: WidgetApplyBidList(param: 'Progress', statusId: '12')));
-                            },
-                            child: WidgetMyFavorite(
-                              icon: Icons.blur_circular,
-                              iconBackgroundColor: AppColors.kDarkYellow,
-                              title: 'Progress',
-                              subtitle: 'Proses Pengerjaan dan laporan',
-                            ),
-                          ),
-                          SizedBox(height: 15.0),
-                          InkWell(
-                            onTap: () {
-                              dataProvider.getAllBidByUserIdAndStatusId('13');
-                              Navigator.push(context, SlideRightRoute(page: WidgetApplyBidList(param: 'Done', statusId: '13')));
-                            },
-                            child: WidgetMyFavorite(
-                              icon: Icons.check_circle_outline,
-                              iconBackgroundColor: AppColors.kBlue,
-                              title: 'Done',
-                              subtitle: 'Project telah selesai',
-                            ),
-                          ),
-                          SizedBox(height: 15.0),
-                          InkWell(
-                            onTap: () {
-                              dataProvider.getAllBidByUserIdAndStatusId('9');
-                              Navigator.push(context, SlideRightRoute(page: WidgetApplyBidList(param: 'Batal', statusId: '9')));
-                            },
-                            child: WidgetMyFavorite(
-                              icon: Icons.delete_outline,
-                              iconBackgroundColor: Colors.red,
-                              title: 'Batal',
-                              subtitle: 'Apply di batalkan / di tolak ',
+                              icon: Icons.shop,
+                              iconBackgroundColor: AppColors.kRed,
+                              title: 'Kelola Toko',
+                              subtitle: 'Kelola produk, alamat bank anda',
                             ),
                           ),
                         ],

@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 class BlocOrder extends ChangeNotifier {
   BlocOrder() {
     getCart();
+    setIdUser();
   }
 
   getOrderByIdUser(idUser) async {
@@ -37,18 +38,18 @@ class BlocOrder extends ChangeNotifier {
     notifyListeners();
   }
 
-//  setIdUser() async {
-//    var id = await LocalStorage.sharedInstance.readValue('id_user_login');
-//    print(id);
-//    if (id != null) {
-//      _id_user_login = id;
-//      getOrderByIdUser(id);
-//      getCart();
-//    } else {
-//      _id_user_login = '0';
-//    }
-//    notifyListeners();
-//  }
+  setIdUser() async {
+    var id = await LocalStorage.sharedInstance.readValue('id_user_login');
+    print(id);
+    if (id != null) {
+      _id_user_login = id;
+      getOrderByIdUser(id);
+      getCart();
+    } else {
+      _id_user_login = '0';
+    }
+    notifyListeners();
+  }
 
   bool _connection = false;
   bool _isLoading = false;
@@ -257,6 +258,7 @@ class BlocOrder extends ChangeNotifier {
     _countUlasan = _listCountOrder.where((element) => element.statusOrder == 'ulasan').length;
     _countSelesai = _listCountOrder.where((element) => element.statusOrder == 'selesai').length;
     _countBatal = _listCountOrder.where((element) => element.statusOrder == 'batal').length;
+    print(_listCountOrder);
     notifyListeners();
   }
 
@@ -276,7 +278,7 @@ class BlocOrder extends ChangeNotifier {
   getCountOrderByParam() async {
     _isLoading = true;
     notifyListeners();
-    var param = {'': ''};
+    var param = {'id_pembeli': _id_user_login.toString()};
     var result = await OrderRepository().getOrderByParam(param);
     if (result['meta']['success']) {
       _isLoading = false;

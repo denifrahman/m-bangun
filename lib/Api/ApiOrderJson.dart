@@ -6,10 +6,10 @@ import 'package:http/http.dart' as http;
 
 class ApiOrderJson {
 //  final _baseUrl = 'm-bangun.com';
-  final _baseUrl = '192.168.100.226';
+  final _baseUrl = '192.168.0.10';
 
 //  final _path = 'api-v2/';
-  final _path = 'api-/';
+  final _path = 'api-mbangun/';
 
   Future<dynamic> get(String url, param) async {
     var responseJson;

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:apps/Api/ApiBaseHelper.dart';
 
 class UserRepository {
@@ -49,6 +51,7 @@ class UserRepository {
     final response = await _helper.get("produk/getFavoriteByParam", param);
     return response;
   }
+
   Future getAllIklan(param) async {
     final response = await _helper.get("iklan/getAllByParam", param);
     return response;
@@ -74,8 +77,18 @@ class UserRepository {
     return response;
   }
 
+  Future getTokoByParam(param) async {
+    final response = await _helper.get("toko/getAllByParam", param);
+    return response;
+  }
+
   Future setDefaultAlamat(body) async {
     final response = await _helper.post("user/updateDefaultAlamat", body);
+    return response;
+  }
+
+  Future addProduk(List<File> files, body) async {
+    final response = await _helper.multipart("produk/insert", files, body);
     return response;
   }
 }

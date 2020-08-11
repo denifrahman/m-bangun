@@ -12,12 +12,18 @@ class BlocAuth extends ChangeNotifier {
 
   bool _isLoading = true;
   bool _isLogin = false;
+  String _statusToko = '0';
+  String _idToko = '0';
   bool _isRegister = false;
   String _errorMessage, _idUser, _token;
   bool _connection = true;
   bool _isNonActive = false;
 
   bool get isNonActive => _isNonActive;
+
+  String get statusToko => _statusToko;
+
+  String get idToko => _idToko;
 
   bool get connection => _connection;
 
@@ -98,6 +104,7 @@ class BlocAuth extends ChangeNotifier {
           return false;
         } else {
           if (result['meta']['success']) {
+            _statusToko = result['data']['status_toko'];
             if (result['data']['aktif'] != '1') {
               _isNonActive = true;
               _isLogin = false;
@@ -108,6 +115,7 @@ class BlocAuth extends ChangeNotifier {
             } else {
               _connection = true;
               _token = result['token'];
+              _idToko = result['data']['id_toko'];
               LocalStorage.sharedInstance.writeValue(key: 'id_user_login', value: result['data']['id']);
               _idUser = result['data']['id'];
               _isRegister = false;

@@ -3,19 +3,20 @@ import 'dart:io';
 
 import 'package:apps/Utils/appException.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 
 class ApiBaseHelper {
 //  final _baseUrl = 'm-bangun.com';
-  final _baseUrl = '192.168.100.226';
+  final _baseUrl = '192.168.0.10';
 
 //  final _path = 'api-v2/';
-  final _path = 'api-/';
+  final _path = 'api-mbangun/';
 
   Future<dynamic> get(String url, param) async {
     var responseJson;
     try {
       final _url = Uri.http(_baseUrl, _path + url, param);
-      print(_url);
       final response = await http.get(_url);
       responseJson = _returnResponse(response);
     } on SocketException catch (err) {
@@ -28,10 +29,44 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final _url = Uri.http(_baseUrl, _path + url);
-      print(_url);
       var header = {"Content-Type": "application/json"};
       final response = await http.post(_url, body: body);
       responseJson = _returnResponse(response);
+    } on SocketException catch (err) {
+      return FetchDataException(err.osError.errorCode.toString());
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> multipart(String url, files, body) async {
+    var responseJson;
+    try {
+      var uri = Uri.parse("http://192.168.0.10/api-mbangun/produk/insert");
+      print(uri);
+      var request = new http.MultipartRequest("POST", uri);
+      for (var file in files) {
+        final mimeTypeprodukthumbnail = lookupMimeType(file.path, headerBytes: [0xFF, 0xD8]).split('/');
+        String fileName = file.path.split('/').last;
+        final foto = await http.MultipartFile.fromPath('foto[]', file.path, contentType: MediaType(mimeTypeprodukthumbnail[0], mimeTypeprodukthumbnail[1]));
+        request.files.addAll([foto]);
+      }
+      request.fields['nama'] = body['nama'];
+      request.fields['berat'] = body['berat'];
+      request.fields['foto'] = body['foto'];
+      request.fields['foto1'] = body['foto1'];
+      request.fields['foto2'] = body['foto2'];
+      request.fields['jenis_ongkir'] = body['jenis_ongkir'];
+      request.fields['deskripsi'] = body['deskripsi'];
+      request.fields['id_kategori'] = body['id_kategori'];
+      request.fields['id_toko'] = body['id_toko'];
+      request.fields['kondisi'] = body['kondisi'];
+      request.fields['minimal_pesanan'] = body['minimal_pesanan'];
+      request.fields['harga'] = body['harga'];
+      request.fields['stok'] = body['stok'];
+      var response = await request.send();
+
+      final result = await http.Response.fromStream(response);
+      responseJson = _returnResponse(result);
     } on SocketException catch (err) {
       return FetchDataException(err.osError.errorCode.toString());
     }

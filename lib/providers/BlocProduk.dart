@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:apps/Repository/UserRepository.dart';
 import 'package:apps/models/Categories.dart';
 import 'package:apps/models/Iklan.dart';
@@ -271,6 +273,28 @@ class BlocProduk extends ChangeNotifier {
       _isLoading = false;
       _connection = true;
       notifyListeners();
+    }
+  }
+
+  addProduk(List<File> files, body) async {
+    _isLoading = true;
+    notifyListeners();
+    var result = await UserRepository().addProduk(files, body);
+    if (result.toString() == '111' || result.toString() == '101') {
+      _connection = false;
+      _isLoading = false;
+      notifyListeners();
+    } else {
+      if (result['meta']['success']) {
+        _isLoading = false;
+        _connection = true;
+        notifyListeners();
+        return true;
+      } else {
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
     }
   }
 }

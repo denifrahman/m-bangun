@@ -11,7 +11,6 @@ import 'package:apps/widget/Home/WidgetNews.dart';
 import 'package:apps/widget/home/WidgetKategori.dart';
 import 'package:apps/widget/home/WidgetOffialStore.dart';
 import 'package:apps/widget/home/WidgetRecentProduct.dart';
-import 'package:apps/widget/home/WidgetSLide.dart';
 import 'package:apps/widget/home/WidgetSLider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -117,12 +116,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     children: [HeaderAnimation(), WidgetKategori()],
                   ),
                   Container(
-                    height: (MediaQuery.of(context).size.height * 0.89) - (MediaQuery.of(context).size.height * 0.23) - height,
+                    height: (MediaQuery.of(context).size.height * 0.91) - (MediaQuery.of(context).size.height * 0.23) - height,
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
                           Container(
-                            height:180,
+                            height: 180,
                             child: WidgetSlider(
                               blocProduk: blocProduk,
                             ),

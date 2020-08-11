@@ -138,7 +138,7 @@ class _DetailTokoScreenState extends State<DetailTokoScreen> {
                     children: <Widget>[
                       Divider(),
                       Container(
-                        height: MediaQuery.of(context).size.height * 0.63 - appBar.preferredSize.height,
+                        height: MediaQuery.of(context).size.height * 0.7 - appBar.preferredSize.height,
                         child: DefaultTabController(
                           length: 2,
                           child: Scaffold(

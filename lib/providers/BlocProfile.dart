@@ -138,7 +138,7 @@ class BlocProfile extends ChangeNotifier {
     var result = await UserRepository().getUserAddress(param);
     Iterable list = result['data'];
     _listUserAddress = list.map((model) => UserAddress.fromMap(model)).toList();
-    if (_listUserAddress.isEmpty) {
+    if (_listUserAddress.isNotEmpty) {
       getSubDistrictById(_listUserAddress[0].idKecamatan);
       _isLoading = false;
     }
@@ -214,5 +214,16 @@ class BlocProfile extends ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  Map<String, dynamic> _dataToko = {};
+
+  Map<String, dynamic> get dataToko => _dataToko;
+
+  getTokoByParam(param) async {
+    var result = await UserRepository().getTokoByParam(param);
+
+    _dataToko = result['data'][0];
+    notifyListeners();
   }
 }

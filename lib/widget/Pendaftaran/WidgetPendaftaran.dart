@@ -80,8 +80,6 @@ class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
                     ),
                     new Expanded(
                       child: TextFormField(
-//                        focusNode: myFocusNodeNamaLengkap,
-//                        controller: namaLengkapController,
                         onSaved: (value) {
                           setState(() {
                             nama = value;

@@ -229,7 +229,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                           setState(() {
                             blocAuth.checkSession();
                             blocOrder.getCart();
-                            blocOrder.setCountPembelian();
+                            blocOrder.setIdUser();
                             currentScreen = MyAdsScreen(); // if user taps on this dashboard tab will be active
                             currentTab = 2;
                           });

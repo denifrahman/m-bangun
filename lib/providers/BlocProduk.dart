@@ -94,6 +94,7 @@ class BlocProduk extends ChangeNotifier {
       notifyListeners();
     } else {
       Iterable list = result['data'];
+
       _listProducts = list.map((model) => Product.fromMap(model)).toList();
       _detailProduct = list.map((model) => Product.fromMap(model)).toList();
       _isLoading = false;

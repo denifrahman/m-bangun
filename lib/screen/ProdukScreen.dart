@@ -11,14 +11,15 @@ class ProdukScreen extends StatefulWidget {
   final String namaKategori;
   final String idSubKategori;
 
-  ProdukScreen({Key key, this.namaKategori, this.idSubKategori}) : super(key: key);
+  ProdukScreen({Key key, this.namaKategori, this.idSubKategori})
+      : super(key: key);
 
   @override
   _ProdukScreenState createState() => _ProdukScreenState();
 }
 
-class _ProdukScreenState extends State<ProdukScreen> with TickerProviderStateMixin {
-
+class _ProdukScreenState extends State<ProdukScreen>
+    with TickerProviderStateMixin {
   AnimationController _hideFabAnimation;
 
   bool _handleScrollNotification(ScrollNotification notification) {
@@ -28,12 +29,14 @@ class _ProdukScreenState extends State<ProdukScreen> with TickerProviderStateMix
         _hideFabAnimation.forward();
         switch (userScroll.direction) {
           case ScrollDirection.forward:
-            if (userScroll.metrics.maxScrollExtent != userScroll.metrics.minScrollExtent) {
+            if (userScroll.metrics.maxScrollExtent !=
+                userScroll.metrics.minScrollExtent) {
               _hideFabAnimation.forward();
             }
             break;
           case ScrollDirection.reverse:
-            if (userScroll.metrics.maxScrollExtent != userScroll.metrics.minScrollExtent) {
+            if (userScroll.metrics.maxScrollExtent !=
+                userScroll.metrics.minScrollExtent) {
               _hideFabAnimation.reverse();
             }
             break;
@@ -49,7 +52,8 @@ class _ProdukScreenState extends State<ProdukScreen> with TickerProviderStateMix
   void initState() {
     // TODO: implement initState
     super.initState();
-    _hideFabAnimation = AnimationController(vsync: this, duration: kThemeAnimationDuration);
+    _hideFabAnimation =
+        AnimationController(vsync: this, duration: kThemeAnimationDuration);
     _hideFabAnimation.forward();
   }
 
@@ -83,19 +87,25 @@ class _ProdukScreenState extends State<ProdukScreen> with TickerProviderStateMix
                       ),
                 ),
               )
-            : Padding(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 2,
-                      child: WidgetListProduk(
-                        idSubKategori: this.widget.idSubKategori,
-                      ),
+            : blocProduk.listProducts.isEmpty
+                ? Center(
+                    child: Text(
+                    'Tidak ada produk ..',
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                  ))
+                : Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          flex: 2,
+                          child: WidgetListProduk(
+                            idSubKategori: this.widget.idSubKategori,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-        ),
+                  ),
         floatingActionButton: ScaleTransition(
           scale: _hideFabAnimation,
           alignment: Alignment.bottomCenter,
@@ -111,7 +121,11 @@ class _ProdukScreenState extends State<ProdukScreen> with TickerProviderStateMix
             backgroundColor: Color(0xffb16a085),
             tooltip: 'Filter',
             icon: Icon(Icons.filter_list),
-            label: Text("Filter", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, letterSpacing: 1)),
+            label: Text("Filter",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1)),
           ),
         ),
       ),

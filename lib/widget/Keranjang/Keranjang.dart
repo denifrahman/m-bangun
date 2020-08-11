@@ -1,4 +1,5 @@
 import 'package:apps/Utils/navigation_right.dart';
+import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProfile.dart';
 import 'package:apps/screen/CheckoutScreen.dart';
@@ -21,6 +22,7 @@ class _KeranjangState extends State<Keranjang> {
   Widget build(BuildContext context) {
     // TODO: implement build
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     AppBar appBar = AppBar(
       elevation: 0,
@@ -132,7 +134,7 @@ class _KeranjangState extends State<Keranjang> {
                                   child: InkWell(
                                     onTap: () {
                                       blocProfile.getProvince();
-                                      blocProfile.getUserAddressDefault();
+                                      blocProfile.getUserAddressDefault(blocAuth.idUser);
                                       var idKecamatanToko = blocOrder.listCart[i].chilrdern[0].idKecamatan;
                                       blocProfile.getSubDistrictById(idKecamatanToko);
                                       blocOrder.getMetodePembayaran();

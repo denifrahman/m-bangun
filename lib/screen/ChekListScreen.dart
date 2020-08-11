@@ -87,8 +87,9 @@ class CheckListScreen extends StatelessWidget {
 
   _openScreen(String dataList, context) {
     if (dataList == 'Keranjang') {
+      BlocAuth blocAuth = Provider.of<BlocAuth>(context);
       Navigator.push(context, SlideRightRoute(page: Keranjang()));
-      Provider.of<BlocProfile>(context).getUserAddressDefault();
+      Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
     } else {
       Navigator.push(context, SlideRightRoute(page: FavoriteScreen()));
     }

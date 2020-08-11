@@ -160,10 +160,10 @@ class BlocProfile extends ChangeNotifier {
 
   List<UserAddress> get listUserAddressDefault => _listUserAddressDefault;
 
-  getUserAddressDefault() async {
+  getUserAddressDefault(idUser) async {
     _isLoading = true;
     notifyListeners();
-    var param = {'default': "1"};
+    var param = {'default': "1", "id_user": idUser.toString()};
     var result = await UserRepository().getUserAddress(param);
     Iterable list = result['data'];
     _listUserAddressDefault = list.map((model) => UserAddress.fromMap(model)).toList();

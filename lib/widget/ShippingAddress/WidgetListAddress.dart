@@ -89,7 +89,7 @@ class WidgetListAddress extends StatelessWidget {
                                     result.then((value) async {
                                       if (value) {
                                         blocProfile.getAllUserAddress(blocAuth.idUser);
-                                        blocProfile.getUserAddressDefault();
+                                        blocProfile.getUserAddressDefault(blocAuth.idUser);
                                       } else {}
                                     });
                                   },

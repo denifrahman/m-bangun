@@ -299,12 +299,12 @@ class WidgetTagihan extends StatelessWidget {
 //                                      width: MediaQuery.of(context).size.width,
                                       child: Padding(
                                         padding: const EdgeInsets.all(10.0),
-                                        child: FittedBox(
-                                          child: Text(
-                                            blocOrder.listOrderDetail[0].namaBank,
-                                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13.0),
-                                          ),
-                                        ),
+                                        child: Center(
+                                                child: Text(
+                                                  blocOrder.listOrderDetail[0].namaBank,
+                                                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24.0),
+                                                ),
+                                              ),
                                       ),
                                     ),
                                     Container(

@@ -107,18 +107,18 @@ class CheckoutScreen extends StatelessWidget {
                                         blocProfile.getAllUserAddress(blocAuth.idUser);
                                         Navigator.push(context, SlideRightRoute(page: ShippingAddressScreen())).then((value) {
                                           Provider.of<BlocProfile>(context).getSubDistrictById(listCart.chilrdern[0].idKecamatan);
-                                          Provider.of<BlocProfile>(context).getUserAddressDefault();
-                                          blocOrder.clearCost();
-                                          int total = 0;
-                                          for (var k = 0; k < this.listCart.chilrdern.length; k++) {
-                                            var beratTotal = int.parse(this.listCart.chilrdern[k].berat.toString()) * int.parse(this.listCart.chilrdern[k].jumlah.toString());
-                                            total += beratTotal;
-                                          }
-                                          var param = {
-                                            'origin': this.listCart.chilrdern[0].idKecamatan.toString(),
-                                            'destination': blocProfile.listUserAddressDefault[0].idKecamatan,
-                                            'weight': total.toString()
-                                          };
+                                            Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
+                                            blocOrder.clearCost();
+                                            int total = 0;
+                                            for (var k = 0; k < this.listCart.chilrdern.length; k++) {
+                                              var beratTotal = int.parse(this.listCart.chilrdern[k].berat.toString()) * int.parse(this.listCart.chilrdern[k].jumlah.toString());
+                                              total += beratTotal;
+                                            }
+                                            var param = {
+                                              'origin': this.listCart.chilrdern[0].idKecamatan.toString(),
+                                              'destination': blocProfile.listUserAddressDefault[0].idKecamatan,
+                                              'weight': total.toString()
+                                            };
                                           blocOrder.getCost(param);
                                         });
                                         _btnController.reset();
@@ -189,7 +189,7 @@ class CheckoutScreen extends StatelessWidget {
                                         blocProfile.getAllUserAddress(blocAuth.idUser);
                                         Navigator.push(context, SlideRightRoute(page: WidgetLisCourier())).then((value) {
                                           Provider.of<BlocProfile>(context).getSubDistrictById(listCart.chilrdern[0].idKecamatan);
-                                          Provider.of<BlocProfile>(context).getUserAddressDefault();
+                                          Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
                                         });
                                         _btnController.reset();
                                       },
@@ -240,7 +240,7 @@ class CheckoutScreen extends StatelessWidget {
                                         blocProfile.getAllUserAddress(blocAuth.idUser);
                                         Navigator.push(context, SlideRightRoute(page: WidgetListPembayaran())).then((value) {
                                           Provider.of<BlocProfile>(context).getSubDistrictById(listCart.chilrdern[0].idKecamatan);
-                                          Provider.of<BlocProfile>(context).getUserAddressDefault();
+                                          Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
                                         });
                                         _btnController.reset();
                                       },

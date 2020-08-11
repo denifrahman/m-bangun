@@ -6,15 +6,16 @@ import 'package:http/http.dart' as http;
 
 class ApiBaseHelper {
 //  final _baseUrl = 'm-bangun.com';
-  final _baseUrl = 'localhost';
+  final _baseUrl = '192.168.100.226';
 
 //  final _path = 'api-v2/';
-  final _path = 'api-mbangun/';
+  final _path = 'api-/';
 
   Future<dynamic> get(String url, param) async {
     var responseJson;
     try {
       final _url = Uri.http(_baseUrl, _path + url, param);
+      print(_url);
       final response = await http.get(_url);
       responseJson = _returnResponse(response);
     } on SocketException catch (err) {
@@ -27,6 +28,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final _url = Uri.http(_baseUrl, _path + url);
+      print(_url);
       var header = {"Content-Type": "application/json"};
       final response = await http.post(_url, body: body);
       responseJson = _returnResponse(response);

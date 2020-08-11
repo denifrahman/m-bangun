@@ -117,9 +117,17 @@ class _DetailTokoScreenState extends State<DetailTokoScreen> {
                       borderRadius: BorderRadius.all(Radius.circular(15)),
                       color: Colors.white,
                     ),
-                    child: Text(
-                      'Follow',
-                      style: TextStyle(color: bannerColor, fontWeight: FontWeight.bold),
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.person_outline,
+                          color: bannerColor,
+                        ),
+                        Text(
+                          'Follow',
+                          style: TextStyle(color: bannerColor, fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     )),
                 body: Container(
                   alignment: Alignment.topLeft,
@@ -130,7 +138,7 @@ class _DetailTokoScreenState extends State<DetailTokoScreen> {
                     children: <Widget>[
                       Divider(),
                       Container(
-                        height: MediaQuery.of(context).size.height * 0.8 - appBar.preferredSize.height,
+                        height: MediaQuery.of(context).size.height * 0.63 - appBar.preferredSize.height,
                         child: DefaultTabController(
                           length: 2,
                           child: Scaffold(

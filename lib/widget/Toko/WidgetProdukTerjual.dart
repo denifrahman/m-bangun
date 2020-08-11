@@ -56,7 +56,7 @@ class WidgetProdukTerjual extends StatelessWidget {
           color: Colors.white,
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * 0.35,
+          height: MediaQuery.of(context).size.height * 0.25,
           child: GridView.count(
             crossAxisCount: 1,
             scrollDirection: Axis.horizontal,
@@ -80,7 +80,7 @@ class WidgetProdukTerjual extends StatelessWidget {
                       child: Column(
                         children: <Widget>[
                           Expanded(
-                            flex: 3,
+                            flex: 2,
                             child: getPostImages(blocProduk.listProdukTerjual[j].foto),
                           ),
                           Expanded(

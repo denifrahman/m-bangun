@@ -1,17 +1,21 @@
+
+
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
+import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/providers/BlocProfile.dart';
 import 'package:apps/screen/FavoriteScreen.dart';
+import 'package:apps/screen/ProdukScreen.dart';
 import 'package:apps/widget/Keranjang/Keranjang.dart';
 import 'package:apps/widget/Login/LoginWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CheckListScreen extends StatelessWidget {
+
   CheckListScreen({Key key}) : super(key: key);
   var dataList = ['Keranjang', 'Favorite'];
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -91,7 +95,14 @@ class CheckListScreen extends StatelessWidget {
       Navigator.push(context, SlideRightRoute(page: Keranjang()));
       Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
     } else {
-      Navigator.push(context, SlideRightRoute(page: FavoriteScreen()));
+
+      BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+      BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+      blocProduk.getFavoriteProductByParam({'id_user_login': blocAuth.idUser});
+      Navigator.push(context, SlideRightRoute(page: ProdukScreen(
+        namaKategori: 'Favorite',
+      )));
+//      Navigator.push(context, SlideRightRoute(page: FavoriteScreen()));
     }
   }
 }

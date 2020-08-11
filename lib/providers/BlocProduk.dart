@@ -81,6 +81,27 @@ class BlocProduk extends ChangeNotifier {
     }
   }
 
+  getFavoriteProductByParam(param) async {
+    imageCache.clear();
+    _isLoading = true;
+    notifyListeners();
+    var result = await UserRepository().getFavoriteProduct(param);
+    print(result);
+    if (result.toString() == '111' || result.toString() == '101') {
+      _connection = false;
+      _isLoading = false;
+      _listProducts = [];
+      notifyListeners();
+    } else {
+      Iterable list = result['data'];
+      _listProducts = list.map((model) => Product.fromMap(model)).toList();
+      _detailProduct = list.map((model) => Product.fromMap(model)).toList();
+      _isLoading = false;
+      _connection = true;
+      notifyListeners();
+    }
+  }
+
   List<OfficialStore> _detailStore = [];
 
   List<OfficialStore> get detailStore => _detailStore;

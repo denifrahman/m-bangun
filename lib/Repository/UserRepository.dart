@@ -44,6 +44,11 @@ class UserRepository {
     final response = await _helper.get("produk/getAllByParam", param);
     return response;
   }
+
+  Future getFavoriteProduct(param) async {
+    final response = await _helper.get("produk/getFavoriteByParam", param);
+    return response;
+  }
   Future getAllIklan(param) async {
     final response = await _helper.get("iklan/getAllByParam", param);
     return response;

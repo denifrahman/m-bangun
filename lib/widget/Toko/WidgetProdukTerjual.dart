@@ -73,7 +73,7 @@ class WidgetProdukTerjual extends StatelessWidget {
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     child: InkWell(
                       onTap: () {
-                        blocProduk.getProductById(blocProduk.listRecentProduct[j].id);
+                        blocProduk.getAllProductByParam({'id': blocProduk.listRecentProduct[j].id.toString()});
                         Provider.of<BlocOrder>(context).getCart();
                         Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
                       },
@@ -151,8 +151,9 @@ class WidgetProdukTerjual extends StatelessWidget {
       return SizedBox();
     }
     return Image.asset(
-      'assets/kategori/' + url,
-      fit: BoxFit.cover,
-    );
+        'assets/kategori/' + url, fit: BoxFit.cover, errorBuilder: (context, urlImage, error) {
+      print(error.hashCode);
+      return Image.asset('assets/logo.png');
+    });
   }
 }

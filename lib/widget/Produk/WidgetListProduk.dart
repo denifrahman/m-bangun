@@ -52,12 +52,12 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
       childAspectRatio: 0.8,
       children: List.generate(
         blocProduk.listProducts.length,
-            (j) {
+        (j) {
           var harga = blocProduk.listProducts[j].harga;
           var hargaFormat = Money.fromInt(harga == null ? 0 : int.parse(harga), IDR);
           return InkWell(
             onTap: () {
-              blocProduk.getProductById(blocProduk.listProducts[j].id);
+              blocProduk.getAllProductByParam({'id': blocProduk.listProducts[j].id.toString()});
               Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
             },
             child: WidgetOverViewProduk(

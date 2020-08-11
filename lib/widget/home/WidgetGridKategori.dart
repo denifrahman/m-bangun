@@ -73,7 +73,7 @@ class WidgetGridKategori extends StatelessWidget {
   }
 
   _openListProduk(BuildContext context, Categories listCategory) {
-    Provider.of<BlocProduk>(context).getAllProductByCategory(listCategory.id);
+    Provider.of<BlocProduk>(context).getAllProductByParam({'id_kategori': listCategory.id.toString()});
     Navigator.push(
         context,
         SlideRightRoute(

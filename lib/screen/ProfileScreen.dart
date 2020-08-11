@@ -79,9 +79,9 @@ class ProfileScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-              ],
-            )),
-      )
+                    ],
+                  )),
+            )
           : blocAuth.isLoading
           ? Center(
         child: CircularProgressIndicator(),
@@ -125,9 +125,9 @@ class ProfileScreen extends StatelessWidget {
                         IconButton(
                           onPressed: () {
                             blocAuth.handleSignOut();
-                                          Provider.of<BlocOrder>(context).clearCart();
-                                          Provider.of<BlocOrder>(context).clearCountOrder();
-                                        },
+                            Provider.of<BlocOrder>(context).clearCart();
+                            Provider.of<BlocOrder>(context).clearCountOrder();
+                          },
                           icon: Icon(Icons.exit_to_app, color: Colors.grey[400], size: 20.0),
                         ),
                       ],
@@ -357,29 +357,6 @@ class ProfileScreen extends StatelessWidget {
           ],
         ),
       ),
-//      floatingActionButton: !dataProvider.connection
-//          ? null
-//          : !dataProvider.isLogin
-//          ? null
-//          : dataProvider.verified
-//          ? null
-//          : FloatingActionButton.extended(
-//        onPressed: () {
-//          Navigator.push(
-//              context,
-//              PageRouteTransition(
-//                animationType: AnimationType.slide_up,
-//                builder: (context) => UpdateAkunScreen(),
-//              )).then((value) {
-//            dataProvider.getProfile();
-//          });
-//          dataProvider.getKategoriByFlag('1');
-//        },
-//        backgroundColor: Color(0xffb16a085),
-//        tooltip: 'Update akun anda',
-//        icon: Icon(Icons.credit_card),
-//        label: Text("Update Akun"),
-//      ),
     );
   }
 }

@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 
 class BlocOrder extends ChangeNotifier {
   BlocOrder() {
-    setIdUser();
+    getCart();
   }
 
   getOrderByIdUser(idUser) async {
@@ -37,17 +37,18 @@ class BlocOrder extends ChangeNotifier {
     notifyListeners();
   }
 
-  setIdUser() async {
-    var id = await LocalStorage.sharedInstance.readValue('id_user_login');
-    if (id != null) {
-      _id_user_login = id;
-      getOrderByIdUser(id);
-      getCart();
-    } else {
-      _id_user_login = '0';
-    }
-    notifyListeners();
-  }
+//  setIdUser() async {
+//    var id = await LocalStorage.sharedInstance.readValue('id_user_login');
+//    print(id);
+//    if (id != null) {
+//      _id_user_login = id;
+//      getOrderByIdUser(id);
+//      getCart();
+//    } else {
+//      _id_user_login = '0';
+//    }
+//    notifyListeners();
+//  }
 
   bool _connection = false;
   bool _isLoading = false;
@@ -123,7 +124,8 @@ class BlocOrder extends ChangeNotifier {
   getCart() async {
     _isLoading = true;
     notifyListeners();
-    var param = {'id_user_login': _id_user_login.toString()};
+    var id = await LocalStorage.sharedInstance.readValue('id_user_login');
+    var param = {'id_user_login': id.toString()};
     var result = await OrderRepository().getCart(param);
     if (result.toString() == '111' || result.toString() == '101') {
       _connection = false;

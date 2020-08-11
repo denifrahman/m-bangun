@@ -46,7 +46,7 @@ class WidgetRecentProduct extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: () {
-                    blocProduk.getAllProduct();
+                    blocProduk.getAllProductByParam({'': ''});
                     Navigator.push(
                         context,
                         SlideRightRoute(
@@ -81,7 +81,7 @@ class WidgetRecentProduct extends StatelessWidget {
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 child: InkWell(
                   onTap: () {
-                    blocProduk.getProductById(blocProduk.listRecentProduct[j].id);
+                    blocProduk.getAllProductByParam({'id': blocProduk.listRecentProduct[j].id});
                     Provider.of<BlocOrder>(context).getCart();
                     Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
                   },

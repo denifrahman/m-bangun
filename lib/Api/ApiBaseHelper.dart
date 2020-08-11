@@ -29,7 +29,6 @@ class ApiBaseHelper {
       final _url = Uri.http(_baseUrl, _path + url);
       var header = {"Content-Type": "application/json"};
       final response = await http.post(_url, body: body);
-      print(response.body);
       responseJson = _returnResponse(response);
     } on SocketException catch (err) {
       return FetchDataException(err.osError.errorCode.toString());

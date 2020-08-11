@@ -130,7 +130,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                           setState(() {
                             blocAuth.checkSession();
                             blocProduk.initLoad();
-                            blocOrder.setIdUser();
+                            blocOrder.getCart();
                             currentScreen = HomeScreen(); // if user taps on this dashboard tab will be active
                             currentTab = 0;
                           });
@@ -171,7 +171,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                         minWidth: 30,
                         onPressed: () {
                           blocAuth.checkSession();
-                          blocOrder.setIdUser();
+                          blocOrder.getCart();
                           setState(() {
                             currentScreen = CheckListScreen(); // if user taps on this dashboard tab will be active
                             currentTab = 1;
@@ -227,8 +227,8 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                         onPressed: () {
                           setState(() {
                             blocAuth.checkSession();
+                            blocOrder.getCart();
                             blocOrder.setCountPembelian();
-                            blocOrder.setIdUser();
                             currentScreen = MyAdsScreen(); // if user taps on this dashboard tab will be active
                             currentTab = 2;
                           });
@@ -278,7 +278,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                         minWidth: 30,
                         onPressed: () {
                           blocAuth.checkSession();
-                          blocOrder.setIdUser();
+                          blocOrder.getCart();
                           setState(() {
                             currentScreen = ProfileScreen(); // if user taps on this dashboard tab will be active
                             currentTab = 3;

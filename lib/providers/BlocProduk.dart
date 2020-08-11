@@ -54,57 +54,14 @@ class BlocProduk extends ChangeNotifier {
   List<Product> _listProducts = [];
 
   List<Product> get listProducts => _listProducts;
-
-  getAllProduct() async {
-    imageCache.clear();
-    _isLoading = true;
-    notifyListeners();
-    var param = {'': ''};
-    var result = await UserRepository().getAllProduct(param);
-    print(result);
-    if (result.toString() == '111' || result.toString() == '101') {
-      _connection = false;
-      _isLoading = false;
-      _listProducts = [];
-      notifyListeners();
-    } else {
-      Iterable list = result['data'];
-      _listProducts = list.map((model) => Product.fromMap(model)).toList();
-      _isLoading = false;
-      _connection = true;
-      notifyListeners();
-    }
-  }
-
   List<Product> _detailProduct = [];
 
   List<Product> get detailProduct => _detailProduct;
 
-  getProductById(id_produk) async {
+  getAllProductByParam(param) async {
     imageCache.clear();
     _isLoading = true;
     notifyListeners();
-    var param = {'id': id_produk.toString()};
-    var result = await UserRepository().getAllProduct(param);
-    if (result.toString() == '111' || result.toString() == '101') {
-      _connection = false;
-      _isLoading = false;
-      _detailProduct = [];
-      notifyListeners();
-    } else {
-      Iterable list = result['data'];
-      _detailProduct = list.map((model) => Product.fromMap(model)).toList();
-      _isLoading = false;
-      _connection = true;
-      notifyListeners();
-    }
-  }
-
-  getAllProductByCategory(id_kategori) async {
-    imageCache.clear();
-    _isLoading = true;
-    notifyListeners();
-    var param = {'id_kategori': id_kategori.toString()};
     var result = await UserRepository().getAllProduct(param);
     print(result);
     if (result.toString() == '111' || result.toString() == '101') {
@@ -115,6 +72,7 @@ class BlocProduk extends ChangeNotifier {
     } else {
       Iterable list = result['data'];
       _listProducts = list.map((model) => Product.fromMap(model)).toList();
+      _detailProduct = list.map((model) => Product.fromMap(model)).toList();
       _isLoading = false;
       _connection = true;
       notifyListeners();

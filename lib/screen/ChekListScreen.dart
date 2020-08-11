@@ -33,7 +33,7 @@ class CheckListScreen extends StatelessWidget {
               ),
             )
           : RefreshIndicator(
-              onRefresh: () => blocOrder.setIdUser(),
+              onRefresh: () => blocOrder.getCart(),
               child: ListView.builder(
                 itemCount: dataList.length,
                 padding: EdgeInsets.all(10),

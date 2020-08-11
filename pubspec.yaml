@@ -105,6 +105,7 @@ flutter:
     - assets/img/waiting.png
     - assets/img/packing.png
     - assets/img/dikirim.png
+    - assets/img/sad.png
     - assets/shipping_background.png
     - assets/icons/store.png
     - assets/images/splace-background.png
@@ -142,6 +143,10 @@ flutter:
     - family: WorkSansMedium
       fonts:
         - asset: assets/fonts/Work_Sans/WorkSans-Medium.ttf
+
+    - family: WorkSansRegular
+      fonts:
+        - asset: assets/fonts/Work_Sans/WorkSans-Regular.ttf
 
     - family: LinoWrite
       fonts:

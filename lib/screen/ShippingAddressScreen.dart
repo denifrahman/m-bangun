@@ -1,4 +1,5 @@
 import 'package:apps/Utils/navigation_right.dart';
+import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocProfile.dart';
 import 'package:apps/widget/ShippingAddress/WidgetAddAddress.dart';
 import 'package:apps/widget/ShippingAddress/WidgetListAddress.dart';
@@ -29,6 +30,7 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -38,7 +40,9 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
             icon: Icon(Icons.add_circle),
             onPressed: () {
               blocProfile.clearDataCity();
-              Navigator.push(context, SlideRightRoute(page: WidgetAddAddress()));
+              Navigator.push(context, SlideRightRoute(page: WidgetAddAddress())).then((value) {
+                blocProfile.getAllUserAddress(blocAuth.idUser);
+              });
             },
           )
         ],

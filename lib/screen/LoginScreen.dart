@@ -2,7 +2,9 @@ import 'package:apps/widget/Login/LoginWidget.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
-  LoginScreen({Key key}) : super(key: key);
+  final String param;
+
+  LoginScreen({Key key, this.param}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +17,7 @@ class LoginScreen extends StatelessWidget {
       body: LoginWidget(
         primaryColor: Color(0xFFb16a085),
         backgroundColor: Colors.white,
-        page: '/BottomNavBar',
+        page: this.param,
       ),
     );
   }

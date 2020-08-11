@@ -7,7 +7,7 @@ ThemeData light = ThemeData(
     labelStyle: TextStyle(color: Colors.black, fontSize: 12),
     hintStyle: TextStyle(color: Colors.grey, fontSize: 12, fontFamily: 'OpenSans-Regular', fontWeight: FontWeight.w500),
   ),
-  fontFamily: 'WorkSansMedium',
+  fontFamily: 'WorkSansRegular',
   primaryColor: Colors.green[600],
   appBarTheme: AppBarTheme(
       brightness: Brightness.light,

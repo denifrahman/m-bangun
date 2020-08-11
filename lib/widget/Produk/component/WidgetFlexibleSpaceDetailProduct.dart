@@ -49,10 +49,11 @@ class WidgetFlexibleSpaceDetailProduct extends StatelessWidget {
               );
             },
             child: Image.network(
-              'https://m-bangun.com/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto,
-              width: MediaQuery.of(context).size.width,
-              fit: BoxFit.fitWidth,
-            ),
+              'https://m-bangun.com/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto, width: MediaQuery.of(context).size.width, fit: BoxFit.fitWidth,
+                errorBuilder: (context, urlImage, error) {
+              print(error.hashCode);
+              return Image.asset('assets/logo.png');
+            }),
           ),
           InkWell(
             onTap: () {

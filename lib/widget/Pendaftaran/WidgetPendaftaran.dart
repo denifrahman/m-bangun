@@ -415,7 +415,7 @@ class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
                   children: <Widget>[
                     new Expanded(
                         child: RoundedLoadingButton(
-                          child: Text('DAFTAR', style: TextStyle(color: Colors.white)),
+                      child: Text('DAFTAR', style: TextStyle(color: Colors.white)),
                       color: Color(0xFFb16a085),
                       controller: _btnController,
                       onPressed: () {
@@ -446,14 +446,18 @@ class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
     map['password'] = password;
     map['id_google'] = blocAuth.currentUser.id;
     map['foto'] = blocAuth.currentUser.photoUrl;
-    var response = await blocAuth.create(map);
-    if (response['meta']['success']) {
-      _btnController.success();
-      _showToast(response['meta']['status_message']);
-      _btnController.stop();
+    if (_formKey.currentState.validate()) {
+      var response = await blocAuth.create(map);
+      if (response['meta']['success']) {
+        _btnController.success();
+        _showToast(response['meta']['status_message']);
+        _btnController.stop();
+      } else {
+        _btnController.stop();
+        _showToast(response['meta']['status_message']);
+      }
     } else {
-      _btnController.stop();
-      _showToast(response['meta']['status_message']);
+      _btnController.reset();
     }
   }
 

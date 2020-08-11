@@ -2,13 +2,13 @@ import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
+import 'package:apps/screen/LoginScreen.dart';
 import 'package:apps/widget/Keranjang/Keranjang.dart';
 import 'package:apps/widget/Produk/component/WidgetDeskripsiDetailProduk.dart';
 import 'package:apps/widget/Produk/component/WidgetFlexibleSpaceDetailProduct.dart';
 import 'package:apps/widget/Produk/component/WidgetHeaderDetailProduct.dart';
 import 'package:apps/widget/Produk/component/WidgetInformasiDetailProduk.dart';
 import 'package:apps/widget/Produk/component/WidgetLeadingTopDetaikProduct.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:money2/money2.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -124,23 +124,19 @@ class ProdukDetailScreen extends StatelessWidget {
                         ),
                         onPressed: () {
                           if (blocAuth.isLogin) {
-//                            if (dataProvider.favoriteProduk) {
-//                              dataProvider.deleteFavoriteByUserId(dataProvider.getdataProdukById['data'][0]['produkid']);
-//                            } else {
-//                              dataProvider.setFavoriveByUserId(dataProvider.getdataProdukById['data'][0]['produkid']);
-//                            }
+//                           Navigator.
                           } else {
-                            Flushbar(
-                              title: "Kesalahan",
-                              message: "Silahkan login / daftar member",
-                              duration: Duration(seconds: 5),
-                              backgroundColor: Colors.red,
-                              flushbarPosition: FlushbarPosition.BOTTOM,
-                              icon: Icon(
-                                Icons.assignment_turned_in,
-                                color: Colors.white,
-                              ),
-                            )..show(context);
+//                            Flushbar(
+//                              title: "Kesalahan",
+//                              message: "Silahkan login / daftar member",
+//                              duration: Duration(seconds: 5),
+//                              backgroundColor: Colors.red,
+//                              flushbarPosition: FlushbarPosition.BOTTOM,
+//                              icon: Icon(
+//                                Icons.assignment_turned_in,
+//                                color: Colors.white,
+//                              ),
+//                            )..show(context);
                           }
                         },
                       ),
@@ -177,17 +173,12 @@ class ProdukDetailScreen extends StatelessWidget {
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     BlocProduk blocProduk = Provider.of<BlocProduk>(context);
     if (!blocAuth.isLogin) {
-      Flushbar(
-        title: "Error",
-        message: "Silahkan login / daftar member",
-        duration: Duration(seconds: 5),
-        backgroundColor: Colors.red,
-        flushbarPosition: FlushbarPosition.BOTTOM,
-        icon: Icon(
-          Icons.assignment_turned_in,
-          color: Colors.white,
-        ),
-      )..show(context);
+      Navigator.push(
+          context,
+          SlideRightRoute(
+              page: LoginScreen(
+            param: 'product',
+          )));
     } else {
       Future<void> future = showModalBottomSheet<void>(
         isScrollControlled: true,

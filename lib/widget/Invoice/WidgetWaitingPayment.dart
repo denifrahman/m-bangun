@@ -27,7 +27,6 @@ class _WidgetWaitingPaymentState extends State<WidgetWaitingPayment> {
   createOrder() async {
     await new Future.delayed(const Duration(seconds: 1));
     BlocOrder blocOrder = Provider.of(context);
-    print(widget.body);
     var result = blocOrder.insert(json.encode(widget.body));
     result.then((value) {
       print(value);
@@ -36,7 +35,6 @@ class _WidgetWaitingPaymentState extends State<WidgetWaitingPayment> {
           'id': value['data']['id_order'].toString(),
         };
         blocOrder.getOrderTagihanByParam(param);
-        blocOrder.setIdUser();
         Navigator.push(
             context,
             SlideRightRoute(

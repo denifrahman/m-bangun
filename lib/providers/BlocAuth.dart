@@ -15,6 +15,9 @@ class BlocAuth extends ChangeNotifier {
   bool _isRegister = false;
   String _errorMessage, _idUser, _token;
   bool _connection = true;
+  bool _isNonActive = false;
+
+  bool get isNonActive => _isNonActive;
 
   bool get connection => _connection;
 
@@ -48,16 +51,16 @@ class BlocAuth extends ChangeNotifier {
 
   handleSignOut() async {
     _googleSignIn.disconnect().then((value) {
-      _isLogin = false;
-      _isRegister = false;
-      notifyListeners();
       _googleSignIn.isSignedIn().then((value) {
         if (value) {
           checkSession();
           return true;
         } else {
+          _isLogin = false;
+          _isNonActive = false;
+          _isRegister = false;
+          notifyListeners();
           LocalStorage.sharedInstance.deleteValue('id_user_login');
-          checkSession();
           return false;
         }
       });
@@ -69,43 +72,54 @@ class BlocAuth extends ChangeNotifier {
     if (result['meta']['success']) {
       _isLogin = true;
       _isRegister = false;
+      checkSession();
       notifyListeners();
       return result;
     } else {
+      checkSession();
       return result;
     }
   }
 
   checkSession() async {
-//    checkVersionApp();
     _isLoading = false;
     _googleSignIn.signInSilently();
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) async {
       if (account != null) {
         _currentUser = account;
-        _isLoading = true;
-        _isLogin = true;
-        _isLoading = false;
-        notifyListeners();
-        var queryString = {'username': account.email, 'id_google': account.id};
+      }
+    });
+    _googleSignIn.isSignedIn().then((value) async {
+      if (value) {
+        var queryString = {'username': _currentUser.email, 'id_google': _currentUser.id};
         var result = await AuthRepository().googleSign(queryString);
-        if (result.toString() == '111' || result.toString() == '101') {
-          _connection = true;
+        if (result['data']['aktif'] != '1') {
+          _isNonActive = true;
           _isLogin = false;
-          _isRegister = true;
-          _isLoading = false;
           notifyListeners();
-          return false;
+          await Future.delayed(Duration(seconds: 5), () {
+            handleSignOut();
+          });
         } else {
-          if (result['meta']['success']) {
+          if (result.toString() == '111' || result.toString() == '101') {
             _connection = true;
-            _token = result['token'];
-            LocalStorage.sharedInstance.writeValue(key: 'id_user_login', value: result['data']['id']);
-            _idUser = result['data']['id'];
-            _isRegister = false;
-            _isLoading = false;
-            notifyListeners();
-            return true;
+            return false;
+          } else {
+            if (result['meta']['success']) {
+              _connection = true;
+              _token = result['token'];
+              LocalStorage.sharedInstance.writeValue(key: 'id_user_login', value: result['data']['id']);
+              _idUser = result['data']['id'];
+              _isRegister = false;
+              _isLoading = false;
+              _isLogin = true;
+              notifyListeners();
+              return true;
+            } else {
+              _isRegister = true;
+              _isLogin = false;
+              notifyListeners();
+            }
           }
         }
       } else {

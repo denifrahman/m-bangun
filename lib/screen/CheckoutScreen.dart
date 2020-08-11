@@ -332,19 +332,20 @@ class CheckoutScreen extends StatelessWidget {
                               'nama_produk': listCart.chilrdern[i].nama.toString(),
                               'harga': listCart.chilrdern[i].harga.toString(),
                               'jumlah': listCart.chilrdern[i].jumlah.toString(),
-                              'subtotal': (int.parse(listCart.chilrdern[i].jumlah.toString()) * int.parse(listCart.chilrdern[i].harga)).toString(),
-                              'berat': listCart.chilrdern[i].berat.toString(),
-                              'slug': listCart.chilrdern[i].nama.toString(),
-                            };
-                            data_produk.add(dataProduk);
-                          }
-                          blocOrder.setErrorShippingAddres(false);
-                          blocOrder.setErrorMethodeTransfer(false);
+                                    'subtotal': (int.parse(listCart.chilrdern[i].jumlah.toString()) * int.parse(listCart.chilrdern[i].harga)).toString(),
+                                    'berat': listCart.chilrdern[i].berat.toString(),
+                                    'slug': listCart.chilrdern[i].nama.toString(),
+                                  };
+                                  data_produk.add(dataProduk);
+                                }
+                                blocOrder.setErrorShippingAddres(false);
+                                blocOrder.setErrorMethodeTransfer(false);
 
-                          Map body = {'data_order': data_order, 'data_produk': data_produk, 'data_penerima': data_penerima};
-                          Navigator.push(context, SlideRightRoute(page: WidgetWaitingPayment(body: body)));
-                          _btnController.reset();
-                        }
+                                Map body = {'data_order': data_order, 'data_produk': data_produk, 'data_penerima': data_penerima};
+                                print(body);
+                                Navigator.push(context, SlideRightRoute(page: WidgetWaitingPayment(body: body)));
+                                _btnController.reset();
+                              }
                       },
                     ),
                   ),

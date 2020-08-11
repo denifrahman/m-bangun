@@ -138,8 +138,10 @@ class BlocProfile extends ChangeNotifier {
     var result = await UserRepository().getUserAddress(param);
     Iterable list = result['data'];
     _listUserAddress = list.map((model) => UserAddress.fromMap(model)).toList();
-    getSubDistrictById(_listUserAddress[0].idKecamatan);
-    _isLoading = false;
+    if (_listUserAddress.isEmpty) {
+      getSubDistrictById(_listUserAddress[0].idKecamatan);
+      _isLoading = false;
+    }
     notifyListeners();
   }
 

@@ -12,6 +12,7 @@ import 'package:apps/widget/home/WidgetKategori.dart';
 import 'package:apps/widget/home/WidgetOffialStore.dart';
 import 'package:apps/widget/home/WidgetRecentProduct.dart';
 import 'package:apps/widget/home/WidgetSLide.dart';
+import 'package:apps/widget/home/WidgetSLider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -55,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+
     DataProvider dataProvider = Provider.of<DataProvider>(context);
     BlogCategories blogCategories = Provider.of<BlogCategories>(context);
     BlocProduk blocProduk = Provider.of<BlocProduk>(context);
@@ -65,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       title: WidgetLokasi(),
     );
     double height = appBar.preferredSize.height;
+    print( (MediaQuery.of(context).size.height * 0.89) - (MediaQuery.of(context).size.height * 0.23) - height);
     return Scaffold(
       appBar: appBar,
       body: !blocProduk.connection
@@ -118,7 +121,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          WidgetSlide(),
+                          Container(
+                            height:180,
+                            child: WidgetSlider(
+                              blocProduk: blocProduk,
+                            ),
+                          ),
                           WidgetOffialStore(
                             blocProduk: blocProduk,
                           ),

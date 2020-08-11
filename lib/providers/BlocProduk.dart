@@ -1,5 +1,6 @@
 import 'package:apps/Repository/UserRepository.dart';
 import 'package:apps/models/Categories.dart';
+import 'package:apps/models/Iklan.dart';
 import 'package:apps/models/OfficialStore.dart';
 import 'package:apps/models/Product.dart';
 import 'package:apps/models/RecentProduk.dart';
@@ -16,6 +17,7 @@ class BlocProduk extends ChangeNotifier {
     getOfficialStore();
     getCategory();
     getRecentProduct();
+    getIklan();
   }
 
   List<Toko> _toko = [
@@ -123,6 +125,31 @@ class BlocProduk extends ChangeNotifier {
     } else {
       Iterable list = result['data'];
       _listOfficialStore = list.map((model) => OfficialStore.fromMap(model)).toList();
+      _connection = true;
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  List<Iklan> _listIklan = [];
+
+  List<Iklan> get listIklan => _listIklan;
+
+  getIklan() async {
+    imageCache.clear();
+    _isLoading = true;
+    notifyListeners();
+    var param = {'': ''};
+    var result = await UserRepository().getAllIklan(param);
+    print(result);
+    if (result.toString() == '111' || result.toString() == '101') {
+      _isLoading = false;
+      _connection = false;
+      _listIklan = [];
+      notifyListeners();
+    } else {
+      Iterable list = result['data'];
+      _listIklan = list.map((model) => Iklan.fromMap(model)).toList();
       _connection = true;
       _isLoading = false;
       notifyListeners();

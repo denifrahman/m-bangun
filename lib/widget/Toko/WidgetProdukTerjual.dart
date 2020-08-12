@@ -73,7 +73,7 @@ class WidgetProdukTerjual extends StatelessWidget {
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     child: InkWell(
                       onTap: () {
-                        blocProduk.getAllProductByParam({'id': blocProduk.listRecentProduct[j].id.toString()});
+                        blocProduk.getAllProductByParam({'id': blocProduk.listProdukTerjual[j].id.toString()});
                         Provider.of<BlocOrder>(context).getCart();
                         Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
                       },
@@ -150,8 +150,7 @@ class WidgetProdukTerjual extends StatelessWidget {
     if (url == null) {
       return SizedBox();
     }
-    return Image.asset(
-        'assets/kategori/' + url, fit: BoxFit.cover, errorBuilder: (context, urlImage, error) {
+    return Image.network('https://m-bangun.com/api-v2/assets/toko/' + url, fit: BoxFit.cover, errorBuilder: (context, urlImage, error) {
       print(error.hashCode);
       return Image.asset('assets/logo.png');
     });

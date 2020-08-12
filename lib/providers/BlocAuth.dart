@@ -96,7 +96,7 @@ class BlocAuth extends ChangeNotifier {
         _currentUser = account;
       }
     });
-    await Future.delayed(Duration(seconds: 3), () {
+    await Future.delayed(Duration(seconds: 1), () {
       _googleSignIn.isSignedIn().then((value) async {
         if (value) {
           var queryString = {'username': _currentUser.email, 'id_google': _currentUser.id};
@@ -111,7 +111,7 @@ class BlocAuth extends ChangeNotifier {
                 _isNonActive = true;
                 _isLogin = false;
                 notifyListeners();
-                await Future.delayed(Duration(seconds: 5), () {
+                await Future.delayed(Duration(milliseconds: 1), () {
                   handleSignOut();
                 });
               } else {

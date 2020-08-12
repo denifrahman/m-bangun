@@ -418,4 +418,20 @@ class BlocOrder extends ChangeNotifier {
       return false;
     }
   }
+
+  Future<bool> updateOrder(body) async {
+    _isLoading = true;
+    notifyListeners();
+    var result = await OrderRepository().updateOrder(body);
+    print(body);
+    if (result['meta']['success']) {
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } else {
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
 }

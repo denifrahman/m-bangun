@@ -53,6 +53,7 @@ class WidgetListPembelian extends StatelessWidget {
                             SlideRightRoute(
                                 page: WidgetDetailOrderProdukPembelian(
                               title: blocOrder.listOrder[index].statusOrder,
+                              order: blocOrder.listOrder[index],
                             )));
                       }
                     },
@@ -111,7 +112,7 @@ class WidgetListPembelian extends StatelessWidget {
       var param = {'id_pembeli': blocAuth.idUser.toString(), 'status_pembayaran': title == 'Menunggu Pembayaran' ? 'menunggu' : 'terbayar'};
       blocOrder.getOrderByParam(param);
     } else {
-      var param = {'id_pembeli': blocAuth.idUser.toString(), 'status_order': title.toString(), 'status_pembyaran': 'terbayar'};
+      var param = {'id_pembeli': blocAuth.idUser.toString(), 'status_order': title.toString(), 'status_pembayaran': 'terbayar'};
       blocOrder.getOrderByParam(param);
     }
   }

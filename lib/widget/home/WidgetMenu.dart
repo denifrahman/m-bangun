@@ -1,4 +1,5 @@
 import 'package:apps/Utils/navigation_right.dart';
+import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/KategoriScreenNew.dart';
 import 'package:apps/widget/Pengajuan/component/WidgetCardMenu.dart';
@@ -13,6 +14,7 @@ class WidgetMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     DataProvider dataProvider = Provider.of<DataProvider>(context);
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     return Column(
       children: [
         Container(
@@ -22,12 +24,14 @@ class WidgetMenu extends StatelessWidget {
             onTap: () => _openScreen('pengajuan_toko', context),
             child: Column(
               children: [
-                WidgetCardMenu(
-                  title: 'Buka Toko',
-                  color: Colors.amber[800],
-                  thumbnail: 'assets/icons/store.png',
-                  deskripsi: 'Anda bisa menjual produk anda secara eksklusif di m-Bangun, cukup mengisi detail produk anda dan produk anda siap di untuk publish!',
-                ),
+                blocAuth.idToko == '0'
+                    ? WidgetCardMenu(
+                        title: 'Buka Toko',
+                        color: Colors.amber[800],
+                        thumbnail: 'assets/icons/store.png',
+                        deskripsi: 'Anda bisa menjual produk anda secara eksklusif di m-Bangun, cukup mengisi detail produk anda dan produk anda siap di untuk publish!',
+                      )
+                    : Container(),
                 WidgetCardMenu(
                   title: 'Panggil m-Bangun',
                   color: Colors.cyan[600],

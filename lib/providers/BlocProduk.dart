@@ -261,7 +261,7 @@ class BlocProduk extends ChangeNotifier {
     if (result.toString() == '111' || result.toString() == '101') {
       _connection = false;
       _isLoading = false;
-      _listOfficialStore = [];
+      _listRecentProduct = [];
       notifyListeners();
     } else {
       Iterable list = result['data'];

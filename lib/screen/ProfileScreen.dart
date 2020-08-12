@@ -218,8 +218,8 @@ class ProfileScreen extends StatelessWidget {
                 )
               ]),
             ),
-            blocAuth.statusToko != '0'
-                ? Container()
+            blocAuth.statusToko == '0'
+                              ? Container()
                 : Expanded(
               child: SingleChildScrollView(
                 child: Column(

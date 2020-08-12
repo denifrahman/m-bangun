@@ -2,9 +2,9 @@ import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/KategoriScreenNew.dart';
 import 'package:apps/widget/Pengajuan/component/WidgetCardMenu.dart';
-import 'package:apps/widget/Toko/Pengajuan.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class WidgetMenu extends StatelessWidget {
   WidgetMenu({Key key}) : super(key: key);
@@ -54,11 +54,19 @@ class WidgetMenu extends StatelessWidget {
 
   openSubkategori(chilrdern) {}
 
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   _openScreen(String s, BuildContext context) {
     if (s == 'pengajuan_toko') {
-      Navigator.push(context, SlideRightRoute(page: Pengajuan()));
+//      Navigator.push(context, SlideRightRoute(page: Pengajuan()));
+      _launchURL('https://mobile.m-bangun.com');
     } else {
-
 //      BlocAuth blocAuth = Provider.of<BlocAuth>(context);
 //      BlocProduk blocProduk = Provider.of<BlocProduk>(context);
 //      blocProduk.getFavoriteProductByParam({'id_user_login': blocAuth.idUser});
@@ -69,4 +77,3 @@ class WidgetMenu extends StatelessWidget {
     }
   }
 }
-

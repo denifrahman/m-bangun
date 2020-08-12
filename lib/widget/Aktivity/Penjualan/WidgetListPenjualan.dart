@@ -1,21 +1,23 @@
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
-import 'package:apps/widget/Aktivity/Pembelian/component/WidgetDetailOrderProdukPembelian.dart';
+import 'package:apps/providers/BlocProfile.dart';
+import 'package:apps/widget/Aktivity/Penjualan/component/WidgetDetailOrderProdukPenjualan.dart';
 import 'package:apps/widget/Tagihan/WidgetTagihan.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:money2/money2.dart';
 import 'package:provider/provider.dart';
 
-class WidgetListPembelian extends StatelessWidget {
+class WidgetListPenjualan extends StatelessWidget {
   final String title;
 
-  WidgetListPembelian({Key key, this.title}) : super(key: key);
+  WidgetListPenjualan({Key key, this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+    BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
     return Scaffold(
       appBar: AppBar(
@@ -43,32 +45,25 @@ class WidgetListPembelian extends StatelessWidget {
                         blocOrder.getOrderTagihanByParam(param);
                         Navigator.push(context, SlideRightRoute(page: WidgetTagihan()));
                       }
-                      if (blocOrder.listOrder[index].statusOrder == 'menunggu konfirmasi' || blocOrder.listOrder[index].statusPembayaran == 'terbayar') {
+                      if (blocOrder.listOrder[index].statusOrder == 'menunggu_konfirmasi' || blocOrder.listOrder[index].statusPembayaran == 'terbayar') {
                         var param = {
                           'id_order': blocOrder.listOrder[index].id,
                         };
                         blocOrder.getOrderProdukByParam(param);
+                        blocProfile.getSubDistrictById(blocOrder.listOrder[index].idKecamatan);
                         Navigator.push(
-                            context,
-                            SlideRightRoute(
-                                page: WidgetDetailOrderProdukPembelian(
-                              title: blocOrder.listOrder[index].statusOrder,
-                            )));
+                            context, SlideRightRoute(page: WidgetDetailOrderProdukPenjualan(title: blocOrder.listOrder[index].statusOrder, order: blocOrder.listOrder[index])));
                       }
                     },
                     child: Card(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
-                          leading: Image.network(
-                              'https://m-bangun.com/api-v2/assets/toko/' + blocOrder.listOrder[index].foto,
-                              width: 100,
-                              height: 100,
+                          leading: Image.network('https://m-bangun.com/api-v2/assets/toko/' + blocOrder.listOrder[index].foto, width: 100, height: 100,
                               errorBuilder: (context, urlImage, error) {
-                                print(error.hashCode);
-                                return Image.asset('assets/logo.png');
-                              }
-                          ),
+                            print(error.hashCode);
+                            return Image.asset('assets/logo.png');
+                          }),
                           title: Text(blocOrder.listOrder[index].namaToko, style: TextStyle(fontSize: 14)),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,12 +102,18 @@ class WidgetListPembelian extends StatelessWidget {
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     blocOrder.setCountPembelian();
-    if (title == 'Menunggu Pembayaran') {
-      var param = {'id_pembeli': blocAuth.idUser.toString(), 'status_pembayaran': title == 'Menunggu Pembayaran' ? 'menunggu' : 'terbayar'};
+    if (title == 'Pesanan Baru') {
+      var param = {
+        'id_toko': blocAuth.idToko.toString(),
+        'status_pembayaran': title == 'Pesanan Baru' ? 'terbayar' : 'terbayar',
+        'status_order': title == 'Pesanan Baru' ? 'menunggu konfirmasi' : 'menunggu konfirmasi'
+      };
       blocOrder.getOrderByParam(param);
+      print(param);
     } else {
-      var param = {'id_pembeli': blocAuth.idUser.toString(), 'status_order': title.toString(), 'status_pembyaran': 'terbayar'};
+      var param = {'id_toko': blocAuth.idToko.toString(), 'status_order': title.toString(), 'status_pembayaran': 'terbayar'};
       blocOrder.getOrderByParam(param);
+      print(param);
     }
   }
 }

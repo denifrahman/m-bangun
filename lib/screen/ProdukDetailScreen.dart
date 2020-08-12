@@ -49,83 +49,84 @@ class ProdukDetailScreen extends StatelessWidget {
                 ),
               ),
             )
-          : Column(
-              children: [
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.9,
-                  child: NestedScrollView(
-                    headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-                      return <Widget>[
-                        SliverAppBar(
-                          automaticallyImplyLeading: true,
-                          expandedHeight: 380.0,
-                          floating: false,
-                          pinned: true,
-                          leading: WidgetLeadingTopDetaikProduct(),
-                          flexibleSpace: WidgetFlexibleSpaceDetailProduct(blocProduk: blocProduk, hashCode: hashCode),
-                        ),
-                      ];
-                    },
-                    body: SingleChildScrollView(
-                      child: Column(
-                        children: <Widget>[
-                          WidgetHeaderDetailProduct(blocProduk: blocProduk, blocOrder: blocOrder, IDR: IDR),
-                          WidgetInformasiDetailProduk(blocProduk: blocProduk),
-                          WidgetDeskripsiDetailProduk(blocProduk: blocProduk),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  color: Colors.white,
-//                  decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3), borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20))),
-                  height: MediaQuery.of(context).size.height * 0.1,
-                  width: MediaQuery.of(context).size.width,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(context, SlideRightRoute(page: Keranjang()));
-                        },
-                        child: Stack(
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.9,
+                    child: NestedScrollView(
+                      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                        return <Widget>[
+                          SliverAppBar(
+                            automaticallyImplyLeading: true,
+                            expandedHeight: 380.0,
+                            floating: false,
+                            pinned: true,
+                            leading: WidgetLeadingTopDetaikProduct(),
+                            flexibleSpace: WidgetFlexibleSpaceDetailProduct(blocProduk: blocProduk, hashCode: hashCode),
+                          ),
+                        ];
+                      },
+                      body: SingleChildScrollView(
+                        child: Column(
                           children: <Widget>[
-                            Icon(
-                              Icons.shopping_cart,
-                              size: 25,
-                              color: Colors.cyan,
-                            ),
-                            blocOrder.listCart.length == 0
-                                ? Container(
-                                    child: Text(''),
-                                  )
-                                : Positioned(
-                                    top: 0.0,
-                                    right: 0.0,
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        blocOrder.listCart.length.toString(),
-                                        style: TextStyle(color: Colors.white, fontSize: 8),
-                                      ),
-                                    ),
-                                  )
+                            WidgetHeaderDetailProduct(blocProduk: blocProduk, blocOrder: blocOrder, IDR: IDR),
+                            WidgetInformasiDetailProduk(blocProduk: blocProduk),
+                            WidgetDeskripsiDetailProduk(blocProduk: blocProduk),
                           ],
                         ),
                       ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.favorite_border,
-                          color: Colors.cyan,
-                          size: 25,
+                    ),
+                  ),
+                  Container(
+                    color: Colors.white,
+//                  decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3), borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20))),
+                    height: MediaQuery.of(context).size.height * 0.1,
+                    width: MediaQuery.of(context).size.width,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(context, SlideRightRoute(page: Keranjang()));
+                          },
+                          child: Stack(
+                            children: <Widget>[
+                              Icon(
+                                Icons.shopping_cart,
+                                size: 25,
+                                color: Colors.cyan,
+                              ),
+                              blocOrder.listCart.length == 0
+                                  ? Container(
+                                      child: Text(''),
+                                    )
+                                  : Positioned(
+                                      top: 0.0,
+                                      right: 0.0,
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          blocOrder.listCart.length.toString(),
+                                          style: TextStyle(color: Colors.white, fontSize: 8),
+                                        ),
+                                      ),
+                                    )
+                            ],
+                          ),
                         ),
-                        onPressed: () {
-                          if (blocAuth.isLogin) {
+                        IconButton(
+                          icon: Icon(
+                            Icons.favorite_border,
+                            color: Colors.cyan,
+                            size: 25,
+                          ),
+                          onPressed: () {
+                            if (blocAuth.isLogin) {
 //                           Navigator.
-                          } else {
+                            } else {
 //                            Flushbar(
 //                              title: "Kesalahan",
 //                              message: "Silahkan login / daftar member",
@@ -137,14 +138,15 @@ class ProdukDetailScreen extends StatelessWidget {
 //                                color: Colors.white,
 //                              ),
 //                            )..show(context);
-                          }
-                        },
-                      ),
-                      _buttonBuy(context)
-                    ],
-                  ),
-                )
-              ],
+                            }
+                          },
+                        ),
+                        _buttonBuy(context)
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
     );
   }
@@ -192,7 +194,10 @@ class ProdukDetailScreen extends StatelessWidget {
                 key: _formKey,
                 autovalidate: false,
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.43,
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.8,
                   padding: EdgeInsets.all(15.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

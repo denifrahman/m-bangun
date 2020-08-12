@@ -4,10 +4,10 @@ import 'package:intl/intl.dart';
 import 'package:money2/money2.dart';
 import 'package:provider/provider.dart';
 
-class WidgetDetailOrderProduk extends StatelessWidget {
+class WidgetDetailOrderProdukPembelian extends StatelessWidget {
   final String title;
 
-  WidgetDetailOrderProduk({Key key, this.title}) : super(key: key);
+  WidgetDetailOrderProdukPembelian({Key key, this.title}) : super(key: key);
   final List<Location> locations = [
     Location('Kolkata Facility', DateTime(2019, 6, 5, 5, 23, 4), showHour: false, isHere: false, passed: true),
     Location('Hyderabad Facility', DateTime(2019, 6, 6, 5, 23, 4), showHour: false, isHere: false, passed: true),
@@ -71,7 +71,19 @@ class WidgetDetailOrderProduk extends StatelessWidget {
                             ),
                             text: blocOrder.listOrderDetailProduk[j].namaProduk),
                       ),
-                      subtitle: Text(Money.fromInt((int.parse(blocOrder.listOrder[j].total)), IDR).toString(), style: TextStyle(fontStyle: FontStyle.normal, fontSize: 12)),
+                      subtitle: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(Money.fromInt((int.parse(blocOrder.listOrderDetailProduk[j].subtotal)), IDR).toString(),
+                              style: TextStyle(fontStyle: FontStyle.normal, fontSize: 10)),
+                          Text(blocOrder.listOrderDetailProduk[j].catatan == null ? '-' : '"' + blocOrder.listOrderDetailProduk[j].catatan + '"',
+                              style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                fontSize: 9,
+                              ))
+                        ],
+                      ),
                       trailing: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(blocOrder.listOrderDetailProduk[j].jumlah),

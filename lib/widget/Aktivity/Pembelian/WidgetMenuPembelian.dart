@@ -206,7 +206,7 @@ class WidgetMenuPembelian extends StatelessWidget {
       var param = {'id_pembeli': idUser.toString(), 'status_pembayaran': title == 'Menunggu Pembayaran' ? 'menunggu' : 'terbayar'};
       blocOrder.getOrderByParam(param);
     } else {
-      var param = {'id_pembeli': idUser.toString(), 'status_order': title.toString() == 'Menunggu Konfirmasi' ? 'menunggu_konfirmasi' : title.toString()};
+      var param = {'id_pembeli': idUser.toString(), 'status_order': title.toString(), 'status_pembayaran': 'terbayar'};
       blocOrder.getOrderByParam(param);
     }
 

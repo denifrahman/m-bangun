@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:apps/Repository/UserRepository.dart';
+import 'package:apps/models/CategioryByToko.dart';
 import 'package:apps/models/Categories.dart';
 import 'package:apps/models/Iklan.dart';
 import 'package:apps/models/OfficialStore.dart';
@@ -83,6 +84,26 @@ class BlocProduk extends ChangeNotifier {
     }
   }
 
+  getDetailProductByParam(param) async {
+    imageCache.clear();
+    _isLoading = true;
+    notifyListeners();
+    var result = await UserRepository().getAllProduct(param);
+    print(result);
+    if (result.toString() == '111' || result.toString() == '101') {
+      _connection = false;
+      _isLoading = false;
+      _listProducts = [];
+      notifyListeners();
+    } else {
+      Iterable list = result['data'];
+      _detailProduct = list.map((model) => Product.fromMap(model)).toList();
+      _isLoading = false;
+      _connection = true;
+      notifyListeners();
+    }
+  }
+
   getFavoriteProductByParam(param) async {
     imageCache.clear();
     _isLoading = true;
@@ -96,7 +117,6 @@ class BlocProduk extends ChangeNotifier {
       notifyListeners();
     } else {
       Iterable list = result['data'];
-
       _listProducts = list.map((model) => Product.fromMap(model)).toList();
       _detailProduct = list.map((model) => Product.fromMap(model)).toList();
       _isLoading = false;
@@ -204,9 +224,9 @@ class BlocProduk extends ChangeNotifier {
     }
   }
 
-  List<Categories> _listCategoryByToko = [];
+  List<CategioryByToko> _listCategoryByToko = [];
 
-  List<Categories> get listCategoryByToko => _listCategoryByToko;
+  List<CategioryByToko> get listCategoryByToko => _listCategoryByToko;
 
   getCategoryByToko(id_toko) async {
     imageCache.clear();
@@ -221,7 +241,7 @@ class BlocProduk extends ChangeNotifier {
       notifyListeners();
     } else {
       Iterable list = result['data'];
-      _listCategoryByToko = list.map((model) => Categories.fromMap(model)).toList();
+      _listCategoryByToko = list.map((model) => CategioryByToko.fromMap(model)).toList();
       _connection = true;
       _isLoading = false;
       notifyListeners();
@@ -280,10 +300,11 @@ class BlocProduk extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().addProduk(files, body);
-    if (result.toString() == '111' || result.toString() == '101') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405') {
       _connection = false;
       _isLoading = false;
       notifyListeners();
+      return false;
     } else {
       if (result['meta']['success']) {
         _isLoading = false;

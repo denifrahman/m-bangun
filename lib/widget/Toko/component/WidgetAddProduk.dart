@@ -25,6 +25,7 @@ class _WidgetAddTokoState extends State<WidgetAddToko> {
   File foto1;
   File foto2;
   bool success = false;
+  bool error = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -33,6 +34,7 @@ class _WidgetAddTokoState extends State<WidgetAddToko> {
     setState(() {
       id_kategori = null;
       success = false;
+      error = false;
       kondisi = null;
       jenis_ongkir = null;
     });
@@ -63,6 +65,12 @@ class _WidgetAddTokoState extends State<WidgetAddToko> {
                       ? SnackBarLauncher(
                           error: 'Berhasil ditambahkan',
                           color: Colors.green,
+                        )
+                      : Container(),
+                  error
+                      ? SnackBarLauncher(
+                          error: 'Periksa jaringan anda',
+                          color: Colors.red,
                         )
                       : Container(),
                   Container(
@@ -475,8 +483,8 @@ class _WidgetAddTokoState extends State<WidgetAddToko> {
                           return null;
                       },
                       decoration: InputDecoration(
-                        hintText: 'Deskripsi pemesanan',
-                        labelText: 'Deskripsi pemesanan',
+                        hintText: 'Deskripsi produk',
+                        labelText: 'Deskripsi produk',
                         hintStyle: TextStyle(color: Colors.grey),
                       ),
                     ),
@@ -517,10 +525,19 @@ class _WidgetAddTokoState extends State<WidgetAddToko> {
                           var result = await blocProduk.addProduk(files, body);
                           if (result) {
                             setState(() {
-                              result = success;
+                              success = true;
                             });
-                            await Future.delayed(Duration(seconds: 5), () {
+                            await Future.delayed(Duration(seconds: 1), () {
                               Navigator.pop(context);
+                            });
+                          } else {
+                            setState(() {
+                              error = true;
+                            });
+                            await Future.delayed(Duration(seconds: 1), () {
+                              setState(() {
+                                error = false;
+                              });
                             });
                           }
                         }

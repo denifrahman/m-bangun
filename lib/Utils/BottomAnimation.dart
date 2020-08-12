@@ -131,6 +131,8 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                             blocAuth.checkSession();
                             blocProduk.initLoad();
                             blocOrder.getCart();
+                            blocOrder.setIdUser();
+                            blocOrder.getCountSaleByParam({'id_toko': blocAuth.idToko.toString()});
                             currentScreen = HomeScreen(); // if user taps on this dashboard tab will be active
                             currentTab = 0;
                           });
@@ -230,6 +232,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                             blocAuth.checkSession();
                             blocOrder.getCart();
                             blocOrder.setIdUser();
+                            blocOrder.getCountSaleByParam({'id_toko': blocAuth.idToko.toString()});
                             currentScreen = MyAdsScreen(); // if user taps on this dashboard tab will be active
                             currentTab = 2;
                           });
@@ -280,6 +283,8 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                         onPressed: () {
                           blocAuth.checkSession();
                           blocOrder.getCart();
+                          blocOrder.setIdUser();
+                          blocOrder.getCountSaleByParam({'id_toko': blocAuth.idToko.toString()});
                           setState(() {
                             currentScreen = ProfileScreen(); // if user taps on this dashboard tab will be active
                             currentTab = 3;

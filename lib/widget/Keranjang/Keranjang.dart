@@ -147,10 +147,12 @@ class _KeranjangState extends State<Keranjang> {
                                       }
                                       var param = {
                                         'origin': idKecamatanToko.toString(),
-                                        'destination': blocProfile.listUserAddressDefault.isEmpty ? '0' : blocProfile.listUserAddressDefault[0].idKecamatan,
+                                        'destination': blocProfile.listUserAddressDefault[0].idKecamatan,
                                         'weight': total.toString()
                                       };
-                                      blocOrder.getCost(param);
+                                      if (blocProfile.listUserAddressDefault.isNotEmpty) {
+                                        blocOrder.getCost(param);
+                                      }
                                       Navigator.push(
                                           context,
                                           SlideRightRoute(

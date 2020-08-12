@@ -19,7 +19,7 @@ class Pengajuan extends StatelessWidget {
       body: Builder(
         builder: (BuildContext context) {
           return WebView(
-            initialUrl: 'http://192.168.100.226/mbangun',
+            initialUrl: 'https://mobile.m-bangun.com',
             javascriptMode: JavascriptMode.unrestricted,
             onWebViewCreated: (WebViewController webViewController) {
               _controller.complete(webViewController);

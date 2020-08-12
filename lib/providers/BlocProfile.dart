@@ -115,6 +115,7 @@ class BlocProfile extends ChangeNotifier {
     notifyListeners();
     var param = {'id': id.toString()};
     var result = await RajaOngkirRepository().getSubDistrict(param);
+    print(result);
     Iterable list = [result['rajaongkir']['results']];
     _listSubDistrictById = list.map((model) => SubDistricById.fromMap(model)).toList();
     _id_provice = _listSubDistrictById[0].provinceId;

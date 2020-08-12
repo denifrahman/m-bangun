@@ -34,12 +34,15 @@ class _LoginWidgetState extends State<LoginWidget> {
   Widget build(BuildContext context) {
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     return blocAuth.isLoading
-        ? Center(child: CircularProgressIndicator())
+        ? Center(
+            child: CircularProgressIndicator(
+            backgroundColor: Colors.transparent,
+          ))
         : blocAuth.isRegister
-        ? PendaftaranScreen()
-        : Container(
-      child: Form(
-        key: _formKey,
+            ? PendaftaranScreen()
+            : Container(
+                child: Form(
+                  key: _formKey,
                   autovalidate: false,
                   child: blocAuth.isNonActive
                       ? Container(

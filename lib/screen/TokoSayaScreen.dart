@@ -76,17 +76,21 @@ class TokoSayaScreen extends StatelessWidget {
                       : Container(
                           height: (MediaQuery.of(context).size.height - appBarHeigh) * 0.85 - MediaQuery.of(context).padding.top,
                           child: SingleChildScrollView(
-                            child: Column(
-                              children: <Widget>[
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(horizontal: 10),
-                                      child: Row(
+                            child: RefreshIndicator(
+                              onRefresh: () async {
+                                onRefresh(context);
+                              },
+                              child: Column(
+                                children: <Widget>[
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(horizontal: 10),
+                                        child: Row(
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
@@ -154,15 +158,16 @@ class TokoSayaScreen extends StatelessWidget {
                                             );
                                           }),
                                     ),
-                                  ],
-                                ),
                               ],
                             ),
-                          ),
+                          ],
                         ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            ),
+      ),
     );
   }
 
@@ -171,5 +176,13 @@ class TokoSayaScreen extends StatelessWidget {
       title,
       style: TextStyle(color: AppColors.kDarkBlue, fontSize: 20.0, fontWeight: FontWeight.w700, letterSpacing: 1.2),
     );
+  }
+
+  void onRefresh(BuildContext context) {
+    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    BlocProfile blocProfile = Provider.of<BlocProfile>(context);
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+    blocProfile.getTokoByParam({'id_user': blocAuth.idUser.toString()});
+    blocProduk.getAllProductByParam({'id_toko': blocAuth.idToko.toString()});
   }
 }

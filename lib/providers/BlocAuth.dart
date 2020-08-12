@@ -88,55 +88,59 @@ class BlocAuth extends ChangeNotifier {
   }
 
   checkSession() async {
-    _isLoading = false;
+    _isLoading = true;
+    notifyListeners();
     _googleSignIn.signInSilently();
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) async {
       if (account != null) {
         _currentUser = account;
       }
     });
-    _googleSignIn.isSignedIn().then((value) async {
-      if (value) {
-        var queryString = {'username': _currentUser.email, 'id_google': _currentUser.id};
-        var result = await AuthRepository().googleSign(queryString);
-        if (result.toString() == '111' || result.toString() == '101') {
-          _connection = true;
-          return false;
-        } else {
-          if (result['meta']['success']) {
-            _statusToko = result['data']['status_toko'];
-            if (result['data']['aktif'] != '1') {
-              _isNonActive = true;
+    await Future.delayed(Duration(seconds: 3), () {
+      _googleSignIn.isSignedIn().then((value) async {
+        if (value) {
+          var queryString = {'username': _currentUser.email, 'id_google': _currentUser.id};
+          var result = await AuthRepository().googleSign(queryString);
+          if (result.toString() == '111' || result.toString() == '101') {
+            _connection = true;
+            return false;
+          } else {
+            if (result['meta']['success']) {
+              _statusToko = result['data']['status_toko'];
+              if (result['data']['aktif'] != '1') {
+                _isNonActive = true;
+                _isLogin = false;
+                notifyListeners();
+                await Future.delayed(Duration(seconds: 5), () {
+                  handleSignOut();
+                });
+              } else {
+                _connection = true;
+                _token = result['token'];
+                _idToko = result['data']['id_toko'];
+                LocalStorage.sharedInstance.writeValue(key: 'id_toko', value: result['data']['id_toko']);
+                LocalStorage.sharedInstance.writeValue(key: 'id_user_login', value: result['data']['id']);
+                _idUser = result['data']['id'];
+                _isRegister = false;
+                _isLoading = false;
+                _isLogin = true;
+                notifyListeners();
+                return true;
+              }
+            } else {
+              _isRegister = true;
               _isLogin = false;
               notifyListeners();
-              await Future.delayed(Duration(seconds: 5), () {
-                handleSignOut();
-              });
-            } else {
-              _connection = true;
-              _token = result['token'];
-              _idToko = result['data']['id_toko'];
-              LocalStorage.sharedInstance.writeValue(key: 'id_user_login', value: result['data']['id']);
-              _idUser = result['data']['id'];
-              _isRegister = false;
-              _isLoading = false;
-              _isLogin = true;
-              notifyListeners();
-              return true;
             }
-          } else {
-            _isRegister = true;
-            _isLogin = false;
-            notifyListeners();
           }
+        } else {
+          print('logout');
+          _isLogin = false;
+          _isLoading = false;
+          notifyListeners();
+          return false;
         }
-      } else {
-        print('logout');
-        _isLogin = false;
-        _isLoading = false;
-        notifyListeners();
-        return false;
-      }
+      });
     });
   }
 

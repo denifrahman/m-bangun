@@ -1,4 +1,4 @@
-/// id : "37"
+/// id : "51"
 /// id_produk : "1"
 /// nama_produk : "Beton Adhimix terbaik jawa timur"
 /// harga : "100000"
@@ -6,8 +6,8 @@
 /// subtotal : "100000"
 /// berat : "100"
 /// slug : "Beton Adhimix terbaik jawa timur"
-/// created_at : "2020-08-06 23:54:59"
-/// id_order : "33"
+/// id_order : "66"
+/// catatan : ""
 /// foto : "beton.png"
 
 class OrderProduk {
@@ -19,8 +19,8 @@ class OrderProduk {
   String subtotal;
   String berat;
   String slug;
-  String createdAt;
   String idOrder;
+  String catatan;
   String foto;
 
   static OrderProduk fromMap(Map<String, dynamic> map) {
@@ -34,8 +34,8 @@ class OrderProduk {
     orderProdukBean.subtotal = map['subtotal'];
     orderProdukBean.berat = map['berat'];
     orderProdukBean.slug = map['slug'];
-    orderProdukBean.createdAt = map['created_at'];
     orderProdukBean.idOrder = map['id_order'];
+    orderProdukBean.catatan = map['catatan'];
     orderProdukBean.foto = map['foto'];
     return orderProdukBean;
   }
@@ -49,8 +49,8 @@ class OrderProduk {
         "subtotal": subtotal,
         "berat": berat,
         "slug": slug,
-        "created_at": createdAt,
         "id_order": idOrder,
+        "catatan": catatan,
         "foto": foto,
       };
 }

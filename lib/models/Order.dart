@@ -1,28 +1,33 @@
-/// id : "25"
-/// no_order : "1111125"
-/// id_toko : "3"
-/// id_pembeli : "35"
-/// subtotal : "300"
-/// total_ongkir : "27000"
-/// total : "27300"
+/// id : "66"
+/// no_order : "1111166"
+/// id_toko : "1"
+/// id_pembeli : "45"
+/// subtotal : "341231"
+/// total_ongkir : "91000"
+/// total : "432232"
 /// metode_pembayaran : "Bank Transfer"
-/// status_pembayaran : "menunggu"
-/// status_order : null
+/// status_pembayaran : "terbayar"
+/// status_order : "menunggu konfirmasi"
 /// total_diskon : "0"
 /// total_lain_lain : "0"
 /// no_resi : null
 /// kode_kurir : "tiki"
 /// nama_kurir : "Citra Van Titipan Kilat (TIKI)"
-/// estimasi_pengiriman : "1"
-/// jenis_service : "ONS"
+/// estimasi_pengiriman : "5"
+/// jenis_service : "ECO"
 /// no_invoice : null
-/// no_rekening : "9888888852"
+/// no_rekening : "12343535353"
 /// nama_rekening : "m-bangun"
-/// nama_bank : "BRI"
-/// created_at : "2020-08-06 17:00:08"
-/// foto : "beton.png"
-/// nama_toko : "Pasir"
-/// batas_bayar : "2020-08-07 17:00:08"
+/// nama_bank : "BCA"
+/// created_at : "2020-08-12 09:08:04"
+/// foto : "scaled_image_picker6466521002307802326.jpg"
+/// nama_toko : "Toko Anugerah"
+/// batas_bayar : "2020-08-13 09:08:04"
+/// id_kecamatan : "1837"
+/// nama_alamat : "rumah"
+/// no_hp_penerima : "081314231"
+/// nama_penerima : "deni"
+/// alamat_lengkap : "kedamean 1"
 
 class Order {
   String id;
@@ -34,7 +39,7 @@ class Order {
   String total;
   String metodePembayaran;
   String statusPembayaran;
-  dynamic statusOrder;
+  String statusOrder;
   String totalDiskon;
   String totalLainLain;
   dynamic noResi;
@@ -50,6 +55,11 @@ class Order {
   String foto;
   String namaToko;
   String batasBayar;
+  String idKecamatan;
+  String namaAlamat;
+  String noHpPenerima;
+  String namaPenerima;
+  String alamatLengkap;
 
   static Order fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
@@ -79,6 +89,11 @@ class Order {
     orderBean.foto = map['foto'];
     orderBean.namaToko = map['nama_toko'];
     orderBean.batasBayar = map['batas_bayar'];
+    orderBean.idKecamatan = map['id_kecamatan'];
+    orderBean.namaAlamat = map['nama_alamat'];
+    orderBean.noHpPenerima = map['no_hp_penerima'];
+    orderBean.namaPenerima = map['nama_penerima'];
+    orderBean.alamatLengkap = map['alamat_lengkap'];
     return orderBean;
   }
 
@@ -108,5 +123,10 @@ class Order {
         "foto": foto,
         "nama_toko": namaToko,
         "batas_bayar": batasBayar,
+        "id_kecamatan": idKecamatan,
+        "nama_alamat": namaAlamat,
+        "no_hp_penerima": noHpPenerima,
+        "nama_penerima": namaPenerima,
+        "alamat_lengkap": alamatLengkap,
       };
 }

@@ -40,10 +40,11 @@ class BlocOrder extends ChangeNotifier {
 
   setIdUser() async {
     var id = await LocalStorage.sharedInstance.readValue('id_user_login');
-    print(id);
+    var idToko = await LocalStorage.sharedInstance.readValue('id_toko');
     if (id != null) {
       _id_user_login = id;
       getOrderByIdUser(id);
+      getCountSaleByParam({'id_toko': idToko.toString()});
       getCart();
     } else {
       _id_user_login = '0';
@@ -198,6 +199,7 @@ class BlocOrder extends ChangeNotifier {
 
   clearCost() {
     _listCostSelected = {};
+    _isLoading = false;
     notifyListeners();
   }
 
@@ -224,6 +226,10 @@ class BlocOrder extends ChangeNotifier {
 
   List<Order> get listCountOrder => _listCountOrder;
 
+  List<Order> _listSaleCountOrder = [];
+
+  List<Order> get listSaleCountOrder => _listSaleCountOrder;
+
   int _countMenunggu = 0;
   int _countTerbayar = 0;
   int _countMenungguKonfirmasi = 0;
@@ -232,6 +238,13 @@ class BlocOrder extends ChangeNotifier {
   int _countUlasan = 0;
   int _countSelesai = 0;
   int _countBatal = 0;
+
+  int _countSaleMenungguKonfirmasi = 0;
+  int _countSaleDikemas = 0;
+  int _countSaleDikirim = 0;
+  int _countSaleUlasan = 0;
+  int _countSaleSelesai = 0;
+  int _countSaleBatal = 0;
 
   int get countMenunggu => _countMenunggu;
 
@@ -249,16 +262,38 @@ class BlocOrder extends ChangeNotifier {
 
   int get countBatal => _countBatal;
 
+  int get countSaleMenungguKonfirmasi => _countSaleMenungguKonfirmasi;
+
+  int get countSaleDikemas => _countSaleDikemas;
+
+  int get countSaleDikirim => _countSaleDikirim;
+
+  int get countSaleUlasan => _countSaleUlasan;
+
+  int get countSaleSelesai => _countSaleSelesai;
+
+  int get countSaleBatal => _countSaleBatal;
+
   setCountPembelian() {
     _countMenunggu = _listCountOrder.where((element) => element.statusPembayaran == 'menunggu').length;
     _countTerbayar = _listCountOrder.where((element) => element.statusPembayaran == 'terbayar').length;
-    _countMenungguKonfirmasi = _listCountOrder.where((element) => element.statusOrder == 'menunggu_konfirmasi').length;
+    _countMenungguKonfirmasi = _listCountOrder.where((element) => element.statusOrder == 'menunggu konfirmasi').length;
     _countDikemas = _listCountOrder.where((element) => element.statusOrder == 'dikemas').length;
     _countDikirim = _listCountOrder.where((element) => element.statusOrder == 'dikirim').length;
     _countUlasan = _listCountOrder.where((element) => element.statusOrder == 'ulasan').length;
     _countSelesai = _listCountOrder.where((element) => element.statusOrder == 'selesai').length;
     _countBatal = _listCountOrder.where((element) => element.statusOrder == 'batal').length;
-    print(_listCountOrder);
+    notifyListeners();
+  }
+
+  setCountPenjualan() {
+    print(_countSaleMenungguKonfirmasi);
+    _countSaleMenungguKonfirmasi = _listSaleCountOrder.where((element) => element.statusOrder == 'menunggu konfirmasi').length;
+    _countSaleDikemas = _listSaleCountOrder.where((element) => element.statusOrder == 'dikemas').length;
+    _countSaleDikirim = _listSaleCountOrder.where((element) => element.statusOrder == 'dikirim').length;
+    _countSaleUlasan = _listSaleCountOrder.where((element) => element.statusOrder == 'ulasan').length;
+    _countSaleSelesai = _listSaleCountOrder.where((element) => element.statusOrder == 'selesai').length;
+    _countSaleBatal = _listSaleCountOrder.where((element) => element.statusOrder == 'batal').length;
     notifyListeners();
   }
 
@@ -296,7 +331,29 @@ class BlocOrder extends ChangeNotifier {
     }
   }
 
+  getCountSaleByParam(param) async {
+    imageCache.clear();
+    _isLoading = true;
+    notifyListeners();
+    var result = await OrderRepository().getOrderByParam(param);
+    if (result['meta']['success']) {
+      _isLoading = false;
+      Iterable list = result['data'];
+      _listSaleCountOrder = list.map((model) => Order.fromMap(model)).toList();
+      setCountPenjualan();
+      notifyListeners();
+      return true;
+    } else {
+      _listSaleCountOrder = [];
+      _isLoading = false;
+      setCountPenjualan();
+      notifyListeners();
+      return false;
+    }
+  }
+
   getOrderByParam(param) async {
+    imageCache.clear();
     _isLoading = true;
     notifyListeners();
     var result = await OrderRepository().getOrderByParam(param);
@@ -319,6 +376,7 @@ class BlocOrder extends ChangeNotifier {
   List<Order> get listOrderDetail => _listOrderDetail;
 
   getOrderTagihanByParam(param) async {
+    imageCache.clear();
     _isLoading = true;
     notifyListeners();
     var result = await OrderRepository().getOrderByParam(param);
@@ -342,6 +400,7 @@ class BlocOrder extends ChangeNotifier {
   List<OrderProduk> get listOrderDetailProduk => _listOrderDetailProduk;
 
   getOrderProdukByParam(param) async {
+    imageCache.clear();
     _isLoading = true;
     notifyListeners();
     var result = await OrderRepository().getOrderProdukByParam(param);

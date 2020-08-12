@@ -57,7 +57,7 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
           var hargaFormat = Money.fromInt(harga == null ? 0 : int.parse(harga), IDR);
           return InkWell(
             onTap: () {
-              blocProduk.getAllProductByParam({'id': blocProduk.listProducts[j].id.toString()});
+              blocProduk.getDetailProductByParam({'id': blocProduk.listProducts[j].id.toString()});
               Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
             },
             child: WidgetOverViewProduk(

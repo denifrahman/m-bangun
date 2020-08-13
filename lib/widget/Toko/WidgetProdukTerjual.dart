@@ -1,7 +1,9 @@
 import 'package:apps/Utils/navigation_right.dart';
+import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/screen/ProdukDetailScreen.dart';
+import 'package:apps/screen/ProdukScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -16,6 +18,7 @@ class WidgetProdukTerjual extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     return Column(
       children: [
         Padding(
@@ -43,6 +46,15 @@ class WidgetProdukTerjual extends StatelessWidget {
                   ),
                 ),
                 InkWell(
+                  onTap: () {
+                    Provider.of<BlocProduk>(context).getAllProductByParam({'aktif': '1', 'id_toko': blocAuth.idToko.toString()});
+                    Navigator.push(
+                        context,
+                        SlideRightRoute(
+                            page: ProdukScreen(
+                          namaKategori: 'Produk ' + blocProduk.detailStore[0].namaToko,
+                        )));
+                  },
                   child: Text(
                     'Semua',
                     style: TextStyle(fontSize: 12, color: Color(0xffb16a085)),
@@ -73,7 +85,7 @@ class WidgetProdukTerjual extends StatelessWidget {
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     child: InkWell(
                       onTap: () {
-                        blocProduk.getAllProductByParam({'id': blocProduk.listProdukTerjual[j].id.toString()});
+                        blocProduk.getAllProductByParam({'id': blocProduk.listProdukTerjual[j].id.toString(), 'aktif': '1'});
                         Provider.of<BlocOrder>(context).getCart();
                         Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
                       },

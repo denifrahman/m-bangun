@@ -1,4 +1,5 @@
 import 'package:apps/Utils/navigation_right.dart';
+import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/screen/ProdukScreen.dart';
 import 'package:flutter/material.dart';
@@ -73,12 +74,13 @@ class WidgetGridKategoriByToko extends StatelessWidget {
   }
 
   _openListProduk(BuildContext context, listCategoryByToko) {
-    Provider.of<BlocProduk>(context).getAllProductByParam({'id_kategori': listCategoryByToko.idKategori.toString()});
+    BlocAuth blocAuth = Provider.of(context);
+    Provider.of<BlocProduk>(context).getAllProductByParam({'id_kategori': listCategoryByToko.idKategori.toString(), 'aktif': '1', 'id_toko': blocAuth.idToko.toString()});
     Navigator.push(
         context,
         SlideRightRoute(
             page: ProdukScreen(
-          namaKategori: listCategoryByToko.nama,
+          namaKategori: listCategoryByToko.nama + ' ' + blocProduk.detailStore[0].namaToko,
         )));
   }
 }

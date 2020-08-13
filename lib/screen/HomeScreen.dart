@@ -66,7 +66,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       title: WidgetLokasi(),
     );
     double height = appBar.preferredSize.height;
-    print( (MediaQuery.of(context).size.height * 0.89) - (MediaQuery.of(context).size.height * 0.23) - height);
     return Scaffold(
       appBar: appBar,
       body: !blocProduk.connection
@@ -110,21 +109,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           : Container(
               margin: EdgeInsets.only(bottom: 50),
               color: Colors.white10.withOpacity(0.2),
-              child: Column(
-                children: <Widget>[
-                  Stack(
-                    children: [HeaderAnimation(), WidgetKategori()],
-                  ),
+              child: Stack(
+                children: [
+                  HeaderAnimation(),
                   Container(
-                    height: (MediaQuery.of(context).size.height * 0.91) - (MediaQuery.of(context).size.height * 0.23) - height,
+                    margin: EdgeInsets.only(top: 115),
+                    height: MediaQuery.of(context).size.height - 115 - height - MediaQuery.of(context).padding.top - 50,
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          Container(
-                            height: 180,
-                            child: WidgetSlider(
-                              blocProduk: blocProduk,
-                            ),
+                          WidgetSlider(
+                            blocProduk: blocProduk,
                           ),
                           WidgetOffialStore(
                             blocProduk: blocProduk,
@@ -137,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       ),
                     ),
                   ),
+                  WidgetKategori(),
                 ],
               ),
             ),
@@ -179,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           String btnLabelCancel = "Nanti";
           return Platform.isIOS
               ? WillPopScope(
-                  onWillPop: () {},
+            onWillPop: () {},
             child: new CupertinoAlertDialog(
               title: Text(title),
               content: Column(

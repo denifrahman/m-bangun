@@ -28,7 +28,7 @@ class ApiBaseHelperRajaOngkir {
     var responseJson;
     try {
       final _url = Uri.https(_baseUrl, _path + url);
-      print(_url);
+//      print(_url);
       var header = {'key': "e99ff50191d54f9bc76c9c00e43cd158"};
       final response = await http.post(_url, body: body, headers: header);
       responseJson = _returnResponse(response);

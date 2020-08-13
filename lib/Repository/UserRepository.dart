@@ -91,4 +91,14 @@ class UserRepository {
     final response = await _helper.multipart("produk/insert", files, body);
     return response;
   }
+
+  Future updateProduk(List<File> files, body) async {
+    final response = await _helper.multipart("produk/update", files, body);
+    return response;
+  }
+
+  Future updateStatus(body) async {
+    final response = await _helper.post("produk/update", body);
+    return response;
+  }
 }

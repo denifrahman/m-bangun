@@ -1,4 +1,4 @@
-/// nama : "Beton"
+/// nama : "Beton Adhimix terbaik jawa timur"
 /// id : "1"
 /// slug : "beton"
 /// berat : "100"
@@ -14,7 +14,7 @@
 /// id_kategori : "1"
 /// stok : "10"
 /// nama_toko : "Toko Anugerah"
-/// deskripsi : "beton"
+/// deskripsi : "Dalam konstruksi, beton adalah sebuah bahan bangunan komposit yang terbuat dari kombinasi aggregat dan pengikat semen. Bentuk paling umum dari beton adalah beton semen Portland, yang terdiri dari agregat mineral (biasanya kerikil dan pasir), semen dan air. Biasanya dipercayai bahwa beton mengering setelah pencampuran dan peletakan. Sebenarnya, beton tidak menjadi padat karena air menguap, tetapi semen berhidrasi, mengrekatkan komponen lainnya bersama dan akhirnya membentuk material seperti-batu. Beton digunakan untuk membuat perkerasan jalan, struktur bangunan, fondasi, jalan, jembatan penyeberangan, struktur parkiran, dasar untuk pagar/gerbang, dan semen dalam bata atau tembok blok. Nama lama untuk beton adalah batu cair. Dalam perkembangannya banyak ditemukan beton baru hasil modifikasi, seperti beton ringan, beton semprot (eng: shotcrete), beton fiber, beton berkekuatan tinggi, beton berkekuatan sangat tinggi, beton mampat sendiri (eng: self compacted concrete) dll. Saat ini beton merupakan bahan bangunan yang paling banyak dipakai di dunia."
 /// id_toko : "1"
 /// jenis_toko : "official_store"
 /// minimal_pesanan : "100"
@@ -28,10 +28,14 @@
 /// min3 : null
 /// price3 : null
 /// price4 : null
-/// jenis_ongkir : ""
+/// jenis_ongkir : "iclude"
 /// biaya_ongkir : null
 /// min2 : null
 /// min4 : null
+/// id_kecamatan : "6131"
+/// aktif : "1"
+/// id_kota : null
+/// id_provinsi : null
 
 class Product {
   String nama;
@@ -69,6 +73,9 @@ class Product {
   dynamic min2;
   dynamic min4;
   String idKecamatan;
+  String aktif;
+  dynamic idKota;
+  dynamic idProvinsi;
 
   static Product fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
@@ -108,6 +115,9 @@ class Product {
     productBean.min2 = map['min2'];
     productBean.min4 = map['min4'];
     productBean.idKecamatan = map['id_kecamatan'];
+    productBean.aktif = map['aktif'];
+    productBean.idKota = map['id_kota'];
+    productBean.idProvinsi = map['id_provinsi'];
     return productBean;
   }
 
@@ -147,5 +157,8 @@ class Product {
         "min2": min2,
         "min4": min4,
         "id_kecamatan": idKecamatan,
+        "aktif": aktif,
+        "id_kota": idKota,
+        "id_provinsi": idProvinsi,
       };
 }

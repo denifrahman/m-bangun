@@ -64,11 +64,12 @@ class BlocProduk extends ChangeNotifier {
   List<Product> get detailProduct => _detailProduct;
 
   getAllProductByParam(param) async {
+    print(param);
     imageCache.clear();
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().getAllProduct(param);
-    print(result);
+//    print(result);
     if (result.toString() == '111' || result.toString() == '101') {
       _connection = false;
       _isLoading = false;
@@ -77,11 +78,15 @@ class BlocProduk extends ChangeNotifier {
     } else {
       Iterable list = result['data'];
       _listProducts = list.map((model) => Product.fromMap(model)).toList();
-      _detailProduct = list.map((model) => Product.fromMap(model)).toList();
       _isLoading = false;
       _connection = true;
       notifyListeners();
     }
+  }
+
+  clearDetailProduk() {
+    _detailProduct = [];
+    notifyListeners();
   }
 
   getDetailProductByParam(param) async {
@@ -93,7 +98,7 @@ class BlocProduk extends ChangeNotifier {
     if (result.toString() == '111' || result.toString() == '101') {
       _connection = false;
       _isLoading = false;
-      _listProducts = [];
+      _detailProduct = [];
       notifyListeners();
     } else {
       Iterable list = result['data'];
@@ -118,7 +123,6 @@ class BlocProduk extends ChangeNotifier {
     } else {
       Iterable list = result['data'];
       _listProducts = list.map((model) => Product.fromMap(model)).toList();
-      _detailProduct = list.map((model) => Product.fromMap(model)).toList();
       _isLoading = false;
       _connection = true;
       notifyListeners();
@@ -280,7 +284,7 @@ class BlocProduk extends ChangeNotifier {
     imageCache.clear();
     _isLoading = true;
     notifyListeners();
-    var param = {'id_toko': id_toko.toString()};
+    var param = {'id_toko': id_toko.toString(), 'aktif': '1'};
     var result = await UserRepository().getProdukTerjual(param);
     if (result.toString() == '111' || result.toString() == '101') {
       _connection = false;
@@ -300,6 +304,53 @@ class BlocProduk extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().addProduk(files, body);
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405') {
+      _connection = false;
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    } else {
+      if (result['meta']['success']) {
+        _isLoading = false;
+        _connection = true;
+        notifyListeners();
+        return true;
+      } else {
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+    }
+  }
+
+  Future<bool> updateProduk(List<File> files, body) async {
+    _isLoading = true;
+    notifyListeners();
+    var result = await UserRepository().updateProduk(files, body);
+    print(result);
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405') {
+      _connection = false;
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    } else {
+      if (result['meta']['success']) {
+        _isLoading = false;
+        _connection = true;
+        notifyListeners();
+        return true;
+      } else {
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+    }
+  }
+
+  Future<bool> updateStatus(body) async {
+    _isLoading = true;
+    notifyListeners();
+    var result = await UserRepository().updateStatus(body);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405') {
       _connection = false;
       _isLoading = false;

@@ -222,9 +222,16 @@ class BlocProfile extends ChangeNotifier {
   Map<String, dynamic> get dataToko => _dataToko;
 
   getTokoByParam(param) async {
-    var result = await UserRepository().getTokoByParam(param);
-
-    _dataToko = result['data'][0];
+    _isLoading = true;
     notifyListeners();
+    var result = await UserRepository().getTokoByParam(param);
+    if (result['meta']['success']) {
+      _dataToko = result['data'][0];
+      _isLoading = false;
+      notifyListeners();
+    } else {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 }

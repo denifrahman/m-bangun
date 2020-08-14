@@ -1,3 +1,4 @@
+import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/widget/Produk/WidgetListProduk.dart';
 import 'package:apps/widget/filter/WIdgetFilter.dart';
@@ -79,33 +80,33 @@ class _ProdukScreenState extends State<ProdukScreen>
         ),
         body: blocProduk.isLoading
             ? SingleChildScrollView(
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: PKCardListSkeleton(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: PKCardListSkeleton(
 //              totalLines: 1,
-                      ),
-                ),
-              )
+            ),
+          ),
+        )
             : blocProduk.listProducts.isEmpty
-                ? Center(
-                    child: Text(
-                    'Tidak ada produk ..',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ))
-                : Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          flex: 2,
-                          child: WidgetListProduk(
-                            idSubKategori: this.widget.idSubKategori,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+            ? Center(
+            child: Text(
+              'Tidak ada produk ..',
+              style: TextStyle(fontSize: 18, color: Colors.grey),
+            ))
+            : Padding(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                flex: 2,
+                child: WidgetListProduk(
+                  idSubKategori: this.widget.idSubKategori,
+                ),
+              ),
+            ],
+          ),
+        ),
         floatingActionButton: ScaleTransition(
           scale: _hideFabAnimation,
           alignment: Alignment.bottomCenter,
@@ -116,7 +117,19 @@ class _ProdukScreenState extends State<ProdukScreen>
                   PageRouteTransition(
                     animationType: AnimationType.slide_up,
                     builder: (context) => WidgetFilter(),
-                  ));
+                  )).then((value) async {
+                blocProduk.getCurrentLocation();
+                String currentIdProvinsi = await LocalStorage.sharedInstance.readValue('idProvinsi');
+                String currentIdKota = await LocalStorage.sharedInstance.readValue('idKota');
+                String currentIdKecamatan = await LocalStorage.sharedInstance.readValue('idKecamatan');
+                var param = {
+                  'id_kecamatan': currentIdKecamatan.toString() == 'null' ? '' : currentIdKecamatan.toString(),
+                  'id_kota': currentIdKota.toString() == 'null' ? '' : currentIdKota.toString(),
+                  'id_provinsi': currentIdProvinsi.toString() == 'null' ? '' : currentIdProvinsi.toString(),
+                  'aktif': '1'
+                };
+                blocProduk.getAllProductByParam(param);
+              });
             },
             backgroundColor: Color(0xffb16a085),
             tooltip: 'Filter',

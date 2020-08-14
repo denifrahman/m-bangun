@@ -3,6 +3,8 @@ import 'package:apps/Utils/TitleHeader.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/models/KotaM.dart';
 import 'package:apps/models/ProvinsiM.dart';
+import 'package:apps/providers/BlocProduk.dart';
+import 'package:apps/providers/BlocProfile.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/widget/Home/WidgetSelectLokasi.dart';
 import 'package:flutter/material.dart';
@@ -35,13 +37,14 @@ class _WidgetLokasiState extends State<WidgetLokasi> {
   void dispose() {
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
-    var kecamatan = dataProvider.namaKecamatan == null ? '' : dataProvider.namaKecamatan.toLowerCase();
-    var kota = dataProvider.namaKota == null ? '' : dataProvider.namaKota.toLowerCase();
-    var provinsi = dataProvider.namaProvinsi == null ? '' : dataProvider.namaProvinsi.toLowerCase();
+    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    var kecamatan = blocProduk.namaKecamatan == null ? '' : blocProduk.namaKecamatan.toLowerCase();
+    var kota = blocProduk.namaKota == null ? '' : blocProduk.namaKota.toLowerCase();
+    var provinsi = blocProduk.namaProvinsi == null ? '' : blocProduk.namaProvinsi.toLowerCase();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -51,7 +54,7 @@ class _WidgetLokasiState extends State<WidgetLokasi> {
             Container(
               height: 50,
               width: 50,
-              margin: EdgeInsets.only(bottom: 6, top: 6),
+              margin: EdgeInsets.only(bottom: 6, top: 5),
               decoration: new BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(50.0)),
                 gradient: new LinearGradient(
@@ -97,18 +100,23 @@ class _WidgetLokasiState extends State<WidgetLokasi> {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        dataProvider.namaKecamatan == null
+                        blocProduk.namaKecamatan == null
                             ? Container()
-                            : Text(dataProvider.namaKecamatan == null ? '' : '${kecamatan[0].toUpperCase()}${kecamatan.substring(1)}',
-                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal, color: Color(0xffb16a085))),
-                        dataProvider.namaKecamatan == null ? Container() : Text(', '),
-                        dataProvider.namaKota == null
+                            : Text(blocProduk.namaKecamatan == null ? '' : '${kecamatan[0].toUpperCase()}${kecamatan.substring(1)}',
+                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal, color: Colors.white)),
+                        blocProduk.namaKecamatan == null
                             ? Container()
-                            : Text(dataProvider.namaKota == null ? '' : '${kota[0].toUpperCase()}${kota.substring(1)}',
-                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal, color: Color(0xffb16a085))),
+                            : Text(
+                                ', ',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                        blocProduk.namaKota == null
+                            ? Container()
+                            : Text(blocProduk.namaKota == null ? '' : '${kota[0].toUpperCase()}${kota.substring(1)}',
+                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal, color: Colors.white)),
                       ],
                     ),
-                    Text(dataProvider.namaProvinsi == null || dataProvider.namaProvinsi == '' ? 'Pilih lokasi' : '${provinsi[0].toUpperCase()}${provinsi.substring(1)}',
+                    Text(blocProduk.namaProvinsi == null || blocProduk.namaProvinsi == '' ? 'Pilih lokasi' : '${provinsi[0].toUpperCase()}${provinsi.substring(1)}',
                         style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.white)),
                   ],
                 ))
@@ -120,14 +128,13 @@ class _WidgetLokasiState extends State<WidgetLokasi> {
 
   _modalListKota() async {
     String currentIdProvinsi = await LocalStorage.sharedInstance.readValue('idProvinsi');
+    BlocProfile blocProfile = Provider.of<BlocProfile>(context);
+    blocProfile.clearDataCity();
     Navigator.push(
       context,
-      SlideRightRoute(
-          page: WidgetSelectLokasi(
-        idProvinsi: currentIdProvinsi,
-      )),
+      SlideRightRoute(page: WidgetSelectLokasi()),
     ).then((value) {
-      Provider.of<DataProvider>(context).getCurrentLocation();
+      Provider.of<BlocProduk>(context).getCurrentLocation();
     });
   }
 }

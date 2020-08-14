@@ -99,7 +99,7 @@ class BlocProfile extends ChangeNotifier {
     notifyListeners();
     var param = {'city': _id_city.toString()};
     var result = await RajaOngkirRepository().getSubDistrict(param);
-    print(result);
+//    print(result);
     Iterable list = [result];
     _listSubDistrict = list.map((model) => SubDistrict.fromMap(model)).toList();
     _isLoading = false;
@@ -115,7 +115,7 @@ class BlocProfile extends ChangeNotifier {
     notifyListeners();
     var param = {'id': id.toString()};
     var result = await RajaOngkirRepository().getSubDistrict(param);
-    print(result);
+//    print(result);
     Iterable list = [result['rajaongkir']['results']];
     _listSubDistrictById = list.map((model) => SubDistricById.fromMap(model)).toList();
     _id_provice = _listSubDistrictById[0].provinceId;
@@ -140,10 +140,18 @@ class BlocProfile extends ChangeNotifier {
     Iterable list = result['data'];
     _listUserAddress = list.map((model) => UserAddress.fromMap(model)).toList();
     if (_listUserAddress.isNotEmpty) {
-      getSubDistrictById(_listUserAddress[0].idKecamatan);
+//      getSubDistrictById(_listUserAddress[0].idKecamatan);
       _isLoading = false;
     }
     notifyListeners();
+  }
+
+  List<UserAddress> _listUserDetailAddress = [];
+
+  List<UserAddress> get listUserDetailAddress => _listUserDetailAddress;
+
+  clearDetailAddress() {
+    _listUserDetailAddress = [];
   }
 
   getUserAddressById(id) async {
@@ -152,8 +160,10 @@ class BlocProfile extends ChangeNotifier {
     var param = {'id': id.toString()};
     var result = await UserRepository().getUserAddress(param);
     Iterable list = result['data'];
-    _listUserAddress = list.map((model) => UserAddress.fromMap(model)).toList();
-    _isLoading = false;
+    _listUserDetailAddress = list.map((model) => UserAddress.fromMap(model)).toList();
+    if (_listUserDetailAddress.isNotEmpty) {
+      _isLoading = false;
+    }
     notifyListeners();
   }
 

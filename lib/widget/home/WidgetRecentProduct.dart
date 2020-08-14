@@ -1,3 +1,4 @@
+import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
@@ -45,8 +46,17 @@ class WidgetRecentProduct extends StatelessWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: () {
-                    blocProduk.getAllProductByParam({'aktif': '1'});
+                  onTap: () async {
+                    String currentIdProvinsi = await LocalStorage.sharedInstance.readValue('idProvinsi');
+                    String currentIdKota = await LocalStorage.sharedInstance.readValue('idKota');
+                    String currentIdKecamatan = await LocalStorage.sharedInstance.readValue('idKecamatan');
+                    var param = {
+                      'id_kecamatan': currentIdKecamatan.toString() == 'null' ? '' : currentIdKecamatan.toString(),
+                      'id_kota': currentIdKota.toString() == 'null' ? '' : currentIdKota.toString(),
+                      'id_provinsi': currentIdProvinsi.toString() == 'null' ? '' : currentIdProvinsi.toString(),
+                      'aktif': '1'
+                    };
+                    blocProduk.getAllProductByParam(param);
                     Navigator.push(
                         context,
                         SlideRightRoute(
@@ -88,7 +98,7 @@ class WidgetRecentProduct extends StatelessWidget {
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 child: InkWell(
                   onTap: () {
-                    blocProduk.getAllProductByParam({'id': blocProduk.listRecentProduct[j].id, 'aktif': '1'});
+                    blocProduk.getDetailProductByParam({'id': blocProduk.listRecentProduct[j].id, 'aktif': '1'});
                     Provider.of<BlocOrder>(context).getCart();
                     Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
                   },

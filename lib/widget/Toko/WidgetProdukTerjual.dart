@@ -85,7 +85,7 @@ class WidgetProdukTerjual extends StatelessWidget {
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     child: InkWell(
                       onTap: () {
-                        blocProduk.getAllProductByParam({'id': blocProduk.listProdukTerjual[j].id.toString(), 'aktif': '1'});
+                        blocProduk.getDetailProductByParam({'id': blocProduk.listProdukTerjual[j].id.toString(), 'aktif': '1'});
                         Provider.of<BlocOrder>(context).getCart();
                         Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
                       },

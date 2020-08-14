@@ -105,6 +105,7 @@ class WidgetListAddress extends StatelessWidget {
                                   onTap: () {
                                     Navigator.pop(context, "Replay Game");
                                     blocProfile.clearDataCity();
+                                    blocProfile.clearDetailAddress();
                                     blocProfile.getUserAddressById(blocProfile.listUserAddress[index].id);
                                     blocProfile.getSubDistrictById(blocProfile.listUserAddress[index].idKecamatan);
                                     Navigator.push(context, SlideRightRoute(page: WidgetUpdateAddress(id: blocProfile.listUserAddress[index].id))).then((value) {

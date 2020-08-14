@@ -55,7 +55,7 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     // TODO: implement build
     AppBar appBar = AppBar(
-      title: Text('Tambah Produk'),
+      title: Text('Update Produk'),
     );
     return blocProduk.detailProduct.isEmpty
         ? PKCardPageSkeleton()
@@ -84,7 +84,7 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
                               )
                             : Container(),
                         Container(
-                          height: 90,
+                          height: 70,
                           child: TextFormField(
                             initialValue: blocProduk.detailProduct[0].nama,
                             onSaved: (value) {
@@ -108,7 +108,7 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
                           ),
                         ),
                         Container(
-                          height: 90,
+                          height: 70,
                           width: MediaQuery.of(context).size.width,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -140,8 +140,11 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
                                 ),
                               ),
                               Container(
-                                height: 90,
-                                width: MediaQuery.of(context).size.width * 0.6,
+                                height: 70,
+                                width: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * 0.6,
                                 child: TextFormField(
                                   initialValue: blocProduk.detailProduct[0].harga,
                                   onSaved: (value) {
@@ -169,14 +172,20 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
                           ),
                         ),
                         Container(
-                          height: 90,
-                          width: MediaQuery.of(context).size.width,
+                          height: 70,
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
                                 height: 100,
-                                width: MediaQuery.of(context).size.width * 0.6,
+                                width: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * 0.6,
                                 child: TextFormField(
                                   initialValue: blocProduk.detailProduct[0].panjang,
                                   onSaved: (value) {
@@ -195,8 +204,11 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
                                 ),
                               ),
                               Container(
-                                height: 90,
-                                width: MediaQuery.of(context).size.width * 0.3,
+                                height: 70,
+                                width: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * 0.3,
                                 child: TextFormField(
                                   initialValue: blocProduk.detailProduct[0].stok,
                                   onSaved: (value) {
@@ -223,7 +235,7 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
                           ),
                         ),
                         Container(
-                          height: 90,
+                          height: 70,
                           child: TextFormField(
                             initialValue: blocProduk.detailProduct[0].minimalPesanan,
                             onSaved: (value) {
@@ -346,7 +358,8 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
                               },
                               items: [
                                 {'label': 'expedisi', 'value': 'raja_ongkir'},
-                                {'label': 'free ongkir', 'value': 'include'}
+                                {'label': 'free ongkir seluruh kota', 'value': 'include'},
+                                {'label': 'free ongkir dalam kota', 'value': 'include_dalam_kota'},
                               ].map((e) {
                                 return DropdownMenuItem<String>(
                                   value: e['value'],
@@ -495,7 +508,7 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
                           height: 20,
                         ),
                         Container(
-                          height: 90,
+                          height: 70,
                           child: TextFormField(
                             initialValue: blocProduk.detailProduct[0].deskripsi,
                             maxLines: 10,

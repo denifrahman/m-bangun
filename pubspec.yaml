@@ -100,6 +100,7 @@ flutter:
     - assets/logo.png
     - assets/icons/verified.png
     - assets/icons/worker.png
+    - assets/icons/freeshipping.png
     - assets/test.pdf
     - assets/img/a.png
     - assets/img/waiting.png

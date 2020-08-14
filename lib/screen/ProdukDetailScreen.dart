@@ -2,6 +2,7 @@ import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
+import 'package:apps/providers/BlocProfile.dart';
 import 'package:apps/screen/LoginScreen.dart';
 import 'package:apps/widget/Keranjang/Keranjang.dart';
 import 'package:apps/widget/Produk/component/WidgetDeskripsiDetailProduk.dart';
@@ -88,6 +89,9 @@ class ProdukDetailScreen extends StatelessWidget {
                       children: [
                         InkWell(
                           onTap: () {
+                            BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+                            BlocProfile blocProfile = Provider.of<BlocProfile>(context);
+                            blocProfile.getUserAddressDefault(blocAuth.idUser);
                             Navigator.push(context, SlideRightRoute(page: Keranjang()));
                           },
                           child: Stack(
@@ -306,7 +310,7 @@ class ProdukDetailScreen extends StatelessWidget {
                                           child: NumberPicker.integer(
                                             initialValue: blocOrder.jumlah,
                                             minValue: 1,
-                                            maxValue: 10,
+                                            maxValue: 900,
                                             onChanged: (value) {
                                               blocOrder.setJumlah(value);
                                             },
@@ -326,18 +330,26 @@ class ProdukDetailScreen extends StatelessWidget {
                       SizedBox(
                         height: 20,
                       ),
-                      RoundedLoadingButton(
-                        width: MediaQuery.of(context).size.width,
-                        height: 40,
-                        child: Text('Tambah Keranjang', style: TextStyle(color: Colors.white)),
-                        color: Colors.cyan,
-                        controller: _btnController,
-                        onPressed: () async {
-                          var map = new Map<String, String>();
-                          map["id_produk"] = blocProduk.detailProduct[0].id;
-                          map["id_user_login"] = blocAuth.idUser;
-                          map["jumlah"] = blocOrder.jumlah.toString();
-                          map["harga"] = blocProduk.detailProduct[0].harga;
+                      blocOrder.jumlah < int.parse(blocProduk.detailProduct[0].minimalPesanan)
+                          ? RoundedLoadingButton(
+                              width: MediaQuery.of(context).size.width,
+                              height: 40,
+                              child: Text('Tambah Keranjang', style: TextStyle(color: Colors.white)),
+                              color: Colors.grey,
+                              controller: _btnController,
+                            )
+                          : RoundedLoadingButton(
+                              width: MediaQuery.of(context).size.width,
+                              height: 40,
+                              child: Text('Tambah Keranjang', style: TextStyle(color: Colors.white)),
+                              color: Colors.cyan,
+                              controller: _btnController,
+                              onPressed: () async {
+                                var map = new Map<String, String>();
+                                map["id_produk"] = blocProduk.detailProduct[0].id;
+                                map["id_user_login"] = blocAuth.idUser;
+                                map["jumlah"] = blocOrder.jumlah.toString();
+                                map["harga"] = blocProduk.detailProduct[0].harga;
                           map["subtotal"] = (int.parse(blocProduk.detailProduct[0].harga) * blocOrder.jumlah).toString();
                           map["id_toko"] = blocProduk.detailProduct[0].idToko;
                           map["jenis_ongkir"] = blocProduk.detailProduct[0].jenisOngkir;

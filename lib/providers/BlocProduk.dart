@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:apps/Repository/RajaOngkirRepository.dart';
 import 'package:apps/Repository/UserRepository.dart';
+import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/models/CategioryByToko.dart';
 import 'package:apps/models/Categories.dart';
 import 'package:apps/models/Iklan.dart';
@@ -17,6 +19,7 @@ class BlocProduk extends ChangeNotifier {
 
   initLoad() {
     imageCache.clear();
+    getCurrentLocation();
     getOfficialStore();
     getCategory();
     getRecentProduct();
@@ -64,7 +67,6 @@ class BlocProduk extends ChangeNotifier {
   List<Product> get detailProduct => _detailProduct;
 
   getAllProductByParam(param) async {
-    print(param);
     imageCache.clear();
     _isLoading = true;
     notifyListeners();
@@ -366,6 +368,44 @@ class BlocProduk extends ChangeNotifier {
         _isLoading = false;
         notifyListeners();
         return false;
+      }
+    }
+  }
+
+  String _namaProvinsi = '';
+  String _namaKecamatan;
+  String _namaKota;
+
+  String get namaProvinsi => _namaProvinsi;
+
+  String get namaKota => _namaKota;
+
+  String get namaKecamatan => _namaKecamatan;
+
+  getCurrentLocation() async {
+    String currentIdProvinsi = await LocalStorage.sharedInstance.readValue('idProvinsi');
+    if (currentIdProvinsi == null) {
+    } else {
+      var result = await RajaOngkirRepository().getProvince({'id': currentIdProvinsi.toString()});
+      _namaProvinsi = result['rajaongkir']['results']['province'];
+      notifyListeners();
+      String currentIdKota = await LocalStorage.sharedInstance.readValue('idKota');
+      if (currentIdKota != 'null') {
+        var param = {'id': currentIdKota.toString()};
+        var result = await RajaOngkirRepository().getCity(param);
+        _namaKota = result['rajaongkir']['results']['city_name'];
+        notifyListeners();
+      } else {
+        _namaKota = null;
+      }
+      String currentIdKecamatan = await LocalStorage.sharedInstance.readValue('idKecamatan');
+      if (currentIdKecamatan != 'null') {
+        var param = {'id': currentIdKota.toString()};
+        var result = await RajaOngkirRepository().getSubDistrict(param);
+        _namaKecamatan = result['rajaongkir']['results']['subdistrict_name'];
+        notifyListeners();
+      } else {
+        _namaKecamatan = null;
       }
     }
   }

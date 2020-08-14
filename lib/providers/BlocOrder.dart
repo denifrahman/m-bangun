@@ -79,6 +79,7 @@ class BlocOrder extends ChangeNotifier {
     var body = new Map<String, String>();
     body['id'] = id.toString();
     var result = await OrderRepository().removeCart(body);
+    print(result);
     if (result['meta']['success']) {
       getCart();
     }
@@ -129,6 +130,7 @@ class BlocOrder extends ChangeNotifier {
     var id = await LocalStorage.sharedInstance.readValue('id_user_login');
     var param = {'id_user_login': id.toString()};
     var result = await OrderRepository().getCart(param);
+    print(result);
     if (result.toString() == '111' || result.toString() == '101') {
       _connection = false;
       _isLoading = false;

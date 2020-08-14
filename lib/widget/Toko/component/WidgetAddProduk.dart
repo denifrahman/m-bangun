@@ -74,7 +74,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                         )
                       : Container(),
                   Container(
-                    height: 90,
+                    height: 70,
                     child: TextFormField(
                       onSaved: (value) {
                         setState(() {
@@ -97,7 +97,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                     ),
                   ),
                   Container(
-                    height: 90,
+                    height: 70,
                     width: MediaQuery.of(context).size.width,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -128,7 +128,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                           ),
                         ),
                         Container(
-                          height: 90,
+                          height: 70,
                           width: MediaQuery
                               .of(context)
                               .size
@@ -159,7 +159,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                     ),
                   ),
                   Container(
-                    height: 90,
+                    height: 70,
                     width: MediaQuery
                         .of(context)
                         .size
@@ -190,7 +190,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                           ),
                         ),
                         Container(
-                          height: 90,
+                          height: 70,
                           width: MediaQuery
                               .of(context)
                               .size
@@ -220,7 +220,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                     ),
                   ),
                   Container(
-                    height: 90,
+                    height: 70,
                     child: TextFormField(
                       onSaved: (value) {
                         setState(() {
@@ -479,7 +479,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                     height: 20,
                   ),
                   Container(
-                    height: 90,
+                    height: 70,
                     child: TextFormField(
                       maxLines: 10,
                       onSaved: (value) {

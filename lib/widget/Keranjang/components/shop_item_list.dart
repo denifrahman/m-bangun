@@ -36,13 +36,27 @@ class _ShopItemListState extends State<ShopItemList> {
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 0),
-                      child: Image.network(
-                        'https://m-bangun.com/api-v2/assets/toko/' + widget.chilrdern.foto,
-                        width: 80,
-                        height: 80,
-                      ),
+                    Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 0),
+                          child: Image.network(
+                            'https://m-bangun.com/api-v2/assets/toko/' + widget.chilrdern.foto,
+                            width: 80,
+                            height: 80,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        widget.chilrdern.jenisOngkir == 'include_dalam_kota'
+                            ? Text(
+                                'Free ongkir \ndalam kota',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 10, color: Colors.grey),
+                              )
+                            : widget.chilrdern.jenisOngkir == 'include' ? Text('Free ongkir') : Text('')
+                      ],
                     ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -130,7 +144,7 @@ class _ShopItemListState extends State<ShopItemList> {
                         child: NumberPicker.integer(
                           initialValue: int.parse(widget.chilrdern.jumlah),
                           minValue: 1,
-                          maxValue: 10,
+                          maxValue: 900,
                           onChanged: (value) {
                             var body = {
                               'id': widget.chilrdern.id.toString(),

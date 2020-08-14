@@ -1,11 +1,9 @@
-import 'dart:convert';
-
-import 'package:apps/Api/Api.dart';
 import 'package:apps/Utils/LocalBindings.dart';
-import 'package:apps/models/KecamatanM.dart';
-import 'package:apps/models/KotaM.dart';
-import 'package:apps/models/ProvinsiM.dart';
-import 'package:apps/providers/DataProvider.dart';
+import 'package:apps/models/City.dart';
+import 'package:apps/models/Provice.dart';
+import 'package:apps/models/SubDistrict.dart';
+import 'package:apps/providers/BlocAuth.dart';
+import 'package:apps/providers/BlocProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,92 +15,18 @@ class WidgetFilterLokasi extends StatefulWidget {
 }
 
 class _WidgetFilterLokasiState extends State<WidgetFilterLokasi> {
-  String idKota;
-  String idProvinsi;
-  String idKecamatan;
-  String namaProvinsi, namaKota, namaKecamatan;
-  var dataKota = List<KotaM>();
-  var dataProvinsi = List<ProvinsiM>();
-  var dataKecamatan = List<KecamatanM>();
-
-  @override
-  void initState() {
-    _getAllProvinsi();
-    _getCurrentLocation();
-    super.initState();
-  }
-
-  void _getCurrentLocation() async {
-    String currentIdProvinsi = await LocalStorage.sharedInstance.readValue('idProvinsi');
-    String currentIdKota = await LocalStorage.sharedInstance.readValue('idKota');
-    String currentIdKecamatan = await LocalStorage.sharedInstance.readValue('idKecamatan');
-    if (currentIdProvinsi != 'null') {
-      _onchangeProvinsi(currentIdProvinsi);
-      setState(() {
-        idProvinsi = currentIdProvinsi;
-      });
-      if (currentIdKota != 'null') {
-        setState(() {
-          idKota = currentIdKota;
-        });
-      }
-    }
-    print(currentIdKecamatan);
-    if (currentIdKecamatan != 'null') {
-      _onchangeKota(currentIdKota);
-    }
-    if (currentIdKecamatan != 'null') {
-      setState(() {
-        idKecamatan = currentIdKecamatan;
-      });
-    }
-  }
-
-  void _getAllProvinsi() async {
-    String token = await LocalStorage.sharedInstance.readValue('token');
-    Provider.of<DataProvider>(context).setDataKota([]);
-    Provider.of<DataProvider>(context).setDataKecamatan([]);
-
-    Api.getAllProvinsi(token).then((value) {
-      var result = json.decode(value.body);
-      print(result);
-      Iterable list = result['data'];
-      Provider.of<DataProvider>(context).setDataProvinsi(list.map((model) => ProvinsiM.fromMap(model)).toList());
-    });
-  }
-
-  void _onchangeProvinsi(String newValue) async {
-    String token = await LocalStorage.sharedInstance.readValue('token');
-    Api.getAllKotaByIdProvinsi(token, newValue).then((value) {
-      var result = json.decode(value.body);
-      Iterable list = result['data'];
-      Provider.of<DataProvider>(context).setDataKota(list.map((model) => KotaM.fromMap(model)).toList());
-    });
-  }
-
-  void _onchangeKota(String newValue) async {
-    String token = await LocalStorage.sharedInstance.readValue('token');
-    Api.getAllKecamatanByIdKota(token, idKota).then((value) {
-      var result = json.decode(value.body);
-      print(result);
-      Iterable list = result['data'];
-      Provider.of<DataProvider>(context).setDataKecamatan(list.map((model) => KecamatanM.fromMap(model)).toList());
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
     // TODO: implement build
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          height: 10,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
+    BlocProfile blocProfile = Provider.of<BlocProfile>(context);
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
             children: [
               Container(
                 width: MediaQuery.of(context).size.width - 10,
@@ -112,36 +36,27 @@ class _WidgetFilterLokasiState extends State<WidgetFilterLokasi> {
                     "Pilih Provinsi",
                     style: TextStyle(color: Colors.grey, fontSize: 12),
                   ),
-                  value: idProvinsi,
+                  value: blocProfile.id_provice,
                   validator: (String arg) {
                     if (arg == null)
                       return 'Harus di isi';
                     else
                       return null;
                   },
-                  onChanged: (String newValue) {
-                    dataProvider.setSelectedKota(null);
-                    setState(() {
-                      idProvinsi = newValue;
-                      idKota = null;
-                      idKecamatan = null;
-                    });
-                    dataProvider.setDataKota([]);
-                    dataProvider.setDataKecamatan([]);
-                    dataProvider.setSelectedProvinsi(newValue);
-                    dataProvider.setSelectedKota(null);
-                    dataProvider.setSelectedKecamatan(null);
-                    _onchangeProvinsi(newValue);
+                  onChanged: (String value) {
+                    blocProfile.setIdProvince(value);
                   },
-                  items: dataProvider.getDataProvinsi.map((ProvinsiM item) {
-                    return new DropdownMenuItem<String>(
-                      value: item.idPropinsi.toString(),
-                      child: new Text(
-                        item.namaPropinsi.toString(),
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    );
-                  }).toList(),
+                  items: blocProfile.listProvice.isEmpty
+                      ? null
+                      : blocProfile.listProvice[0].rajaongkir.results.map((ResultsBean item) {
+                          return new DropdownMenuItem<String>(
+                            value: item.provinceId,
+                            child: new Text(
+                              item.province.toString(),
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          );
+                        }).toList(),
                 ),
               ),
               Container(
@@ -152,28 +67,23 @@ class _WidgetFilterLokasiState extends State<WidgetFilterLokasi> {
                     "Pilih Kota",
                     style: TextStyle(color: Colors.grey, fontSize: 12),
                   ),
-                  value: idKota,
+                  value: blocProfile.id_city,
                   validator: (String arg) {
                     if (arg == null)
                       return 'Harus di isi';
                     else
                       return null;
                   },
-                  onChanged: (String newValue) {
-                    setState(() {
-                      idKota = newValue;
-                      dataKecamatan = [];
-                      idKecamatan = null;
-                    });
-                    dataProvider.setSelectedKota(newValue);
-                    dataProvider.setSelectedKecamatan(null);
-                    _onchangeKota(newValue);
+                  onChanged: (String value) {
+                    blocProfile.setIdCity(value);
                   },
-                  items: dataProvider.getDataKota.map((KotaM item) {
+                  items: blocProfile.listCity.isEmpty
+                      ? null
+                      : blocProfile.listCity[0].rajaongkir.results.map((ResultsBeanCity item) {
                     return new DropdownMenuItem<String>(
-                      value: item.idKabkota.toString(),
+                      value: item.cityId,
                       child: new Text(
-                        item.namaKabkota.toString(),
+                        item.cityName.toString(),
                         style: TextStyle(fontSize: 12),
                       ),
                     );
@@ -188,24 +98,23 @@ class _WidgetFilterLokasiState extends State<WidgetFilterLokasi> {
                     "Pilih Kecamatan",
                     style: TextStyle(color: Colors.grey, fontSize: 12),
                   ),
-                  value: idKecamatan,
+                  value: blocProfile.id_subdistrict,
                   validator: (String arg) {
                     if (arg == null)
                       return 'Harus di isi';
                     else
                       return null;
                   },
-                  onChanged: (String newValue) {
-                    setState(() {
-                      idKecamatan = newValue;
-                    });
-                    dataProvider.setSelectedKecamatan(newValue);
+                  onChanged: (String value) {
+                    blocProfile.setIdSubistrict(value);
                   },
-                  items: dataProvider.getDataKecamatan.map((KecamatanM item) {
+                  items: blocProfile.listSubDistrict.isEmpty
+                      ? null
+                      : blocProfile.listSubDistrict[0].rajaongkir.results.map((ResultsBeanSubdistrict item) {
                     return new DropdownMenuItem<String>(
-                      value: item.idKecamatan.toString(),
+                      value: item.subdistrictId,
                       child: new Text(
-                        item.namaKecamatan.toString(),
+                        item.subdistrictName.toString(),
                         style: TextStyle(fontSize: 12),
                       ),
                     );
@@ -214,8 +123,30 @@ class _WidgetFilterLokasiState extends State<WidgetFilterLokasi> {
               ),
             ],
           ),
-        )
-      ],
+//          SizedBox(
+//            width: double.infinity,
+//            child: RaisedButton(
+//              child: Text("Simpan"),
+//              color: Color(0xffb16a085),
+//              textColor: Colors.white,
+//              padding: EdgeInsets.only(left: 11, right: 11, top: 15, bottom: 15),
+//              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+//              onPressed: () async {
+//                _simpanKota(context);
+//              },
+//            ),
+//          )
+        ],
+      ),
     );
+  }
+
+  _simpanKota(context) {
+    BlocProfile blocProfile = Provider.of<BlocProfile>(context);
+    LocalStorage.sharedInstance.writeValue(key: 'idProvinsi', value: blocProfile.id_provice);
+    LocalStorage.sharedInstance.writeValue(key: 'idKota', value: blocProfile.id_city == null ? 'null' : blocProfile.id_city);
+    LocalStorage.sharedInstance.writeValue(key: 'idKecamatan', value: blocProfile.id_subdistrict == null ? 'null' : blocProfile.id_subdistrict);
+    print('simpan');
+    Navigator.pop(context);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/models/ProdukListM.dart';
+import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/screen/ProdukDetailScreen.dart';
 import 'package:apps/widget/Produk/WidgetOverViewProduk.dart';
@@ -40,6 +41,7 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
   Widget build(BuildContext context) {
     // TODO: implement build
     BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     var size = MediaQuery.of(context).size;
 
     /*24 is for notification bar on Android*/

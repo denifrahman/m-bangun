@@ -1,5 +1,5 @@
-/// flag : "Pasir"
-/// chilrdern : [{"id":"35","created_at":"2020-08-04 11:54:53.283426","id_produk":"5","id_user_login":"35","jumlah":"2","harga":"100","subtotal":"200","id_toko":"3","jenis_ongkir":"iclude","catatan":"warna merah muda","foto":"ramayana.png","nama":"Pasir","nama_toko":"Pasir","id_kecamatan":"6133","foto_toko":"pasir.png"}]
+/// flag : "Toko Anugerah"
+/// chilrdern : [{"id":"110","created_at":"2020-08-14 20:14:41.279496","id_produk":"29","id_user_login":"45","jumlah":"14","harga":"5000000","subtotal":"70000000","id_toko":"1","jenis_ongkir":"include_dalam_kota","catatan":"","foto":"scaled_image_picker6724287038539896222.jpg","nama":"semen gresik","nama_toko":"Toko Anugerah","id_kecamatan":"6131","foto_toko":"ramayana.png","berat":"100000","id_kota":"444","id_provinsi":"11"},{"id":"109","created_at":"2020-08-14 19:40:32.506459","id_produk":"27","id_user_login":"45","jumlah":"1","harga":"1000000","subtotal":"1000000","id_toko":"1","jenis_ongkir":"raja_ongkir","catatan":"","foto":"scaled_image_picker5911815857486830770.jpg","nama":"batako","nama_toko":"Toko Anugerah","id_kecamatan":"6131","foto_toko":"ramayana.png","berat":"100000","id_kota":"444","id_provinsi":"11"},{"id":"108","created_at":"2020-08-14 19:40:24.746809","id_produk":"28","id_user_login":"45","jumlah":"1","harga":"500000","subtotal":"500000","id_toko":"1","jenis_ongkir":"raja_ongkir","catatan":"","foto":"scaled_image_picker798869768074060374.jpg","nama":"asbes","nama_toko":"Toko Anugerah","id_kecamatan":"6131","foto_toko":"ramayana.png","berat":"10000","id_kota":"444","id_provinsi":"11"},{"id":"91","created_at":"2020-08-13 13:59:49.192174","id_produk":"31","id_user_login":"44","jumlah":"1","harga":"25000","subtotal":"25000","id_toko":"1","jenis_ongkir":"raja_ongkir","catatan":"","foto":"scaled_image_picker5306355590071312649.jpg","nama":"palu","nama_toko":"Toko Anugerah","id_kecamatan":"6131","foto_toko":"ramayana.png","berat":"5000","id_kota":"444","id_provinsi":"11"}]
 
 class Cart {
   String flag;
@@ -19,21 +19,24 @@ class Cart {
       };
 }
 
-/// id : "35"
-/// created_at : "2020-08-04 11:54:53.283426"
-/// id_produk : "5"
-/// id_user_login : "35"
-/// jumlah : "2"
-/// harga : "100"
-/// subtotal : "200"
-/// id_toko : "3"
-/// jenis_ongkir : "iclude"
-/// catatan : "warna merah muda"
-/// foto : "ramayana.png"
-/// nama : "Pasir"
-/// nama_toko : "Pasir"
-/// id_kecamatan : "6133"
-/// foto_toko : "pasir.png"
+/// id : "110"
+/// created_at : "2020-08-14 20:14:41.279496"
+/// id_produk : "29"
+/// id_user_login : "45"
+/// jumlah : "14"
+/// harga : "5000000"
+/// subtotal : "70000000"
+/// id_toko : "1"
+/// jenis_ongkir : "include_dalam_kota"
+/// catatan : ""
+/// foto : "scaled_image_picker6724287038539896222.jpg"
+/// nama : "semen gresik"
+/// nama_toko : "Toko Anugerah"
+/// id_kecamatan : "6131"
+/// foto_toko : "ramayana.png"
+/// berat : "100000"
+/// id_kota : "444"
+/// id_provinsi : "11"
 
 class ChilrdernBean {
   String id;
@@ -52,6 +55,8 @@ class ChilrdernBean {
   String idKecamatan;
   String fotoToko;
   String berat;
+  String idKota;
+  String idProvinsi;
 
   static ChilrdernBean fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
@@ -72,6 +77,8 @@ class ChilrdernBean {
     chilrdernBean.idKecamatan = map['id_kecamatan'];
     chilrdernBean.fotoToko = map['foto_toko'];
     chilrdernBean.berat = map['berat'];
+    chilrdernBean.idKota = map['id_kota'];
+    chilrdernBean.idProvinsi = map['id_provinsi'];
     return chilrdernBean;
   }
 
@@ -93,5 +100,7 @@ class ChilrdernBean {
         "id_kecamatan": idKecamatan,
         "foto_toko": fotoToko,
         "berat": berat,
+        "id_kota": idKota,
+        "id_provinsi": idProvinsi,
       };
 }

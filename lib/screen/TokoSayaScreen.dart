@@ -150,19 +150,31 @@ class TokoSayaScreen extends StatelessWidget {
                                                   ),
                                                   title: Text(
                                                     blocProduk.listProducts[index].nama,
-                                                    style: TextStyle(fontSize: 14),
+                                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                                                   ),
-                                                  subtitle: Row(
+                                                  subtitle: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
-                                                      Text(
-                                                        Money.fromInt(int.parse(blocProduk.listProducts[index].harga.toString()), IDR).toString(),
-                                                        style: TextStyle(fontSize: 12),
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            Money.fromInt(int.parse(blocProduk.listProducts[index].harga.toString()), IDR).toString(),
+                                                            style: TextStyle(fontSize: 12),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 5,
+                                                          ),
+                                                          Text(
+                                                            'Stok : ' + blocProduk.listProducts[index].stok,
+                                                            style: TextStyle(fontSize: 12),
+                                                          ),
+                                                        ],
                                                       ),
                                                       SizedBox(
                                                         width: 5,
                                                       ),
                                                       Text(
-                                                        'Stok : ' + blocProduk.listProducts[index].stok,
+                                                        'Dilihat : ' + blocProduk.listProducts[index].jumlahDilihat,
                                                         style: TextStyle(fontSize: 12),
                                                       ),
                                                     ],
@@ -191,7 +203,9 @@ class TokoSayaScreen extends StatelessWidget {
                                                               var param = {'id': blocProduk.listProducts[index].id};
                                                               blocProduk.getDetailProductByParam(param);
                                                               blocProduk.clearDetailProduk();
-                                                              Navigator.push(context, SlideRightRoute(page: WidgetUpdateProduk()));
+                                                              Navigator.push(context, SlideRightRoute(page: WidgetUpdateProduk())).then((value) {
+                                                                blocProduk.getAllProductByParam({'id_toko': blocAuth.idToko.toString()});
+                                                              });
                                                             },
                                                           ),
                                                         ),

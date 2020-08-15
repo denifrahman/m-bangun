@@ -93,7 +93,6 @@ class BlocProduk extends ChangeNotifier {
 
   addCountViewProduk(body) async {
     var result = await UserRepository().addCountViewProduk(body);
-    print(result);
   }
 
   getDetailProductByParam(param) async {
@@ -123,7 +122,7 @@ class BlocProduk extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().getFavoriteProduct(param);
-    print(result);
+//    print(result);
     if (result.toString() == '111' || result.toString() == '101') {
       _connection = false;
       _isLoading = false;
@@ -198,7 +197,7 @@ class BlocProduk extends ChangeNotifier {
     notifyListeners();
     var param = {'': ''};
     var result = await UserRepository().getAllIklan(param);
-    print(result);
+//    print(result);
     if (result.toString() == '111' || result.toString() == '101') {
       _isLoading = false;
       _connection = false;
@@ -336,7 +335,7 @@ class BlocProduk extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().updateProduk(files, body);
-    print(result);
+//    print(result);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405') {
       _connection = false;
       _isLoading = false;

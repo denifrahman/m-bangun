@@ -84,7 +84,7 @@ class BlocProfile extends ChangeNotifier {
     notifyListeners();
     var param = {'province': _id_provice.toString()};
     var result = await RajaOngkirRepository().getCity(param);
-    print([result]);
+//    print([result]);
     Iterable list = [result];
     _listCity = list.map((model) => City.fromMap(model)).toList();
     _isLoading = false;

@@ -8,15 +8,17 @@ import 'package:mime/mime.dart';
 
 class ApiBaseHelper {
   final _baseUrl = 'm-bangun.com';
-//  final _baseUrl = '192.168.100.226';
+//  final _baseUrl = '192.168.100.248';
 
   final _path = 'api-v2/';
-//  final _path = 'api-/';
+
+//  final _path = 'api-mbangun/';
 
   Future<dynamic> get(String url, param) async {
     var responseJson;
     try {
       final _url = Uri.http(_baseUrl, _path + url, param);
+      print(_url);
       final response = await http.get(_url);
       responseJson = _returnResponse(response);
     } on SocketException catch (err) {
@@ -42,12 +44,9 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final _url = Uri.http(_baseUrl, _path + url);
-//      var uri = Uri.parse(_baseUrl"/produk/insert");
-//      print(uri);
       var request = new http.MultipartRequest("POST", _url);
       for (var file in files) {
         final mimeTypeprodukthumbnail = lookupMimeType(file.path, headerBytes: [0xFF, 0xD8]).split('/');
-        String fileName = file.path.split('/').last;
         final foto = await http.MultipartFile.fromPath('foto[]', file.path, contentType: MediaType(mimeTypeprodukthumbnail[0], mimeTypeprodukthumbnail[1]));
         request.files.addAll([foto]);
       }
@@ -67,9 +66,13 @@ class ApiBaseHelper {
       var response = await request.send();
 
       final result = await http.Response.fromStream(response);
-      responseJson = _returnResponse(result);
+      if (result.statusCode == 200) {
+        responseJson = _returnResponse(result);
+      } else {
+        responseJson = result.statusCode.toString();
+      }
     } on SocketException catch (err) {
-      return FetchDataException(err.osError.errorCode.toString());
+      return AppException(err.osError.errorCode, err.message);
     }
     return responseJson;
   }

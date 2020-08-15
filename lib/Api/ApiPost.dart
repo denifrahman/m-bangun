@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 
-const baseUrl = 'm-bangun.com';
-const controller = 'api-v2/';
+const baseUrl = 'localhost';
+const controller = 'api-mbangun/';
 
 class ApiPost {
   static Future auth(body) {

@@ -87,6 +87,11 @@ class UserRepository {
     return response;
   }
 
+  Future addCountViewProduk(body) async {
+    final response = await _helper.post("produk/insertDilihat", body);
+    return response;
+  }
+
   Future addProduk(List<File> files, body) async {
     final response = await _helper.multipart("produk/insert", files, body);
     return response;

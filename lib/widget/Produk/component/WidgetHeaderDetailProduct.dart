@@ -1,7 +1,9 @@
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
+import 'package:apps/providers/BlocProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:money2/money2.dart';
+import 'package:provider/provider.dart';
 
 class WidgetHeaderDetailProduct extends StatelessWidget {
   const WidgetHeaderDetailProduct({
@@ -17,7 +19,7 @@ class WidgetHeaderDetailProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(blocProduk.detailProduct[0].jenisOngkir);
+    BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     return Container(
       child: Column(
         children: [
@@ -155,7 +157,12 @@ class WidgetHeaderDetailProduct extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Text('dikirim dari '),
+                  Row(
+                    children: [
+                      Text('dikirim dari ', style: TextStyle(fontSize: 12, color: Colors.grey),),
+                      Text('${blocProfile.alamatToko['city_name']}', style: TextStyle(fontSize: 12),),
+                    ],
+                  ),
                   SizedBox(
                     height: 8,
                   ),

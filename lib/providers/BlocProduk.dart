@@ -91,18 +91,25 @@ class BlocProduk extends ChangeNotifier {
     notifyListeners();
   }
 
+  addCountViewProduk(body) async {
+    var result = await UserRepository().addCountViewProduk(body);
+    print(result);
+  }
+
   getDetailProductByParam(param) async {
     imageCache.clear();
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().getAllProduct(param);
-    print(result);
     if (result.toString() == '111' || result.toString() == '101') {
       _connection = false;
       _isLoading = false;
       _detailProduct = [];
       notifyListeners();
     } else {
+      var id = await LocalStorage.sharedInstance.readValue('id_user_login');
+      var body = {'id_user_login': '1', 'id_produk': param['id'], 'id_user_login': id.toString()};
+      addCountViewProduk(body);
       Iterable list = result['data'];
       _detailProduct = list.map((model) => Product.fromMap(model)).toList();
       _isLoading = false;

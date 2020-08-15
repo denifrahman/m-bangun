@@ -62,14 +62,11 @@ class WidgetListPembelian extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
                           leading: Image.network(
-                              'https://m-bangun.com/api-v2/assets/toko/' + blocOrder.listOrder[index].foto,
-                              width: 100,
-                              height: 100,
+                              'https://m-bangun.com/api-v2/assets/toko/' + blocOrder.listOrder[index].foto, width: 50, height: 100,
                               errorBuilder: (context, urlImage, error) {
-                                print(error.hashCode);
-                                return Image.asset('assets/logo.png');
-                              }
-                          ),
+                            print(error.hashCode);
+                            return Image.asset('assets/logo.png');
+                          }),
                           title: Text(blocOrder.listOrder[index].namaToko, style: TextStyle(fontSize: 14)),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,7 +82,7 @@ class WidgetListPembelian extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 5),
                             child: Column(
                               children: [
-                                Icon(Icons.watch_later, color: Colors.red),
+                                Icon(Icons.watch_later, color: Colors.red, size: 20,),
                                 Text(
                                   Jiffy(DateTime.parse(blocOrder.listOrder[index].batasBayar.toString())).format("dd/MM/yyyy"),
                                   style: TextStyle(fontSize: 9, color: Colors.grey),

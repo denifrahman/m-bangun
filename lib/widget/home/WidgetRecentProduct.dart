@@ -1,7 +1,7 @@
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/Utils/navigation_right.dart';
-import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
+import 'package:apps/providers/BlocProfile.dart';
 import 'package:apps/screen/ProdukDetailScreen.dart';
 import 'package:apps/screen/ProdukScreen.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +19,7 @@ class WidgetRecentProduct extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     return Column(
       children: [
         Padding(
@@ -61,8 +62,8 @@ class WidgetRecentProduct extends StatelessWidget {
                         context,
                         SlideRightRoute(
                             page: ProdukScreen(
-                          namaKategori: 'Semua',
-                        )));
+                              namaKategori: 'Semua',
+                            )));
                   },
                   child: Text(
                     'Semua',
@@ -99,18 +100,20 @@ class WidgetRecentProduct extends StatelessWidget {
                 child: InkWell(
                   onTap: () {
                     blocProduk.getDetailProductByParam({'id': blocProduk.listRecentProduct[j].id, 'aktif': '1'});
-                    Provider.of<BlocOrder>(context).getCart();
+                    blocProfile.getCityParam({'id': blocProduk.listProducts[j].idKota.toString()});
                     Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
                   },
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(5.0),
                     child: Column(
                       children: <Widget>[
                         Expanded(
                           flex: 2,
                           child: getPostImages(blocProduk.listRecentProduct[j].foto),
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Expanded(
                           flex: 3,
                           child: Column(
@@ -120,7 +123,7 @@ class WidgetRecentProduct extends StatelessWidget {
                               Column(
                                 children: [
                                   Container(
-                                    width: 150,
+                                    width: 100,
                                     child: RichText(
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
@@ -129,7 +132,7 @@ class WidgetRecentProduct extends StatelessWidget {
                                     ),
                                   ),
                                   Container(
-                                    width: 150,
+                                    width: 100,
                                     child: RichText(
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
@@ -154,7 +157,7 @@ class WidgetRecentProduct extends StatelessWidget {
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                           text: TextSpan(
-                                              style: TextStyle(color: Colors.grey, fontSize: 11, fontWeight: FontWeight.normal, fontStyle: FontStyle.italic),
+                                              style: TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.normal, fontStyle: FontStyle.italic),
                                               text: blocProduk.listRecentProduct[j].namaToko + ' '),
                                         ),
                                         blocProduk.listRecentProduct.isEmpty

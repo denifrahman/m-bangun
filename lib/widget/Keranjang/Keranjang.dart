@@ -154,7 +154,7 @@ class _KeranjangState extends State<Keranjang> {
                                     onTap: () {
                                       blocProfile.getProvince();
                                       var idKecamatanToko = blocOrder.listCart[i].chilrdern[0].idKecamatan;
-                                      blocProfile.getSubDistrictById(idKecamatanToko);
+//                                      blocProfile.getSubDistrictById(idKecamatanToko);
                                       blocOrder.getMetodePembayaran();
                                       blocOrder.clearCost();
                                       int totalDalamKota = 0;

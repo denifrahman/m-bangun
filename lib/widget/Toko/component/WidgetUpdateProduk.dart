@@ -60,7 +60,7 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
     return blocProduk.detailProduct.isEmpty
         ? PKCardPageSkeleton()
         : ModalProgressHUD(
-            inAsyncCall: blocProduk.isLoading,
+            inAsyncCall: false,
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: appBar,
@@ -578,6 +578,7 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
                                   'kondisi': kondisi == null ? blocProduk.detailProduct[0].kondisi : kondisi.toString(),
                                   'minimal_pesanan': minimal_pesanan.toString(),
                                   'harga': harga.toString(),
+                                  'panjang': panjang.toString(),
                                   'stok': stok.toString(),
                                 };
                                 List<File> files = [foto, foto1, foto2];

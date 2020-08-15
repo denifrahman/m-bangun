@@ -92,6 +92,7 @@ class ProdukDetailScreen extends StatelessWidget {
                             BlocAuth blocAuth = Provider.of<BlocAuth>(context);
                             BlocProfile blocProfile = Provider.of<BlocProfile>(context);
                             blocProfile.getUserAddressDefault(blocAuth.idUser);
+                            blocOrder.getCart();
                             Navigator.push(context, SlideRightRoute(page: Keranjang()));
                           },
                           child: Stack(
@@ -198,10 +199,7 @@ class ProdukDetailScreen extends StatelessWidget {
                 key: _formKey,
                 autovalidate: false,
                 child: Container(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height * 0.8,
+                  height: MediaQuery.of(context).size.height * 0.8,
                   padding: EdgeInsets.all(15.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -340,16 +338,16 @@ class ProdukDetailScreen extends StatelessWidget {
                             )
                           : RoundedLoadingButton(
                               width: MediaQuery.of(context).size.width,
-                              height: 40,
-                              child: Text('Tambah Keranjang', style: TextStyle(color: Colors.white)),
-                              color: Colors.cyan,
-                              controller: _btnController,
-                              onPressed: () async {
-                                var map = new Map<String, String>();
-                                map["id_produk"] = blocProduk.detailProduct[0].id;
-                                map["id_user_login"] = blocAuth.idUser;
-                                map["jumlah"] = blocOrder.jumlah.toString();
-                                map["harga"] = blocProduk.detailProduct[0].harga;
+                        height: 40,
+                        child: Text('Tambah Keranjang', style: TextStyle(color: Colors.white)),
+                        color: Colors.cyan,
+                        controller: _btnController,
+                        onPressed: () async {
+                          var map = new Map<String, String>();
+                          map["id_produk"] = blocProduk.detailProduct[0].id;
+                          map["id_user_login"] = blocAuth.idUser;
+                          map["jumlah"] = blocOrder.jumlah.toString();
+                          map["harga"] = blocProduk.detailProduct[0].harga;
                           map["subtotal"] = (int.parse(blocProduk.detailProduct[0].harga) * blocOrder.jumlah).toString();
                           map["id_toko"] = blocProduk.detailProduct[0].idToko;
                           map["jenis_ongkir"] = blocProduk.detailProduct[0].jenisOngkir;

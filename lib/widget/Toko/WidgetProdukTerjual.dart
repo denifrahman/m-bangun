@@ -2,9 +2,11 @@ import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
+import 'package:apps/providers/BlocProfile.dart';
 import 'package:apps/screen/ProdukDetailScreen.dart';
 import 'package:apps/screen/ProdukScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:money2/money2.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
@@ -19,6 +21,7 @@ class WidgetProdukTerjual extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+    BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     return Column(
       children: [
         Padding(
@@ -74,7 +77,10 @@ class WidgetProdukTerjual extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             children: List.generate(
               blocProduk.listProdukTerjual.isEmpty ? 1 : blocProduk.listProdukTerjual.length,
-                  (j) {
+              (j) {
+                final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
+                var harga = blocProduk.listRecentProduct.isEmpty ? '0' : blocProduk.listRecentProduct[j].harga;
+                var hargaFormat = Money.fromInt(harga == null ? 0 : int.parse(harga), IDR);
                 if (blocProduk.listProdukTerjual.isEmpty) {
                   return Center(
                     child: Text('Tidak ada data'),
@@ -87,12 +93,13 @@ class WidgetProdukTerjual extends StatelessWidget {
                       onTap: () {
                         blocProduk.getDetailProductByParam({'id': blocProduk.listProdukTerjual[j].id.toString(), 'aktif': '1'});
                         Provider.of<BlocOrder>(context).getCart();
+                        blocProfile.getCityParam({'id': blocProduk.listProducts[j].idKota.toString()});
                         Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
                       },
                       child: Column(
                         children: <Widget>[
                           Expanded(
-                            flex: 2,
+                            flex: 1,
                             child: getPostImages(blocProduk.listProdukTerjual[j].foto),
                           ),
                           Expanded(
@@ -113,12 +120,38 @@ class WidgetProdukTerjual extends StatelessWidget {
                                     ),
                                   ),
                                   Container(
-                                    width: 150,
+                                    width: 100,
                                     child: RichText(
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                       text: TextSpan(
-                                          style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal), text: blocProduk.listProdukTerjual[j].namaToko),
+                                          style: TextStyle(
+                                            color: Colors.redAccent,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          text: hargaFormat.toString()),
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Row(
+                                      children: [
+                                        RichText(
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          text: TextSpan(
+                                              style: TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.normal, fontStyle: FontStyle.italic),
+                                              text: blocProduk.listRecentProduct[j].namaToko + ' '),
+                                        ),
+                                        blocProduk.listRecentProduct.isEmpty
+                                            ? Container()
+                                            : blocProduk.listRecentProduct[j].jenisToko == 'official_store'
+                                            ? Image.asset(
+                                          'assets/icons/verified.png',
+                                          height: 10,
+                                        )
+                                            : Container()
+                                      ],
                                     ),
                                   ),
                                   SmoothStarRating(

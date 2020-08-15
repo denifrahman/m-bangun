@@ -138,33 +138,29 @@ class CheckoutScreen extends StatelessWidget {
                                   child: PKCardListSkeleton(),
                                 )
                               : Container(
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemBuilder: (_, j) {
-                                print(blocOrder.listCart[0].chilrdern
-                                    .where((element) => element.jenisOngkir == 'raja_ongkir')
-                                    .length);
-                                if (blocOrder.listCart[0].chilrdern[j].jenisOngkir == 'raja_ongkir') {
-                                  return CardRajaOngkir(
-                                    listCart: listCart,
-                                    blocAuth: blocAuth,
-                                    blocOrder: blocOrder,
-                                    blocProfile: blocProfile,
-                                    IDR: IDR,
-                                    btnController: _btnController,
-                                  );
-                                } else {
-                                  return Container();
-                                }
-                              },
-                              itemCount: blocOrder.listCart[0].chilrdern
-                                  .where((element) => element.jenisOngkir == 'raja_ongkir')
-                                  .length > 1 ? 1 : blocOrder.listCart[0].chilrdern
-                                  .where((element) => element.jenisOngkir == 'raja_ongkir')
-                                  .length,
-                            ),
-                          ),
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemBuilder: (_, j) {
+                                      print(blocOrder.listCart[0].chilrdern.where((element) => element.jenisOngkir == 'raja_ongkir').length);
+                                      if (blocOrder.listCart[0].chilrdern[j].jenisOngkir == 'raja_ongkir') {
+                                        return CardRajaOngkir(
+                                          listCart: listCart,
+                                          blocAuth: blocAuth,
+                                          blocOrder: blocOrder,
+                                          blocProfile: blocProfile,
+                                          IDR: IDR,
+                                          btnController: _btnController,
+                                        );
+                                      } else {
+                                        return Container();
+                                      }
+                                    },
+                                    itemCount: blocOrder.listCart[0].chilrdern.where((element) => element.jenisOngkir == 'raja_ongkir').length > 1
+                                        ? 1
+                                        : blocOrder.listCart[0].chilrdern.length,
+                                  ),
+                                ),
                           Container(
                             color: blocOrder.listMetodePembayaranSelected.isEmpty ? Colors.red.withOpacity(0.2) : Colors.white,
                             margin: const EdgeInsets.only(top: 10.0),
@@ -247,54 +243,60 @@ class CheckoutScreen extends StatelessWidget {
                             child: Text('Bayar', style: TextStyle(color: Colors.white)),
                             color: Colors.cyan[700],
                             onPressed: () {
-                              if (blocOrder.listCostSelected.isNotEmpty && blocOrder.listMetodePembayaran.isNotEmpty) {
-                                var totalOngkir = blocOrder.listCostSelected.isEmpty ? 0 : blocOrder.listCostSelected['total_ongkir'];
-                                Map data_order = {
-                                  'id_toko': listCart.chilrdern[0].idToko.toString(),
-                                  'id_pembeli': blocAuth.idUser.toString(),
-                                  'subtotal': this.subtotal.toString(),
-                                  'total_ongkir': totalOngkir.toString(),
-                                  'total': (this.subtotal + totalOngkir).toString(),
-                                  'metode_pembayaran': blocOrder.listMetodePembayaranSelected['metode_pembayaran'].toString(),
-                                  'status_pembayaran': 'menunggu'.toString(),
-                                  'total_diskon': '0'.toString(),
-                                  'total_lain_lain': '0'.toString(),
-                                  'kode_kurir': blocOrder.listCostSelected['kode_kurir'].toString(),
-                                  'nama_kurir': blocOrder.listCostSelected['nama_kurir'].toString(),
-                                  'estimasi_pengiriman': blocOrder.listCostSelected['estimasi_pengiriman'].toString(),
-                                  'jenis_service': blocOrder.listCostSelected['jenis_service'].toString(),
-                                  'no_rekening': blocOrder.listMetodePembayaranSelected['no_rekening'].toString(),
-                                  'nama_rekening': blocOrder.listMetodePembayaranSelected['nama_rekening'].toString(),
-                                  'nama_bank': blocOrder.listMetodePembayaranSelected['nama_bank'].toString(),
+                              var totalOngkir = blocOrder.listCostSelected.isEmpty ? 0 : blocOrder.listCostSelected['total_ongkir'];
+                              Map data_order = {
+                                'id_toko': listCart.chilrdern[0].idToko.toString(),
+                                'id_pembeli': blocAuth.idUser.toString(),
+                                'subtotal': this.subtotal.toString(),
+                                'total_ongkir': totalOngkir.toString(),
+                                'total': (this.subtotal + totalOngkir).toString(),
+                                'metode_pembayaran': blocOrder.listMetodePembayaranSelected['metode_pembayaran'].toString(),
+                                'status_pembayaran': 'menunggu'.toString(),
+                                'total_diskon': '0'.toString(),
+                                'total_lain_lain': '0'.toString(),
+                                'kode_kurir': blocOrder.listCostSelected['kode_kurir'].toString(),
+                                'nama_kurir': blocOrder.listCostSelected['nama_kurir'].toString(),
+                                'estimasi_pengiriman': blocOrder.listCostSelected['estimasi_pengiriman'].toString(),
+                                'jenis_service': blocOrder.listCostSelected['jenis_service'].toString(),
+                                'no_rekening': blocOrder.listMetodePembayaranSelected['no_rekening'].toString(),
+                                'nama_rekening': blocOrder.listMetodePembayaranSelected['nama_rekening'].toString(),
+                                'nama_bank': blocOrder.listMetodePembayaranSelected['nama_bank'].toString(),
+                              };
+                              Map data_penerima = {
+                                'id_user_login': blocAuth.idUser.toString(),
+                                'nama_penerima': blocProfile.listUserAddressDefault[0].namaPenerima.toString(),
+                                'no_hp_penerima': blocProfile.listUserAddressDefault[0].noHp.toString(),
+                                'nama_alamat': blocProfile.listUserAddressDefault[0].namaAlamat.toString(),
+                                'id_kecamatan': blocProfile.listUserAddressDefault[0].idKecamatan.toString(),
+                                'alamat_lengkap': blocProfile.listUserAddressDefault[0].alamatLengkap.toString(),
+                              };
+                              List data_produk = [];
+                              for (var i = 0; i < listCart.chilrdern.length; i++) {
+                                Map dataProduk = {
+                                  'id_produk': listCart.chilrdern[i].idProduk.toString(),
+                                  'id_keranjang': listCart.chilrdern[i].id.toString(),
+                                  'nama_produk': listCart.chilrdern[i].nama.toString(),
+                                  'harga': listCart.chilrdern[i].harga.toString(),
+                                  'jumlah': listCart.chilrdern[i].jumlah.toString(),
+                                  'subtotal': (int.parse(listCart.chilrdern[i].jumlah.toString()) * int.parse(listCart.chilrdern[i].harga)).toString(),
+                                  'berat': listCart.chilrdern[i].berat.toString(),
+                                  'slug': listCart.chilrdern[i].nama.toString(),
+                                  'catatan': listCart.chilrdern[i].catatan.toString(),
                                 };
-                                Map data_penerima = {
-                                  'id_user_login': blocAuth.idUser.toString(),
-                                  'nama_penerima': blocProfile.listUserAddressDefault[0].namaPenerima.toString(),
-                                  'no_hp_penerima': blocProfile.listUserAddressDefault[0].noHp.toString(),
-                                  'nama_alamat': blocProfile.listUserAddressDefault[0].namaAlamat.toString(),
-                                  'id_kecamatan': blocProfile.listUserAddressDefault[0].idKecamatan.toString(),
-                                  'alamat_lengkap': blocProfile.listUserAddressDefault[0].alamatLengkap.toString(),
-                                };
-                                List data_produk = [];
-                                for (var i = 0; i < listCart.chilrdern.length; i++) {
-                                  Map dataProduk = {
-                                    'id_produk': listCart.chilrdern[i].idProduk.toString(),
-                                    'id_keranjang': listCart.chilrdern[i].id.toString(),
-                                    'nama_produk': listCart.chilrdern[i].nama.toString(),
-                                    'harga': listCart.chilrdern[i].harga.toString(),
-                                    'jumlah': listCart.chilrdern[i].jumlah.toString(),
-                                    'subtotal': (int.parse(listCart.chilrdern[i].jumlah.toString()) * int.parse(listCart.chilrdern[i].harga)).toString(),
-                                    'berat': listCart.chilrdern[i].berat.toString(),
-                                    'slug': listCart.chilrdern[i].nama.toString(),
-                                    'catatan': listCart.chilrdern[i].catatan.toString(),
-                                  };
-                                  data_produk.add(dataProduk);
-                                }
-                                blocOrder.setErrorShippingAddres(false);
-                                blocOrder.setErrorMethodeTransfer(false);
+                                data_produk.add(dataProduk);
+                              }
+                              blocOrder.setErrorShippingAddres(false);
+                              blocOrder.setErrorMethodeTransfer(false);
 
-                                Map body = {'data_order': data_order, 'data_produk': data_produk, 'data_penerima': data_penerima};
-                                print(body);
+                              Map body = {'data_order': data_order, 'data_produk': data_produk, 'data_penerima': data_penerima};
+                              print(body);
+                              var rajaOngkir = blocOrder.listCart[0].chilrdern
+                                  .where((element) => element.jenisOngkir == 'raja_ongkir')
+                                  .length;
+                              print(rajaOngkir);
+                              if (blocOrder.listCostSelected.isNotEmpty && blocOrder.listMetodePembayaran.isNotEmpty) {
+                                Navigator.push(context, SlideRightRoute(page: WidgetWaitingPayment(body: body)));
+                              } else if (rajaOngkir == 0) {
                                 Navigator.push(context, SlideRightRoute(page: WidgetWaitingPayment(body: body)));
                               }
                             },

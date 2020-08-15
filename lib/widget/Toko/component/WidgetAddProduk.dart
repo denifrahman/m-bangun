@@ -50,7 +50,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
       title: Text('Tambah Produk'),
     );
     return ModalProgressHUD(
-      inAsyncCall: blocProduk.isLoading,
+      inAsyncCall: false,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: appBar,
@@ -74,7 +74,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                         )
                       : Container(),
                   Container(
-                    height: 70,
+                    height: 80,
                     child: TextFormField(
                       onSaved: (value) {
                         setState(() {
@@ -91,13 +91,14 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                       decoration: InputDecoration(
                         hintText: 'Nama Produk',
                         labelText: 'Nama Produk',
+                        errorStyle: TextStyle(fontSize: 9),
                         labelStyle: TextStyle(fontSize: 16),
                         hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                     ),
                   ),
                   Container(
-                    height: 70,
+                    height: 80,
                     width: MediaQuery.of(context).size.width,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -123,12 +124,13 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                               hintText: 'Berat',
                               labelText: 'Berat',
                               labelStyle: TextStyle(fontSize: 16),
+                              errorStyle: TextStyle(fontSize: 9),
                               hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
                             ),
                           ),
                         ),
                         Container(
-                          height: 70,
+                          height: 80,
                           width: MediaQuery
                               .of(context)
                               .size
@@ -147,9 +149,10 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                                 return null;
                             },
                             decoration: InputDecoration(
-                              hintText: 'Harga Produk',
+                              hintText: '100000',
                               labelText: 'Harga Produk',
                               prefixText: 'Rp ',
+                              errorStyle: TextStyle(fontSize: 9),
                               labelStyle: TextStyle(fontSize: 16),
                               hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
                             ),
@@ -159,7 +162,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                     ),
                   ),
                   Container(
-                    height: 70,
+                    height: 80,
                     width: MediaQuery
                         .of(context)
                         .size
@@ -185,12 +188,13 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                               hintText: 'Panjang',
                               labelText: 'Panjang',
                               labelStyle: TextStyle(fontSize: 16),
+                              errorStyle: TextStyle(fontSize: 9),
                               hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
                             ),
                           ),
                         ),
                         Container(
-                          height: 70,
+                          height: 80,
                           width: MediaQuery
                               .of(context)
                               .size
@@ -212,6 +216,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                               hintText: 'Stok',
                               labelText: 'Stok',
                               labelStyle: TextStyle(fontSize: 16),
+                              errorStyle: TextStyle(fontSize: 9),
                               hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
                             ),
                           ),
@@ -220,7 +225,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                     ),
                   ),
                   Container(
-                    height: 70,
+                    height: 80,
                     child: TextFormField(
                       onSaved: (value) {
                         setState(() {
@@ -238,6 +243,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                         hintText: 'Minimal pemesanan',
                         labelText: 'Minimal pemesanan',
                         labelStyle: TextStyle(fontSize: 16),
+                        errorStyle: TextStyle(fontSize: 9),
                         hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                     ),
@@ -342,7 +348,8 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                         },
                         items: [
                           {'label': 'expedisi', 'value': 'raja_ongkir'},
-                          {'label': 'free ongkir', 'value': 'include'}
+                          {'label': 'free ongkir seluruh kota', 'value': 'include'},
+                          {'label': 'free ongkir dalam kota', 'value': 'include_dalam_kota'},
                         ].map((e) {
                           return DropdownMenuItem<String>(
                             value: e['value'],
@@ -479,7 +486,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                     height: 20,
                   ),
                   Container(
-                    height: 70,
+                    height: 180,
                     child: TextFormField(
                       maxLines: 10,
                       onSaved: (value) {
@@ -498,6 +505,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                         hintText: 'Deskripsi produk',
                         labelText: 'Deskripsi produk',
                         labelStyle: TextStyle(fontSize: 16),
+                        errorStyle: TextStyle(fontSize: 9),
                         hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                     ),
@@ -516,9 +524,30 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                       onPressed: () async {
                         _formKey.currentState.save();
                         if (_formKey.currentState.validate()) {
-                          String fileNameFoto = foto.path.split('/').last;
-                          String fileNameFoto1 = foto1.path.split('/').last;
-                          String fileNameFoto2 = foto2.path.split('/').last;
+                          String fileNameFoto;
+                          String fileNameFoto1;
+                          String fileNameFoto2;
+                          if (foto != null) {
+                            fileNameFoto = foto.path
+                                .split('/')
+                                .last;
+                          } else {
+                            fileNameFoto = 'empty';
+                          }
+                          if (foto1 != null) {
+                            fileNameFoto1 = foto1.path
+                                .split('/')
+                                .last;
+                          } else {
+                            fileNameFoto1 = 'empty';
+                          }
+                          if (foto2 != null) {
+                            fileNameFoto2 = foto2.path
+                                .split('/')
+                                .last;
+                          } else {
+                            fileNameFoto2 = 'empty';
+                          }
                           var body = {
                             'nama': nama.toString(),
                             'berat': berat.toString(),
@@ -532,6 +561,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                             'kondisi': kondisi.toString(),
                             'minimal_pesanan': minimal_pesanan.toString(),
                             'harga': harga.toString(),
+                            'panjang': panjang.toString(),
                             'stok': stok.toString(),
                           };
                           List<File> files = [foto, foto1, foto2];

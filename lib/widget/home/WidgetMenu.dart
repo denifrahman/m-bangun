@@ -31,7 +31,7 @@ class WidgetMenu extends StatelessWidget {
                       )
                     : Container(),
                 WidgetCardMenu(
-                  title: 'Panggil m-Bangun',
+                  title: 'Panggil m-Bangun (Segera Hadir)',
                   color: Colors.cyan[600],
                   thumbnail: 'assets/icons/worker.png',
                   deskripsi: 'Mau benerin perabotan rumah atau appartemen? kesulitan cari tukang di tengah kota? kami siap datang untuk melakukan survey!',
@@ -67,16 +67,7 @@ class WidgetMenu extends StatelessWidget {
 
   _openScreen(String s, BuildContext context) {
     if (s == 'pengajuan_toko') {
-//      Navigator.push(context, SlideRightRoute(page: Pengajuan()));
       _launchURL('https://mobile.m-bangun.com', context);
-    } else {
-//      BlocAuth blocAuth = Provider.of<BlocAuth>(context);
-//      BlocProduk blocProduk = Provider.of<BlocProduk>(context);
-//      blocProduk.getFavoriteProductByParam({'id_user_login': blocAuth.idUser});
-//      Navigator.push(context, SlideRightRoute(page: ProdukScreen(
-//        namaKategori: 'Favorite',
-//      )));
-//      Navigator.push(context, SlideRightRoute(page: FavoriteScreen()));
     }
   }
 }

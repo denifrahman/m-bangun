@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:apps/models/Order.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:money2/money2.dart';
@@ -105,68 +108,121 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
 //                    height: 150,
                   child: this.title == 'menunggu_konfirmasi'
                       ? Image.asset(
-                    'assets/img/waiting.png',
-                    fit: BoxFit.fitWidth,
-                  )
+                          'assets/img/waiting.png',
+                          fit: BoxFit.fitWidth,
+                        )
                       : this.title == 'dikemas'
-                      ? Image.asset(
-                    'assets/img/packing.png',
-                    fit: BoxFit.fitWidth,
-                  )
-                      : this.title == 'dikirim'
-                      ? Image.asset(
-                    'assets/img/dikirim.png',
-                    fit: BoxFit.fitWidth,
-                  )
-                      : this.title == 'ulasan'
-                      ? Image.asset(
-                    'assets/img/waiting.png',
-                    fit: BoxFit.fitWidth,
-                  )
-                      : Image.asset(
-                    'assets/img/waiting.png',
-                    fit: BoxFit.fitWidth,
-                  ),
+                          ? Image.asset(
+                              'assets/img/packing.png',
+                              fit: BoxFit.fitWidth,
+                            )
+                          : this.title == 'dikirim'
+                              ? Image.asset(
+                                  'assets/img/dikirim.png',
+                                  fit: BoxFit.fitWidth,
+                                )
+                              : this.title == 'ulasan'
+                                  ? Image.asset(
+                                      'assets/img/waiting.png',
+                                      fit: BoxFit.fitWidth,
+                                    )
+                                  : Image.asset(
+                                      'assets/img/waiting.png',
+                                      fit: BoxFit.fitWidth,
+                                    ),
                 ),
               ),
             ),
             title.toLowerCase() != 'dikirim'
                 ? Container()
                 : Expanded(
-              child: SizedBox(
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: RaisedButton(
-                    child: Text(title.toLowerCase() == 'dikirim' ? 'Barang diterima' : title == 'menunggu konfirmasi' ? 'Kemas Barang' : title,
-                      style: TextStyle(fontWeight: FontWeight.bold),),
-                    color: Color(0xffb16a085),
-                    textColor: Colors.white,
-                    padding: EdgeInsets.only(left: 11, right: 11, top: 15, bottom: 15),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                    onPressed: () async {
-                      var body = {
-                        'id': order.id.toString(),
-                        'status_order': title.toLowerCase() == 'dikirim' ? 'ulasan' : '',
-                        'id_toko': order.idToko.toString()
-                      };
-                      var result = blocOrder.updateOrder(body);
-                      result.then((value) {
-                        if (value) {
-                          Navigator.pop(context);
-                          var param = {'id_pembeli': blocAuth.idToko.toString(), 'status_order': title.toString().toLowerCase(), 'status_pembayaran': 'terbayar'};
-                          blocOrder.getOrderByParam(param);
-                          blocOrder.setIdUser();
-                        }
-                      });
-                    },
-                  ),
-                ),
-              ),
-            )
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: RaisedButton(
+                          child: Text(
+                            title.toLowerCase() == 'dikirim' ? 'Barang diterima' : title == 'menunggu konfirmasi' ? 'Kemas Barang' : title,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          color: Color(0xffb16a085),
+                          textColor: Colors.white,
+                          padding: EdgeInsets.only(left: 11, right: 11, top: 15, bottom: 15),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                          onPressed: () async {
+                            _showVersionDialog(context, blocOrder, blocAuth);
+                          },
+                        ),
+                      ),
+                    ),
+                  )
           ],
         ),
       ),
+    );
+  }
+
+  _showVersionDialog(context, BlocOrder blocOrder, blocAuth) async {
+    await showDialog<String>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        String title = "Penerimaan barang";
+        String btnLabel = "Terima";
+        String btnLabelCancel = "Belum";
+        return Platform.isIOS
+            ? WillPopScope(
+                onWillPop: () {},
+                child: new CupertinoAlertDialog(
+                  title: Text(title),
+                  content: Column(
+                    children: <Widget>[
+                      Text("Apakah Anda yakin barang sudah anda terima?"),
+                    ],
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text(btnLabelCancel),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    FlatButton(
+                        child: Text(btnLabel),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          var body = {'id': order.id.toString(), 'status_order': this.title.toLowerCase() == 'dikirim' ? 'ulasan' : '', 'id_toko': order.idToko.toString()};
+                          var result = blocOrder.updateOrder(body);
+                          result.then((value) {
+                            if (value) {
+                              Navigator.pop(context);
+                              var param = {'id_pembeli': blocAuth.idToko.toString(), 'status_order': title.toString().toLowerCase(), 'status_pembayaran': 'terbayar'};
+                              blocOrder.getOrderByParam(param);
+                              blocOrder.setIdUser();
+                            }
+                          });
+                        }),
+                  ],
+                ),
+              )
+            : WillPopScope(
+                onWillPop: () {},
+                child: new CupertinoAlertDialog(
+                  title: Text(title),
+                  content: Column(
+                    children: <Widget>[
+                      Text("Apakah Anda yakin barang sudah anda terima?"),
+                    ],
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text(btnLabel),
+//                  onPressed: () => _launchURL(PLAY_STORE_URL),
+                    ),
+                  ],
+                ),
+              );
+      },
     );
   }
 }

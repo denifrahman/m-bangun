@@ -531,9 +531,7 @@ class DataProvider extends ChangeNotifier {
 
   getCurrentLocation() async {
     String currentIdProvinsi = await LocalStorage.sharedInstance.readValue('idProvinsi');
-//    print(currentIdProvinsi);
     if (currentIdProvinsi == null) {
-//      print(currentIdProvinsi);
     } else {
       Api.getProvinsiById(token, currentIdProvinsi).then((value) {
         var result = json.decode(value.body);

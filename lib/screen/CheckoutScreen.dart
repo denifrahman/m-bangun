@@ -4,8 +4,8 @@ import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProfile.dart';
 import 'package:apps/screen/ShippingAddressScreen.dart';
+import 'package:apps/widget/Helper/CardRajaOngkir.dart';
 import 'package:apps/widget/Invoice/WidgetWaitingPayment.dart';
-import 'package:apps/widget/ShippingAddress/WidgetListCourier.dart';
 import 'package:apps/widget/ShippingAddress/WidgetListPembayaran.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -29,6 +29,7 @@ class CheckoutScreen extends StatelessWidget {
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+    final cart = listCart.chilrdern[0];
     AppBar appBar = AppBar(
       elevation: 0,
       title: Text('Checkout'),
@@ -115,7 +116,7 @@ class CheckoutScreen extends StatelessWidget {
                                               total += beratTotal;
                                             }
                                             var param = {
-                                              'origin': this.listCart.chilrdern[0].idKecamatan.toString(),
+                                              'origin': cart.idKecamatan.toString(),
                                               'destination': blocProfile.listUserAddressDefault[0].idKecamatan,
                                               'weight': total.toString()
                                             };
@@ -137,68 +138,35 @@ class CheckoutScreen extends StatelessWidget {
                                   child: PKCardListSkeleton(),
                                 )
                               : Container(
-                                  color: blocOrder.errorShippingAddres ? Colors.red.withOpacity(0.2) : Colors.white,
-                                  margin: const EdgeInsets.only(top: 10.0),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ListTile(
-                                      title: Row(
-                                        children: [
-                                          Text('Jasa Pengiriman', style: TextStyle(fontSize: 12)),
-                                          Text(
-                                            ' (Kurir)',
-                                            style: TextStyle(color: Colors.grey, fontSize: 10, fontStyle: FontStyle.italic),
-                                          )
-                                        ],
-                                      ),
-                                      subtitle: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                              blocOrder.listCostSelected.isEmpty
-                                                  ? '-'
-                                                  : blocOrder.listCostSelected['kode_kurir'].toString().toUpperCase() +
-                                                      ' ' +
-                                                      ' estimasi ' +
-                                                      blocOrder.listCostSelected['estimasi_pengiriman'],
-                                              style: TextStyle(fontSize: 10)),
-                                          Text(blocOrder.listCostSelected.isEmpty ? '' : '#' + blocOrder.listCostSelected['jenis_service'].toString(),
-                                              style: TextStyle(fontSize: 10)),
-                                          Text(
-                                              blocOrder.listCostSelected.isEmpty
-                                                  ? ''
-                                                  : Money.fromInt(int.parse(blocOrder.listCostSelected['total_ongkir'].toString()), IDR).toString(),
-                                              style: TextStyle(fontSize: 12, color: Colors.black)),
-                                        ],
-                                      ),
-                                      leading: Icon(FontAwesomeIcons.carAlt),
-                                      trailing: Container(
-                                        height: 30,
-                                        width: 80,
-                                        child: new Row(
-                                          children: <Widget>[
-                                            new Expanded(
-                                                child: RoundedLoadingButton(
-                                              child: Text('Ubah', style: TextStyle(color: Colors.white, fontSize: 12)),
-                                              color: Colors.cyan[700],
-                                              controller: _btnController,
-                                              onPressed: () {
-                                                blocProfile.getAllUserAddress(blocAuth.idUser);
-                                                Navigator.push(context, SlideRightRoute(page: WidgetLisCourier())).then((value) {
-                                                  Provider.of<BlocProfile>(context).getSubDistrictById(listCart.chilrdern[0].idKecamatan);
-                                                  Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
-                                                });
-                                                _btnController.reset();
-                                              },
-                                            )),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemBuilder: (_, j) {
+                                print(blocOrder.listCart[0].chilrdern
+                                    .where((element) => element.jenisOngkir == 'raja_ongkir')
+                                    .length);
+                                if (blocOrder.listCart[0].chilrdern[j].jenisOngkir == 'raja_ongkir') {
+                                  return CardRajaOngkir(
+                                    listCart: listCart,
+                                    blocAuth: blocAuth,
+                                    blocOrder: blocOrder,
+                                    blocProfile: blocProfile,
+                                    IDR: IDR,
+                                    btnController: _btnController,
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              },
+                              itemCount: blocOrder.listCart[0].chilrdern
+                                  .where((element) => element.jenisOngkir == 'raja_ongkir')
+                                  .length > 1 ? 1 : blocOrder.listCart[0].chilrdern
+                                  .where((element) => element.jenisOngkir == 'raja_ongkir')
+                                  .length,
+                            ),
+                          ),
                           Container(
-                            color: blocOrder.errorMethodeTransfer ? Colors.red.withOpacity(0.2) : Colors.white,
+                            color: blocOrder.listMetodePembayaranSelected.isEmpty ? Colors.red.withOpacity(0.2) : Colors.white,
                             margin: const EdgeInsets.only(top: 10.0),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -275,29 +243,18 @@ class CheckoutScreen extends StatelessWidget {
                         Container(
                           height: 30,
                           width: MediaQuery.of(context).size.width * 0.4,
-//                        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                          child: RoundedLoadingButton(
+                          child: FlatButton(
                             child: Text('Bayar', style: TextStyle(color: Colors.white)),
                             color: Colors.cyan[700],
-                            controller: _btnController,
                             onPressed: () {
-                              if (blocOrder.listCostSelected.isEmpty) {
-                                _showToast('Silahkan pilih pengiriman', Colors.amber);
-                                blocOrder.setErrorShippingAddres(true);
-                                _btnController.reset();
-                                _showToast('Silahkan pilih metode pembayaran', Colors.amber);
-                                blocOrder.setErrorMethodeTransfer(true);
-                              } else if (blocOrder.listMetodePembayaranSelected.isEmpty) {
-                                _showToast('Silahkan pilih metode pembayaran', Colors.amber);
-                                blocOrder.setErrorMethodeTransfer(true);
-                                _btnController.reset();
-                              } else {
+                              if (blocOrder.listCostSelected.isNotEmpty && blocOrder.listMetodePembayaran.isNotEmpty) {
+                                var totalOngkir = blocOrder.listCostSelected.isEmpty ? 0 : blocOrder.listCostSelected['total_ongkir'];
                                 Map data_order = {
                                   'id_toko': listCart.chilrdern[0].idToko.toString(),
                                   'id_pembeli': blocAuth.idUser.toString(),
                                   'subtotal': this.subtotal.toString(),
-                                  'total_ongkir': blocOrder.listCostSelected['total_ongkir'].toString(),
-                                  'total': (this.subtotal + blocOrder.listCostSelected['total_ongkir']).toString(),
+                                  'total_ongkir': totalOngkir.toString(),
+                                  'total': (this.subtotal + totalOngkir).toString(),
                                   'metode_pembayaran': blocOrder.listMetodePembayaranSelected['metode_pembayaran'].toString(),
                                   'status_pembayaran': 'menunggu'.toString(),
                                   'total_diskon': '0'.toString(),
@@ -339,7 +296,6 @@ class CheckoutScreen extends StatelessWidget {
                                 Map body = {'data_order': data_order, 'data_produk': data_produk, 'data_penerima': data_penerima};
                                 print(body);
                                 Navigator.push(context, SlideRightRoute(page: WidgetWaitingPayment(body: body)));
-                                _btnController.reset();
                               }
                             },
                           ),

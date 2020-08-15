@@ -17,6 +17,7 @@ class WidgetHeaderDetailProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(blocProduk.detailProduct[0].jenisOngkir);
     return Container(
       child: Column(
         children: [
@@ -26,26 +27,71 @@ class WidgetHeaderDetailProduct extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                  child: Container(
-                    child: Text(
-                      Money.fromInt((int.parse(blocProduk.detailProduct[0].harga) * blocOrder.jumlah), IDR).toString(),
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                          child: Container(
+                            child: Text(
+                              Money.fromInt((int.parse(blocProduk.detailProduct[0].harga) * blocOrder.jumlah), IDR).toString(),
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.7,
+                            child: Text(
+                              blocProduk.detailProduct[0].nama,
+                              maxLines: 3,
+                              style: TextStyle(fontSize: 14, letterSpacing: 1),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    child: Text(
-                      blocProduk.detailProduct[0].nama,
-                      maxLines: 3,
-                      style: TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
+                    blocProduk.detailProduct[0].jenisOngkir == 'include'
+                        ? Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              children: [
+                                Container(
+                                  child: Image.asset(
+                                    'assets/icons/freeshipping.png',
+                                    height: 30,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : blocProduk.detailProduct[0].jenisOngkir == 'include_dalam_kota'
+                            ? Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      child: Image.asset(
+                                        'assets/icons/freeshipping.png',
+                                        height: 25,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      'Dalam kota',
+                                      style: TextStyle(color: Colors.grey, fontSize: 11),
+                                    )
+                                  ],
+                                ),
+                              )
+                            : Container(),
+                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -109,6 +155,7 @@ class WidgetHeaderDetailProduct extends StatelessWidget {
                       ),
                     ],
                   ),
+                  Text('dikirim dari '),
                   SizedBox(
                     height: 8,
                   ),

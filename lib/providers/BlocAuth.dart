@@ -7,7 +7,8 @@ import 'package:package_info/package_info.dart';
 
 class BlocAuth extends ChangeNotifier {
   BlocAuth() {
-    checkSession();
+//    checkSession();
+    getCurrentUser();
   }
 
   bool _isLoading = true;
@@ -87,16 +88,21 @@ class BlocAuth extends ChangeNotifier {
     }
   }
 
-  checkSession() async {
-    _isLoading = true;
-    notifyListeners();
+  getCurrentUser() {
     _googleSignIn.signInSilently();
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) async {
       if (account != null) {
         _currentUser = account;
+        checkSession();
       }
     });
-    await Future.delayed(Duration(seconds: 3), () {
+  }
+
+  checkSession() async {
+    checkVersionApp();
+    _isLoading = true;
+    notifyListeners();
+    await Future.delayed(Duration(milliseconds: 1), () {
       _googleSignIn.isSignedIn().then((value) async {
         if (value) {
           var queryString = {'username': _currentUser.email, 'id_google': _currentUser.id};
@@ -111,7 +117,7 @@ class BlocAuth extends ChangeNotifier {
                 _isNonActive = true;
                 _isLogin = false;
                 notifyListeners();
-                await Future.delayed(Duration(seconds: 5), () {
+                await Future.delayed(Duration(milliseconds: 1), () {
                   handleSignOut();
                 });
               } else {

@@ -27,6 +27,11 @@ class OrderRepository {
     return response;
   }
 
+  Future updateOrder(body) async {
+    final response = await _helper.post("order/updateStatus", body);
+    return response;
+  }
+
   Future getMetodePembayaran(param) async {
     final response = await _helper.get("order/getMetodePembayaran", param);
     return response;

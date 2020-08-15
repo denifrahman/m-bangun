@@ -218,8 +218,8 @@ class ProfileScreen extends StatelessWidget {
                 )
               ]),
             ),
-            blocAuth.statusToko != '0'
-                ? Container()
+            blocAuth.statusToko == '0'
+                              ? Container()
                 : Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -236,8 +236,10 @@ class ProfileScreen extends StatelessWidget {
                               subheading('Toko Saya'),
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.push(context, SlideRightRoute(page: TokoSayaScreen()));
-                                },
+                                                      blocProfile.getTokoByParam({'id_user': blocAuth.idUser.toString()});
+                                                      blocProduk.getAllProductByParam({'id_toko': blocAuth.idToko.toString()});
+                                                      Navigator.push(context, SlideRightRoute(page: TokoSayaScreen()));
+                                                    },
                                 child: CircleAvatar(
                                   radius: 25.0,
                                   backgroundColor: AppColors.mainColor,

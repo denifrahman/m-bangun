@@ -1,4 +1,5 @@
 import 'package:apps/Utils/LocalBindings.dart';
+import 'package:apps/providers/BlocProfile.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,11 +35,11 @@ class WidgetFilter extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
-          LocalStorage.sharedInstance.writeValue(key: 'idProvinsi', value: dataProvider.getSelectedProvinsi);
-          LocalStorage.sharedInstance.writeValue(key: 'idKota', value: dataProvider.getSelectedKota == null ? 'null' : dataProvider.getSelectedKota);
-          LocalStorage.sharedInstance.writeValue(key: 'idKecamatan', value: dataProvider.getSelectedKecamatan == null ? 'null' : dataProvider.getSelectedKecamatan);
-          dataProvider.getAllProdukListByParam();
-          dataProvider.getCurrentLocation();
+          BlocProfile blocProfile = Provider.of<BlocProfile>(context);
+          LocalStorage.sharedInstance.writeValue(key: 'idProvinsi', value: blocProfile.id_provice);
+          LocalStorage.sharedInstance.writeValue(key: 'idKota', value: blocProfile.id_city == null ? 'null' : blocProfile.id_city);
+          LocalStorage.sharedInstance.writeValue(key: 'idKecamatan', value: blocProfile.id_subdistrict == null ? 'null' : blocProfile.id_subdistrict);
+          print('simpan');
           Navigator.pop(context);
         },
         backgroundColor: Color(0xffb16a085),

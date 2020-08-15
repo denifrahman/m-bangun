@@ -1,4 +1,5 @@
 import 'package:apps/models/Order.dart';
+import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProfile.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,7 @@ class WidgetDetailOrderProdukPenjualan extends StatelessWidget {
   Widget build(BuildContext context) {
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
     // TODO: implement build
     AppBar appBar = AppBar(
@@ -188,19 +190,42 @@ class WidgetDetailOrderProdukPenjualan extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: RaisedButton(
-                        child: Text(title == 'dikemas' ? 'Kirim Barang' : title == 'menunggu konfirmasi' ? 'Kemas Barang' : title),
-                        color: Color(0xffb16a085),
-                        textColor: Colors.white,
-                        padding: EdgeInsets.only(left: 11, right: 11, top: 15, bottom: 15),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                        onPressed: () async {},
-                      ),
-                    ),
-                  )
+                  title == 'dikirim'
+                      ? Container()
+                      : Expanded(
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: RaisedButton(
+                                child: Text(
+                                  title == 'dikemas' ? 'Kirim Barang' : title == 'menunggu konfirmasi' ? 'Kemas Barang' : title,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                color: Color(0xffb16a085),
+                                textColor: Colors.white,
+                                padding: EdgeInsets.only(left: 11, right: 11, top: 15, bottom: 15),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                onPressed: () async {
+                                  var body = {
+                                    'id': order.id.toString(),
+                                    'status_order': title == 'menunggu konfirmasi' ? 'dikemas' : title == 'dikemas' ? 'dikirim' : '',
+                                    'id_toko': order.idToko.toString()
+                                  };
+                                  var result = blocOrder.updateOrder(body);
+                                  result.then((value) {
+                                    if (value) {
+                                      Navigator.pop(context);
+                                      var param = {'id_toko': blocAuth.idToko.toString(), 'status_order': title.toString(), 'status_pembayaran': 'terbayar'};
+                                      blocOrder.getOrderByParam(param);
+                                      blocOrder.setIdUser();
+                                    }
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        )
                 ],
               ),
             ),

@@ -15,11 +15,11 @@ class WidgetSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 10),
+      margin: EdgeInsets.only(top: 35),
       color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 10),
       width: MediaQuery.of(context).size.width,
-      height: 100,
+      height: 180,
       child: CarouselSlider(
         options: CarouselOptions(
           aspectRatio: 2.5,

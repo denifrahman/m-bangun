@@ -9,14 +9,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
 
-class WidgetAddToko extends StatefulWidget {
-  WidgetAddToko({Key key}) : super(key: key);
+class WidgetAddProduk extends StatefulWidget {
+  WidgetAddProduk({Key key}) : super(key: key);
 
   @override
-  _WidgetAddTokoState createState() => _WidgetAddTokoState();
+  _WidgetAddProdukState createState() => _WidgetAddProdukState();
 }
 
-class _WidgetAddTokoState extends State<WidgetAddToko> {
+class _WidgetAddProdukState extends State<WidgetAddProduk> {
   String nama, berat, harga, minimal_pesanan, stok, panjang, deskripsi;
   String id_kategori = null;
   String kondisi = null;
@@ -74,7 +74,7 @@ class _WidgetAddTokoState extends State<WidgetAddToko> {
                         )
                       : Container(),
                   Container(
-                    height: 50,
+                    height: 70,
                     child: TextFormField(
                       onSaved: (value) {
                         setState(() {
@@ -91,18 +91,19 @@ class _WidgetAddTokoState extends State<WidgetAddToko> {
                       decoration: InputDecoration(
                         hintText: 'Nama Produk',
                         labelText: 'Nama Produk',
-                        hintStyle: TextStyle(color: Colors.grey),
+                        labelStyle: TextStyle(fontSize: 16),
+                        hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                     ),
                   ),
                   Container(
-                    height: 50,
+                    height: 70,
                     width: MediaQuery.of(context).size.width,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          height: 50,
+                          height: 100,
                           width: MediaQuery.of(context).size.width * 0.3,
                           child: TextFormField(
                             onSaved: (value) {
@@ -121,13 +122,17 @@ class _WidgetAddTokoState extends State<WidgetAddToko> {
                               suffixText: 'gram',
                               hintText: 'Berat',
                               labelText: 'Berat',
-                              hintStyle: TextStyle(color: Colors.grey),
+                              labelStyle: TextStyle(fontSize: 16),
+                              hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
                             ),
                           ),
                         ),
                         Container(
-                          height: 50,
-                          width: MediaQuery.of(context).size.width * 0.6,
+                          height: 70,
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width * 0.6,
                           child: TextFormField(
                             onSaved: (value) {
                               setState(() {
@@ -145,7 +150,8 @@ class _WidgetAddTokoState extends State<WidgetAddToko> {
                               hintText: 'Harga Produk',
                               labelText: 'Harga Produk',
                               prefixText: 'Rp ',
-                              hintStyle: TextStyle(color: Colors.grey),
+                              labelStyle: TextStyle(fontSize: 16),
+                              hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
                             ),
                           ),
                         ),
@@ -153,14 +159,20 @@ class _WidgetAddTokoState extends State<WidgetAddToko> {
                     ),
                   ),
                   Container(
-                    height: 50,
-                    width: MediaQuery.of(context).size.width,
+                    height: 70,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          height: 50,
-                          width: MediaQuery.of(context).size.width * 0.6,
+                          height: 100,
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width * 0.6,
                           child: TextFormField(
                             onSaved: (value) {
                               setState(() {
@@ -168,23 +180,21 @@ class _WidgetAddTokoState extends State<WidgetAddToko> {
                               });
                             },
                             keyboardType: TextInputType.number,
-                            validator: (String arg) {
-                              if (arg.length < 1)
-                                return 'Panjang Produk Harus di isi';
-                              else
-                                return null;
-                            },
                             decoration: InputDecoration(
                               suffixText: 'cm',
                               hintText: 'Panjang',
                               labelText: 'Panjang',
-                              hintStyle: TextStyle(color: Colors.grey),
+                              labelStyle: TextStyle(fontSize: 16),
+                              hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
                             ),
                           ),
                         ),
                         Container(
-                          height: 50,
-                          width: MediaQuery.of(context).size.width * 0.3,
+                          height: 70,
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width * 0.3,
                           child: TextFormField(
                             onSaved: (value) {
                               setState(() {
@@ -201,7 +211,8 @@ class _WidgetAddTokoState extends State<WidgetAddToko> {
                             decoration: InputDecoration(
                               hintText: 'Stok',
                               labelText: 'Stok',
-                              hintStyle: TextStyle(color: Colors.grey),
+                              labelStyle: TextStyle(fontSize: 16),
+                              hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
                             ),
                           ),
                         ),
@@ -209,7 +220,7 @@ class _WidgetAddTokoState extends State<WidgetAddToko> {
                     ),
                   ),
                   Container(
-                    height: 50,
+                    height: 70,
                     child: TextFormField(
                       onSaved: (value) {
                         setState(() {
@@ -226,7 +237,8 @@ class _WidgetAddTokoState extends State<WidgetAddToko> {
                       decoration: InputDecoration(
                         hintText: 'Minimal pemesanan',
                         labelText: 'Minimal pemesanan',
-                        hintStyle: TextStyle(color: Colors.grey),
+                        labelStyle: TextStyle(fontSize: 16),
+                        hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                     ),
                   ),
@@ -467,7 +479,7 @@ class _WidgetAddTokoState extends State<WidgetAddToko> {
                     height: 20,
                   ),
                   Container(
-                    height: 150,
+                    height: 70,
                     child: TextFormField(
                       maxLines: 10,
                       onSaved: (value) {
@@ -485,7 +497,8 @@ class _WidgetAddTokoState extends State<WidgetAddToko> {
                       decoration: InputDecoration(
                         hintText: 'Deskripsi produk',
                         labelText: 'Deskripsi produk',
-                        hintStyle: TextStyle(color: Colors.grey),
+                        labelStyle: TextStyle(fontSize: 16),
+                        hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                     ),
                   ),
@@ -590,7 +603,7 @@ class _WidgetAddTokoState extends State<WidgetAddToko> {
   }
 
   void _getImage(BuildContext context, ImageSource source, param) async {
-    File image = await ImagePicker.pickImage(source: source, maxHeight: 1000, maxWidth: 1000, imageQuality: 50);
+    File image = await ImagePicker.pickImage(source: source, maxHeight: 1000, maxWidth: 1000, imageQuality: 100);
     if (param == 'foto') {
       setState(() {
         foto = image;

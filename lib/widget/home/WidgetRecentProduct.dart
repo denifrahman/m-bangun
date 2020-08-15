@@ -1,3 +1,4 @@
+import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
@@ -45,8 +46,17 @@ class WidgetRecentProduct extends StatelessWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: () {
-                    blocProduk.getAllProductByParam({'': ''});
+                  onTap: () async {
+                    String currentIdProvinsi = await LocalStorage.sharedInstance.readValue('idProvinsi');
+                    String currentIdKota = await LocalStorage.sharedInstance.readValue('idKota');
+                    String currentIdKecamatan = await LocalStorage.sharedInstance.readValue('idKecamatan');
+                    var param = {
+                      'id_kecamatan': currentIdKecamatan.toString() == 'null' ? '' : currentIdKecamatan.toString(),
+                      'id_kota': currentIdKota.toString() == 'null' ? '' : currentIdKota.toString(),
+                      'id_provinsi': currentIdProvinsi.toString() == 'null' ? '' : currentIdProvinsi.toString(),
+                      'aktif': '1'
+                    };
+                    blocProduk.getAllProductByParam(param);
                     Navigator.push(
                         context,
                         SlideRightRoute(
@@ -66,9 +76,16 @@ class WidgetRecentProduct extends StatelessWidget {
         Container(
           color: Colors.white,
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * 0.4,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height * 0.45,
           child: GridView.count(
+            childAspectRatio: 0.9,
             crossAxisCount: 3,
             shrinkWrap: false,
             physics: new NeverScrollableScrollPhysics(),
@@ -81,23 +98,24 @@ class WidgetRecentProduct extends StatelessWidget {
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 child: InkWell(
                   onTap: () {
-                    blocProduk.getAllProductByParam({'id': blocProduk.listRecentProduct[j].id});
+                    blocProduk.getDetailProductByParam({'id': blocProduk.listRecentProduct[j].id, 'aktif': '1'});
                     Provider.of<BlocOrder>(context).getCart();
                     Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
                   },
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 4,
-                        child: getPostImages(blocProduk.listRecentProduct[j].foto),
-                      ),
-                      Expanded(
-                        flex: 5,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          flex: 2,
+                          child: getPostImages(blocProduk.listRecentProduct[j].foto),
+                        ),
+                        SizedBox(height: 5,),
+                        Expanded(
+                          flex: 3,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Column(
                                 children: [
@@ -105,9 +123,9 @@ class WidgetRecentProduct extends StatelessWidget {
                                     width: 150,
                                     child: RichText(
                                       overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
+                                      maxLines: 2,
                                       text: TextSpan(
-                                          style: TextStyle(color: Colors.grey[800], fontSize: 9, fontWeight: FontWeight.normal), text: blocProduk.listRecentProduct[j].nama),
+                                          style: TextStyle(color: Colors.grey[800], fontSize: 12, fontWeight: FontWeight.normal), text: blocProduk.listRecentProduct[j].nama),
                                     ),
                                   ),
                                   Container(
@@ -118,7 +136,7 @@ class WidgetRecentProduct extends StatelessWidget {
                                       text: TextSpan(
                                           style: TextStyle(
                                             color: Colors.redAccent,
-                                            fontSize: 9,
+                                            fontSize: 12,
                                             fontWeight: FontWeight.bold,
                                           ),
                                           text: hargaFormat.toString()),
@@ -136,17 +154,17 @@ class WidgetRecentProduct extends StatelessWidget {
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                           text: TextSpan(
-                                              style: TextStyle(color: Colors.grey, fontSize: 7, fontWeight: FontWeight.normal, fontStyle: FontStyle.italic),
+                                              style: TextStyle(color: Colors.grey, fontSize: 11, fontWeight: FontWeight.normal, fontStyle: FontStyle.italic),
                                               text: blocProduk.listRecentProduct[j].namaToko + ' '),
                                         ),
                                         blocProduk.listRecentProduct.isEmpty
                                             ? Container()
                                             : blocProduk.listRecentProduct[j].jenisToko == 'official_store'
-                                                ? Image.asset(
-                                                    'assets/icons/verified.png',
-                                                    height: 8,
-                                                  )
-                                                : Container()
+                                            ? Image.asset(
+                                          'assets/icons/verified.png',
+                                          height: 10,
+                                        )
+                                            : Container()
                                       ],
                                     ),
                                   ),
@@ -154,7 +172,7 @@ class WidgetRecentProduct extends StatelessWidget {
                                     rating: 3,
                                     isReadOnly: true,
                                     color: Colors.amber,
-                                    size: 7,
+                                    size: 8,
                                     filledIconData: Icons.star,
                                     halfFilledIconData: Icons.star_half,
                                     defaultIconData: Icons.star_border,
@@ -171,8 +189,8 @@ class WidgetRecentProduct extends StatelessWidget {
                             ],
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 shape: RoundedRectangleBorder(

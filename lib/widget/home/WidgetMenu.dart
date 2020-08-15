@@ -1,5 +1,5 @@
 import 'package:apps/Utils/navigation_right.dart';
-import 'package:apps/providers/DataProvider.dart';
+import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/screen/KategoriScreenNew.dart';
 import 'package:apps/widget/Pengajuan/component/WidgetCardMenu.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +12,7 @@ class WidgetMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     return Column(
       children: [
         Container(
@@ -22,12 +22,14 @@ class WidgetMenu extends StatelessWidget {
             onTap: () => _openScreen('pengajuan_toko', context),
             child: Column(
               children: [
-                WidgetCardMenu(
-                  title: 'Buka Toko',
-                  color: Colors.amber[800],
-                  thumbnail: 'assets/icons/store.png',
-                  deskripsi: 'Anda bisa menjual produk anda secara eksklusif di m-Bangun, cukup mengisi detail produk anda dan produk anda siap di untuk publish!',
-                ),
+                blocAuth.statusToko == '0'
+                    ? WidgetCardMenu(
+                        title: 'Buka Toko',
+                        color: Colors.amber[800],
+                        thumbnail: 'assets/icons/store.png',
+                        deskripsi: 'Anda bisa menjual produk anda secara eksklusif di m-Bangun, cukup mengisi detail produk anda dan produk anda siap di untuk publish!',
+                      )
+                    : Container(),
                 WidgetCardMenu(
                   title: 'Panggil m-Bangun',
                   color: Colors.cyan[600],
@@ -54,9 +56,10 @@ class WidgetMenu extends StatelessWidget {
 
   openSubkategori(chilrdern) {}
 
-  _launchURL(String url) async {
+  _launchURL(String url, context) async {
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     if (await canLaunch(url)) {
-      await launch(url);
+      await launch(url + '?email=' + blocAuth.currentUser.email);
     } else {
       throw 'Could not launch $url';
     }
@@ -65,7 +68,7 @@ class WidgetMenu extends StatelessWidget {
   _openScreen(String s, BuildContext context) {
     if (s == 'pengajuan_toko') {
 //      Navigator.push(context, SlideRightRoute(page: Pengajuan()));
-      _launchURL('https://mobile.m-bangun.com');
+      _launchURL('https://mobile.m-bangun.com', context);
     } else {
 //      BlocAuth blocAuth = Provider.of<BlocAuth>(context);
 //      BlocProduk blocProduk = Provider.of<BlocProduk>(context);

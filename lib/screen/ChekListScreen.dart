@@ -5,7 +5,6 @@ import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/providers/BlocProfile.dart';
-import 'package:apps/screen/FavoriteScreen.dart';
 import 'package:apps/screen/ProdukScreen.dart';
 import 'package:apps/widget/Keranjang/Keranjang.dart';
 import 'package:apps/widget/Login/LoginWidget.dart';
@@ -92,6 +91,8 @@ class CheckListScreen extends StatelessWidget {
   _openScreen(String dataList, context) {
     if (dataList == 'Keranjang') {
       BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+      BlocProfile blocProfile = Provider.of<BlocProfile>(context);
+      blocProfile.getUserAddressDefault(blocAuth.idUser);
       Navigator.push(context, SlideRightRoute(page: Keranjang()));
       Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
     } else {

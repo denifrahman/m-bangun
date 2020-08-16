@@ -57,15 +57,15 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
     AppBar appBar = AppBar(
       title: Text('Update Produk'),
     );
-    return blocProduk.detailProduct.isEmpty
-        ? PKCardPageSkeleton()
-        : ModalProgressHUD(
-            inAsyncCall: false,
-            child: Scaffold(
-              backgroundColor: Colors.white,
-              appBar: appBar,
-              body: SingleChildScrollView(
-                child: Form(
+    return ModalProgressHUD(
+      inAsyncCall: false,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: appBar,
+        body: SingleChildScrollView(
+          child: blocProduk.detailProduct.isEmpty
+              ? PKCardPageSkeleton()
+              : Form(
                   key: _formKey,
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),

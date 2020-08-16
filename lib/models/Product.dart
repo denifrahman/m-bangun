@@ -76,6 +76,8 @@ class Product {
   String aktif;
   dynamic idKota;
   dynamic idProvinsi;
+  String avg_rating;
+  String jumlah_rating;
 
   static Product fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
@@ -118,6 +120,8 @@ class Product {
     productBean.aktif = map['aktif'];
     productBean.idKota = map['id_kota'];
     productBean.idProvinsi = map['id_provinsi'];
+    productBean.avg_rating = map['avg_rating'];
+    productBean.jumlah_rating = map['jumlah_rating'];
     return productBean;
   }
 
@@ -160,5 +164,7 @@ class Product {
         "aktif": aktif,
         "id_kota": idKota,
         "id_provinsi": idProvinsi,
+        "avg_rating": avg_rating,
+        "jumlah_rating": jumlah_rating,
       };
 }

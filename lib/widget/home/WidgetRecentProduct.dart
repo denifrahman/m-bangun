@@ -1,5 +1,6 @@
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/Utils/navigation_right.dart';
+import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/providers/BlocProfile.dart';
 import 'package:apps/screen/ProdukDetailScreen.dart';
@@ -20,6 +21,7 @@ class WidgetRecentProduct extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     return Column(
       children: [
         Padding(
@@ -94,6 +96,8 @@ class WidgetRecentProduct extends StatelessWidget {
               final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
               var harga = blocProduk.listRecentProduct.isEmpty ? '0' : blocProduk.listRecentProduct[j].harga;
               var hargaFormat = Money.fromInt(harga == null ? 0 : int.parse(harga), IDR);
+              var avgRating = blocProduk.listRecentProduct[j].avg_rating == null ? 0 : blocProduk.listRecentProduct[j].avg_rating;
+              var jumlahRating = blocProduk.listRecentProduct[j].jumlah_rating == null ? '0' : blocProduk.listRecentProduct[j].jumlah_rating;
               return Card(
                 semanticContainer: true,
                 clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -101,6 +105,7 @@ class WidgetRecentProduct extends StatelessWidget {
                   onTap: () {
                     blocProduk.getDetailProductByParam({'id': blocProduk.listRecentProduct[j].id, 'aktif': '1'});
                     blocProfile.getCityParam({'id': blocProduk.listProducts[j].idKota.toString()});
+                    blocOrder.getUlasanProduByParam({'id_produk': blocProduk.listRecentProduct[j].id});
                     Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
                   },
                   child: Padding(
@@ -127,8 +132,7 @@ class WidgetRecentProduct extends StatelessWidget {
                                     child: RichText(
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
-                                      text: TextSpan(
-                                          style: TextStyle(color: Colors.grey[800], fontSize: 12, fontWeight: FontWeight.normal), text: blocProduk.listRecentProduct[j].nama),
+                                      text: TextSpan(style: TextStyle(color: Colors.black, fontSize: 12), text: blocProduk.listRecentProduct[j].nama),
                                     ),
                                   ),
                                   Container(
@@ -171,21 +175,29 @@ class WidgetRecentProduct extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  SmoothStarRating(
-                                    rating: 3,
-                                    isReadOnly: true,
-                                    color: Colors.amber,
-                                    size: 8,
-                                    filledIconData: Icons.star,
-                                    halfFilledIconData: Icons.star_half,
-                                    defaultIconData: Icons.star_border,
-                                    starCount: 5,
-                                    allowHalfRating: true,
-                                    spacing: 2.0,
-                                    onRated: (value) {
-                                      print("rating value -> $value");
-                                      // print("rating value dd -> ${value.truncate()}");
-                                    },
+                                  SizedBox(height: 2,),
+                                  Row(
+                                    children: [
+                                      SmoothStarRating(
+                                        rating: double.parse(avgRating.toString()),
+                                        isReadOnly: true,
+                                        color: Colors.amber,
+                                        size: 9,
+                                        borderColor: Colors.grey,
+                                        filledIconData: Icons.star,
+                                        halfFilledIconData: Icons.star_half,
+                                        defaultIconData: Icons.star_border,
+                                        starCount: 5,
+                                        allowHalfRating: true,
+                                        spacing: 2.0,
+                                        onRated: (value) {
+                                          print("rating value -> $value");
+                                          // print("rating value dd -> ${value.truncate()}");
+                                        },
+                                      ),
+                                      SizedBox(width: 2,),
+                                      Text('($jumlahRating)', style: TextStyle(fontSize: 9, color: Colors.grey),)
+                                    ],
                                   ),
                                 ],
                               ),

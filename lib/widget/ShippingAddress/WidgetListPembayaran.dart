@@ -38,12 +38,16 @@ class WidgetListPembayaran extends StatelessWidget {
               elevation: 8.0,
               margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
               child: Container(
+                padding: EdgeInsets.all(2),
                 child: ListTile(
                   contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                  leading: Icon(Icons.account_circle),
+                  leading: Icon(
+                    Icons.credit_card,
+                    size: 35,
+                  ),
                   title: Text(
                     element['nama_bank'],
-                    style: TextStyle(fontWeight: FontWeight.normal, color: Colors.grey, fontSize: 12),
+                    style: TextStyle(fontWeight: FontWeight.normal, color: Colors.grey, fontSize: 16),
                   ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

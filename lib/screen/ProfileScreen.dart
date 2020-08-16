@@ -9,7 +9,6 @@ import 'package:apps/screen/TokoSayaScreen.dart';
 import 'package:apps/widget/Login/LoginWidget.dart';
 import 'package:apps/widget/Profile/TopContainer.dart';
 import 'package:apps/widget/Profile/WidgetMyFavorite.dart';
-import 'package:apps/widget/Profile/WidgetProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -117,22 +116,22 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.push(context, SlideRightRoute(page: WidgetProfile()));
-                            blocProfile.getProfileUser(blocAuth.idUser);
-                          },
-                          icon: Icon(Icons.edit, color: AppColors.kDarkBlue, size: 20.0),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            blocAuth.handleSignOut();
-                            Provider.of<BlocOrder>(context).clearCart();
-                            Provider.of<BlocOrder>(context).clearCountOrder();
-                          },
-                          icon: Icon(Icons.exit_to_app, color: Colors.grey[400], size: 20.0),
-                        ),
-                      ],
+//                        IconButton(
+//                          onPressed: () {
+//                            Navigator.push(context, SlideRightRoute(page: WidgetProfile()));
+//                            blocProfile.getProfileUser(blocAuth.idUser);
+//                          },
+//                          icon: Icon(Icons.edit, color: AppColors.kDarkBlue, size: 20.0),
+//                        ),
+                                      IconButton(
+                                        onPressed: () {
+                                          blocAuth.handleSignOut();
+                                          Provider.of<BlocOrder>(context).clearCart();
+                                          Provider.of<BlocOrder>(context).clearCountOrder();
+                                        },
+                                        icon: Icon(Icons.exit_to_app, color: Colors.grey[400], size: 20.0),
+                                      ),
+                                    ],
                     ),
                   ],
                 ),

@@ -22,6 +22,7 @@ class WidgetProdukTerjual extends StatelessWidget {
     // TODO: implement build
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     return Column(
       children: [
         Padding(
@@ -79,6 +80,8 @@ class WidgetProdukTerjual extends StatelessWidget {
               blocProduk.listProdukTerjual.isEmpty ? 1 : blocProduk.listProdukTerjual.length,
               (j) {
                 final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
+                var avgRating = blocProduk.listRecentProduct[j].avg_rating == null ? '0' : blocProduk.listRecentProduct[j].avg_rating;
+                var jumlahRating = blocProduk.listRecentProduct[j].jumlah_rating == null ? '0' : blocProduk.listRecentProduct[j].jumlah_rating;
                 var harga = blocProduk.listRecentProduct.isEmpty ? '0' : blocProduk.listRecentProduct[j].harga;
                 var hargaFormat = Money.fromInt(harga == null ? 0 : int.parse(harga), IDR);
                 if (blocProduk.listProdukTerjual.isEmpty) {
@@ -94,6 +97,7 @@ class WidgetProdukTerjual extends StatelessWidget {
                         blocProduk.getDetailProductByParam({'id': blocProduk.listProdukTerjual[j].id.toString(), 'aktif': '1'});
                         Provider.of<BlocOrder>(context).getCart();
                         blocProfile.getCityParam({'id': blocProduk.listProducts[j].idKota.toString()});
+                        blocOrder.getUlasanProduByParam({'id_produk': blocProduk.listProdukTerjual[j].id});
                         Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
                       },
                       child: Column(
@@ -146,28 +150,41 @@ class WidgetProdukTerjual extends StatelessWidget {
                                         blocProduk.listRecentProduct.isEmpty
                                             ? Container()
                                             : blocProduk.listRecentProduct[j].jenisToko == 'official_store'
-                                            ? Image.asset(
-                                          'assets/icons/verified.png',
-                                          height: 10,
-                                        )
-                                            : Container()
+                                                ? Image.asset(
+                                                    'assets/icons/verified.png',
+                                                    height: 10,
+                                                  )
+                                                : Container()
                                       ],
                                     ),
                                   ),
-                                  SmoothStarRating(
-                                    rating: 3,
-                                    isReadOnly: true,
-                                    size: 10,
-                                    filledIconData: Icons.star,
-                                    halfFilledIconData: Icons.star_half,
-                                    defaultIconData: Icons.star_border,
-                                    starCount: 5,
-                                    allowHalfRating: true,
-                                    spacing: 2.0,
-                                    onRated: (value) {
-                                      print("rating value -> $value");
-                                      // print("rating value dd -> ${value.truncate()}");
-                                    },
+                                  Row(
+                                    children: [
+                                      SmoothStarRating(
+                                        rating: double.parse(avgRating.toString()),
+                                        isReadOnly: true,
+                                        color: Colors.amber,
+                                        size: 11,
+                                        borderColor: Colors.grey,
+                                        filledIconData: Icons.star,
+                                        halfFilledIconData: Icons.star_half,
+                                        defaultIconData: Icons.star_border,
+                                        starCount: 5,
+                                        allowHalfRating: true,
+                                        spacing: 2.0,
+                                        onRated: (value) {
+                                          print("rating value -> $value");
+                                          // print("rating value dd -> ${value.truncate()}");
+                                        },
+                                      ),
+                                      SizedBox(
+                                        width: 2,
+                                      ),
+                                      Text(
+                                        '($jumlahRating)',
+                                        style: TextStyle(fontSize: 11, color: Colors.grey),
+                                      )
+                                    ],
                                   ),
                                 ],
                               ),

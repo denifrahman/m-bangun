@@ -1,40 +1,25 @@
-import 'dart:io';
-
-import 'package:apps/models/Order.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:money2/money2.dart';
+import 'package:pk_skeleton/pk_skeleton.dart';
 import 'package:provider/provider.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class WidgetDetailOrderProdukPembelian extends StatelessWidget {
   final String title;
-  final Order order;
+  final order;
 
-  WidgetDetailOrderProdukPembelian({Key key, this.title, this.order}) : super(key: key);
-  final List<Location> locations = [
-    Location('Kolkata Facility', DateTime(2019, 6, 5, 5, 23, 4), showHour: false, isHere: false, passed: true),
-    Location('Hyderabad Facility', DateTime(2019, 6, 6, 5, 23, 4), showHour: false, isHere: false, passed: true),
-    Location(
-      'Chennai Facility',
-      DateTime(2019, 6, 9, 5, 23, 4),
-      showHour: false,
-      isHere: true,
-    ),
-    Location(
-      'Kerala Facility',
-      DateTime(2019, 6, 10, 5, 23, 4),
-      showHour: true,
-      isHere: false,
-    ),
-  ];
+  WidgetDetailOrderProdukPembelian({Key key, this.order, this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+    var totalTerUlas = blocOrder.listOrderDetailProduk.where((element) => element.ulasan != null).length;
+    var totalOrder = blocOrder.listOrderDetailProduk.length;
     final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
     // TODO: implement build
     AppBar appBar = AppBar(
@@ -42,127 +27,187 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
     );
     return Scaffold(
       appBar: appBar,
-      body: Container(
-        decoration: BoxDecoration(color: Colors.grey[100], image: DecorationImage(image: AssetImage('assets/shipping_background.png'), fit: BoxFit.contain)),
-        height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top),
-        child: Column(
-          children: [
-            Expanded(
-              flex: 5,
-              child: ListView.builder(
-                shrinkWrap: true,
-                padding: EdgeInsets.all(10),
-                itemCount: blocOrder.listOrderDetailProduk.length,
-//                  physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (_, j) {
-                  return Card(
-                    child: ListTile(
-                      leading: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.network(
-                          'https://m-bangun.com/api-v2/assets/toko/' + blocOrder.listOrderDetailProduk[j].foto,
-                          errorBuilder: (context, urlImage, error) {
-                            print(error.hashCode);
-                            return Image.asset('assets/logo.png');
-                          },
-                          width: 80,
-                        ),
-                      ),
-                      title: RichText(
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        text: TextSpan(
-                            style: TextStyle(
-                              fontSize: 12.0,
-                              color: Colors.black,
-                            ),
-                            text: blocOrder.listOrderDetailProduk[j].namaProduk),
-                      ),
-                      subtitle: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(Money.fromInt((int.parse(blocOrder.listOrderDetailProduk[j].subtotal)), IDR).toString(),
-                              style: TextStyle(fontStyle: FontStyle.normal, fontSize: 10)),
-                          Text(blocOrder.listOrderDetailProduk[j].catatan == null ? '-' : '"' + blocOrder.listOrderDetailProduk[j].catatan + '"',
-                              style: TextStyle(
-                                fontStyle: FontStyle.italic,
-                                fontSize: 9,
-                              ))
-                        ],
-                      ),
-                      trailing: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(blocOrder.listOrderDetailProduk[j].jumlah),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: SingleChildScrollView(
-                child: Container(
-                  width: 150,
-//                    height: 150,
-                  child: this.title == 'menunggu_konfirmasi'
-                      ? Image.asset(
-                          'assets/img/waiting.png',
-                          fit: BoxFit.fitWidth,
-                        )
-                      : this.title == 'dikemas'
-                          ? Image.asset(
-                              'assets/img/packing.png',
-                              fit: BoxFit.fitWidth,
-                            )
-                          : this.title == 'dikirim'
-                              ? Image.asset(
-                                  'assets/img/dikirim.png',
-                                  fit: BoxFit.fitWidth,
-                                )
-                              : this.title == 'ulasan'
-                                  ? Image.asset(
-                                      'assets/img/waiting.png',
-                                      fit: BoxFit.fitWidth,
-                                    )
-                                  : Image.asset(
-                                      'assets/img/waiting.png',
-                                      fit: BoxFit.fitWidth,
+      body: blocOrder.isLoading
+          ? PKCardListSkeleton()
+          : Container(
+              decoration: BoxDecoration(color: Colors.grey[100], image: DecorationImage(image: AssetImage('assets/shipping_background.png'), fit: BoxFit.contain)),
+              height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top),
+              child: Column(
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: RefreshIndicator(
+                      onRefresh: () {
+                        onRefresh(context, order.id);
+                      },
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.all(10),
+                          itemCount: blocOrder.listOrderDetailProduk.length,
+                          itemBuilder: (_, j) {
+                            print(blocOrder.listOrderDetailProduk[j].ulasan);
+                            return Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ListTile(
+                                  leading: Image.network(
+                                    'https://m-bangun.com/api-v2/assets/toko/' + blocOrder.listOrderDetailProduk[j].foto,
+                                    errorBuilder: (context, urlImage, error) {
+                                      print(error.hashCode);
+                                      return Image.asset('assets/logo.png');
+                                    },
+                                    width: 80,
+                                  ),
+                                  title: RichText(
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    text: TextSpan(
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          color: Colors.black,
+                                        ),
+                                        text: blocOrder.listOrderDetailProduk[j].namaProduk),
+                                  ),
+                                  subtitle: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(Money.fromInt((int.parse(blocOrder.listOrderDetailProduk[j].subtotal)), IDR).toString(),
+                                          style: TextStyle(fontStyle: FontStyle.normal, fontSize: 12, color: Colors.redAccent)),
+                                      Text(
+                                        blocOrder.listOrderDetailProduk[j].catatan == null ? '-' : '"' + blocOrder.listOrderDetailProduk[j].catatan + '"',
+                                        style: TextStyle(
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      title.toString().toLowerCase() == 'ulasan'
+                                          ? blocOrder.listOrderDetailProduk[j].ulasan != null
+                                              ? Container()
+                                              : SizedBox(
+                                                  height: 25,
+                                                  width: double.infinity,
+                                                  child: RaisedButton(
+                                                    child: Text(
+                                                      'Ulas Produk',
+                                                      style: TextStyle(fontSize: 12),
+                                                    ),
+                                                    color: Colors.orangeAccent,
+                                                    textColor: Colors.white,
+                                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                                    onPressed: () async {
+                                                      _ulasaPopUp(context, blocAuth, blocOrder, blocOrder.listOrderDetailProduk[j]);
+                                                    },
+                                                  ),
+                                                )
+                                          : Container()
+                                    ],
+                                  ),
+                                  trailing: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8),
+                                    child: Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(color: Colors.orange[100], borderRadius: BorderRadius.all(Radius.circular(50))),
+                                      child: Center(
+                                        child: Text(
+                                          blocOrder.listOrderDetailProduk[j].jumlah,
+                                          style: TextStyle(color: Colors.orange[900]),
+                                        ),
+                                      ),
                                     ),
-                ),
-              ),
-            ),
-            title.toLowerCase() != 'dikirim'
-                ? Container()
-                : Expanded(
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: RaisedButton(
-                          child: Text(
-                            title.toLowerCase() == 'dikirim' ? 'Barang diterima' : title == 'menunggu konfirmasi' ? 'Kemas Barang' : title,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          color: Color(0xffb16a085),
-                          textColor: Colors.white,
-                          padding: EdgeInsets.only(left: 11, right: 11, top: 15, bottom: 15),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                          onPressed: () async {
-                            _showVersionDialog(context, blocOrder, blocAuth);
-                          },
-                        ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: SingleChildScrollView(
+                      child: Container(
+                        width: 150,
+//                    height: 150,
+                        child: this.title == 'menunggu_konfirmasi'
+                            ? Image.asset(
+                                'assets/img/waiting.png',
+                                fit: BoxFit.fitWidth,
+                              )
+                            : this.title == 'dikemas'
+                                ? Image.asset(
+                                    'assets/img/packing.png',
+                                    fit: BoxFit.fitWidth,
+                                  )
+                                : this.title == 'dikirim'
+                                    ? Image.asset(
+                                        'assets/img/dikirim.png',
+                                        fit: BoxFit.fitWidth,
+                                      )
+                                    : this.title == 'ulasan'
+                                        ? Image.asset(
+                                            'assets/img/waiting.png',
+                                            fit: BoxFit.fitWidth,
+                                          )
+                                        : Image.asset(
+                                            'assets/img/waiting.png',
+                                            fit: BoxFit.fitWidth,
+                                          ),
                       ),
                     ),
-                  )
-          ],
-        ),
-      ),
+                  ),
+                  title.toLowerCase().toLowerCase() != 'dikirim'
+                      ? Container()
+                      : Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 40,
+                            child: RaisedButton(
+                              child: Text(
+                                title.toLowerCase() == 'dikirim' ? 'Barang diterima' : title == 'menunggu konfirmasi' ? 'Kemas Barang' : title,
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                              ),
+                              color: Color(0xffb16a085),
+                              textColor: Colors.white,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                              onPressed: () async {
+                                _confirmPopUp(context, blocOrder, blocAuth);
+                              },
+                            ),
+                          ),
+                        ),
+                  totalTerUlas < totalOrder
+                      ? Container()
+                      : Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 40,
+                            child: RaisedButton(
+                              child: Text(
+                                'Beri Rating Penjual',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                              ),
+                              color: Color(0xffb16a085),
+                              textColor: Colors.white,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                              onPressed: () async {
+//                                _confirmPopUp(context, blocOrder, blocAuth);
+                              },
+                            ),
+                          ),
+                        )
+                ],
+              ),
+            ),
     );
   }
 
-  _showVersionDialog(context, BlocOrder blocOrder, blocAuth) async {
+  _confirmPopUp(context, BlocOrder blocOrder, blocAuth) async {
     await showDialog<String>(
       context: context,
       barrierDismissible: true,
@@ -170,60 +215,128 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
         String title = "Penerimaan barang";
         String btnLabel = "Terima";
         String btnLabelCancel = "Belum";
-        return Platform.isIOS
-            ? WillPopScope(
-                onWillPop: () {},
-                child: new CupertinoAlertDialog(
-                  title: Text(title),
-                  content: Column(
-                    children: <Widget>[
-                      Text("Apakah Anda yakin barang sudah anda terima?"),
-                    ],
-                  ),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: Text(btnLabelCancel),
-                      onPressed: () {
+        return WillPopScope(
+          onWillPop: () {},
+          child: new CupertinoAlertDialog(
+            title: Text(title),
+            content: Column(
+              children: <Widget>[
+                Text("Apakah Anda yakin barang sudah anda terima?"),
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(btnLabelCancel),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              FlatButton(
+                  child: Text(btnLabel),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    var body = {'id': order.id.toString(), 'status_order': this.title.toLowerCase() == 'dikirim' ? 'ulasan' : '', 'id_toko': order.idToko.toString()};
+                    var result = blocOrder.updateOrder(body);
+                    result.then((value) {
+                      if (value) {
                         Navigator.pop(context);
-                      },
-                    ),
-                    FlatButton(
-                        child: Text(btnLabel),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          var body = {'id': order.id.toString(), 'status_order': this.title.toLowerCase() == 'dikirim' ? 'ulasan' : '', 'id_toko': order.idToko.toString()};
-                          var result = blocOrder.updateOrder(body);
-                          result.then((value) {
-                            if (value) {
-                              Navigator.pop(context);
-                              var param = {'id_pembeli': blocAuth.idToko.toString(), 'status_order': title.toString().toLowerCase(), 'status_pembayaran': 'terbayar'};
-                              blocOrder.getOrderByParam(param);
-                              blocOrder.setIdUser();
-                            }
-                          });
-                        }),
-                  ],
-                ),
-              )
-            : WillPopScope(
-                onWillPop: () {},
-                child: new CupertinoAlertDialog(
-                  title: Text(title),
-                  content: Column(
-                    children: <Widget>[
-                      Text("Apakah Anda yakin barang sudah anda terima?"),
-                    ],
-                  ),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: Text(btnLabel),
-//                  onPressed: () => _launchURL(PLAY_STORE_URL),
-                    ),
-                  ],
-                ),
-              );
+                        var param = {'id_pembeli': blocAuth.idToko.toString(), 'status_order': title.toString().toLowerCase(), 'status_pembayaran': 'terbayar'};
+                        blocOrder.getOrderByParam(param);
+                        blocOrder.setIdUser();
+                      }
+                    });
+                    Navigator.pop(context);
+                  }),
+            ],
+          ),
+        );
       },
     );
+  }
+
+  _ulasaPopUp(context, BlocAuth blocAuth, BlocOrder blocOrder, order) async {
+    Future<void> future = showDialog<void>(
+      context: context,
+      child: new AlertDialog(
+        contentPadding: const EdgeInsets.all(16.0),
+        content: Container(
+          height: 200,
+          child: new Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Center(
+                child: Text(
+                  'Ulas produk ini!',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SmoothStarRating(
+                rating: 0,
+                isReadOnly: false,
+                color: Colors.amber,
+                size: 40,
+                filledIconData: Icons.star,
+                halfFilledIconData: Icons.star_half,
+                defaultIconData: Icons.star_border,
+                starCount: 5,
+                allowHalfRating: true,
+                spacing: 2.0,
+                onRated: (value) {
+                  blocOrder.changeRating(value.toString());
+                },
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              new Expanded(
+                child: new TextField(
+                  autofocus: true,
+                  maxLines: 5,
+                  onChanged: (value) {
+                    blocOrder.changeUlasan(value);
+                  },
+                  style: TextStyle(fontSize: 12),
+                  decoration: new InputDecoration(labelText: 'Tulis ulasan', labelStyle: TextStyle(fontSize: 16), hintText: 'Berikan ulasan untuk produk ini!'),
+                ),
+              )
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          new FlatButton(
+              child: const Text('Batal'),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+          new FlatButton(
+              child: const Text('Submit'),
+              onPressed: () {
+                Navigator.pop(context);
+                var body = {
+                  'id_order': order.idOrder,
+                  'id_produk': order.idProduk,
+                  'id_user_login': blocAuth.idUser,
+                  'rating': blocOrder.rating.toString(),
+                  'ulasan': blocOrder.ulasan.toString()
+                };
+                blocOrder.insertUlasan(body);
+              })
+        ],
+      ),
+    );
+    future.then((void value) => onRefresh(context, order.idOrder));
+  }
+
+  onRefresh(context, idOrder) {
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+    var param = {
+      'id_order': idOrder.toString(),
+    };
+    blocOrder.getOrderProdukByParam(param);
   }
 }
 

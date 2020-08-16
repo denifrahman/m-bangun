@@ -289,15 +289,15 @@ class CheckoutScreen extends StatelessWidget {
                               blocOrder.setErrorMethodeTransfer(false);
 
                               Map body = {'data_order': data_order, 'data_produk': data_produk, 'data_penerima': data_penerima};
-                              print(body);
-                              var rajaOngkir = blocOrder.listCart[0].chilrdern
-                                  .where((element) => element.jenisOngkir == 'raja_ongkir')
-                                  .length;
-                              print(rajaOngkir);
-                              if (blocOrder.listCostSelected.isNotEmpty && blocOrder.listMetodePembayaran.isNotEmpty) {
+
+                              var rajaOngkir = blocOrder.listCart[0].chilrdern.where((element) => element.jenisOngkir == 'raja_ongkir').length;
+                              print(blocOrder.listMetodePembayaranSelected.isNotEmpty);
+                              if (blocOrder.listCostSelected.isNotEmpty && blocOrder.listMetodePembayaranSelected.isNotEmpty) {
                                 Navigator.push(context, SlideRightRoute(page: WidgetWaitingPayment(body: body)));
+                                print('save');
                               } else if (rajaOngkir == 0) {
                                 Navigator.push(context, SlideRightRoute(page: WidgetWaitingPayment(body: body)));
+                                print('save 0');
                               }
                             },
                           ),

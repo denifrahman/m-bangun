@@ -22,6 +22,7 @@ class OrderProduk {
   String idOrder;
   String catatan;
   String foto;
+  String ulasan;
 
   static OrderProduk fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
@@ -37,6 +38,7 @@ class OrderProduk {
     orderProdukBean.idOrder = map['id_order'];
     orderProdukBean.catatan = map['catatan'];
     orderProdukBean.foto = map['foto'];
+    orderProdukBean.ulasan = map['ulasan'];
     return orderProdukBean;
   }
 
@@ -52,5 +54,6 @@ class OrderProduk {
         "id_order": idOrder,
         "catatan": catatan,
         "foto": foto,
+        "ulasan": ulasan,
       };
 }

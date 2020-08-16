@@ -2,6 +2,7 @@ import 'package:apps/models/Order.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProfile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:money2/money2.dart';
@@ -36,6 +37,9 @@ class WidgetDetailOrderProdukPenjualan extends StatelessWidget {
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
+    var kecamatan = blocProfile.listSubDistrict.isEmpty ? '' : blocProfile.listSubDistrict[0].rajaongkir.results[0].subdistrictName;
+    var kota = blocProfile.listSubDistrict.isEmpty ? '' : blocProfile.listSubDistrict[0].rajaongkir.results[0].city;
+    var provinsi = blocProfile.listSubDistrict.isEmpty ? '' : blocProfile.listSubDistrict[0].rajaongkir.results[0].province;
     // TODO: implement build
     AppBar appBar = AppBar(
       elevation: 0,
@@ -70,11 +74,11 @@ class WidgetDetailOrderProdukPenjualan extends StatelessWidget {
                               Row(
                                 children: [
                                   Text(
-                                      blocProfile.listSubDistrict[0].rajaongkir.results[0].subdistrictName +
+                                      kecamatan +
                                           ' ' +
-                                          blocProfile.listSubDistrict[0].rajaongkir.results[0].city +
+                                          kota +
                                           ' ' +
-                                          blocProfile.listSubDistrict[0].rajaongkir.results[0].province,
+                                          provinsi,
                                       style: TextStyle(fontSize: 14)),
                                 ],
                               ),
@@ -182,55 +186,85 @@ class WidgetDetailOrderProdukPenjualan extends StatelessWidget {
                                         ? Image.asset(
                                             'assets/img/waiting.png',
                                             fit: BoxFit.fitWidth,
-                                          )
-                                        : Image.asset(
-                                            'assets/img/waiting.png',
-                                            fit: BoxFit.fitWidth,
-                                          ),
+                        )
+                            : Image.asset(
+                          'assets/img/waiting.png',
+                          fit: BoxFit.fitWidth,
+                        ),
                       ),
                     ),
                   ),
-                  title == 'dikirim'
+                  title == 'dikirim' || title == 'ulasan'
                       ? Container()
-                      : Expanded(
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: RaisedButton(
-                                child: Text(
-                                  title == 'dikemas' ? 'Kirim Barang' : title == 'menunggu konfirmasi' ? 'Kemas Barang' : title,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                color: Color(0xffb16a085),
-                                textColor: Colors.white,
-                                padding: EdgeInsets.only(left: 11, right: 11, top: 15, bottom: 15),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                onPressed: () async {
-                                  var body = {
-                                    'id': order.id.toString(),
-                                    'status_order': title == 'menunggu konfirmasi' ? 'dikemas' : title == 'dikemas' ? 'dikirim' : '',
-                                    'id_toko': order.idToko.toString()
-                                  };
-                                  var result = blocOrder.updateOrder(body);
-                                  result.then((value) {
-                                    if (value) {
-                                      Navigator.pop(context);
-                                      var param = {'id_toko': blocAuth.idToko.toString(), 'status_order': title.toString(), 'status_pembayaran': 'terbayar'};
-                                      blocOrder.getOrderByParam(param);
-                                      blocOrder.setIdUser();
-                                    }
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                        )
+                      : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: 40,
+                      width: double.infinity,
+                      child: RaisedButton(
+                        child: Text(
+                          title == 'dikemas' ? 'Kirim Barang' : title == 'menunggu konfirmasi' ? 'Kemas Barang' : title,
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                        ),
+                        color: Color(0xffb16a085),
+                        textColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                        onPressed: () async {
+                          _confirmPopUp(context, blocOrder, blocAuth);
+                        },
+                      ),
+                    ),
+                  )
                 ],
               ),
-            ),
+      ),
     );
   }
+
+  _confirmPopUp(context, BlocOrder blocOrder, blocAuth) async {
+    await showDialog<String>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        String btnLabel = "Terima";
+        String btnLabelCancel = "Batal";
+        return WillPopScope(
+          onWillPop: () {},
+          child: new CupertinoAlertDialog(
+            title: Text(title == 'dikemas' ? 'Kirim Barang' : title == 'menunggu konfirmasi' ? 'Kemas Barang' : title),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(btnLabelCancel),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              FlatButton(
+                  child: Text(title == 'dikemas' ? 'Kirim Barang' : title == 'menunggu konfirmasi' ? 'Kemas Barang' : title),
+                  onPressed: () {
+                    var body = {
+                      'id': order.id.toString(),
+                      'status_order': title == 'menunggu konfirmasi' ? 'dikemas' : title == 'dikemas' ? 'dikirim' : '',
+                      'id_toko': order.idToko.toString()
+                    };
+                    var result = blocOrder.updateOrder(body);
+                    result.then((value) {
+                      if (value) {
+                        Navigator.pop(context);
+                        var param = {'id_toko': blocAuth.idToko.toString(), 'status_order': title.toString(), 'status_pembayaran': 'terbayar'};
+                        blocOrder.getOrderByParam(param);
+                        blocOrder.setIdUser();
+                      }
+                    });
+                    Navigator.pop(context);
+                  }),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
 }
 
 class Location {

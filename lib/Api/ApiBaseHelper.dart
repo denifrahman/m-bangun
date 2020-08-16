@@ -19,7 +19,6 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final _url = Uri.http(_baseUrl, _path + url, param);
-      print(_url);
       final response = await http.get(_url);
       responseJson = _returnResponse(response);
     } on SocketException catch (err) {

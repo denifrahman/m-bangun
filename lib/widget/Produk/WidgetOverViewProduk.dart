@@ -7,8 +7,10 @@ class WidgetOverViewProduk extends StatelessWidget {
   final String harga;
   final String namaToko;
   final String jenisToko;
+  final String avgRating;
+  final String jumlahRating;
 
-  WidgetOverViewProduk({Key key, this.produkNama, this.thumbnail, this.harga, this.namaToko, this.jenisToko}) : super(key: key);
+  WidgetOverViewProduk({Key key, this.produkNama, this.thumbnail, this.harga, this.namaToko, this.jenisToko, this.avgRating, this.jumlahRating}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,7 @@ class WidgetOverViewProduk extends StatelessWidget {
                         children: [
                           Text(
                             namaToko + ' ',
-                            style: TextStyle(color: Colors.white, fontSize: 10),
+                            style: TextStyle(color: Colors.white, fontSize: 11),
                           ),
                           jenisToko == 'official_store'
                               ? Image.asset(
@@ -52,21 +54,33 @@ class WidgetOverViewProduk extends StatelessWidget {
                               : Container()
                         ],
                       ),
-                      SmoothStarRating(
-                        rating: 3,
-                        isReadOnly: true,
-                        size: 8,
-                        color: Colors.amber,
-                        filledIconData: Icons.star,
-                        halfFilledIconData: Icons.star_half,
-                        defaultIconData: Icons.star_border,
-                        starCount: 5,
-                        allowHalfRating: true,
-                        spacing: 2.0,
-                        onRated: (value) {
-                          print("rating value -> $value");
-                          // print("rating value dd -> ${value.truncate()}");
-                        },
+                      Row(
+                        children: [
+                          SmoothStarRating(
+                            rating: double.parse(avgRating.toString()),
+                            isReadOnly: true,
+                            color: Colors.amber,
+                            size: 11,
+                            borderColor: Colors.grey,
+                            filledIconData: Icons.star,
+                            halfFilledIconData: Icons.star_half,
+                            defaultIconData: Icons.star_border,
+                            starCount: 5,
+                            allowHalfRating: true,
+                            spacing: 2.0,
+                            onRated: (value) {
+                              print("rating value -> $value");
+                              // print("rating value dd -> ${value.truncate()}");
+                            },
+                          ),
+                          SizedBox(
+                            width: 2,
+                          ),
+                          Text(
+                            '($jumlahRating)',
+                            style: TextStyle(fontSize: 11, color: Colors.white),
+                          )
+                        ],
                       ),
                     ],
                   ),

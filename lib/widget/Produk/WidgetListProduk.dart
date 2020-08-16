@@ -1,5 +1,6 @@
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/models/ProdukListM.dart';
+import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/providers/BlocProfile.dart';
 import 'package:apps/screen/ProdukDetailScreen.dart';
@@ -42,6 +43,7 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
     // TODO: implement build
     BlocProduk blocProduk = Provider.of<BlocProduk>(context);
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     var size = MediaQuery.of(context).size;
 
     /*24 is for notification bar on Android*/
@@ -55,12 +57,15 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
       children: List.generate(
         blocProduk.listProducts.length,
         (j) {
+          var avgRating = blocProduk.listProducts[j].avg_rating == null ? '0' : blocProduk.listProducts[j].avg_rating;
+          var jumlahRating = blocProduk.listProducts[j].jumlah_rating == null ? '0' : blocProduk.listProducts[j].jumlah_rating;
           var harga = blocProduk.listProducts[j].harga;
           var hargaFormat = Money.fromInt(harga == null ? 0 : int.parse(harga), IDR);
           return InkWell(
             onTap: () {
               blocProduk.getDetailProductByParam({'id': blocProduk.listProducts[j].id.toString()});
               blocProfile.getCityParam({'id': blocProduk.listProducts[j].idKota.toString()});
+              blocOrder.getUlasanProduByParam({'id_produk': blocProduk.listProducts[j].id});
               Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
             },
             child: WidgetOverViewProduk(
@@ -68,6 +73,8 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
               namaToko: blocProduk.listProducts[j].namaToko,
               jenisToko: blocProduk.listProducts[j].jenisToko,
               thumbnail: blocProduk.listProducts[j].foto,
+              avgRating: avgRating,
+              jumlahRating: jumlahRating,
               harga: hargaFormat.toString(),
             ),
           );

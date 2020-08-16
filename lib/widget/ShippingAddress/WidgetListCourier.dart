@@ -55,12 +55,16 @@ class WidgetLisCourier extends StatelessWidget {
               elevation: 8.0,
               margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
               child: Container(
+                padding: EdgeInsets.all(2),
                 child: ListTile(
                   contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                  leading: Icon(Icons.account_circle),
+                  leading: Icon(
+                    Icons.directions_car,
+                    size: 30,
+                  ),
                   title: Text(
                     element['service'],
-                    style: TextStyle(fontWeight: FontWeight.normal, color: Colors.grey, fontSize: 12),
+                    style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
                   ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

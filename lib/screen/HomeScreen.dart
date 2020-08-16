@@ -148,17 +148,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ));
   }
 
-  syncVersion() async {
-    await new Future.delayed(const Duration(seconds: 1));
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
-    var newVersion = await dataProvider.newVersion;
-    if (newVersion > dataProvider.currentVersion) {
-      _showVersionDialog();
-    }
-  }
+//  syncVersion() async {
+//    await new Future.delayed(const Duration(seconds: 1));
+//    DataProvider dataProvider = Provider.of<DataProvider>(context);
+//    var newVersion = await dataProvider.newVersion;
+//    if (newVersion > dataProvider.currentVersion) {
+//      _showVersionDialog();
+//    }
+//  }
 
   _showVersionDialog() async {
-    await new Future.delayed(const Duration(seconds: 1));
+//    await new Future.delayed(const Duration(seconds: 1));
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     final PackageInfo info = await PackageInfo.fromPlatform();
     var currentVersion = info.version;

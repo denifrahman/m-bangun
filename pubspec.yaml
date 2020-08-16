@@ -76,6 +76,7 @@ dependencies:
   flutter_spinkit: ^4.1.2
   fw_ticket: ^0.1.1
   dotted_line: ^2.0.1
+  flutter_summernote: ^0.2.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3

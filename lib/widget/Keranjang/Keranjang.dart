@@ -180,10 +180,11 @@ class _KeranjangState extends State<Keranjang> {
                                       var param = {
                                         'origin': idKecamatanToko.toString(),
                                         'destination': blocProfile.listUserAddressDefault[0].idKecamatan,
-                                        'weight': (totalDalamKota + totalRajaOngkir).toString()
+                                        'weight': (totalDalamKota + totalRajaOngkir) == 0 ? '1' : (totalDalamKota + totalRajaOngkir).toString()
                                       };
                                       if (blocProfile.listUserAddressDefault.isNotEmpty) {
                                         blocOrder.getCost(param);
+                                        print(param);
                                       }
                                       Navigator.push(
                                           context,

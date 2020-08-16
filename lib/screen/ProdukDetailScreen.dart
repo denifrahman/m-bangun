@@ -10,6 +10,7 @@ import 'package:apps/widget/Produk/component/WidgetFlexibleSpaceDetailProduct.da
 import 'package:apps/widget/Produk/component/WidgetHeaderDetailProduct.dart';
 import 'package:apps/widget/Produk/component/WidgetInformasiDetailProduk.dart';
 import 'package:apps/widget/Produk/component/WidgetLeadingTopDetaikProduct.dart';
+import 'package:apps/widget/Produk/component/WidgetUlasanPembeli.dart';
 import 'package:flutter/material.dart';
 import 'package:money2/money2.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -74,6 +75,7 @@ class ProdukDetailScreen extends StatelessWidget {
                             WidgetHeaderDetailProduct(blocProduk: blocProduk, blocOrder: blocOrder, IDR: IDR),
                             WidgetInformasiDetailProduk(blocProduk: blocProduk),
                             WidgetDeskripsiDetailProduk(blocProduk: blocProduk),
+                            WidgetUlasanPembeli(blocProduk: blocProduk),
                           ],
                         ),
                       ),

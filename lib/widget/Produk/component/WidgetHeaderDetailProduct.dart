@@ -20,6 +20,8 @@ class WidgetHeaderDetailProduct extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
+    var avgRating = blocProduk.detailProduct[0].avg_rating == null ? 0 : blocProduk.detailProduct[0].avg_rating;
+    var jumlahRating = blocProduk.detailProduct[0].jumlah_rating == null ? '0' : blocProduk.detailProduct[0].jumlah_rating;
     return Container(
       child: Column(
         children: [
@@ -106,10 +108,10 @@ class WidgetHeaderDetailProduct extends StatelessWidget {
                             Icon(
                               Icons.star,
                               color: Colors.amber,
-                              size: 12,
+                              size: 14,
                             ),
-                            Text(' 4.3', style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w600)),
-                            Text(' (30)', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                            Text(' $avgRating', style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w600)),
+                            Text(' ($jumlahRating)', style: TextStyle(color: Colors.grey, fontSize: 12)),
                           ],
                         ),
                         VerticalDivider(
@@ -118,7 +120,7 @@ class WidgetHeaderDetailProduct extends StatelessWidget {
                         Row(
                           children: [
                             Text('Terjual   ', style: TextStyle(color: Colors.black, fontSize: 12)),
-                            Text('100', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                            Text(blocProduk.detailProduct[0].jumlahDibeli, style: TextStyle(color: Colors.grey, fontSize: 12)),
                           ],
                         ),
                         VerticalDivider(

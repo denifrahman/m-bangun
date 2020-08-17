@@ -196,7 +196,7 @@ class _KeranjangState extends State<Keranjang> {
                                     child: Center(
                                       child: Text(
                                         'Checkout',
-                                        style: TextStyle(color: Colors.white),
+                                        style: TextStyle(color: Colors.white, fontSize: 18),
                                       ),
                                     ),
                                   ),

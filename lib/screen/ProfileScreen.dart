@@ -84,38 +84,38 @@ class ProfileScreen extends StatelessWidget {
                   )),
             )
           : blocAuth.isLoading
-          ? Center(
-        child: CircularProgressIndicator(),
-      )
-          : !blocAuth.isLogin
-          ? Container(
-        color: Colors.white,
-        child: LoginWidget(
-          primaryColor: Color(0xFFb16a085),
-          backgroundColor: Colors.white,
-          page: '/BottomNavBar',
-        ),
-      )
-          : SafeArea(
-        child: Column(
-          children: <Widget>[
-            TopContainer(
-              height: 200,
-              width: width,
-              child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      'Profil',
-                      style: TextStyle(
-                        fontSize: 22.0,
-                        color: AppColors.kDarkBlue,
-                        fontWeight: FontWeight.w800,
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : !blocAuth.isLogin
+                  ? Container(
+                      color: Colors.white,
+                      child: LoginWidget(
+                        primaryColor: Color(0xFFb16a085),
+                        backgroundColor: Colors.white,
+                        page: '/BottomNavBar',
                       ),
-                    ),
-                    Row(
-                      children: [
+                    )
+                  : SafeArea(
+                      child: Column(
+                        children: <Widget>[
+                          TopContainer(
+                            height: 200,
+                            width: width,
+                            child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    'Profil',
+                                    style: TextStyle(
+                                      fontSize: 22.0,
+                                      color: AppColors.kDarkBlue,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
 //                        IconButton(
 //                          onPressed: () {
 //                            Navigator.push(context, SlideRightRoute(page: WidgetProfile()));
@@ -132,150 +132,143 @@ class ProfileScreen extends StatelessWidget {
                                         icon: Icon(Icons.exit_to_app, color: Colors.grey[400], size: 20.0),
                                       ),
                                     ],
-                    ),
-                  ],
-                ),
-                Container(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      CircularPercentIndicator(
-                        radius: 70.0,
-                        lineWidth: 5.0,
-                        animation: true,
-                        percent: 0.75,
-                        circularStrokeCap: CircularStrokeCap.round,
-                        progressColor: AppColors.kRed,
-                        backgroundColor: AppColors.kDarkYellow,
-                        center: Container(
-                            width: 60.0,
-                            height: 60.0,
-                            child: ClipOval(
-                              child: Image.network(
-                                blocAuth.currentUser.photoUrl == null ? dataProvider.fotoNull : blocAuth.currentUser.photoUrl,
-                                fit: BoxFit.cover,
-                                width: 80,
-                              ),
-                            )),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
-                            width: MediaQuery
-                                .of(context)
-                                .size
-                                .width * 0.6,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                !dataProvider.verified
-                                    ? Container()
-                                    : Container(child: Image(width: 18, fit: BoxFit.contain, image: new AssetImage('assets/icons/verified.png'))),
-                                Container(
-                                  width: MediaQuery
-                                      .of(context)
-                                      .size
-                                      .width * 0.5,
-                                  margin: EdgeInsets.only(left: dataProvider.verified ? 5 : 0),
-                                  child: RichText(
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    text: TextSpan(
-                                        style: TextStyle(
-                                          fontSize: 16.0,
-                                          color: AppColors.kDarkBlue,
-                                          fontWeight: FontWeight.w800,
-                                        ),
-                                        text: blocAuth.currentUser.displayName),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
-                            child: RichText(
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              strutStyle: StrutStyle(fontSize: 12.0),
-                              text: TextSpan(
-                                style: TextStyle(
-                                  color: Colors.grey[800],
-                                ),
-                                text: blocAuth.currentUser.email,
+                                ],
                               ),
-                            ),
+                              Container(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    CircularPercentIndicator(
+                                      radius: 70.0,
+                                      lineWidth: 5.0,
+                                      animation: true,
+                                      percent: 0.75,
+                                      circularStrokeCap: CircularStrokeCap.round,
+                                      progressColor: AppColors.kRed,
+                                      backgroundColor: AppColors.kDarkYellow,
+                                      center: Container(
+                                          width: 60.0,
+                                          height: 60.0,
+                                          child: ClipOval(
+                                            child: Image.network(
+                                              blocAuth.currentUser.photoUrl == null ? dataProvider.fotoNull : blocAuth.currentUser.photoUrl,
+                                              fit: BoxFit.cover,
+                                              width: 80,
+                                            ),
+                                          )),
+                                    ),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Container(
+                                          padding: EdgeInsets.symmetric(horizontal: 5),
+                                          width: MediaQuery.of(context).size.width * 0.6,
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              !dataProvider.verified
+                                                  ? Container()
+                                                  : Container(child: Image(width: 18, fit: BoxFit.contain, image: new AssetImage('assets/icons/verified.png'))),
+                                              Container(
+                                                width: MediaQuery.of(context).size.width * 0.5,
+                                                margin: EdgeInsets.only(left: dataProvider.verified ? 5 : 0),
+                                                child: RichText(
+                                                  overflow: TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                  text: TextSpan(
+                                                      style: TextStyle(
+                                                        fontSize: 16.0,
+                                                        color: AppColors.kDarkBlue,
+                                                        fontWeight: FontWeight.w800,
+                                                      ),
+                                                      text: blocAuth.currentUser.displayName),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(horizontal: 5),
+                                          child: RichText(
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            strutStyle: StrutStyle(fontSize: 12.0),
+                                            text: TextSpan(
+                                              style: TextStyle(
+                                                color: Colors.grey[800],
+                                              ),
+                                              text: blocAuth.currentUser.email,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              )
+                            ]),
                           ),
-                        ],
-                      )
-                    ],
-                  ),
-                )
-              ]),
-            ),
-            blocAuth.statusToko == '0'
+                          blocAuth.statusToko == '0'
                               ? Container()
-                : Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      color: Colors.transparent,
-                      padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              subheading('Toko Saya'),
-                              GestureDetector(
-                                onTap: () {
+                              : Expanded(
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      children: <Widget>[
+                                        Container(
+                                          color: Colors.transparent,
+                                          padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                                          child: Column(
+                                            children: <Widget>[
+                                              Row(
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: <Widget>[
+                                                  subheading('Toko Saya'),
+                                                  GestureDetector(
+                                                    onTap: () {
                                                       blocProfile.getTokoByParam({'id_user': blocAuth.idUser.toString()});
                                                       blocProduk.getAllProductByParam({'id_toko': blocAuth.idToko.toString()});
                                                       Navigator.push(context, SlideRightRoute(page: TokoSayaScreen()));
                                                     },
-                                child: CircleAvatar(
-                                  radius: 25.0,
-                                  backgroundColor: AppColors.mainColor,
-                                  child: Icon(
-                                    Icons.shop,
-                                    size: 20.0,
-                                    color: Colors.white,
+                                                    child: CircleAvatar(
+                                                      radius: 25.0,
+                                                      backgroundColor: AppColors.mainColor,
+                                                      child: Icon(
+                                                        Icons.shop,
+                                                        size: 20.0,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(height: 15.0),
+                                              InkWell(
+                                                onTap: () {
+                                                  blocProfile.getTokoByParam({'id_user': blocAuth.idUser.toString()});
+                                                  blocProduk.getAllProductByParam({'id_toko': blocAuth.idToko.toString()});
+                                                  Navigator.push(context, SlideRightRoute(page: TokoSayaScreen()));
+                                                },
+                                                child: WidgetMyFavorite(
+                                                  icon: Icons.shop,
+                                                  iconBackgroundColor: AppColors.kRed,
+                                                  title: 'Kelola Toko',
+                                                  subtitle: 'Kelola produk, alamat bank anda',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 15.0),
-                          InkWell(
-                            onTap: () {
-                              blocProfile.getTokoByParam({'id_user': blocAuth.idUser.toString()});
-                              blocProduk.getAllProductByParam({'id_toko': blocAuth.idToko.toString()});
-                              Navigator.push(context, SlideRightRoute(page: TokoSayaScreen()));
-                            }
-                            ,
-                            child: WidgetMyFavorite(
-                              icon: Icons.shop,
-                              iconBackgroundColor: AppColors.kRed,
-                              title: 'Kelola Toko',
-                              subtitle: 'Kelola produk, alamat bank anda',
-                            ),
-                          ),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

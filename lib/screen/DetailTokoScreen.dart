@@ -74,12 +74,12 @@ class _DetailTokoScreenState extends State<DetailTokoScreen> {
                     style: TextStyle(fontWeight: FontWeight.w400),
                   ),
                 ),
-                Tab(
-                  child: Text(
-                    'Tentang Toko',
-                    style: TextStyle(fontWeight: FontWeight.w400),
-                  ),
-                ),
+//                Tab(
+//                  child: Text(
+//                    'Tentang Toko',
+//                    style: TextStyle(fontWeight: FontWeight.w400),
+//                  ),
+//                ),
               ],
             ),
           ),
@@ -97,7 +97,7 @@ class _DetailTokoScreenState extends State<DetailTokoScreen> {
               child: CardSliverAppBar(
                 height: 200,
                 background: Image.network(
-                  "https://m-bangun.com/api-v2/assets/toko/" + blocProduk.detailStore[0].foto,
+                  "https://m-bangun.com/api-v2/assets/toko/" + blocProduk.detailStore[0].fotoSampul,
                   fit: BoxFit.cover,
                   errorBuilder: (context, urlImage, error) {
                     print(error.hashCode);
@@ -140,7 +140,7 @@ class _DetailTokoScreenState extends State<DetailTokoScreen> {
                       Container(
                         height: MediaQuery.of(context).size.height * 0.7 - appBar.preferredSize.height,
                         child: DefaultTabController(
-                          length: 2,
+                          length: 1,
                           child: Scaffold(
                             appBar: appBar,
                             body: Container(
@@ -156,14 +156,14 @@ class _DetailTokoScreenState extends State<DetailTokoScreen> {
                                           )),
                                     ],
                                   ),
-                                  Container(
-                                    margin: EdgeInsets.only(top: 10),
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children: <Widget>[Text('Tentang toko')],
-                                    ),
-                                  ),
+//                                  Container(
+//                                    margin: EdgeInsets.only(top: 10),
+//                                    child: Row(
+//                                      crossAxisAlignment: CrossAxisAlignment.center,
+//                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                                      children: <Widget>[Text('Tentang toko')],
+//                                    ),
+//                                  ),
                                 ],
                               ),
                             ),
@@ -177,7 +177,7 @@ class _DetailTokoScreenState extends State<DetailTokoScreen> {
                             Container(
                               alignment: Alignment.centerLeft,
                               margin: EdgeInsets.only(left: 10, top: 10),
-                              child: Text("Toko Lainnya", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                              child: Text("Toko Lainnya", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                             ),
                             Container(
                               alignment: Alignment.center,

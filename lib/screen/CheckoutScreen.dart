@@ -56,15 +56,12 @@ class CheckoutScreen extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: ListTile(
-                                title: Text(listCart.flag, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                                title: Text(listCart.flag, style: TextStyle(fontWeight: FontWeight.bold)),
                                 subtitle: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      'Dikirim dari ',
-                                      style: TextStyle(fontSize: 10),
-                                    ),
-                                    Text(blocProfile.listSubDistrictById.isEmpty ? '' : blocProfile.listSubDistrictById[0].city, style: TextStyle(fontSize: 10)),
+                                    Text('Dikirim dari '),
+                                    Text(blocProfile.listSubDistrictById.isEmpty ? '' : blocProfile.listSubDistrictById[0].city, style: TextStyle(color: Colors.black)),
                                   ],
                                 ),
                                 leading: Image.network(
@@ -81,16 +78,18 @@ class CheckoutScreen extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: ListTile(
-                                title: Text('Alamat Penerima', style: TextStyle(fontSize: 12)),
+                                title: Text('Alamat Penerima'),
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                        blocProfile.listUserAddressDefault.isEmpty
-                                            ? ''
-                                            : '#' + blocProfile.listUserAddressDefault[0].namaPenerima + ' ' + '(' + blocProfile.listUserAddressDefault[0].namaAlamat + ')',
-                                        style: TextStyle(fontSize: 10)),
-                                    Text(blocProfile.listUserAddressDefault.isEmpty ? '' : blocProfile.listUserAddressDefault[0].alamatLengkap, style: TextStyle(fontSize: 10)),
+                                      blocProfile.listUserAddressDefault.isEmpty
+                                          ? ''
+                                          : '#' + blocProfile.listUserAddressDefault[0].namaPenerima + ' ' + '(' + blocProfile.listUserAddressDefault[0].namaAlamat + ')',
+                                    ),
+                                    Text(
+                                      blocProfile.listUserAddressDefault.isEmpty ? '' : blocProfile.listUserAddressDefault[0].alamatLengkap,
+                                    ),
                                   ],
                                 ),
                                 leading: Icon(FontAwesomeIcons.addressBook),
@@ -167,20 +166,20 @@ class CheckoutScreen extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: ListTile(
-                                title: Text('Metode Pembayaran', style: TextStyle(fontSize: 12)),
+                                title: Text('Metode Pembayaran'),
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(blocOrder.listMetodePembayaranSelected.isEmpty ? '-' : blocOrder.listMetodePembayaranSelected['metode_pembayaran'],
-                                        style: TextStyle(fontSize: 10)),
+                                    Text(
+                                      blocOrder.listMetodePembayaranSelected.isEmpty ? '-' : blocOrder.listMetodePembayaranSelected['metode_pembayaran'],
+                                    ),
                                     Text(
                                         blocOrder.listMetodePembayaranSelected.isEmpty
                                             ? ''
                                             : blocOrder.listMetodePembayaranSelected['nama_bank'] + ' ' + blocOrder.listMetodePembayaranSelected['no_rekening'],
-                                        style: TextStyle(fontSize: 10, color: Colors.black)),
+                                        style: TextStyle(color: Colors.black)),
                                     Text(
                                       blocOrder.listMetodePembayaranSelected.isEmpty ? '' : 'a.n ' + blocOrder.listMetodePembayaranSelected['nama_rekening'],
-                                      style: TextStyle(fontSize: 10),
                                     )
                                   ],
                                 ),
@@ -225,23 +224,35 @@ class CheckoutScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          child: Text('Subtotal'),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              child: Text(
+                                'Subtotal',
+                                style: TextStyle(fontSize: 18, color: Colors.grey),
+                              ),
+                            ),
+                            Container(
+                              child: Text(
+                                blocOrder.listCostSelected.isEmpty
+                                    ? Money.fromInt((this.subtotal), IDR).toString()
+                                    : Money.fromInt((this.subtotal + blocOrder.listCostSelected['total_ongkir']), IDR).toString(),
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                              ),
+                            ),
+                          ],
                         ),
                         Container(
-                          child: Text(
-                            blocOrder.listCostSelected.isEmpty
-                                ? Money.fromInt((this.subtotal), IDR).toString()
-                                : Money.fromInt((this.subtotal + blocOrder.listCostSelected['total_ongkir']), IDR).toString(),
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Container(
-                          height: 30,
+                          height: 40,
                           width: MediaQuery.of(context).size.width * 0.4,
                           child: FlatButton(
-                            child: Text('Bayar', style: TextStyle(color: Colors.white)),
-                            color: Colors.cyan[700],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                            child: Text('Bayar', style: TextStyle(color: Colors.white, fontSize: 18)),
+                            color: Colors.green,
                             onPressed: () {
                               var totalOngkir = blocOrder.listCostSelected.isEmpty ? 0 : blocOrder.listCostSelected['total_ongkir'];
                               Map data_order = {
@@ -292,12 +303,12 @@ class CheckoutScreen extends StatelessWidget {
 
                               var rajaOngkir = blocOrder.listCart[0].chilrdern.where((element) => element.jenisOngkir == 'raja_ongkir').length;
                               print(blocOrder.listMetodePembayaranSelected.isNotEmpty);
-                              if (blocOrder.listCostSelected.isNotEmpty && blocOrder.listMetodePembayaranSelected.isNotEmpty) {
+                              if (rajaOngkir == 0 && blocOrder.listMetodePembayaranSelected.isNotEmpty) {
                                 Navigator.push(context, SlideRightRoute(page: WidgetWaitingPayment(body: body)));
-                                print('save');
-                              } else if (rajaOngkir == 0) {
+                                print('pembayaran free ongkir');
+                              } else if (blocOrder.listCostSelected.isNotEmpty && rajaOngkir == 1 && blocOrder.listMetodePembayaranSelected.isNotEmpty) {
+                                print('cost');
                                 Navigator.push(context, SlideRightRoute(page: WidgetWaitingPayment(body: body)));
-                                print('save 0');
                               }
                             },
                           ),

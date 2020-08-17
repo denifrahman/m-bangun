@@ -26,6 +26,7 @@ class WidgetLisCourier extends StatelessWidget {
         title: Text('Pilih jasa pengiriman'),
       ),
       body: GroupedListView<dynamic, String>(
+        padding: EdgeInsets.all(8),
         groupBy: (element) => element['code'],
         elements: blocOrder.listCost,
         order: GroupedListOrder.DESC,
@@ -37,48 +38,42 @@ class WidgetLisCourier extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
-        ),
+            ),
         itemBuilder: (c, element) {
-          return InkWell(
-            onTap: () {
-              var body = {
-                'kode_kurir': element['code'],
-                'nama_kurir': element['name'],
-                'estimasi_pengiriman': element['etd'],
-                'total_ongkir': element['cost'],
-                'jenis_service': element['service']
-              };
-              blocOrder.onChangeCost(body);
-              Navigator.pop(context);
-            },
-            child: Card(
-              elevation: 8.0,
-              margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-              child: Container(
-                padding: EdgeInsets.all(2),
-                child: ListTile(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                  leading: Icon(
-                    Icons.directions_car,
-                    size: 30,
-                  ),
-                  title: Text(
-                    element['service'],
-                    style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(Money.fromInt(int.parse(element['cost'].toString()), IDR).toString(), style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 12)),
-                      Text('Estimasi ' + element['etd'], style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontSize: 12)),
-                    ],
-                  ),
-                  trailing: Icon(
-                    Icons.arrow_forward,
-                    size: 20,
-                    color: Colors.cyan[700],
-                  ),
-                ),
+          return Card(
+            elevation: 1.0,
+            child: ListTile(
+              onTap: () {
+                var body = {
+                  'kode_kurir': element['code'],
+                  'nama_kurir': element['name'],
+                  'estimasi_pengiriman': element['etd'],
+                  'total_ongkir': element['cost'],
+                  'jenis_service': element['service']
+                };
+                blocOrder.onChangeCost(body);
+                Navigator.pop(context);
+              },
+              contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+              leading: Icon(
+                Icons.directions_car,
+                size: 30,
+              ),
+              title: Text(
+                element['service'],
+                style: TextStyle(fontWeight: FontWeight.normal),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(Money.fromInt(int.parse(element['cost'].toString()), IDR).toString(), style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+                  Text('Estimasi ' + element['etd'], style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black)),
+                ],
+              ),
+              trailing: Icon(
+                Icons.arrow_forward,
+                size: 20,
+                color: Colors.cyan[700],
               ),
             ),
           );

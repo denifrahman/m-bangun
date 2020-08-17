@@ -506,6 +506,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.7.10"
+  multipart_request:
+    dependency: "direct main"
+    description:
+      name: multipart_request
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.1"
   numberpicker:
     dependency: transitive
     description:

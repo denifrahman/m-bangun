@@ -73,12 +73,12 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(Money.fromInt((int.parse(blocOrder.listOrderDetailProduk[j].subtotal)), IDR).toString(),
-                                          style: TextStyle(fontStyle: FontStyle.normal, fontSize: 12, color: Colors.redAccent)),
+                                          style: TextStyle(fontStyle: FontStyle.normal, color: Colors.redAccent)),
                                       Text(
                                         blocOrder.listOrderDetailProduk[j].catatan == null ? '-' : '"' + blocOrder.listOrderDetailProduk[j].catatan + '"',
                                         style: TextStyle(
                                           fontStyle: FontStyle.italic,
-                                          fontSize: 12,
+                                          fontSize: 14,
                                         ),
                                       ),
                                       SizedBox(
@@ -208,7 +208,7 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
   }
 
   _confirmPopUp(context, BlocOrder blocOrder, blocAuth) async {
-    await showDialog<String>(
+    Future<void> future = showDialog<String>(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
@@ -234,24 +234,26 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
               FlatButton(
                   child: Text(btnLabel),
                   onPressed: () {
-                    Navigator.pop(context);
                     var body = {'id': order.id.toString(), 'status_order': this.title.toLowerCase() == 'dikirim' ? 'ulasan' : '', 'id_toko': order.idToko.toString()};
+                    Navigator.pop(context);
                     var result = blocOrder.updateOrder(body);
                     result.then((value) {
+                      print(value);
                       if (value) {
-                        Navigator.pop(context);
                         var param = {'id_pembeli': blocAuth.idToko.toString(), 'status_order': title.toString().toLowerCase(), 'status_pembayaran': 'terbayar'};
                         blocOrder.getOrderByParam(param);
                         blocOrder.setIdUser();
                       }
                     });
-                    Navigator.pop(context);
                   }),
             ],
           ),
         );
       },
     );
+    future.then((void value) {
+      Navigator.pop(context);
+    });
   }
 
   _ulasaPopUp(context, BlocAuth blocAuth, BlocOrder blocOrder, order) async {

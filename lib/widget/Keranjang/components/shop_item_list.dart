@@ -67,7 +67,7 @@ class _ShopItemListState extends State<ShopItemList> {
                           child: Text(
                             widget.chilrdern.nama,
                             maxLines: 1,
-                            style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.w700),
+                            style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
                           ),
                         ),
                         Container(
@@ -78,10 +78,10 @@ class _ShopItemListState extends State<ShopItemList> {
                             children: [
                               Text(
                                 'Harga ',
-                                style: TextStyle(fontSize: 12, color: Colors.grey),
+                                style: TextStyle(color: Colors.grey, fontSize: 12),
                               ),
-                              Text(Money.fromInt((int.parse(widget.chilrdern.harga)), IDR).toString(), style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                              Text('Jumlah', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                              Text(Money.fromInt((int.parse(widget.chilrdern.harga)), IDR).toString(), style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                              Text('Jumlah', style: TextStyle(color: Colors.grey, fontSize: 12)),
                             ],
                           ),
                         ),
@@ -105,7 +105,7 @@ class _ShopItemListState extends State<ShopItemList> {
                             keyboardType: TextInputType.multiline,
                             decoration: InputDecoration(
                               hintText: 'Catatan untuk penjual',
-                              hintStyle: TextStyle(color: Colors.grey, fontSize: 11, fontStyle: FontStyle.italic),
+                              hintStyle: TextStyle(color: Colors.grey, fontSize: 12, fontStyle: FontStyle.italic),
                             ),
                           ),
                         ),
@@ -117,11 +117,11 @@ class _ShopItemListState extends State<ShopItemList> {
                             children: [
                               Text(
                                 'Subtotal',
-                                style: TextStyle(fontSize: 14, color: Colors.grey),
+                                style: TextStyle(color: Colors.grey, fontSize: 14),
                               ),
                               Text(
                                 Money.fromInt((int.parse(widget.chilrdern.harga) * int.parse(widget.chilrdern.jumlah)), IDR).toString(),
-                                style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),
+                                style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
@@ -137,7 +137,6 @@ class _ShopItemListState extends State<ShopItemList> {
                               headline: TextStyle(fontFamily: 'Montserrat', fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
                               body1: TextStyle(
                                 fontFamily: 'Montserrat',
-                                fontSize: 12,
                                 color: Colors.grey[400],
                               ),
                             )),

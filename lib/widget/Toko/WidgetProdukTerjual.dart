@@ -39,12 +39,12 @@ class WidgetProdukTerjual extends StatelessWidget {
                     children: [
                       Text('Produk Terjual',
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 18,
                             fontWeight: FontWeight.w700,
                           )),
                       Text(
                         'Temukan produk bangunan disini',
-                        style: TextStyle(fontSize: 12),
+                        style: TextStyle(fontSize: 14),
                       ),
                     ],
                   ),
@@ -80,9 +80,9 @@ class WidgetProdukTerjual extends StatelessWidget {
               blocProduk.listProdukTerjual.isEmpty ? 1 : blocProduk.listProdukTerjual.length,
               (j) {
                 final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
-                var avgRating = blocProduk.listRecentProduct[j].avg_rating == null ? '0' : blocProduk.listRecentProduct[j].avg_rating;
-                var jumlahRating = blocProduk.listRecentProduct[j].jumlah_rating == null ? '0' : blocProduk.listRecentProduct[j].jumlah_rating;
-                var harga = blocProduk.listRecentProduct.isEmpty ? '0' : blocProduk.listRecentProduct[j].harga;
+                var avgRating = blocProduk.listProdukTerjual[j].avg_rating == null ? '0' : blocProduk.listProdukTerjual[j].avg_rating;
+                var jumlahRating = blocProduk.listProdukTerjual[j].jumlah_rating == null ? '0' : blocProduk.listProdukTerjual[j].jumlah_rating;
+                var harga = blocProduk.listProdukTerjual.isEmpty ? '0' : blocProduk.listProdukTerjual[j].harga;
                 var hargaFormat = Money.fromInt(harga == null ? 0 : int.parse(harga), IDR);
                 if (blocProduk.listProdukTerjual.isEmpty) {
                   return Center(
@@ -96,7 +96,7 @@ class WidgetProdukTerjual extends StatelessWidget {
                       onTap: () {
                         blocProduk.getDetailProductByParam({'id': blocProduk.listProdukTerjual[j].id.toString(), 'aktif': '1'});
                         Provider.of<BlocOrder>(context).getCart();
-                        blocProfile.getCityParam({'id': blocProduk.listProducts[j].idKota.toString()});
+                        blocProfile.getCityParam({'id': blocProduk.listProdukTerjual[j].idKota.toString()});
                         blocOrder.getUlasanProduByParam({'id_produk': blocProduk.listProdukTerjual[j].id});
                         Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
                       },
@@ -145,11 +145,11 @@ class WidgetProdukTerjual extends StatelessWidget {
                                           maxLines: 1,
                                           text: TextSpan(
                                               style: TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.normal, fontStyle: FontStyle.italic),
-                                              text: blocProduk.listRecentProduct[j].namaToko + ' '),
+                                              text: blocProduk.listProdukTerjual[j].namaToko + ' '),
                                         ),
-                                        blocProduk.listRecentProduct.isEmpty
+                                        blocProduk.listProdukTerjual.isEmpty
                                             ? Container()
-                                            : blocProduk.listRecentProduct[j].jenisToko == 'official_store'
+                                            : blocProduk.listProdukTerjual[j].jenisToko == 'official_store'
                                                 ? Image.asset(
                                                     'assets/icons/verified.png',
                                                     height: 10,

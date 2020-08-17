@@ -35,22 +35,7 @@ class ProdukDetailScreen extends StatelessWidget {
     return Scaffold(
 //      backgroundColor: Colors.white,
       body: blocProduk.isLoading
-          ? SingleChildScrollView(
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: Scaffold(
-                  appBar: AppBar(
-                    title: Text('Waiting'),
-                  ),
-                  body: Center(
-                    child: PKCardPageSkeleton(
-                      totalLines: 3,
-                    ),
-                  ),
-                ),
-              ),
-            )
+          ? Center(child: PKCardListSkeleton())
           : SingleChildScrollView(
               child: Column(
                 children: [
@@ -235,11 +220,11 @@ class ProdukDetailScreen extends StatelessWidget {
                                     children: [
                                       Container(
                                         margin: EdgeInsets.only(top: 0),
-                                        child: Image.network(
-                                          'https://m-bangun.com/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto,
-                                          width: 50,
-                                          height: 80,
-                                        ),
+                                        child: Image.network('https://m-bangun.com/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto, width: 50, height: 80,
+                                            errorBuilder: (context, urlImage, error) {
+                                              print(error.hashCode);
+                                              return Image.asset('assets/logo.png');
+                                            }),
                                       ),
                                       Column(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -339,7 +324,10 @@ class ProdukDetailScreen extends StatelessWidget {
                               controller: _btnController,
                             )
                           : RoundedLoadingButton(
-                              width: MediaQuery.of(context).size.width,
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width,
                         height: 40,
                         child: Text('Tambah Keranjang', style: TextStyle(color: Colors.white)),
                         color: Colors.cyan,

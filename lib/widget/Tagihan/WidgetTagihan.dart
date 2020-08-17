@@ -103,8 +103,8 @@ class WidgetTagihan extends StatelessWidget {
                               Container(
                                 child: Text(
                                   'Sisa waktu yang harus dibayar',
-                                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                                ),
+                                        style: TextStyle(fontSize: 14, color: Colors.grey),
+                                      ),
                               ),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -119,7 +119,7 @@ class WidgetTagihan extends StatelessWidget {
                                       ),
                                       Text(
                                         'Jam',
-                                        style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12, fontFamily: 'WorkSansMedium'),
+                                        style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, fontFamily: 'WorkSansMedium'),
                                       ),
                                     ],
                                   ),
@@ -147,7 +147,7 @@ class WidgetTagihan extends StatelessWidget {
                                       ),
                                       Text(
                                         "Menit",
-                                        style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12, fontFamily: 'WorkSansMedium'),
+                                        style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, fontFamily: 'WorkSansMedium'),
                                       ),
                                     ],
                                   ),
@@ -159,7 +159,7 @@ class WidgetTagihan extends StatelessWidget {
                               Container(
                                 child: Text(
                                   'Jumlah yang harus dibayar',
-                                  style: TextStyle(fontSize: 12),
+                                  style: TextStyle(fontSize: 14),
                                 ),
                               ),
                               SizedBox(
@@ -171,7 +171,7 @@ class WidgetTagihan extends StatelessWidget {
                                   children: [
                                     Text(
                                       Money.fromInt((int.parse(blocOrder.listOrderDetail[0].total)), IDR).toString(),
-                                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.redAccent, fontSize: 15),
+                                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.redAccent, fontSize: 18),
                                     ),
                                     SizedBox(
                                       width: 5,
@@ -212,8 +212,8 @@ class WidgetTagihan extends StatelessWidget {
                                       textAlign: TextAlign.center,
                                       style: TextStyle(letterSpacing: 0.5,
                                           height: 1.5,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
                                           color: Colors.white),
                                     ),
                                     SizedBox(
@@ -224,7 +224,7 @@ class WidgetTagihan extends StatelessWidget {
                                       textAlign: TextAlign.center,
                                       style: TextStyle(letterSpacing: 0.5,
                                           height: 1.5,
-                                          fontSize: 11,
+                                          fontSize: 12,
                                           fontStyle: FontStyle.italic,
                                           color: Colors.white),
                                     )
@@ -338,7 +338,7 @@ class WidgetTagihan extends StatelessWidget {
                                       children: [
                                         new Text(
                                           'Salin rekening ',
-                                          style: TextStyle(color: Colors.white),
+                                          style: TextStyle(color: Colors.white, fontSize: 14),
                                         ),
                                         Icon(
                                           Icons.content_copy,

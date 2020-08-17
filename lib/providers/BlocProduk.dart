@@ -331,26 +331,25 @@ class BlocProduk extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateProduk(List<File> files, body) async {
+  updateProduk(List<File> files, body) async {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().updateProduk(files, body);
-//    print(result);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405') {
       _connection = false;
       _isLoading = false;
       notifyListeners();
-      return false;
+      return result;
     } else {
       if (result['meta']['success']) {
         _isLoading = false;
         _connection = true;
         notifyListeners();
-        return true;
+        return result;
       } else {
         _isLoading = false;
         notifyListeners();
-        return false;
+        return result;
       }
     }
   }

@@ -51,10 +51,10 @@ class _CardRajaOngkirState extends State<CardRajaOngkir> {
         child: ListTile(
           title: Row(
             children: [
-              Text('Jasa Pengiriman', style: TextStyle(fontSize: 12)),
+              Text('Jasa Pengiriman'),
               Text(
                 ' (Kurir)',
-                style: TextStyle(color: Colors.grey, fontSize: 10, fontStyle: FontStyle.italic),
+                style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
               )
             ],
           ),
@@ -62,13 +62,13 @@ class _CardRajaOngkirState extends State<CardRajaOngkir> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                  widget.blocOrder.listCostSelected.isEmpty
-                      ? '-'
-                      : widget.blocOrder.listCostSelected['kode_kurir'].toString().toUpperCase() + ' ' + ' estimasi ' + widget.blocOrder.listCostSelected['estimasi_pengiriman'],
-                  style: TextStyle(fontSize: 10)),
-              Text(widget.blocOrder.listCostSelected.isEmpty ? '' : '#' + widget.blocOrder.listCostSelected['jenis_service'].toString(), style: TextStyle(fontSize: 10)),
+                widget.blocOrder.listCostSelected.isEmpty
+                    ? '-'
+                    : widget.blocOrder.listCostSelected['kode_kurir'].toString().toUpperCase() + ' ' + ' estimasi ' + widget.blocOrder.listCostSelected['estimasi_pengiriman'],
+              ),
+              Text(widget.blocOrder.listCostSelected.isEmpty ? '' : '#' + widget.blocOrder.listCostSelected['jenis_service'].toString()),
               Text(widget.blocOrder.listCostSelected.isEmpty ? '' : Money.fromInt(int.parse(widget.blocOrder.listCostSelected['total_ongkir'].toString()), widget.IDR).toString(),
-                  style: TextStyle(fontSize: 12, color: Colors.black)),
+                  style: TextStyle(color: Colors.redAccent)),
             ],
           ),
           leading: Icon(FontAwesomeIcons.carAlt),

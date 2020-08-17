@@ -18,26 +18,26 @@ class WidgetMenu extends StatelessWidget {
         Container(
           width: MediaQuery.of(context).size.width,
           padding: EdgeInsets.all(10),
-          child: InkWell(
-            onTap: () => _openScreen('pengajuan_toko', context),
-            child: Column(
-              children: [
-                blocAuth.statusToko == '0'
-                    ? WidgetCardMenu(
+          child: Column(
+            children: [
+              blocAuth.statusToko == '0'
+                  ? InkWell(
+                      onTap: () => _openScreen('pengajuan_toko', context),
+                      child: WidgetCardMenu(
                         title: 'Buka Toko',
                         color: Colors.amber[800],
                         thumbnail: 'assets/icons/store.png',
                         deskripsi: 'Anda bisa menjual produk anda secara eksklusif di m-Bangun, cukup mengisi detail produk anda dan produk anda siap di untuk publish!',
-                      )
-                    : Container(),
-                WidgetCardMenu(
-                  title: 'Panggil m-Bangun (Segera Hadir)',
-                  color: Colors.cyan[600],
-                  thumbnail: 'assets/icons/worker.png',
-                  deskripsi: 'Mau benerin perabotan rumah atau appartemen? kesulitan cari tukang di tengah kota? kami siap datang untuk melakukan survey!',
-                )
-              ],
-            ),
+                      ),
+                    )
+                  : Container(),
+              WidgetCardMenu(
+                title: 'Panggil m-Bangun (Segera Hadir)',
+                color: Colors.cyan[600],
+                thumbnail: 'assets/icons/worker.png',
+                deskripsi: 'Mau benerin perabotan rumah atau appartemen? kesulitan cari tukang di tengah kota? kami siap datang untuk melakukan survey!',
+              )
+            ],
           ),
         ),
       ],

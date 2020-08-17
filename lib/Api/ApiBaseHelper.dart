@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -9,7 +10,7 @@ import 'package:mime/mime.dart';
 class ApiBaseHelper {
   final _baseUrl = 'm-bangun.com';
 
-//  final _baseUrl = '192.168.100.248';
+//  final _baseUrl = '192.168.0.6';
 
   final _path = 'api-v2/';
 
@@ -42,6 +43,7 @@ class ApiBaseHelper {
 
   Future<dynamic> multipart(String url, files, body) async {
     var responseJson;
+    var client = new http.Client();
     try {
       final _url = Uri.http(_baseUrl, _path + url);
       var request = new http.MultipartRequest("POST", _url);
@@ -52,28 +54,12 @@ class ApiBaseHelper {
           request.files.addAll([foto]);
         }
       }
-      if (body['id'] != null) {
-        request.fields['id'] = body['id'];
-      }
-      if (body['panjang'] != null) {
-        request.fields['panjang'] = body['panjang'];
-      }
-      request.fields['nama'] = body['nama'];
-      request.fields['berat'] = body['berat'];
-      request.fields['foto'] = body['foto'];
-      request.fields['foto1'] = body['foto1'];
-      request.fields['foto2'] = body['foto2'];
-      request.fields['jenis_ongkir'] = body['jenis_ongkir'];
-      request.fields['deskripsi'] = body['deskripsi'];
-      request.fields['id_kategori'] = body['id_kategori'];
-      request.fields['id_toko'] = body['id_toko'];
-      request.fields['kondisi'] = body['kondisi'];
-      request.fields['minimal_pesanan'] = body['minimal_pesanan'];
-      request.fields['harga'] = body['harga'];
-      request.fields['stok'] = body['stok'];
+      request.fields.addAll(body);
+      int byteCount = 0;
+      print('${request.fields.values.toString()}' + 'test');
       var response = await request.send();
-
       final result = await http.Response.fromStream(response);
+
       if (result.statusCode == 200) {
         responseJson = _returnResponse(result);
       } else {

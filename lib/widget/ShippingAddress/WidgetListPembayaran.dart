@@ -52,8 +52,8 @@ class WidgetListPembayaran extends StatelessWidget {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(element['no_rekening'], style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 12)),
-                      Text('a.n ' + element['atas_nama'], style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontSize: 12)),
+                      Text(element['no_rekening'], style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+                      Text('a.n ' + element['atas_nama'], style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black)),
                     ],
                   ),
                   trailing: Icon(

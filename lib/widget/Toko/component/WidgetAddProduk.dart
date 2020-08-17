@@ -48,6 +48,17 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
     // TODO: implement build
     AppBar appBar = AppBar(
       title: Text('Tambah Produk'),
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.save,
+            color: Colors.cyan,
+          ),
+          onPressed: () {
+            _simpan();
+          },
+        )
+      ],
     );
     return ModalProgressHUD(
       inAsyncCall: false,
@@ -131,10 +142,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                         ),
                         Container(
                           height: 80,
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width * 0.6,
+                          width: MediaQuery.of(context).size.width * 0.6,
                           child: TextFormField(
                             onSaved: (value) {
                               setState(() {
@@ -619,17 +627,77 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                     _getImage(context, ImageSource.camera, param);
                   },
                 ),
-                FlatButton(
-                  textColor: Colors.red,
-                  child: Text('Use Gallery'),
-                  onPressed: () {
-                    _getImage(context, ImageSource.gallery, param);
-                  },
-                ),
               ],
             ),
           );
         });
+  }
+
+  void _simpan() async {
+    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+    _formKey.currentState.save();
+    if (_formKey.currentState.validate()) {
+      String fileNameFoto;
+      String fileNameFoto1;
+      String fileNameFoto2;
+      if (foto != null) {
+        fileNameFoto = foto.path
+            .split('/')
+            .last;
+      } else {
+        fileNameFoto = 'empty';
+      }
+      if (foto1 != null) {
+        fileNameFoto1 = foto1.path
+            .split('/')
+            .last;
+      } else {
+        fileNameFoto1 = 'empty';
+      }
+      if (foto2 != null) {
+        fileNameFoto2 = foto2.path
+            .split('/')
+            .last;
+      } else {
+        fileNameFoto2 = 'empty';
+      }
+      var body = {
+        'nama': nama.toString(),
+        'berat': berat.toString(),
+        'foto': fileNameFoto.toString(),
+        'foto1': fileNameFoto1.toString(),
+        'foto2': fileNameFoto2.toString(),
+        'jenis_ongkir': jenis_ongkir.toString(),
+        'deskripsi': deskripsi.toString(),
+        'id_kategori': id_kategori.toString(),
+        'id_toko': blocAuth.idToko.toString(),
+        'kondisi': kondisi.toString(),
+        'minimal_pesanan': minimal_pesanan.toString(),
+        'harga': harga.toString(),
+        'panjang': panjang.toString(),
+        'stok': stok.toString(),
+      };
+      List<File> files = [foto, foto1, foto2];
+      var result = await blocProduk.addProduk(files, body);
+      if (result) {
+        setState(() {
+          success = true;
+        });
+        await Future.delayed(Duration(seconds: 1), () {
+          Navigator.pop(context);
+        });
+      } else {
+        setState(() {
+          error = true;
+        });
+        await Future.delayed(Duration(seconds: 1), () {
+          setState(() {
+            error = false;
+          });
+        });
+      }
+    }
   }
 
   void _getImage(BuildContext context, ImageSource source, param) async {

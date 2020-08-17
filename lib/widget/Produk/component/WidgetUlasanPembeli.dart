@@ -33,7 +33,7 @@ class WidgetUlasanPembeli extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Ulasan Pembeli', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                      Text('Ulasan Pembeli', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                       InkWell(
                         onTap: () {
                           blocOrder.getUlasanProduByParam({'id_produk': blocProduk.detailProduct[0].id});
@@ -41,7 +41,7 @@ class WidgetUlasanPembeli extends StatelessWidget {
                         },
                         child: Text(
                           'Selengkapnya',
-                          style: TextStyle(fontSize: 12, color: Colors.cyan[700]),
+                          style: TextStyle(fontSize: 14, color: Colors.cyan[700]),
                         ),
                       ),
                     ],
@@ -53,12 +53,15 @@ class WidgetUlasanPembeli extends StatelessWidget {
                     width: MediaQuery.of(context).size.width,
                     child: Row(
                       children: [
-                        Text(avgRating),
+                        Text(
+                          avgRating,
+                          style: TextStyle(fontSize: 18),
+                        ),
                         Container(
-                            margin: EdgeInsets.only(top: 2),
+                            margin: EdgeInsets.only(top: 5),
                             child: Text(
                               '/5',
-                              style: TextStyle(color: Colors.grey, fontSize: 11),
+                              style: TextStyle(color: Colors.grey, fontSize: 14),
                             )),
                         SizedBox(
                           width: 2,
@@ -73,7 +76,7 @@ class WidgetUlasanPembeli extends StatelessWidget {
                         ),
                         Text(
                           '$jumlahRating ulasan',
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                          style: TextStyle(fontSize: 14, color: Colors.grey),
                         ),
                       ],
                     ),
@@ -117,11 +120,11 @@ class WidgetUlasanPembeli extends StatelessWidget {
                               children: [
                                 Text(
                                   'oleh ',
-                                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                                  style: TextStyle(fontSize: 14, color: Colors.grey),
                                 ),
                                 Text(
                                   namaPembeli,
-                                  style: TextStyle(fontSize: 12),
+                                  style: TextStyle(fontSize: 14),
                                 ),
                               ],
                             ),
@@ -137,7 +140,7 @@ class WidgetUlasanPembeli extends StatelessWidget {
                           text: TextSpan(
                               style: TextStyle(
                                 color: Colors.grey,
-                                fontSize: 12,
+                                fontSize: 14,
                               ),
                               text: blocOrder.listUlasan[0].ulasan),
                         )),

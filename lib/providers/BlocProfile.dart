@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:apps/Repository/RajaOngkirRepository.dart';
 import 'package:apps/Repository/UserRepository.dart';
 import 'package:apps/models/City.dart';
@@ -256,6 +258,31 @@ class BlocProfile extends ChangeNotifier {
     } else {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  bool _connection = false;
+
+  updateToko(List<File> files, body) async {
+    _isLoading = true;
+    notifyListeners();
+    var result = await UserRepository().updateToko(files, body);
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405') {
+      _connection = false;
+      _isLoading = false;
+      notifyListeners();
+      return result;
+    } else {
+      if (result['meta']['success']) {
+        _isLoading = false;
+        _connection = true;
+        notifyListeners();
+        return result;
+      } else {
+        _isLoading = false;
+        notifyListeners();
+        return result;
+      }
     }
   }
 }

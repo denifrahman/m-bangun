@@ -30,35 +30,33 @@ class WidgetListAddress extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return Card(
                       child: ListTile(
+                        enabled: blocProfile.listUserAddress[index].defaultAlamat == '1' ? true : false,
                         title: Row(
                           children: [
-                            Text('#' + blocProfile.listUserAddress[index].namaAlamat, style: TextStyle(fontSize: 14)),
+                            Text('#' + blocProfile.listUserAddress[index].namaAlamat),
                             SizedBox(
                               width: 2,
                             ),
                             Text(
                               '(' + blocProfile.listUserAddress[index].namaPenerima + ')  ',
-                              style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12, color: Colors.grey),
+                              style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
                             ),
                             blocProfile.listUserAddress[index].defaultAlamat == '1'
                                 ? Container(
-                              decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)), color: Colors.green),
-                              child: Padding(
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)), color: Colors.green),
+                                    child: Padding(
                                 padding: const EdgeInsets.all(5.0),
                                 child: Text(
                                   'default',
-                                  style: TextStyle(fontSize: 8, color: Colors.white),
+                                  style: TextStyle(fontSize: 12, color: Colors.white),
                                 ),
-                                    ),
-                                  )
+                              ),
+                            )
                                 : Container()
                           ],
                         ),
                         subtitle: Row(
                           children: [
-                            SizedBox(
-                              width: 10,
-                            ),
                             Container(
                               width: MediaQuery
                                   .of(context)
@@ -67,9 +65,8 @@ class WidgetListAddress extends StatelessWidget {
                               child: RichText(
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
-                                strutStyle: StrutStyle(fontSize: 10.0),
                                 text: TextSpan(
-                                    style: TextStyle(color: Colors.grey[500], fontSize: 12, fontWeight: FontWeight.normal), text: blocProfile.listUserAddress[index].alamatLengkap),
+                                    style: TextStyle(color: Colors.grey[500], fontWeight: FontWeight.normal), text: blocProfile.listUserAddress[index].alamatLengkap),
                               ),
                             ),
                           ],

@@ -5,6 +5,7 @@ import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/providers/BlocProfile.dart';
 import 'package:apps/widget/Toko/component/WidgetAddProduk.dart';
 import 'package:apps/widget/Toko/component/WidgetUpdateProduk.dart';
+import 'package:apps/widget/Toko/component/WidgetUpdateToko.dart';
 import 'package:flutter/material.dart';
 import 'package:money2/money2.dart';
 import 'package:pk_skeleton/pk_skeleton.dart';
@@ -49,7 +50,7 @@ class TokoSayaScreen extends StatelessWidget {
                         child: RichText(
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          strutStyle: StrutStyle(fontSize: 12.0),
+                          strutStyle: StrutStyle(fontSize: 14.0),
                           text: TextSpan(
                             style: TextStyle(
                               color: Colors.grey[800],
@@ -62,14 +63,24 @@ class TokoSayaScreen extends StatelessWidget {
                         width: 60.0,
                         height: 60.0,
                         child: ClipOval(
-                          child: Image.network(
-                            blocAuth.currentUser.photoUrl,
-                            fit: BoxFit.cover,
-                            width: 80,
-                          ),
+                          child: Image.network('https://m-bangun.com/api-v2/assets/toko/' + blocProfile.dataToko['foto'], fit: BoxFit.contain,
+//                            width: 30,
+                              errorBuilder: (context, urlImage, error) {
+                            print(error.hashCode);
+                            return Image.asset('assets/logo.png');
+                          }),
                         ),
                       ),
                       subtitle: Text(blocProfile.dataToko['jenis_toko']),
+                      trailing: IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          blocProfile.getTokoByParam({'id_user': blocAuth.idUser.toString()});
+                          Navigator.push(context, SlideRightRoute(page: WidgetUpdateToko())).then((value) {
+                            blocProfile.getTokoByParam({'id_user': blocAuth.idUser.toString()});
+                          });
+                        },
+                      ),
                     ),
                   ),
             blocAuth.statusToko == '0'
@@ -105,11 +116,11 @@ class TokoSayaScreen extends StatelessWidget {
                                   },
                                   child: CircleAvatar(
                                     radius: 25.0,
-                                    backgroundColor: AppColors.mainColor,
+                                    backgroundColor: Colors.white,
                                     child: Icon(
                                       Icons.add_circle,
-                                      size: 20.0,
-                                      color: Colors.white,
+                                      size: 40.0,
+                                      color: Colors.cyan,
                                     ),
                                   ),
                                 ),
@@ -153,7 +164,7 @@ class TokoSayaScreen extends StatelessWidget {
                                         ),
                                         title: Text(
                                           blocProduk.listProducts[index].nama,
-                                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                          style: TextStyle(fontWeight: FontWeight.bold),
                                         ),
                                         subtitle: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,7 +173,7 @@ class TokoSayaScreen extends StatelessWidget {
                                               children: [
                                                 Text(
                                                   Money.fromInt(int.parse(blocProduk.listProducts[index].harga.toString()), IDR).toString(),
-                                                  style: TextStyle(fontSize: 12, color: Colors.redAccent),
+                                                  style: TextStyle(fontSize: 14, color: Colors.redAccent),
                                                 ),
                                                 SizedBox(
                                                   width: 5,
@@ -174,15 +185,15 @@ class TokoSayaScreen extends StatelessWidget {
                                             ),
                                             Text(
                                               'Stok : ' + blocProduk.listProducts[index].stok,
-                                              style: TextStyle(fontSize: 10),
+                                              style: TextStyle(fontSize: 13),
                                             ),
                                             Text(
                                               'Terjual : ' + blocProduk.listProducts[index].jumlahDibeli,
-                                              style: TextStyle(fontSize: 10),
+                                              style: TextStyle(fontSize: 13),
                                             ),
                                             Text(
                                               'Dilihat : ' + blocProduk.listProducts[index].jumlahDilihat,
-                                              style: TextStyle(fontSize: 10),
+                                              style: TextStyle(fontSize: 13),
                                             ),
                                           ],
                                         ),
@@ -203,7 +214,7 @@ class TokoSayaScreen extends StatelessWidget {
                                                           .width * 0.3,
                                                       child: Text(
                                                         "Ubah",
-                                                        style: TextStyle(fontSize: 12),
+                                                        style: TextStyle(fontSize: 14),
                                                       )),
                                                   onTap: () {
                                                     Navigator.pop(context, "Replay Game");
@@ -229,7 +240,7 @@ class TokoSayaScreen extends StatelessWidget {
                                                           .width * 0.3,
                                                       child: Text(
                                                         aktif == '1' ? "Non Aktifkan" : 'Aktifkan',
-                                                        style: TextStyle(fontSize: 12),
+                                                        style: TextStyle(fontSize: 14),
                                                       )),
                                                   onTap: () async {
                                                     var body = {'id': blocProduk.listProducts[index].id, 'aktif': aktif == '1' ? '0' : '1'};

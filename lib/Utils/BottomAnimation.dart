@@ -73,8 +73,13 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     int countAktivitas = 0;
-    countAktivitas =
-        blocOrder.countMenunggu + blocOrder.countMenungguKonfirmasi + blocOrder.countDikemas + blocOrder.countDikirim + blocOrder.countDikirim + blocOrder.countSelesai;
+    countAktivitas = blocOrder.countMenunggu +
+        blocOrder.countMenungguKonfirmasi +
+        blocOrder.countDikemas +
+        blocOrder.countDikirim +
+        blocOrder.countDikirim +
+        blocOrder.countSelesai +
+        blocOrder.countUlasan;
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(

@@ -42,7 +42,7 @@ class WidgetHeaderDetailProduct extends StatelessWidget {
                           child: Container(
                             child: Text(
                               Money.fromInt((int.parse(blocProduk.detailProduct[0].harga) * blocOrder.jumlah), IDR).toString(),
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
@@ -53,7 +53,7 @@ class WidgetHeaderDetailProduct extends StatelessWidget {
                             child: Text(
                               blocProduk.detailProduct[0].nama,
                               maxLines: 3,
-                              style: TextStyle(fontSize: 14, letterSpacing: 1),
+                              style: TextStyle(fontSize: 18, letterSpacing: 1),
                             ),
                           ),
                         ),
@@ -110,8 +110,8 @@ class WidgetHeaderDetailProduct extends StatelessWidget {
                               color: Colors.amber,
                               size: 14,
                             ),
-                            Text(' $avgRating', style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w600)),
-                            Text(' ($jumlahRating)', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                            Text(' $avgRating', style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600)),
+                            Text(' ($jumlahRating)', style: TextStyle(color: Colors.grey, fontSize: 14)),
                           ],
                         ),
                         VerticalDivider(
@@ -119,8 +119,8 @@ class WidgetHeaderDetailProduct extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            Text('Terjual   ', style: TextStyle(color: Colors.black, fontSize: 12)),
-                            Text(blocProduk.detailProduct[0].jumlahDibeli, style: TextStyle(color: Colors.grey, fontSize: 12)),
+                            Text('Terjual   ', style: TextStyle(color: Colors.black, fontSize: 14)),
+                            Text(blocProduk.detailProduct[0].jumlahDibeli, style: TextStyle(color: Colors.grey, fontSize: 14)),
                           ],
                         ),
                         VerticalDivider(
@@ -128,7 +128,7 @@ class WidgetHeaderDetailProduct extends StatelessWidget {
                         ),
                         Text(
                           'Disukai',
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                          style: TextStyle(color: Colors.grey, fontSize: 14),
                         )
                       ],
                     ),
@@ -148,8 +148,8 @@ class WidgetHeaderDetailProduct extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text('Dijual oleh ', style: TextStyle(fontSize: 11)),
-                      Text(blocProduk.detailProduct[0].namaToko, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                      Text('Dijual oleh ', style: TextStyle(fontSize: 13)),
+                      Text(blocProduk.detailProduct[0].namaToko, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                       SizedBox(
                         width: 5,
                       ),
@@ -161,8 +161,14 @@ class WidgetHeaderDetailProduct extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Text('dikirim dari ', style: TextStyle(fontSize: 12, color: Colors.grey),),
-                      Text('${blocProfile.alamatToko['city_name']}', style: TextStyle(fontSize: 12),),
+                      Text(
+                        'dikirim dari ',
+                        style: TextStyle(fontSize: 14, color: Colors.grey),
+                      ),
+                      Text(
+                        '${blocProfile.alamatToko['city_name']}',
+                        style: TextStyle(fontSize: 14),
+                      ),
                     ],
                   ),
                   SizedBox(

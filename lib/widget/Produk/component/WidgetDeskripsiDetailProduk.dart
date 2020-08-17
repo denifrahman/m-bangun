@@ -25,7 +25,7 @@ class WidgetDeskripsiDetailProduk extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Text('Deskripsi Produk', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                  child: Text('Deskripsi Produk', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
@@ -34,7 +34,7 @@ class WidgetDeskripsiDetailProduk extends StatelessWidget {
                     child: RichText(
                       overflow: TextOverflow.ellipsis,
                       maxLines: 4,
-                      text: TextSpan(style: TextStyle(color: Colors.grey[800], fontSize: 12, fontWeight: FontWeight.normal), text: blocProduk.detailProduct[0].deskripsi),
+                      text: TextSpan(style: TextStyle(color: Colors.grey[800], fontSize: 14, fontWeight: FontWeight.normal), text: blocProduk.detailProduct[0].deskripsi),
                     ),
                   ),
                 ),
@@ -48,7 +48,7 @@ class WidgetDeskripsiDetailProduk extends StatelessWidget {
                         },
                         child: Text(
                           'Baca Selengkapnya',
-                          style: TextStyle(fontSize: 12, color: Colors.cyan[700]),
+                          style: TextStyle(fontSize: 14, color: Colors.cyan[700]),
                         ),
                       )),
                 ),
@@ -92,7 +92,7 @@ class WidgetDeskripsiDetailProduk extends StatelessWidget {
                     children: [
                       Text(
                         'Deskripsi Produk',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                       ),
                       InkWell(
                           onTap: () {
@@ -108,7 +108,7 @@ class WidgetDeskripsiDetailProduk extends StatelessWidget {
                         color: Colors.white38,
                         child: Text(
                           blocProduk.detailProduct[0].deskripsi,
-                          style: TextStyle(fontSize: 12),
+                          style: TextStyle(fontSize: 14),
                         ),
                       ),
                     ),

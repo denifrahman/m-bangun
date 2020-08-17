@@ -102,6 +102,11 @@ class UserRepository {
     return response;
   }
 
+  Future updateToko(List<File> files, body) async {
+    final response = await _helper.multipart("toko/update", files, body);
+    return response;
+  }
+
   Future updateStatus(body) async {
     final response = await _helper.post("produk/update", body);
     return response;

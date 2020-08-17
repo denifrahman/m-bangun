@@ -9,11 +9,12 @@ ThemeData light = ThemeData(
   ),
   fontFamily: 'WorkSansRegular',
   primaryColor: Colors.green[600],
+  primaryTextTheme: TextTheme(headline6: TextStyle(color: Colors.white, fontSize: 18)),
   appBarTheme: AppBarTheme(
       brightness: Brightness.light,
       color: Colors.white,
       iconTheme: IconThemeData(color: Colors.black),
-      textTheme: TextTheme(title: TextStyle(fontSize: 15, color: Colors.black, fontFamily: 'OpenSans-Regular', fontWeight: FontWeight.bold))),
+      textTheme: TextTheme(title: TextStyle(fontSize: 18, color: Colors.black, fontFamily: 'OpenSans-Regular', fontWeight: FontWeight.bold))),
 );
 
 ThemeData dark = ThemeData(

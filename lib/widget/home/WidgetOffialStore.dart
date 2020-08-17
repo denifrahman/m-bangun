@@ -36,7 +36,10 @@ class WidgetOffialStore extends StatelessWidget {
                     height: 60,
                     errorBuilder: (context, urlImage, error) {
                       print(error.hashCode);
-                      return Image.asset('assets/logo.png');
+                      return Image.asset(
+                        'assets/logo.png',
+                        height: 60,
+                      );
                     },
                   ),
                 ),

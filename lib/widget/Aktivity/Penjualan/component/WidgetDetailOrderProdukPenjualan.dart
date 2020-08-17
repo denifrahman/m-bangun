@@ -47,11 +47,8 @@ class WidgetDetailOrderProdukPenjualan extends StatelessWidget {
     );
     return Scaffold(
       appBar: appBar,
-      body: blocProfile.isLoading
-          ? Center(
-              child: PKCardPageSkeleton(
-              totalLines: 2,
-            ))
+      body: blocOrder.isLoading
+          ? Center(child: PKCardListSkeleton())
           : Container(
               decoration: BoxDecoration(color: Colors.grey[100], image: DecorationImage(image: AssetImage('assets/shipping_background.png'), fit: BoxFit.contain)),
               height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top),
@@ -73,13 +70,7 @@ class WidgetDetailOrderProdukPenjualan extends StatelessWidget {
                               Text(order.alamatLengkap, style: TextStyle(fontSize: 14)),
                               Row(
                                 children: [
-                                  Text(
-                                      kecamatan +
-                                          ' ' +
-                                          kota +
-                                          ' ' +
-                                          provinsi,
-                                      style: TextStyle(fontSize: 14)),
+                                  Text(kecamatan + ' ' + kota + ' ' + provinsi, style: TextStyle(fontSize: 14)),
                                 ],
                               ),
                               Row(
@@ -125,7 +116,6 @@ class WidgetDetailOrderProdukPenjualan extends StatelessWidget {
                                 maxLines: 2,
                                 text: TextSpan(
                                     style: TextStyle(
-                                      fontSize: 12.0,
                                       color: Colors.black,
                                     ),
                                     text: blocOrder.listOrderDetailProduk[j].namaProduk),
@@ -135,11 +125,10 @@ class WidgetDetailOrderProdukPenjualan extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(Money.fromInt((int.parse(blocOrder.listOrderDetailProduk[j].subtotal)), IDR).toString(),
-                                      style: TextStyle(fontStyle: FontStyle.normal, fontSize: 12)),
+                                      style: TextStyle(fontStyle: FontStyle.normal, color: Colors.redAccent, fontSize: 14)),
                                   Text(blocOrder.listOrderDetailProduk[j].catatan == null ? '-' : '"' + blocOrder.listOrderDetailProduk[j].catatan + '"',
                                       style: TextStyle(
                                         fontStyle: FontStyle.italic,
-                                        fontSize: 9,
                                       ))
                                 ],
                               ),
@@ -176,16 +165,16 @@ class WidgetDetailOrderProdukPenjualan extends StatelessWidget {
                                 ? Image.asset(
                                     'assets/img/packing.png',
                                     fit: BoxFit.fitWidth,
-                                  )
-                                : this.title == 'dikirim'
-                                    ? Image.asset(
-                                        'assets/img/dikirim.png',
-                                        fit: BoxFit.fitWidth,
-                                      )
-                                    : this.title == 'ulasan'
-                                        ? Image.asset(
-                                            'assets/img/waiting.png',
-                                            fit: BoxFit.fitWidth,
+                        )
+                            : this.title == 'dikirim'
+                            ? Image.asset(
+                          'assets/img/dikirim.png',
+                          fit: BoxFit.fitWidth,
+                        )
+                            : this.title == 'ulasan'
+                            ? Image.asset(
+                          'assets/img/waiting.png',
+                          fit: BoxFit.fitWidth,
                         )
                             : Image.asset(
                           'assets/img/waiting.png',
@@ -215,14 +204,14 @@ class WidgetDetailOrderProdukPenjualan extends StatelessWidget {
                       ),
                     ),
                   )
-                ],
-              ),
+          ],
+        ),
       ),
     );
   }
 
   _confirmPopUp(context, BlocOrder blocOrder, blocAuth) async {
-    await showDialog<String>(
+    Future<void> future = showDialog<String>(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
@@ -247,24 +236,25 @@ class WidgetDetailOrderProdukPenjualan extends StatelessWidget {
                       'status_order': title == 'menunggu konfirmasi' ? 'dikemas' : title == 'dikemas' ? 'dikirim' : '',
                       'id_toko': order.idToko.toString()
                     };
+                    Navigator.pop(context);
                     var result = blocOrder.updateOrder(body);
                     result.then((value) {
                       if (value) {
-                        Navigator.pop(context);
                         var param = {'id_toko': blocAuth.idToko.toString(), 'status_order': title.toString(), 'status_pembayaran': 'terbayar'};
                         blocOrder.getOrderByParam(param);
                         blocOrder.setIdUser();
                       }
                     });
-                    Navigator.pop(context);
                   }),
             ],
           ),
         );
       },
     );
+    future.then((void value) {
+      Navigator.pop(context);
+    });
   }
-
 }
 
 class Location {

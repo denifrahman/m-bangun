@@ -22,7 +22,7 @@ class WidgetInformasiDetailProduk extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Text('Informasi Produk', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                  child: Text('Informasi Produk', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
@@ -32,10 +32,10 @@ class WidgetInformasiDetailProduk extends StatelessWidget {
                       Text(
                         'Berat',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 14,
                         ),
                       ),
-                      Text(blocProduk.detailProduct[0].berat + ' gram', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                      Text(blocProduk.detailProduct[0].berat + ' gram', style: TextStyle(color: Colors.grey, fontSize: 14)),
                     ],
                   ),
                 ),
@@ -46,9 +46,9 @@ class WidgetInformasiDetailProduk extends StatelessWidget {
                     children: [
                       Text('Kondisi',
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 14,
                           )),
-                      Text(blocProduk.detailProduct[0].kondisi, style: TextStyle(color: Colors.grey, fontSize: 12)),
+                      Text(blocProduk.detailProduct[0].kondisi, style: TextStyle(color: Colors.grey, fontSize: 14)),
                     ],
                   ),
                 ),
@@ -59,11 +59,11 @@ class WidgetInformasiDetailProduk extends StatelessWidget {
                     children: [
                       Text('Pemesanan Min',
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 14,
                           )),
                       Text(
                         blocProduk.detailProduct[0].minimalPesanan,
-                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                        style: TextStyle(color: Colors.grey, fontSize: 14),
                       ),
                     ],
                   ),
@@ -75,11 +75,11 @@ class WidgetInformasiDetailProduk extends StatelessWidget {
                     children: [
                       Text('Kategori',
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 14,
                           )),
                       Text(
                         blocProduk.detailProduct[0].namaKategori,
-                        style: TextStyle(color: Colors.cyan[700], fontSize: 12),
+                        style: TextStyle(color: Colors.cyan[700], fontSize: 14),
                       ),
                     ],
                   ),

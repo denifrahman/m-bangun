@@ -27,7 +27,7 @@ class WidgetKategoriByToko extends StatelessWidget {
                       children: [
                         Text('Kategori',
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 18,
                               color: Colors.black,
                               fontWeight: FontWeight.w700,
                             )),

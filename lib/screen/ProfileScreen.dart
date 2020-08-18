@@ -49,7 +49,7 @@ class ProfileScreen extends StatelessWidget {
           ? Center(
               child: InkWell(
                   onTap: () {
-                    dataProvider.getToken();
+                    blocAuth.checkSession();
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,7 +72,7 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         child: FlatButton(
                           onPressed: () {
-                            dataProvider.getToken();
+                            blocAuth.checkSession();
                           },
                           child: Text(
                             'Coba Lagi',

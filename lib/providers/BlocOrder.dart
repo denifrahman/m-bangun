@@ -318,19 +318,27 @@ class BlocOrder extends ChangeNotifier {
     notifyListeners();
     var param = {'id_pembeli': _id_user_login.toString()};
     var result = await OrderRepository().getOrderByParam(param);
-    if (result['meta']['success']) {
+    if (result.toString() == '111' || result.toString() == '101') {
+      _connection = false;
       _isLoading = false;
-      Iterable list = result['data'];
-      _listCountOrder = list.map((model) => Order.fromMap(model)).toList();
-      setCountPembelian();
-      notifyListeners();
-      return true;
-    } else {
-      _listCountOrder = [];
-      _isLoading = false;
-      setCountPembelian();
+      _listCart = [];
       notifyListeners();
       return false;
+    } else {
+      if (result['meta']['success']) {
+        _isLoading = false;
+        Iterable list = result['data'];
+        _listCountOrder = list.map((model) => Order.fromMap(model)).toList();
+        setCountPembelian();
+        notifyListeners();
+        return true;
+      } else {
+        _listCountOrder = [];
+        _isLoading = false;
+        setCountPembelian();
+        notifyListeners();
+        return false;
+      }
     }
   }
 
@@ -339,19 +347,27 @@ class BlocOrder extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await OrderRepository().getOrderByParam(param);
-    if (result['meta']['success']) {
+    if (result.toString() == '111' || result.toString() == '101') {
+      _connection = false;
       _isLoading = false;
-      Iterable list = result['data'];
-      _listSaleCountOrder = list.map((model) => Order.fromMap(model)).toList();
-      setCountPenjualan();
-      notifyListeners();
-      return true;
-    } else {
-      _listSaleCountOrder = [];
-      _isLoading = false;
-      setCountPenjualan();
+      _listCart = [];
       notifyListeners();
       return false;
+    } else {
+      if (result['meta']['success']) {
+        _isLoading = false;
+        Iterable list = result['data'];
+        _listSaleCountOrder = list.map((model) => Order.fromMap(model)).toList();
+        setCountPenjualan();
+        notifyListeners();
+        return true;
+      } else {
+        _listSaleCountOrder = [];
+        _isLoading = false;
+        setCountPenjualan();
+        notifyListeners();
+        return false;
+      }
     }
   }
 

@@ -71,7 +71,7 @@ class BlocProduk extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().getAllProduct(param);
-//    print(result);
+    print(param);
     if (result.toString() == '111' || result.toString() == '101') {
       _connection = false;
       _isLoading = false;

@@ -73,7 +73,7 @@ class CheckoutScreen extends StatelessWidget {
                             ),
                           ),
                           Container(
-                            color: Colors.white,
+                            color: blocProfile.listUserAddressDefault.isNotEmpty ? Colors.white : Colors.red.withOpacity(0.2),
                             margin: const EdgeInsets.only(top: 10.0),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -114,12 +114,14 @@ class CheckoutScreen extends StatelessWidget {
                                               var beratTotal = int.parse(this.listCart.chilrdern[k].berat.toString()) * int.parse(this.listCart.chilrdern[k].jumlah.toString());
                                               total += beratTotal;
                                             }
-                                            var param = {
-                                              'origin': cart.idKecamatan.toString(),
-                                              'destination': blocProfile.listUserAddressDefault[0].idKecamatan,
-                                              'weight': total.toString()
-                                            };
-                                            blocOrder.getCost(param);
+                                            if (blocProfile.listUserAddressDefault.isNotEmpty) {
+                                              var param = {
+                                                'origin': cart.idKecamatan.toString(),
+                                                'destination': blocProfile.listUserAddressDefault[0].idKecamatan,
+                                                'weight': total.toString()
+                                              };
+                                              blocOrder.getCost(param);
+                                            }
                                           });
                                           _btnController.reset();
                                         },
@@ -303,10 +305,13 @@ class CheckoutScreen extends StatelessWidget {
 
                               var rajaOngkir = blocOrder.listCart[0].chilrdern.where((element) => element.jenisOngkir == 'raja_ongkir').length;
                               print(blocOrder.listMetodePembayaranSelected.isNotEmpty);
-                              if (rajaOngkir == 0 && blocOrder.listMetodePembayaranSelected.isNotEmpty) {
+                              if (rajaOngkir == 0 && blocOrder.listMetodePembayaranSelected.isNotEmpty && blocProfile.listUserAddressDefault.isNotEmpty) {
                                 Navigator.push(context, SlideRightRoute(page: WidgetWaitingPayment(body: body)));
                                 print('pembayaran free ongkir');
-                              } else if (blocOrder.listCostSelected.isNotEmpty && rajaOngkir == 1 && blocOrder.listMetodePembayaranSelected.isNotEmpty) {
+                              } else if (blocOrder.listCostSelected.isNotEmpty &&
+                                  rajaOngkir == 1 &&
+                                  blocOrder.listMetodePembayaranSelected.isNotEmpty &&
+                                  blocProfile.listUserAddressDefault.isNotEmpty) {
                                 print('cost');
                                 Navigator.push(context, SlideRightRoute(page: WidgetWaitingPayment(body: body)));
                               }

@@ -100,7 +100,7 @@ class _WidgetAddAddressState extends State<WidgetAddAddress> {
                         no_hp = value;
                       });
                     },
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.phone,
                     validator: (String arg) {
                       if (arg.length < 1)
                         return 'No.phone harus di isi';
@@ -247,7 +247,7 @@ class _WidgetAddAddressState extends State<WidgetAddAddress> {
                     children: <Widget>[
                       new Expanded(
                           child: RoundedLoadingButton(
-                        child: Text('DAFTAR', style: TextStyle(color: Colors.white)),
+                            child: Text('Simpan', style: TextStyle(color: Colors.white)),
                         color: Color(0xFFb16a085),
                         controller: _btnController,
                         onPressed: () {

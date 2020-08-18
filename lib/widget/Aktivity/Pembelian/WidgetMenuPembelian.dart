@@ -200,8 +200,8 @@ class WidgetMenuPembelian extends StatelessWidget {
 
   _openPembelian(String title, idUser, context) {
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
-    if (title.toLowerCase() == 'Menunggu Pembayaran' || title.toLowerCase() == 'batal') {
-      var param = {'id_pembeli': idUser.toString(), 'status_pembayaran': title == 'Menunggu Pembayaran' ? 'menunggu' : title.toLowerCase() == 'batal' ? 'batal' : 'terbayar'};
+    if (title == 'Menunggu Pembayaran' || title == 'Batal') {
+      var param = {'id_pembeli': idUser.toString(), 'status_pembayaran': title == 'Menunggu Pembayaran' ? 'menunggu' : title.toLowerCase() == 'Batal' ? 'batal' : 'terbayar'};
       print(param);
       blocOrder.getOrderByParam(param);
     } else {

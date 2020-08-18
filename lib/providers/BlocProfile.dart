@@ -159,6 +159,7 @@ class BlocProfile extends ChangeNotifier {
 //      getSubDistrictById(_listUserAddress[0].idKecamatan);
       _isLoading = false;
     }
+    _isLoading = false;
     notifyListeners();
   }
 

@@ -177,12 +177,12 @@ class _KeranjangState extends State<Keranjang> {
                                           totalRajaOngkir += beratTotal;
                                         }
                                       }
-                                      var param = {
-                                        'origin': idKecamatanToko.toString(),
-                                        'destination': blocProfile.listUserAddressDefault[0].idKecamatan,
-                                        'weight': (totalDalamKota + totalRajaOngkir) == 0 ? '1' : (totalDalamKota + totalRajaOngkir).toString()
-                                      };
                                       if (blocProfile.listUserAddressDefault.isNotEmpty) {
+                                        var param = {
+                                          'origin': idKecamatanToko.toString(),
+                                          'destination': blocProfile.listUserAddressDefault[0].idKecamatan,
+                                          'weight': (totalDalamKota + totalRajaOngkir) == 0 ? '1' : (totalDalamKota + totalRajaOngkir).toString()
+                                        };
                                         blocOrder.getCost(param);
                                         print(param);
                                       }

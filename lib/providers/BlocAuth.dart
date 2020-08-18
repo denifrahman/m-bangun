@@ -100,47 +100,61 @@ class BlocAuth extends ChangeNotifier {
 
   checkSession() async {
     checkVersionApp();
-    _isLoading = true;
+    _isLoading = false;
     notifyListeners();
     await Future.delayed(Duration(milliseconds: 1), () {
       _googleSignIn.isSignedIn().then((value) async {
         if (value) {
-          var queryString = {'username': _currentUser.email, 'id_google': _currentUser.id};
-          var result = await AuthRepository().googleSign(queryString);
-          if (result.toString() == '111' || result.toString() == '101') {
-            _connection = true;
-            return false;
+          if (_currentUser == null) {
+            getCurrentUser();
+            _connection = false;
+            _isLoading = false;
+            notifyListeners();
           } else {
-            if (result['meta']['success']) {
-              _statusToko = result['data']['status_toko'];
-              if (result['data']['aktif'] != '1') {
-                _isNonActive = true;
-                _isLogin = false;
-                notifyListeners();
-                await Future.delayed(Duration(milliseconds: 1), () {
-                  handleSignOut();
-                });
+            var queryString = {'username': _currentUser.email, 'id_google': _currentUser.id};
+            var result = await AuthRepository().googleSign(queryString);
+            print(result);
+            if (result.toString() == '111' || result.toString() == '101') {
+              _connection = false;
+              _isLoading = false;
+              notifyListeners();
+              return false;
+            } else {
+              if (result['meta']['success']) {
+                _statusToko = result['data']['status_toko'];
+                if (result['data']['aktif'] != '1') {
+                  _isNonActive = true;
+                  _connection = true;
+                  _isLogin = false;
+                  notifyListeners();
+                  await Future.delayed(Duration(milliseconds: 1), () {
+                    handleSignOut();
+                  });
+                } else {
+                  _connection = true;
+                  _token = result['token'];
+                  _idToko = result['data']['id_toko'];
+                  LocalStorage.sharedInstance.writeValue(key: 'id_toko', value: result['data']['id_toko']);
+                  LocalStorage.sharedInstance.writeValue(key: 'id_user_login', value: result['data']['id']);
+                  _idUser = result['data']['id'];
+                  _isRegister = false;
+                  _isLoading = false;
+                  _isLogin = true;
+                  notifyListeners();
+                  return true;
+                }
               } else {
                 _connection = true;
-                _token = result['token'];
-                _idToko = result['data']['id_toko'];
-                LocalStorage.sharedInstance.writeValue(key: 'id_toko', value: result['data']['id_toko']);
-                LocalStorage.sharedInstance.writeValue(key: 'id_user_login', value: result['data']['id']);
-                _idUser = result['data']['id'];
-                _isRegister = false;
+                _isRegister = true;
                 _isLoading = false;
-                _isLogin = true;
+                _isLogin = false;
                 notifyListeners();
-                return true;
               }
-            } else {
-              _isRegister = true;
-              _isLogin = false;
-              notifyListeners();
             }
           }
         } else {
           print('logout');
+          _connection = true;
           _isLogin = false;
           _isLoading = false;
           notifyListeners();
@@ -170,10 +184,17 @@ class BlocAuth extends ChangeNotifier {
     notifyListeners();
     var param = {'': ''};
     var result = await AuthRepository().checkVersionApp(param);
-    _newVersion = double.parse(result['data'][0]['versi_nomor'].trim().replaceAll(".", ""));
-    if (newVersion > currentVersion) {
-      _showVersionDialog = true;
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405') {
+      _connection = false;
+      _isLoading = false;
       notifyListeners();
+      return result;
+    } else {
+      _newVersion = double.parse(result['data'][0]['versi_nomor'].trim().replaceAll(".", ""));
+      if (newVersion > currentVersion) {
+        _showVersionDialog = true;
+        notifyListeners();
+      }
     }
   }
 }

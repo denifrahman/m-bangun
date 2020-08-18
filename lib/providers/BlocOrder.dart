@@ -347,6 +347,7 @@ class BlocOrder extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await OrderRepository().getOrderByParam(param);
+    print(param);
     if (result.toString() == '111' || result.toString() == '101') {
       _connection = false;
       _isLoading = false;
@@ -423,29 +424,8 @@ class BlocOrder extends ChangeNotifier {
     clearDetailOrderProduk();
     _isLoading = true;
     var order = await OrderRepository().getOrderProdukByParam(param);
-    print(order['data']);
     Iterable list = order['data'];
     _listOrderDetailProduk = list.map((model) => OrderProduk.fromMap(model)).toList();
-    notifyListeners();
-    if (order['meta']['success']) {
-      for (var i = 0; i < _listOrderDetailProduk.length; i++) {
-        var dataOrder = _listOrderDetailProduk[i];
-        var param = {'id_order': dataOrder.idOrder, 'id_produk': dataOrder.idProduk};
-        var ulasanProduk = await OrderRepository().getUlasanProdukByParam(param);
-        Iterable list = ulasanProduk['data'];
-        _listUlasan = list.map((model) => Ulasan.fromMap(model)).toList();
-        for (var j = 0; j < _listUlasan.length; j++) {
-          var dataUlasan = _listOrderDetailProduk[i];
-          if (dataUlasan.idProduk == dataOrder.idProduk) {
-            order['data'][i].addAll(ulasanProduk['data'][j]);
-            Iterable list = order['data'];
-            _listOrderDetailProduk = list.map((model) => OrderProduk.fromMap(model)).toList();
-            _isLoading = false;
-            notifyListeners();
-          }
-        }
-      }
-    }
     _isLoading = false;
     notifyListeners();
   }
@@ -464,7 +444,7 @@ class BlocOrder extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await OrderRepository().getUlasanProdukByParam(param);
-    print(result);
+//    print(result);
     if (result['meta']['success']) {
       _isLoading = false;
       Iterable list = result['data'];
@@ -497,8 +477,25 @@ class BlocOrder extends ChangeNotifier {
 
   Future<bool> insertUlasan(body) async {
     _isLoading = true;
-    notifyListeners();
     var result = await OrderRepository().insertUlasan(body);
+    _ulasan = null;
+    if (result['meta']['success']) {
+      return true;
+    } else {
+      return true;
+    }
+  }
+
+  Future<bool> insertUlasanToko(body) async {
+    _isLoading = true;
+    var result = await OrderRepository().insertUlasanToko(body);
+//    print(result);
+    _ulasan = '';
+    if (result['meta']['success']) {
+      return true;
+    } else {
+      return true;
+    }
   }
 
   String _rating;

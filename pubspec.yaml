@@ -77,7 +77,7 @@ dependencies:
   fw_ticket: ^0.1.1
   dotted_line: ^2.0.1
   multipart_request: ^0.3.1
-  flutter_summernote: ^0.2.0
+  html_editor: ^1.0.1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3

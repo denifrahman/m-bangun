@@ -137,41 +137,33 @@ class _DetailTokoScreenState extends State<DetailTokoScreen> {
                   child: Column(
                     children: <Widget>[
                       Divider(),
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.7 - appBar.preferredSize.height,
+                      Expanded(
+                        flex: 2,
                         child: DefaultTabController(
                           length: 1,
                           child: Scaffold(
                             appBar: appBar,
-                            body: Container(
-                              child: TabBarView(
-                                children: [
-                                  Column(
-                                    children: [
-                                      Container(margin: EdgeInsets.only(top: 10), child: WidgetKategoriByToko()),
-                                      Container(
-                                          margin: EdgeInsets.only(top: 0),
-                                          child: WidgetProdukTerjual(
-                                            blocProduk: blocProduk,
-                                          )),
-                                    ],
-                                  ),
-//                                  Container(
-//                                    margin: EdgeInsets.only(top: 10),
-//                                    child: Row(
-//                                      crossAxisAlignment: CrossAxisAlignment.center,
-//                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                                      children: <Widget>[Text('Tentang toko')],
-//                                    ),
-//                                  ),
-                                ],
-                              ),
+                            body: TabBarView(
+                              children: [
+                                Column(
+                                  children: [
+                                    Expanded(flex: 0, child: WidgetKategoriByToko()),
+                                    Expanded(
+                                      flex: 0,
+                                      child: WidgetProdukTerjual(
+                                        blocProduk: blocProduk,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         ),
                       ),
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.3 - appBar.preferredSize.height,
+                      Expanded(
+                        flex: 1,
+//                        height: MediaQuery.of(context).size.height * 0.3,
                         child: Column(
                           children: [
                             Container(

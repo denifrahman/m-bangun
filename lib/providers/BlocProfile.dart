@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:apps/Repository/RajaOngkirRepository.dart';
 import 'package:apps/Repository/UserRepository.dart';
 import 'package:apps/models/City.dart';
+import 'package:apps/models/Penghasilan.dart';
 import 'package:apps/models/Provice.dart';
 import 'package:apps/models/SubDistricById.dart';
 import 'package:apps/models/SubDistrict.dart';
@@ -86,7 +87,6 @@ class BlocProfile extends ChangeNotifier {
     notifyListeners();
     var param = {'province': _id_provice.toString()};
     var result = await RajaOngkirRepository().getCity(param);
-//    print([result]);
     Iterable list = [result];
     _listCity = list.map((model) => City.fromMap(model)).toList();
     _isLoading = false;
@@ -115,7 +115,6 @@ class BlocProfile extends ChangeNotifier {
     notifyListeners();
     var param = {'city': _id_city.toString()};
     var result = await RajaOngkirRepository().getSubDistrict(param);
-//    print(result);
     Iterable list = [result];
     _listSubDistrict = list.map((model) => SubDistrict.fromMap(model)).toList();
     _isLoading = false;
@@ -131,7 +130,6 @@ class BlocProfile extends ChangeNotifier {
     notifyListeners();
     var param = {'id': id.toString()};
     var result = await RajaOngkirRepository().getSubDistrict(param);
-//    print(result);
     Iterable list = [result['rajaongkir']['results']];
     _listSubDistrictById = list.map((model) => SubDistricById.fromMap(model)).toList();
     _id_provice = _listSubDistrictById[0].provinceId;
@@ -156,7 +154,6 @@ class BlocProfile extends ChangeNotifier {
     Iterable list = result['data'];
     _listUserAddress = list.map((model) => UserAddress.fromMap(model)).toList();
     if (_listUserAddress.isNotEmpty) {
-//      getSubDistrictById(_listUserAddress[0].idKecamatan);
       _isLoading = false;
     }
     _isLoading = false;
@@ -275,6 +272,35 @@ class BlocProfile extends ChangeNotifier {
       return result;
     } else {
       if (result['meta']['success']) {
+        _isLoading = false;
+        _connection = true;
+        notifyListeners();
+        return result;
+      } else {
+        _isLoading = false;
+        notifyListeners();
+        return result;
+      }
+    }
+  }
+
+  List<Penghasilan> _listPenghasilan = [];
+
+  List<Penghasilan> get listPenghasilan => _listPenghasilan;
+
+  getPenghasilanByParam(param) async {
+    _isLoading = true;
+    notifyListeners();
+    var result = await UserRepository().getPenghasilanByParam(param);
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405') {
+      _connection = false;
+      _isLoading = false;
+      notifyListeners();
+      return result;
+    } else {
+      if (result['meta']['success']) {
+        Iterable list = result['data'];
+        _listPenghasilan = list.map((model) => Penghasilan.fromMap(model)).toList();
         _isLoading = false;
         _connection = true;
         notifyListeners();

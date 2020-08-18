@@ -119,17 +119,6 @@ class ProdukDetailScreen extends StatelessWidget {
                             if (blocAuth.isLogin) {
 //                           Navigator.
                             } else {
-//                            Flushbar(
-//                              title: "Kesalahan",
-//                              message: "Silahkan login / daftar member",
-//                              duration: Duration(seconds: 5),
-//                              backgroundColor: Colors.red,
-//                              flushbarPosition: FlushbarPosition.BOTTOM,
-//                              icon: Icon(
-//                                Icons.assignment_turned_in,
-//                                color: Colors.white,
-//                              ),
-//                            )..show(context);
                             }
                           },
                         ),
@@ -144,7 +133,6 @@ class ProdukDetailScreen extends StatelessWidget {
   }
 
   Widget _buttonBuy(context) {
-//    DataProvider dataProvider = Provider.of<DataProvider>(context);
     return Container(
       child: InkWell(
         onTap: () {
@@ -295,7 +283,7 @@ class ProdukDetailScreen extends StatelessWidget {
                                           child: NumberPicker.integer(
                                             initialValue: blocOrder.jumlah,
                                             minValue: 1,
-                                            maxValue: 900,
+                                            maxValue: int.parse(blocProduk.detailProduct[0].stok),
                                             onChanged: (value) {
                                               blocOrder.setJumlah(value);
                                             },

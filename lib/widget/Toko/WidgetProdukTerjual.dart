@@ -28,7 +28,7 @@ class WidgetProdukTerjual extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
-            margin: EdgeInsets.only(top: 5),
+            margin: EdgeInsets.only(top: 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[

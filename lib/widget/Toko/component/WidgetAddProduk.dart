@@ -5,6 +5,7 @@ import 'package:apps/models/Categories.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:flutter/material.dart';
+import 'package:html_editor/html_editor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ class WidgetAddProduk extends StatefulWidget {
 }
 
 class _WidgetAddProdukState extends State<WidgetAddProduk> {
+  GlobalKey<HtmlEditorState> keyEditor = GlobalKey();
   String nama, berat, harga, minimal_pesanan, stok, panjang, deskripsi;
   String id_kategori = null;
   String kondisi = null;
@@ -74,15 +76,15 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                 children: [
                   success
                       ? SnackBarLauncher(
-                          error: 'Berhasil ditambahkan',
-                          color: Colors.green,
-                        )
+                    error: 'Berhasil ditambahkan',
+                    color: Colors.green,
+                  )
                       : Container(),
                   error
                       ? SnackBarLauncher(
-                          error: 'Periksa jaringan anda',
-                          color: Colors.red,
-                        )
+                    error: 'Periksa jaringan anda',
+                    color: Colors.red,
+                  )
                       : Container(),
                   Container(
                     height: 80,
@@ -171,19 +173,13 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                   ),
                   Container(
                     height: 80,
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
+                    width: MediaQuery.of(context).size.width,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
                           height: 100,
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width * 0.6,
+                          width: MediaQuery.of(context).size.width * 0.6,
                           child: TextFormField(
                             onSaved: (value) {
                               setState(() {
@@ -279,26 +275,26 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                       items: blocProduk.listCategory.isEmpty
                           ? null
                           : blocProduk.listCategory.map((Categories item) {
-                              return new DropdownMenuItem<String>(
-                                value: item.id,
-                                child: Row(
-                                  children: [
-                                    Image.asset(
-                                      'assets/kategori/' + item.icon,
-                                      height: 30,
-                                      width: 30,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    new Text(
-                                      item.nama.toString(),
-                                      style: TextStyle(fontSize: 12),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
+                        return new DropdownMenuItem<String>(
+                          value: item.id,
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                'assets/kategori/' + item.icon,
+                                height: 30,
+                                width: 30,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              new Text(
+                                item.nama.toString(),
+                                style: TextStyle(fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
                     ),
                   ),
                   Container(
@@ -388,12 +384,12 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                               ),
                               foto != null
                                   ? Image.file(
-                                      foto,
-                                      fit: BoxFit.fitHeight,
-                                      alignment: Alignment.topCenter,
-                                      width: 80,
-                                      height: 80,
-                                    )
+                                foto,
+                                fit: BoxFit.fitHeight,
+                                alignment: Alignment.topCenter,
+                                width: 80,
+                                height: 80,
+                              )
                                   : Container(),
                               Container(
                                 height: 20,
@@ -427,12 +423,12 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                               ),
                               foto1 != null
                                   ? Image.file(
-                                      foto1,
-                                      fit: BoxFit.fitHeight,
-                                      alignment: Alignment.topCenter,
-                                      width: 80,
-                                      height: 80,
-                                    )
+                                foto1,
+                                fit: BoxFit.fitHeight,
+                                alignment: Alignment.topCenter,
+                                width: 80,
+                                height: 80,
+                              )
                                   : Container(),
                               Container(
                                 height: 20,
@@ -465,12 +461,12 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                               ),
                               foto2 != null
                                   ? Image.file(
-                                      foto2,
-                                      fit: BoxFit.fitHeight,
-                                      alignment: Alignment.topCenter,
-                                      width: 80,
-                                      height: 80,
-                                    )
+                                foto2,
+                                fit: BoxFit.fitHeight,
+                                alignment: Alignment.topCenter,
+                                width: 80,
+                                height: 80,
+                              )
                                   : Container(),
                               Container(
                                 height: 20,
@@ -493,108 +489,18 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                   Container(
                     height: 20,
                   ),
-                  Container(
-                    height: 180,
-                    child: TextFormField(
-                      maxLines: 10,
-                      onSaved: (value) {
-                        setState(() {
-                          deskripsi = value;
-                        });
-                      },
-                      keyboardType: TextInputType.multiline,
-                      validator: (String arg) {
-                        if (arg.length < 1)
-                          return 'Deskripsi Produk Harus di isi';
-                        else
-                          return null;
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Deskripsi produk',
-                        labelText: 'Deskripsi produk',
-                        labelStyle: TextStyle(fontSize: 16),
-                        errorStyle: TextStyle(fontSize: 9),
-                        hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
-                      ),
-                    ),
+                  HtmlEditor(
+                    hint: "Your text here...",
+                    //value: "text content initial, if any",
+                    key: keyEditor,
+                    showBottomToolbar: true,
+                    useBottomSheet: true,
+                    widthImage: '50%',
+                    height: 400,
                   ),
                   Container(
                     height: 20,
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: RaisedButton(
-                      child: Text("Simpan"),
-                      color: Color(0xffb16a085),
-                      textColor: Colors.white,
-                      padding: EdgeInsets.only(left: 11, right: 11, top: 15, bottom: 15),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                      onPressed: () async {
-                        _formKey.currentState.save();
-                        if (_formKey.currentState.validate()) {
-                          String fileNameFoto;
-                          String fileNameFoto1;
-                          String fileNameFoto2;
-                          if (foto != null) {
-                            fileNameFoto = foto.path
-                                .split('/')
-                                .last;
-                          } else {
-                            fileNameFoto = 'empty';
-                          }
-                          if (foto1 != null) {
-                            fileNameFoto1 = foto1.path
-                                .split('/')
-                                .last;
-                          } else {
-                            fileNameFoto1 = 'empty';
-                          }
-                          if (foto2 != null) {
-                            fileNameFoto2 = foto2.path
-                                .split('/')
-                                .last;
-                          } else {
-                            fileNameFoto2 = 'empty';
-                          }
-                          var body = {
-                            'nama': nama.toString(),
-                            'berat': berat.toString(),
-                            'foto': fileNameFoto.toString(),
-                            'foto1': fileNameFoto1.toString(),
-                            'foto2': fileNameFoto2.toString(),
-                            'jenis_ongkir': jenis_ongkir.toString(),
-                            'deskripsi': deskripsi.toString(),
-                            'id_kategori': id_kategori.toString(),
-                            'id_toko': blocAuth.idToko.toString(),
-                            'kondisi': kondisi.toString(),
-                            'minimal_pesanan': minimal_pesanan.toString(),
-                            'harga': harga.toString(),
-                            'panjang': panjang.toString(),
-                            'stok': stok.toString(),
-                          };
-                          List<File> files = [foto, foto1, foto2];
-                          var result = await blocProduk.addProduk(files, body);
-                          if (result) {
-                            setState(() {
-                              success = true;
-                            });
-                            await Future.delayed(Duration(seconds: 1), () {
-                              Navigator.pop(context);
-                            });
-                          } else {
-                            setState(() {
-                              error = true;
-                            });
-                            await Future.delayed(Duration(seconds: 1), () {
-                              setState(() {
-                                error = false;
-                              });
-                            });
-                          }
-                        }
-                      },
-                    ),
-                  )
                 ],
               ),
             ),
@@ -627,6 +533,13 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                     _getImage(context, ImageSource.camera, param);
                   },
                 ),
+                FlatButton(
+                  textColor: Colors.red,
+                  child: Text('Use Gallery'),
+                  onPressed: () {
+                    _getImage(context, ImageSource.gallery, param);
+                  },
+                ),
               ],
             ),
           );
@@ -646,22 +559,23 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
             .split('/')
             .last;
       } else {
-        fileNameFoto = 'empty';
+        fileNameFoto = 'No-image-found.jpg';
       }
       if (foto1 != null) {
         fileNameFoto1 = foto1.path
             .split('/')
             .last;
       } else {
-        fileNameFoto1 = 'empty';
+        fileNameFoto1 = 'No-image-found.jpg';
       }
       if (foto2 != null) {
         fileNameFoto2 = foto2.path
             .split('/')
             .last;
       } else {
-        fileNameFoto2 = 'empty';
+        fileNameFoto2 = 'No-image-found.jpg';
       }
+      final deskripsi = await keyEditor.currentState.getText();
       var body = {
         'nama': nama.toString(),
         'berat': berat.toString(),

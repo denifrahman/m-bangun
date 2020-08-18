@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 class WidgetMenuPenjualan extends StatelessWidget {
   WidgetMenuPenjualan({Key key}) : super(key: key);
-  var dataList = ['Pesanan Baru', 'Dikemas', 'Dikirim', 'Ulasan', 'Selesai'];
+  var dataList = ['Pesanan Baru', 'Dikemas', 'Dikirim', 'Selesai'];
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +32,10 @@ class WidgetMenuPenjualan extends StatelessWidget {
                   ),
                   leading: dataList[index] == 'Pesanan Baru'
                       ? Stack(
-                          children: <Widget>[
-                            Icon(
-                              Icons.new_releases,
-                              size: 33,
+                    children: <Widget>[
+                      Icon(
+                        Icons.new_releases,
+                        size: 33,
                         color: Colors.blue,
                       ),
                       Positioned(
@@ -122,51 +122,11 @@ class WidgetMenuPenjualan extends StatelessWidget {
                       )
                     ],
                   )
-                      : dataList[index] == 'Ulasan'
-                      ? Stack(
-                    children: <Widget>[
-                      Icon(
-                        Icons.comment,
-                        color: Colors.red,
-                        size: 33,
-                      ),
-                      Positioned(
-                        top: 0.0,
-                        right: 0.0,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                          alignment: Alignment.center,
-                          child: Text(
-                            blocOrder.countSaleUlasan.toString() == '0' ? '' : blocOrder.countSaleUlasan.toString(),
-                            style: TextStyle(color: Colors.white, fontSize: 10),
-                          ),
-                        ),
-                      )
-                    ],
-                  )
                       : dataList[index] == 'Selesai'
-                      ? Stack(
-                    children: <Widget>[
-                      Icon(
-                        Icons.assignment_turned_in,
-                        size: 33,
-                        color: Colors.green,
-                      ),
-                      Positioned(
-                        top: 0.0,
-                        right: 0.0,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                          alignment: Alignment.center,
-                          child: Text(
-                            blocOrder.countSaleSelesai.toString() == '0' ? '' : blocOrder.countSaleSelesai.toString(),
-                            style: TextStyle(color: Colors.white, fontSize: 10),
-                          ),
-                        ),
-                      )
-                    ],
+                      ? Icon(
+                    Icons.assignment_turned_in,
+                    size: 33,
+                    color: Colors.green,
                   )
                       : Icon(Icons.delete, color: Colors.red),
                   trailing: Icon(Icons.arrow_forward_ios)),

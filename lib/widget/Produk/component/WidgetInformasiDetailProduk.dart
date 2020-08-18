@@ -1,5 +1,8 @@
+import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocProduk.dart';
+import 'package:apps/screen/ProdukScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class WidgetInformasiDetailProduk extends StatelessWidget {
   const WidgetInformasiDetailProduk({
@@ -11,6 +14,7 @@ class WidgetInformasiDetailProduk extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
     return Container(
       child: Column(
         children: [
@@ -77,9 +81,20 @@ class WidgetInformasiDetailProduk extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14,
                           )),
-                      Text(
-                        blocProduk.detailProduct[0].namaKategori,
-                        style: TextStyle(color: Colors.cyan[700], fontSize: 14),
+                      InkWell(
+                        onTap: () {
+                          blocProduk.getAllProductByParam({'id_kategori': blocProduk.detailProduct[0].idKategori.toString(), 'aktif': '1'});
+                          Navigator.push(
+                              context,
+                              SlideRightRoute(
+                                  page: ProdukScreen(
+                                    namaKategori: blocProduk.detailProduct[0].namaKategori,
+                                  )));
+                        },
+                        child: Text(
+                          blocProduk.detailProduct[0].namaKategori,
+                          style: TextStyle(color: Colors.cyan[700], fontSize: 14),
+                        ),
                       ),
                     ],
                   ),

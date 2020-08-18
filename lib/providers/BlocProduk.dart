@@ -46,8 +46,6 @@ class BlocProduk extends ChangeNotifier {
   }
 
   add(value, index) {
-//    print(index.price);
-
     _listProducts.forEach((element) {
       if (element.harga == index.price) {
         element.stok = value;
@@ -71,7 +69,6 @@ class BlocProduk extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().getAllProduct(param);
-    print(param);
     if (result.toString() == '111' || result.toString() == '101') {
       _connection = false;
       _isLoading = false;
@@ -197,7 +194,6 @@ class BlocProduk extends ChangeNotifier {
     notifyListeners();
     var param = {'': ''};
     var result = await UserRepository().getAllIklan(param);
-//    print(result);
     if (result.toString() == '111' || result.toString() == '101') {
       _isLoading = false;
       _connection = false;

@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 class WidgetMenuPembelian extends StatelessWidget {
   WidgetMenuPembelian({Key key}) : super(key: key);
-  var dataList = ['Menunggu Pembayaran', 'Menunggu Konfirmasi', 'Dikemas', 'Dikirim', 'Ulasan', 'Selesai', 'Batal'];
+  var dataList = ['Menunggu Pembayaran', 'Menunggu Konfirmasi', 'Dikemas', 'Dikirim', 'Selesai', 'Batal'];
 
   @override
   Widget build(BuildContext context) {
@@ -120,77 +120,20 @@ class WidgetMenuPembelian extends StatelessWidget {
                                         ),
                                       )
                                     ],
-                                  )
-                                : dataList[index] == 'Ulasan'
-                                    ? Stack(
-                                        children: <Widget>[
-                                          Icon(
-                                            Icons.comment,
-                                            color: Colors.blue,
-                                            size: 33,
-                                          ),
-                                          Positioned(
-                                            top: 0.0,
-                                            right: 0.0,
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                blocOrder.countUlasan.toString() == '0' ? '' : blocOrder.countUlasan.toString(),
-                                                style: TextStyle(color: Colors.white, fontSize: 10),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    : dataList[index] == 'Selesai'
-                                        ? Stack(
-                                            children: <Widget>[
-                                              Icon(
-                                                Icons.assignment_turned_in,
-                                                size: 33,
-                                                color: Colors.green,
-                                              ),
-                                              Positioned(
-                                                top: 0.0,
-                                                right: 0.0,
-                                                child: Container(
-                                                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                                                  alignment: Alignment.center,
-                                                  child: Text(
-                                                    blocOrder.countSelesai.toString() == '0' ? '' : blocOrder.countSelesai.toString(),
-                                                    style: TextStyle(color: Colors.white, fontSize: 10),
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          )
-                                        : dataList[index] == 'Batal'
-                                            ? Stack(
-                                                children: <Widget>[
-                                                  Icon(
-                                                    Icons.backspace,
-                                                    size: 33,
-                                                    color: Colors.red,
-                                                  ),
-                                                  Positioned(
-                                                    top: 0.0,
-                                                    right: 0.0,
-                                                    child: Container(
-                                                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                                      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                                                      alignment: Alignment.center,
-                                                      child: Text(
-                                                        blocOrder.countBatal.toString() == '0' ? '' : blocOrder.countBatal.toString(),
-                                                        style: TextStyle(color: Colors.white, fontSize: 10),
-                                                      ),
-                                                    ),
-                                                  )
-                                                ],
-                                              )
-                                            : Icon(Icons.backspace, color: Colors.red),
+                )
+                    : dataList[index] == 'Selesai'
+                    ? Icon(
+                  Icons.assignment_turned_in,
+                  size: 33,
+                  color: Colors.green,
+                )
+                    : dataList[index] == 'Batal'
+                    ? Icon(
+                  Icons.backspace,
+                  size: 33,
+                  color: Colors.red,
+                )
+                    : Icon(Icons.backspace, color: Colors.red),
                 trailing: Icon(Icons.arrow_forward_ios)),
           );
         },
@@ -205,7 +148,11 @@ class WidgetMenuPembelian extends StatelessWidget {
       print(param);
       blocOrder.getOrderByParam(param);
     } else {
-      var param = {'id_pembeli': idUser.toString(), 'status_order': title.toString(), 'status_pembayaran': 'terbayar'};
+      var param = {
+        'id_pembeli': idUser.toString(),
+        'status_order': title.toString().toLowerCase() == 'ulasan' ? 'selesai' : title.toString().toLowerCase(),
+        'status_pembayaran': 'terbayar'
+      };
       print(param);
       blocOrder.getOrderByParam(param);
     }

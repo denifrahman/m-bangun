@@ -82,6 +82,11 @@ class UserRepository {
     return response;
   }
 
+  Future getPenghasilanByParam(param) async {
+    final response = await _helper.get("penghasilan/getAllByParam", param);
+    return response;
+  }
+
   Future setDefaultAlamat(body) async {
     final response = await _helper.post("user/updateDefaultAlamat", body);
     return response;

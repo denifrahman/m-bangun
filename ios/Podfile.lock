@@ -1,6 +1,7 @@
 PODS:
   - advance_pdf_viewer (1.0.5):
     - Flutter
+  - Alamofire (4.9.1)
   - AppAuth (1.3.1):
     - AppAuth/Core (= 1.3.1)
     - AppAuth/ExternalUserAgent (= 1.3.1)
@@ -112,6 +113,9 @@ PODS:
   - multi_image_picker (4.7.10):
     - BSImagePicker (~> 2.10.3)
     - Flutter
+  - multipart_request (0.0.1):
+    - Alamofire (= 4.9.1)
+    - Flutter
   - nanopb (1.30905.0):
     - nanopb/decode (= 1.30905.0)
     - nanopb/encode (= 1.30905.0)
@@ -171,6 +175,7 @@ DEPENDENCIES:
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - local_auth (from `.symlinks/plugins/local_auth/ios`)
   - multi_image_picker (from `.symlinks/plugins/multi_image_picker/ios`)
+  - multipart_request (from `.symlinks/plugins/multipart_request/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - path_provider_linux (from `.symlinks/plugins/path_provider_linux/ios`)
@@ -192,6 +197,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Alamofire
     - AppAuth
     - BSGridCollectionViewLayout
     - BSImagePicker
@@ -239,6 +245,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/local_auth/ios"
   multi_image_picker:
     :path: ".symlinks/plugins/multi_image_picker/ios"
+  multipart_request:
+    :path: ".symlinks/plugins/multipart_request/ios"
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
   path_provider:
@@ -278,6 +286,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   advance_pdf_viewer: 5c832f382b4ca84fe735f893b7e91aa830c27d7b
+  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
   AppAuth: 8803ba1aec6d00d9afd30093f82e600307eaa6ea
   BSGridCollectionViewLayout: 333dcb457a5a3bdd9212607ab5756553dcfe06cb
   BSImagePicker: 07404254f2fcdaf5a2eb403c0f8c337267ce8738
@@ -307,6 +316,7 @@ SPEC CHECKSUMS:
   image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
   local_auth: 25938960984c3a7f6e3253e3f8d962fdd16852bd
   multi_image_picker: 5b7a578db2e02d12f30098afdff6983f4d69fbe0
+  multipart_request: 1d959b9c5697a47347842aaf6b9cfd9a82ee9cf9
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c

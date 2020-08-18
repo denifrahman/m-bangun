@@ -64,10 +64,14 @@ class BlocAuth extends ChangeNotifier {
           return true;
         } else {
           _isLogin = false;
+          _idToko = '0';
+          _idUser = '0';
+          _connection = true;
           _isNonActive = false;
           _isRegister = false;
           notifyListeners();
           LocalStorage.sharedInstance.deleteValue('id_user_login');
+          LocalStorage.sharedInstance.deleteValue('id_toko');
           return false;
         }
       });
@@ -113,7 +117,7 @@ class BlocAuth extends ChangeNotifier {
           } else {
             var queryString = {'username': _currentUser.email, 'id_google': _currentUser.id};
             var result = await AuthRepository().googleSign(queryString);
-            print(result);
+            print(result['data']['id_toko']);
             if (result.toString() == '111' || result.toString() == '101') {
               _connection = false;
               _isLoading = false;
@@ -133,7 +137,7 @@ class BlocAuth extends ChangeNotifier {
                 } else {
                   _connection = true;
                   _token = result['token'];
-                  _idToko = result['data']['id_toko'];
+                  _idToko = result['data']['id_toko'].toString();
                   LocalStorage.sharedInstance.writeValue(key: 'id_toko', value: result['data']['id_toko']);
                   LocalStorage.sharedInstance.writeValue(key: 'id_user_login', value: result['data']['id']);
                   _idUser = result['data']['id'];

@@ -33,7 +33,7 @@ class TokoSayaScreen extends StatelessWidget {
           ? Container(
               child: PKCardProfileSkeleton(),
             )
-          : SafeArea(
+          : SingleChildScrollView(
               child: Column(
                 children: <Widget>[
                   Container(

@@ -18,10 +18,11 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
   Widget build(BuildContext context) {
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
-    var totalTerUlas = blocOrder.listOrderDetailProduk.where((element) => element.ulasan != null).length;
+    var totalTerUlas = blocOrder.listOrderDetailProduk.where((element) => element.statusUlasan != null).length;
     var totalOrder = blocOrder.listOrderDetailProduk.length;
     final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
     // TODO: implement build
+    print(order.statusUlasan + 'status');
     AppBar appBar = AppBar(
       title: Text('Detail Produk'),
     );
@@ -37,7 +38,7 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
                   Expanded(
                     flex: 5,
                     child: RefreshIndicator(
-                      onRefresh: () {
+                      onRefresh: () async {
                         onRefresh(context, order.id);
                       },
                       child: ListView.builder(
@@ -45,7 +46,7 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
                           padding: EdgeInsets.all(10),
                           itemCount: blocOrder.listOrderDetailProduk.length,
                           itemBuilder: (_, j) {
-                            print(blocOrder.listOrderDetailProduk[j].ulasan);
+                            print(blocOrder.listOrderDetailProduk[j].statusUlasan);
                             return Card(
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -84,18 +85,18 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
                                       SizedBox(
                                         height: 10,
                                       ),
-                                      title.toString().toLowerCase() == 'ulasan'
-                                          ? blocOrder.listOrderDetailProduk[j].ulasan != null
-                                              ? Container()
-                                              : SizedBox(
-                                                  height: 25,
-                                                  width: double.infinity,
-                                                  child: RaisedButton(
-                                                    child: Text(
-                                                      'Ulas Produk',
-                                                      style: TextStyle(fontSize: 12),
-                                                    ),
-                                                    color: Colors.orangeAccent,
+                                      title.toString().toLowerCase() == 'selesai'
+                                          ? blocOrder.listOrderDetailProduk[j].statusUlasan == '1'
+                                          ? Container()
+                                          : SizedBox(
+                                        height: 25,
+                                        width: double.infinity,
+                                        child: RaisedButton(
+                                          child: Text(
+                                            'Ulas Produk',
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          color: Colors.orangeAccent,
                                                     textColor: Colors.white,
                                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                                     onPressed: () async {
@@ -131,7 +132,6 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
                     child: SingleChildScrollView(
                       child: Container(
                         width: 150,
-//                    height: 150,
                         child: this.title == 'menunggu_konfirmasi'
                             ? Image.asset(
                                 'assets/img/waiting.png',
@@ -180,7 +180,7 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
                             ),
                           ),
                         ),
-                  totalTerUlas < totalOrder
+                  order.statusUlasan.toString() == '1'
                       ? Container()
                       : Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -196,7 +196,7 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
                               textColor: Colors.white,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                               onPressed: () async {
-//                                _confirmPopUp(context, blocOrder, blocAuth);
+                                _ulasanToko(context, blocAuth, blocOrder);
                               },
                             ),
                           ),
@@ -234,7 +234,7 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
               FlatButton(
                   child: Text(btnLabel),
                   onPressed: () {
-                    var body = {'id': order.id.toString(), 'status_order': this.title.toLowerCase() == 'dikirim' ? 'ulasan' : '', 'id_toko': order.idToko.toString()};
+                    var body = {'id': order.id.toString(), 'status_order': this.title.toLowerCase() == 'dikirim' ? 'selesai' : '', 'id_toko': order.idToko.toString()};
                     Navigator.pop(context);
                     var result = blocOrder.updateOrder(body);
                     result.then((value) {
@@ -316,29 +316,100 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
               }),
           new FlatButton(
               child: const Text('Submit'),
-              onPressed: () {
+              onPressed: () async {
                 Navigator.pop(context);
                 var body = {
-                  'id_order': order.idOrder,
+                  'id_order_produk': order.id,
                   'id_produk': order.idProduk,
                   'id_user_login': blocAuth.idUser,
                   'rating': blocOrder.rating.toString(),
                   'ulasan': blocOrder.ulasan.toString()
                 };
-                blocOrder.insertUlasan(body);
+                var result = await blocOrder.insertUlasan(body);
+                if (result) {
+                  onRefresh(context, order.idOrder);
+                }
               })
         ],
       ),
     );
-    future.then((void value) => onRefresh(context, order.idOrder));
+  }
+
+  _ulasanToko(context, BlocAuth blocAuth, BlocOrder blocOrder) async {
+    Future<void> future = showDialog<void>(
+      context: context,
+      child: new AlertDialog(
+        contentPadding: const EdgeInsets.all(16.0),
+        content: Container(
+          height: 100,
+          child: new Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Center(
+                child: Text(
+                  'Ulas toko ini',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              new Expanded(
+                child: new TextField(
+                  autofocus: true,
+                  maxLines: 5,
+                  onChanged: (value) {
+                    blocOrder.changeUlasan(value);
+                  },
+                  style: TextStyle(fontSize: 12),
+                  decoration: new InputDecoration(labelText: 'Tulis ulasan', labelStyle: TextStyle(fontSize: 16), hintText: 'Berikan ulasan untuk produk ini!'),
+                ),
+              )
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          new FlatButton(
+              child: const Text('Tidak Suka'),
+              onPressed: () async {
+                Navigator.pop(context);
+                var body = {'id_order': order.id, 'id_toko': order.idToko, 'id_user_login': blocAuth.idUser, 'suka': '0', 'komentar': blocOrder.ulasan.toString()};
+                var result = await blocOrder.insertUlasanToko(body);
+                if (result) {
+                  onRefresh(context, this.order.id);
+                }
+              }),
+          new FlatButton(
+              child: const Text('Suka'),
+              onPressed: () async {
+                Navigator.pop(context);
+                var body = {'id_order': order.id, 'id_toko': order.idToko, 'id_user_login': blocAuth.idUser, 'suka': '1', 'komentar': blocOrder.ulasan.toString()};
+                var result = await blocOrder.insertUlasanToko(body);
+                if (result) {
+                  Navigator.pop(context);
+                  onRefresh(context, this.order.id);
+                }
+              })
+        ],
+      ),
+    );
   }
 
   onRefresh(context, idOrder) {
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     var param = {
       'id_order': idOrder.toString(),
     };
     blocOrder.getOrderProdukByParam(param);
+    if (title == 'Menunggu Pembayaran') {
+      var param = {'id_pembeli': blocAuth.idUser.toString(), 'status_pembayaran': title == 'Menunggu Pembayaran' ? 'menunggu' : 'terbayar'};
+      blocOrder.getOrderByParam(param);
+    } else {
+      var param = {'id_pembeli': blocAuth.idUser.toString(), 'status_order': title.toString(), 'status_pembayaran': 'terbayar'};
+      blocOrder.getOrderByParam(param);
+    }
   }
 }
 

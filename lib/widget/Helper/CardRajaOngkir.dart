@@ -50,11 +50,15 @@ class _CardRajaOngkirState extends State<CardRajaOngkir> {
         padding: const EdgeInsets.all(8.0),
         child: ListTile(
           title: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Jasa Pengiriman'),
-              Text(
-                ' (Kurir)',
-                style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
+              Container(
+                margin: EdgeInsets.only(top: 2),
+                child: Text(
+                  ' (Kurir)',
+                  style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic, fontSize: 13),
+                ),
               )
             ],
           ),

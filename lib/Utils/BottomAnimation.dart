@@ -77,9 +77,9 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
         blocOrder.countMenungguKonfirmasi +
         blocOrder.countDikemas +
         blocOrder.countDikirim +
-        blocOrder.countDikirim +
-        blocOrder.countSelesai +
-        blocOrder.countUlasan;
+        blocOrder.countSaleMenungguKonfirmasi +
+        blocOrder.countSaleDikemas +
+        blocOrder.countSaleDikirim;
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -152,16 +152,6 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                                   size: 25,
                                   color: currentTab == 0 ? Colors.white : Colors.grey[400],
                                 ),
-//                                new Positioned(
-//                                  top: 0.0,
-//                                  right: 0.0,
-//                                  child: Container(
-//                                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-//                                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-//                                    alignment: Alignment.center,
-//                                    child: Text('2', style: TextStyle(color: Colors.white, fontSize: 8),),
-//                                  ),
-//                                )
                               ],
                             ),
                             Text(
@@ -180,8 +170,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                           blocAuth.checkSession();
                           blocOrder.getCart();
                           setState(() {
-                            currentScreen = CheckListScreen(
-                            ); // if user taps on this dashboard tab will be active
+                            currentScreen = CheckListScreen(); // if user taps on this dashboard tab will be active
                             currentTab = 1;
                           });
                         },
@@ -305,16 +294,6 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                                   size: 28,
                                   color: currentTab == 3 ? Colors.white : Colors.grey[400],
                                 ),
-//                                new Positioned(
-//                                  top: 0.0,
-//                                  right: 0.0,
-//                                  child: Container(
-//                                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-//                                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-//                                    alignment: Alignment.center,
-//                                    child: Text('2', style: TextStyle(color: Colors.white, fontSize: 8),),
-//                                  ),
-//                                )
                               ],
                             ),
                             Text(

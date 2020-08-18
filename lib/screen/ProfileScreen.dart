@@ -9,6 +9,7 @@ import 'package:apps/screen/TokoSayaScreen.dart';
 import 'package:apps/widget/Login/LoginWidget.dart';
 import 'package:apps/widget/Profile/TopContainer.dart';
 import 'package:apps/widget/Profile/WidgetMyFavorite.dart';
+import 'package:apps/widget/penghasilan/WidgetDetailPenghasilan.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -116,13 +117,6 @@ class ProfileScreen extends StatelessWidget {
                                   ),
                                   Row(
                                     children: [
-//                        IconButton(
-//                          onPressed: () {
-//                            Navigator.push(context, SlideRightRoute(page: WidgetProfile()));
-//                            blocProfile.getProfileUser(blocAuth.idUser);
-//                          },
-//                          icon: Icon(Icons.edit, color: AppColors.kDarkBlue, size: 20.0),
-//                        ),
                                       IconButton(
                                         onPressed: () {
                                           blocAuth.handleSignOut();
@@ -227,22 +221,22 @@ class ProfileScreen extends StatelessWidget {
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: <Widget>[
                                                   subheading('Toko Saya'),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      blocProfile.getTokoByParam({'id_user': blocAuth.idUser.toString()});
-                                                      blocProduk.getAllProductByParam({'id_toko': blocAuth.idToko.toString()});
-                                                      Navigator.push(context, SlideRightRoute(page: TokoSayaScreen()));
-                                                    },
-                                                    child: CircleAvatar(
-                                                      radius: 25.0,
-                                                      backgroundColor: AppColors.mainColor,
-                                                      child: Icon(
-                                                        Icons.shop,
-                                                        size: 20.0,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
+//                                                  GestureDetector(
+//                                                    onTap: () {
+//                                                      blocProfile.getTokoByParam({'id_user': blocAuth.idUser.toString()});
+//                                                      blocProduk.getAllProductByParam({'id_toko': blocAuth.idToko.toString()});
+//                                                      Navigator.push(context, SlideRightRoute(page: TokoSayaScreen()));
+//                                                    },
+//                                                    child: CircleAvatar(
+//                                                      radius: 25.0,
+//                                                      backgroundColor: AppColors.kRed,
+//                                                      child: Icon(
+//                                                        Icons.shop,
+//                                                        size: 20.0,
+//                                                        color: Colors.white,
+//                                                      ),
+//                                                    ),
+//                                                  ),
                                                 ],
                                               ),
                                               SizedBox(height: 15.0),
@@ -257,6 +251,47 @@ class ProfileScreen extends StatelessWidget {
                                                   iconBackgroundColor: AppColors.kRed,
                                                   title: 'Kelola Toko',
                                                   subtitle: 'Kelola produk, alamat bank anda',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Divider(),
+                                        Container(
+                                          color: Colors.transparent,
+                                          padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                                          child: Column(
+                                            children: <Widget>[
+                                              Row(
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: <Widget>[
+                                                  subheading('Penghasilan'),
+//                                                  GestureDetector(
+//                                                    onTap: () {
+//                                                      blocProfile.getTokoByParam({'id_user': blocAuth.idUser.toString()});
+//                                                      blocProduk.getAllProductByParam({'id_toko': blocAuth.idToko.toString()});
+//                                                      Navigator.push(context, SlideRightRoute(page: TokoSayaScreen()));
+//                                                    },
+//                                                    child: CircleAvatar(
+//                                                      radius: 25.0,
+//                                                      backgroundColor: Colors.green,
+//                                                      child: Text('Rp', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),)
+//                                                    ),
+//                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(height: 15.0),
+                                              InkWell(
+                                                onTap: () {
+                                                  blocProfile.getPenghasilanByParam({'id_toko': blocAuth.idToko.toString()});
+                                                  Navigator.push(context, SlideRightRoute(page: WidgetDetailPenghasilan()));
+                                                },
+                                                child: WidgetMyFavorite(
+                                                  icon: Icons.credit_card,
+                                                  iconBackgroundColor: Colors.green,
+                                                  title: 'Lihat Penghasilan',
+                                                  subtitle: 'Pembayaran penghasilan anda',
                                                 ),
                                               ),
                                             ],

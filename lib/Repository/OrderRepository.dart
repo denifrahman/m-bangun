@@ -66,4 +66,9 @@ class OrderRepository {
     final response = await _helper.post("order/insertUlasan", body);
     return response;
   }
+
+  Future insertUlasanToko(body) async {
+    final response = await _helper.post("order/insertUlasanToko", body);
+    return response;
+  }
 }

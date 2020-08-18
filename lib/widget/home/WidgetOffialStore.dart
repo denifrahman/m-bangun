@@ -15,7 +15,6 @@ class WidgetOffialStore extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 10),
-      color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 10),
       width: MediaQuery.of(context).size.width,
       height: 100,

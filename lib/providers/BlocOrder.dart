@@ -42,6 +42,7 @@ class BlocOrder extends ChangeNotifier {
   setIdUser() async {
     var id = await LocalStorage.sharedInstance.readValue('id_user_login');
     var idToko = await LocalStorage.sharedInstance.readValue('id_toko');
+    print(idToko);
     if (id != null) {
       _id_user_login = id;
       getOrderByIdUser(id);
@@ -347,7 +348,6 @@ class BlocOrder extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await OrderRepository().getOrderByParam(param);
-    print(param);
     if (result.toString() == '111' || result.toString() == '101') {
       _connection = false;
       _isLoading = false;

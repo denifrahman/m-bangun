@@ -144,6 +144,7 @@ class _ShopItemListState extends State<ShopItemList> {
                           initialValue: int.parse(widget.chilrdern.jumlah),
                           minValue: 1,
                           maxValue: 900,
+                          step: 1,
                           onChanged: (value) {
                             var body = {
                               'id': widget.chilrdern.id.toString(),

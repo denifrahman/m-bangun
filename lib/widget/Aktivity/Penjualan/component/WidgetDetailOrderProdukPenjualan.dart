@@ -238,6 +238,7 @@ class WidgetDetailOrderProdukPenjualan extends StatelessWidget {
                     };
                     Navigator.pop(context);
                     var result = blocOrder.updateOrder(body);
+                    print(body);
                     result.then((value) {
                       if (value) {
                         var param = {'id_toko': blocAuth.idToko.toString(), 'status_order': title.toString(), 'status_pembayaran': 'terbayar'};

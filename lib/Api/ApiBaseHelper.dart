@@ -10,7 +10,7 @@ import 'package:mime/mime.dart';
 class ApiBaseHelper {
   final _baseUrl = 'm-bangun.com';
 
-//  final _baseUrl = '192.168.0.6';
+//  final _baseUrl = '192.168.0.7';
 
   final _path = 'api-v2/';
 
@@ -34,7 +34,6 @@ class ApiBaseHelper {
       final _url = Uri.http(_baseUrl, _path + url);
       var header = {"Content-Type": "application/json"};
       final response = await http.post(_url, body: body);
-      print(response.body);
       responseJson = _returnResponse(response);
     } on SocketException catch (err) {
       print(err.osError);

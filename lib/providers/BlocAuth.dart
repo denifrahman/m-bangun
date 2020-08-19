@@ -117,7 +117,6 @@ class BlocAuth extends ChangeNotifier {
           } else {
             var queryString = {'username': _currentUser.email, 'id_google': _currentUser.id};
             var result = await AuthRepository().googleSign(queryString);
-            print(result['data']['id_toko']);
             if (result.toString() == '111' || result.toString() == '101') {
               _connection = false;
               _isLoading = false;

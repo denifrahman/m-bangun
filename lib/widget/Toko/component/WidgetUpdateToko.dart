@@ -33,6 +33,7 @@ class _WidgetUpdateTokoState extends State<WidgetUpdateToko> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: Text('Ubah Toko'),
         actions: [
           IconButton(
@@ -49,11 +50,11 @@ class _WidgetUpdateTokoState extends State<WidgetUpdateToko> {
           )
         ],
       ),
-      body: blocProfile.isLoading
-          ? Center(child: PKCardListSkeleton())
-          : ModalProgressHUD(
-              inAsyncCall: blocProduk.isLoading,
-              child: SingleChildScrollView(
+      body: ModalProgressHUD(
+        inAsyncCall: blocProduk.isLoading,
+        child: blocProfile.isLoading
+            ? Center(child: PKCardListSkeleton())
+            : SingleChildScrollView(
                 child: Form(
                   key: _formKey,
                   child: Padding(
@@ -249,15 +250,15 @@ class _WidgetUpdateTokoState extends State<WidgetUpdateToko> {
                             },
                           ),
                         ),
-                        Container(
-                          height: 20,
-                        ),
-                      ],
-                    ),
+                  Container(
+                    height: 20,
                   ),
-                ),
+                ],
               ),
             ),
+          ),
+        ),
+      ),
     );
   }
 

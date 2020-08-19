@@ -49,6 +49,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     // TODO: implement build
     AppBar appBar = AppBar(
+      elevation: 0,
       title: Text('Tambah Produk'),
       actions: [
         IconButton(
@@ -63,7 +64,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
       ],
     );
     return ModalProgressHUD(
-      inAsyncCall: false,
+      inAsyncCall: blocProduk.isLoading,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: appBar,

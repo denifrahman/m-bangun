@@ -264,7 +264,7 @@ class BlocProduk extends ChangeNotifier {
     imageCache.clear();
     _isLoading = true;
     notifyListeners();
-    var param = {'': ''};
+    var param = {'aktif': '1'};
     var result = await UserRepository().getRecentProduct(param);
     if (result.toString() == '111' || result.toString() == '101') {
       _connection = false;

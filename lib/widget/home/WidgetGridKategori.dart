@@ -55,7 +55,7 @@ class WidgetGridKategori extends StatelessWidget {
                 RichText(
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
-                  maxLines: 2,
+                  maxLines: 1,
                   text: TextSpan(
                     style: TextStyle(
                       color: Colors.white,

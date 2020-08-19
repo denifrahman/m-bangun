@@ -23,7 +23,6 @@ class WidgetGridKategoriByToko extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       child: GridView.count(
         scrollDirection: Axis.horizontal,
-//            physics: const NeverScrollableScrollPhysics(),
         crossAxisCount: 1,
         children: List.generate(blocProduk.listCategoryByToko.length, (j) {
           return Container(
@@ -56,7 +55,7 @@ class WidgetGridKategoriByToko extends StatelessWidget {
                 RichText(
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
-                  maxLines: 2,
+                  maxLines: 1,
                   text: TextSpan(
                     style: TextStyle(
                       color: Colors.grey,

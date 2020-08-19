@@ -11,7 +11,7 @@ description: Aplikasi m-bangun
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.0.2+14
+version: 2.0.3+15
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -114,14 +114,15 @@ flutter:
     - assets/images/splace-background.png
     - assets/bottom_yellow.png
     - assets/kategori/bahan_bangunan.png
-    - assets/kategori/bata_merah.png
+    - assets/kategori/furniture.png
     - assets/kategori/bata_putih.png
-    - assets/kategori/besi.png
+    - assets/kategori/roof.png
     - assets/kategori/beton.png
     - assets/kategori/kayu.png
     - assets/kategori/pasir.png
+    - assets/kategori/paint.png
     - assets/kategori/semen.png
-    - assets/kategori/perkakas.png
+    - assets/kategori/plumbing.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

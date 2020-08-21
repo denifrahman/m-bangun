@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:apps/Utils/HeaderAnimation.dart';
+import 'package:apps/Utils/WidgetErrorConnection.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/providers/Categories.dart';
@@ -69,43 +70,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return Scaffold(
       appBar: appBar,
       body: !blocProduk.connection
-          ? Center(
-              child: InkWell(
-                  onTap: () {
-                    dataProvider.getToken();
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.network_check,
-                        color: Colors.grey,
-                        size: 50,
-                      ),
-                      Text('Tidak Ada Koneksi Internet'),
-                      Container(
-                        height: 10,
-                      ),
-                      Container(
-                        height: 35.0,
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: FlatButton(
-                          onPressed: () {
-                            blocProduk.initLoad();
-                          },
-                          child: Text(
-                            'Coba Lagi',
-                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )),
-            )
+          ? WidgetErrorConection()
           : Container(
               margin: EdgeInsets.only(bottom: 50),
               color: Colors.white10.withOpacity(0.2),
@@ -221,3 +186,4 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
   }
 }
+

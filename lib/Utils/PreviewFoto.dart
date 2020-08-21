@@ -8,7 +8,6 @@ class PreviewFoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(urlFoto);
     // TODO: implement build
     return GestureDetector(
       child: Scaffold(

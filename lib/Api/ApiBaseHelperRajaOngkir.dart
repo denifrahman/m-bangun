@@ -19,7 +19,7 @@ class ApiBaseHelperRajaOngkir {
       final response = await http.get(_url, headers: header);
       responseJson = _returnResponse(response);
     } on SocketException catch (err) {
-      return AppException(err.osError.errorCode, err.message);
+      return 'Conncetion Error';
     }
     return responseJson;
   }
@@ -33,7 +33,7 @@ class ApiBaseHelperRajaOngkir {
       final response = await http.post(_url, body: body, headers: header);
       responseJson = _returnResponse(response);
     } on SocketException catch (err) {
-      return FetchDataException(err.osError.errorCode.toString());
+      return 'Conncetion Error';
     }
     return responseJson;
   }

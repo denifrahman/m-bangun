@@ -343,7 +343,10 @@ class _WidgetUpdateTokoState extends State<WidgetUpdateToko> {
   }
 
   void _getImage(BuildContext context, ImageSource source, param) async {
-    File image = await ImagePicker.pickImage(source: source, maxHeight: 1000, maxWidth: 1000, imageQuality: 100);
+    File image = await ImagePicker.pickImage(
+      source: source,
+      imageQuality: 50,
+    );
     if (param == 'foto') {
       setState(() {
         foto = image;

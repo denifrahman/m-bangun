@@ -42,7 +42,7 @@ class WidgetRecentProduct extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                           )),
                       Text(
-                        'Temukan produk bangunan disini',
+                        'Rekomendasi produk terbaru',
                         style: TextStyle(fontSize: 12),
                       ),
                     ],
@@ -79,16 +79,10 @@ class WidgetRecentProduct extends StatelessWidget {
         Container(
           color: Colors.white,
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          width: MediaQuery
-              .of(context)
-              .size
-              .width,
-          height: MediaQuery
-              .of(context)
-              .size
-              .height * 0.45,
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height * 0.5,
           child: GridView.count(
-            childAspectRatio: 0.9,
+            childAspectRatio: 0.8,
             crossAxisCount: 3,
             shrinkWrap: false,
             physics: new NeverScrollableScrollPhysics(),
@@ -123,7 +117,7 @@ class WidgetRecentProduct extends StatelessWidget {
                           flex: 3,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-//                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Column(
                                 children: [
@@ -157,12 +151,15 @@ class WidgetRecentProduct extends StatelessWidget {
                                   Container(
                                     child: Row(
                                       children: [
-                                        RichText(
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          text: TextSpan(
-                                              style: TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.normal, fontStyle: FontStyle.italic),
-                                              text: blocProduk.listRecentProduct[j].namaToko + ' '),
+                                        Container(
+                                          width: 75,
+                                          child: RichText(
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            text: TextSpan(
+                                                style: TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.normal, fontStyle: FontStyle.italic),
+                                                text: blocProduk.listRecentProduct[j].namaToko + ' '),
+                                          ),
                                         ),
                                         blocProduk.listRecentProduct.isEmpty
                                             ? Container()
@@ -231,7 +228,7 @@ class WidgetRecentProduct extends StatelessWidget {
       fit: BoxFit.cover,
       errorBuilder: (context, urlImage, error) {
         print(error.hashCode);
-        return Image.asset('assets/logo.png');
+        return Image.network('https://m-bangun.com/api-v2/assets/toko/No-image-found.jpg');
       },
     );
   }

@@ -1,5 +1,6 @@
 
 
+import 'package:apps/Utils/WidgetErrorConnection.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
@@ -26,18 +27,20 @@ class CheckListScreen extends StatelessWidget {
     );
     return Scaffold(
       appBar: appBar,
-      body: !blocAuth.isLogin
-          ? Container(
-              color: Colors.white,
-              child: LoginWidget(
-                primaryColor: Color(0xFFb16a085),
-                backgroundColor: Colors.white,
-                page: '/BottomNavBar',
-              ),
-            )
-          : RefreshIndicator(
-              onRefresh: () => blocOrder.getCart(),
-              child: ListView.builder(
+      body: !blocAuth.connection
+          ? WidgetErrorConection()
+          : !blocAuth.isLogin
+              ? Container(
+                  color: Colors.white,
+                  child: LoginWidget(
+                    primaryColor: Color(0xFFb16a085),
+                    backgroundColor: Colors.white,
+                    page: '/BottomNavBar',
+                  ),
+                )
+              : RefreshIndicator(
+                  onRefresh: () => blocOrder.getCart(),
+                  child: ListView.builder(
                 itemCount: dataList.length,
                 padding: EdgeInsets.all(10),
                 itemBuilder: (context, index) {
@@ -91,8 +94,10 @@ class CheckListScreen extends StatelessWidget {
   _openScreen(String dataList, context) {
     if (dataList == 'Keranjang') {
       BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+      BlocOrder blocOrder = Provider.of<BlocOrder>(context);
       BlocProfile blocProfile = Provider.of<BlocProfile>(context);
       blocProfile.getUserAddressDefault(blocAuth.idUser);
+      blocOrder.getCart();
       Navigator.push(context, SlideRightRoute(page: Keranjang()));
       Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
     } else {

@@ -1,3 +1,4 @@
+import 'package:apps/Utils/WidgetErrorConnection.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/widget/Aktivity/Pembelian/WidgetMenuPembelian.dart';
@@ -16,6 +17,7 @@ class MyAdsScreen extends StatefulWidget {
 class _MyAdsScreenState extends State<MyAdsScreen> {
   @override
   Widget build(BuildContext context) {
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     AppBar appBar = AppBar(
       elevation: 0.0,
       backgroundColor: Colors.cyan[700],
@@ -71,68 +73,31 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
       ),
     );
     DataProvider dataProvider = Provider.of<DataProvider>(context);
-    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
-    return !dataProvider.connection
-        ? Center(
-            child: InkWell(
-                onTap: () {
-                  dataProvider.getToken();
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                Icons.network_check,
-                color: Colors.grey,
-                size: 50,
-              ),
-              Text('Tidak Ada Koneksi Internet'),
-              Container(
-                height: 10,
-              ),
-              Container(
-                height: 35.0,
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(30),
+    return !blocAuth.connection
+        ? WidgetErrorConection()
+        : !blocAuth.isLogin
+            ? Container(
+                color: Colors.white,
+                child: LoginWidget(
+                  primaryColor: Colors.white,
+                  backgroundColor: Colors.white,
+                  page: '/BottomNavBar',
                 ),
-                child: FlatButton(
-                  onPressed: () {
-                    dataProvider.getToken();
-                  },
-                  child: Text(
-                    'Coba Lagi',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16),
+              )
+            : DefaultTabController(
+                length: 3,
+                child: Scaffold(
+                  appBar: appBar,
+                  body: Container(
+                    child: TabBarView(
+                      children: [
+                        Container(child: WidgetMenuPembelian()),
+                        Container(child: WidgetMenuPenjualan()),
+                        Container(child: WidgetPengajuanList()),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          )),
-    )
-        : !blocAuth.isLogin
-        ? Container(
-      color: Colors.white,
-      child: LoginWidget(
-        primaryColor: Colors.white,
-        backgroundColor: Colors.white,
-        page: '/BottomNavBar',
-      ),
-    )
-        : DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: appBar,
-        body: Container(
-          child: TabBarView(
-            children: [
-              Container(child: WidgetMenuPembelian()),
-              Container(child: WidgetMenuPenjualan()),
-              Container(child: WidgetPengajuanList()),
-            ],
-          ),
-        ),
-      ),
-    );
+              );
   }
 }

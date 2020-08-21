@@ -44,8 +44,8 @@ class WidgetGridKategori extends StatelessWidget {
                           tileMode: TileMode.clamp),
                     ),
                     child: new Center(
-                      child: Image.asset(
-                        'assets/kategori/' + blocProduk.listCategory[j].icon,
+                      child: Image.network(
+                        'http://m-bangun.com/api-v2/assets/kategori/' + blocProduk.listCategory[j].icon.toString(),
                         height: 30,
                         width: 30,
                       ),

@@ -249,23 +249,32 @@ class BlocProfile extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().getTokoByParam(param);
-    if (result['meta']['success']) {
-      _dataToko = result['data'][0];
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405' || result.toString() == 'Conncetion Error') {
+      _connection = false;
       _isLoading = false;
       notifyListeners();
+      return result;
     } else {
-      _isLoading = false;
-      notifyListeners();
+      if (result['meta']['success']) {
+        _dataToko = result['data'][0];
+        _isLoading = false;
+        notifyListeners();
+      } else {
+        _isLoading = false;
+        notifyListeners();
+      }
     }
   }
 
   bool _connection = false;
 
+  bool get connection => _connection;
+
   updateToko(List<File> files, body) async {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().updateToko(files, body);
-    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405' || result.toString() == '8') {
       _connection = false;
       _isLoading = false;
       notifyListeners();

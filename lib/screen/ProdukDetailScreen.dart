@@ -118,8 +118,7 @@ class ProdukDetailScreen extends StatelessWidget {
                           onPressed: () {
                             if (blocAuth.isLogin) {
 //                           Navigator.
-                            } else {
-                            }
+                            } else {}
                           },
                         ),
                         _buttonBuy(context)
@@ -133,20 +132,21 @@ class ProdukDetailScreen extends StatelessWidget {
   }
 
   Widget _buttonBuy(context) {
+    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
     return Container(
       child: InkWell(
         onTap: () {
-          _showDialog(context);
+          blocProduk.detailProduct[0].stok == '0' ? '' : _showDialog(context);
         },
         child: Center(
             child: Text(
-          'Beli',
+          blocProduk.detailProduct[0].stok == '0' ? 'Stok tidak tersedia' : 'Beli',
           style: TextStyle(color: Colors.white),
         )),
       ),
       height: 40,
       width: MediaQuery.of(context).size.width * 0.7,
-      decoration: BoxDecoration(color: Colors.cyan, borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(color: blocProduk.detailProduct[0].stok == '0' ? Colors.grey[400] : Colors.cyan, borderRadius: BorderRadius.circular(20)),
     );
   }
 
@@ -154,13 +154,14 @@ class ProdukDetailScreen extends StatelessWidget {
     imageCache.clear();
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    blocAuth.checkSession();
     if (!blocAuth.isLogin) {
       Navigator.push(
           context,
           SlideRightRoute(
               page: LoginScreen(
-            param: 'product',
-          )));
+                param: 'product',
+              )));
     } else {
       Future<void> future = showModalBottomSheet<void>(
         isScrollControlled: true,
@@ -211,7 +212,10 @@ class ProdukDetailScreen extends StatelessWidget {
                                         child: Image.network('https://m-bangun.com/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto, width: 50, height: 80,
                                             errorBuilder: (context, urlImage, error) {
                                               print(error.hashCode);
-                                              return Image.asset('assets/logo.png');
+                                              return Image.asset(
+                                                'assets/logo.png',
+                                                height: 40,
+                                              );
                                             }),
                                       ),
                                       Column(
@@ -268,7 +272,7 @@ class ProdukDetailScreen extends StatelessWidget {
                                         ],
                                       ),
                                       Container(
-                                        margin: const EdgeInsets.only(left: 0.0, top: 0, bottom: 40.0),
+                                        margin: const EdgeInsets.only(left: 0.0, top: 0, bottom: 30.0),
                                         child: Theme(
                                           data: ThemeData(
                                               accentColor: Colors.black,
@@ -280,7 +284,12 @@ class ProdukDetailScreen extends StatelessWidget {
                                                   color: Colors.grey[400],
                                                 ),
                                               )),
-                                          child: NumberPicker.integer(
+                                          child: blocProduk.detailProduct[0].stok == '1'
+                                              ? Text(
+                                            '1',
+                                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                                          )
+                                              : NumberPicker.integer(
                                             initialValue: blocOrder.jumlah,
                                             minValue: 1,
                                             maxValue: int.parse(blocProduk.detailProduct[0].stok),
@@ -330,17 +339,29 @@ class ProdukDetailScreen extends StatelessWidget {
                           map["id_toko"] = blocProduk.detailProduct[0].idToko;
                           map["jenis_ongkir"] = blocProduk.detailProduct[0].jenisOngkir;
                           map["catatan"] = blocOrder.catatan;
-                          var response = await blocOrder.addToCart(map);
-                          if (response) {
-                            _btnController.success();
-                            blocOrder.getCart();
-                            await new Future.delayed(const Duration(seconds: 1));
-                            Navigator.pop(context);
-                          } else {
-                            _btnController.error();
-                            await new Future.delayed(const Duration(seconds: 1));
-                            _btnController.reset();
-                          }
+                          var result = blocProduk.getCurrentStokProduk({'id': blocProduk.detailProduct[0].id.toString()});
+                          result.then((value) async {
+                            print(value['stok']);
+                            if (value['stok'] != '0') {
+                              var response = await blocOrder.addToCart(map);
+                              if (response) {
+                                _btnController.success();
+                                blocOrder.getCart();
+                                await new Future.delayed(const Duration(seconds: 1));
+                                Navigator.pop(context);
+                              } else {
+                                _btnController.error();
+                                await new Future.delayed(const Duration(seconds: 1));
+                                _btnController.reset();
+                              }
+                            } else {
+                              _btnController.error();
+                              await new Future.delayed(const Duration(seconds: 1));
+                              _btnController.reset();
+                              Navigator.pop(context);
+                              blocProduk.getDetailProductByParam({'id': blocProduk.detailProduct[0].id.toString()});
+                            }
+                          });
                         },
                       )
                     ],

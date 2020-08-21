@@ -42,10 +42,6 @@ class WidgetProdukTerjual extends StatelessWidget {
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
                           )),
-                      Text(
-                        'Temukan produk bangunan disini',
-                        style: TextStyle(fontSize: 14),
-                      ),
                     ],
                   ),
                 ),
@@ -80,10 +76,11 @@ class WidgetProdukTerjual extends StatelessWidget {
               blocProduk.listProdukTerjual.isEmpty ? 1 : blocProduk.listProdukTerjual.length,
               (j) {
                 final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
-                var avgRating = blocProduk.listProdukTerjual[j].avg_rating == null ? '0' : blocProduk.listProdukTerjual[j].avg_rating;
-                var jumlahRating = blocProduk.listProdukTerjual[j].jumlah_rating == null ? '0' : blocProduk.listProdukTerjual[j].jumlah_rating;
+                var avgRating = blocProduk.listProdukTerjual.isEmpty || blocProduk.listProdukTerjual[j].avg_rating == null ? '0' : blocProduk.listProdukTerjual[j].avg_rating;
+                var jumlahRating = blocProduk.listProdukTerjual.isEmpty ? '0' : blocProduk.listProdukTerjual[j].jumlah_rating;
                 var harga = blocProduk.listProdukTerjual.isEmpty ? '0' : blocProduk.listProdukTerjual[j].harga;
                 var hargaFormat = Money.fromInt(harga == null ? 0 : int.parse(harga), IDR);
+                print(blocProduk.listProdukTerjual.isEmpty);
                 if (blocProduk.listProdukTerjual.isEmpty) {
                   return Center(
                     child: Text('Tidak ada data'),

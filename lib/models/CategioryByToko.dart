@@ -6,6 +6,7 @@
 class CategioryByToko {
   String id;
   String idKategori;
+  String idToko;
   String nama;
   String icon;
 
@@ -14,14 +15,17 @@ class CategioryByToko {
     CategioryByToko categioryByTokoBean = CategioryByToko();
     categioryByTokoBean.id = map['id'];
     categioryByTokoBean.idKategori = map['id_kategori'];
+    categioryByTokoBean.idToko = map['id_toko'];
     categioryByTokoBean.nama = map['nama'];
     categioryByTokoBean.icon = map['icon'];
     return categioryByTokoBean;
   }
 
-  Map toJson() => {
+  Map toJson() =>
+      {
         "id": id,
         "id_kategori": idKategori,
+        "id_toko": idToko,
         "nama": nama,
         "icon": icon,
       };

@@ -7,7 +7,6 @@ import 'package:package_info/package_info.dart';
 
 class BlocAuth extends ChangeNotifier {
   BlocAuth() {
-//    checkSession();
     getCurrentUser();
   }
 
@@ -93,13 +92,15 @@ class BlocAuth extends ChangeNotifier {
   }
 
   getCurrentUser() {
-    _googleSignIn.signInSilently();
-    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) async {
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
+      _currentUser = account;
       if (account != null) {
-        _currentUser = account;
         checkSession();
+      } else {
+        handleSignOut();
       }
     });
+    _googleSignIn.signInSilently();
   }
 
   checkSession() async {
@@ -108,16 +109,18 @@ class BlocAuth extends ChangeNotifier {
     notifyListeners();
     await Future.delayed(Duration(milliseconds: 1), () {
       _googleSignIn.isSignedIn().then((value) async {
+        print(_currentUser);
         if (value) {
           if (_currentUser == null) {
             getCurrentUser();
-            _connection = false;
+            _connection = true;
             _isLoading = false;
+            _isLogin = false;
             notifyListeners();
           } else {
             var queryString = {'username': _currentUser.email, 'id_google': _currentUser.id};
             var result = await AuthRepository().googleSign(queryString);
-            if (result.toString() == '111' || result.toString() == '101') {
+            if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
               _connection = false;
               _isLoading = false;
               notifyListeners();
@@ -187,7 +190,7 @@ class BlocAuth extends ChangeNotifier {
     notifyListeners();
     var param = {'': ''};
     var result = await AuthRepository().checkVersionApp(param);
-    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       notifyListeners();

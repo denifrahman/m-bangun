@@ -16,9 +16,10 @@ import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class CheckoutScreen extends StatelessWidget {
   final Cart listCart;
+  final int index;
   final int subtotal;
 
-  CheckoutScreen({Key key, this.listCart, this.subtotal}) : super(key: key);
+  CheckoutScreen({Key key, this.listCart, this.subtotal, this.index}) : super(key: key);
   final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
   final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -304,17 +305,31 @@ class CheckoutScreen extends StatelessWidget {
                               Map body = {'data_order': data_order, 'data_produk': data_produk, 'data_penerima': data_penerima};
 
                               var rajaOngkir = blocOrder.listCart[0].chilrdern.where((element) => element.jenisOngkir == 'raja_ongkir').length;
-                              print(blocOrder.listMetodePembayaranSelected.isNotEmpty);
-                              if (rajaOngkir == 0 && blocOrder.listMetodePembayaranSelected.isNotEmpty && blocProfile.listUserAddressDefault.isNotEmpty) {
-                                Navigator.push(context, SlideRightRoute(page: WidgetWaitingPayment(body: body)));
-                                print('pembayaran free ongkir');
-                              } else if (blocOrder.listCostSelected.isNotEmpty &&
-                                  rajaOngkir == 1 &&
-                                  blocOrder.listMetodePembayaranSelected.isNotEmpty &&
-                                  blocProfile.listUserAddressDefault.isNotEmpty) {
-                                print('cost');
-                                Navigator.push(context, SlideRightRoute(page: WidgetWaitingPayment(body: body)));
-                              }
+                              var result = blocOrder.getCart();
+                              result.then((value) {
+                                var aktif = value[index]['chilrdern'].where((element) => element['aktif'] == '0').length;
+                                var stok = value[index]['chilrdern'].where((element) => element['stok'] == '0').length;
+                                if (aktif <= 0 && stok <= 0) {
+                                  print('push');
+                                  if (rajaOngkir == 0 && blocOrder.listMetodePembayaranSelected.isNotEmpty && blocProfile.listUserAddressDefault.isNotEmpty) {
+                                    Navigator.push(context, SlideRightRoute(page: WidgetWaitingPayment(body: body)));
+                                    print('pembayaran free ongkir');
+                                  } else if (blocOrder.listCostSelected.isNotEmpty &&
+                                      rajaOngkir == 1 &&
+                                      blocOrder.listMetodePembayaranSelected.isNotEmpty &&
+                                      blocProfile.listUserAddressDefault.isNotEmpty) {
+                                    print('cost');
+                                    Navigator.push(context, SlideRightRoute(page: WidgetWaitingPayment(body: body)));
+                                  }
+                                } else {
+                                  _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                    content: Text('Barang tidak tersedia'),
+                                    backgroundColor: Colors.red,
+                                    duration: Duration(seconds: 3),
+                                  ));
+                                  print('not');
+                                }
+                              });
                             },
                           ),
                         ),

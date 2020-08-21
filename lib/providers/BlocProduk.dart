@@ -31,8 +31,8 @@ class BlocProduk extends ChangeNotifier {
     Toko('https://m-bangun.com/wp-content/uploads/2020/07/properti-2.png', 'Boat roackerz 100 On-Ear Bluetooth Headphones', 'description', 122222, 1),
   ];
 
-  bool _connection = false;
   bool _isLoading = false;
+  bool _connection = false;
 
   bool get connection => _connection;
 
@@ -69,7 +69,7 @@ class BlocProduk extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().getAllProduct(param);
-    if (result.toString() == '111' || result.toString() == '101') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '8') {
       _connection = false;
       _isLoading = false;
       _listProducts = [];
@@ -97,11 +97,12 @@ class BlocProduk extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().getAllProduct(param);
-    if (result.toString() == '111' || result.toString() == '101') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       _detailProduct = [];
       notifyListeners();
+      return result['data'];
     } else {
       var id = await LocalStorage.sharedInstance.readValue('id_user_login');
       var body = {'id_user_login': '1', 'id_produk': param['id'], 'id_user_login': id.toString()};
@@ -111,7 +112,13 @@ class BlocProduk extends ChangeNotifier {
       _isLoading = false;
       _connection = true;
       notifyListeners();
+      return result['data'];
     }
+  }
+
+  Future<dynamic> getCurrentStokProduk(param) async {
+    var result = await UserRepository().getAllProduct(param);
+    return result['data'][0];
   }
 
   getFavoriteProductByParam(param) async {
@@ -120,7 +127,7 @@ class BlocProduk extends ChangeNotifier {
     notifyListeners();
     var result = await UserRepository().getFavoriteProduct(param);
 //    print(result);
-    if (result.toString() == '111' || result.toString() == '101') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       _listProducts = [];
@@ -144,7 +151,7 @@ class BlocProduk extends ChangeNotifier {
     notifyListeners();
     var param = {'id': id.toString()};
     var result = await UserRepository().getDetailStore(param);
-    if (result.toString() == '111' || result.toString() == '101') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _detailStore = [];
       _isLoading = false;
@@ -170,7 +177,8 @@ class BlocProduk extends ChangeNotifier {
     notifyListeners();
     var param = {'': ''};
     var result = await UserRepository().getOfficialStore(param);
-    if (result.toString() == '111' || result.toString() == '101') {
+
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _isLoading = false;
       _connection = false;
       _listOfficialStore = [];
@@ -194,7 +202,7 @@ class BlocProduk extends ChangeNotifier {
     notifyListeners();
     var param = {'': ''};
     var result = await UserRepository().getAllIklan(param);
-    if (result.toString() == '111' || result.toString() == '101') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _isLoading = false;
       _connection = false;
       _listIklan = [];
@@ -218,7 +226,7 @@ class BlocProduk extends ChangeNotifier {
     notifyListeners();
     var param = {'show_on_homepage': '1'};
     var result = await UserRepository().getCategory(param);
-    if (result.toString() == '111' || result.toString() == '101') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       _listOfficialStore = [];
@@ -242,7 +250,7 @@ class BlocProduk extends ChangeNotifier {
     notifyListeners();
     var param = {'id_toko': id_toko.toString()};
     var result = await UserRepository().getCategoryByToko(param);
-    if (result.toString() == '111' || result.toString() == '101') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       _listCategoryByToko = [];
@@ -266,7 +274,7 @@ class BlocProduk extends ChangeNotifier {
     notifyListeners();
     var param = {'aktif': '1'};
     var result = await UserRepository().getRecentProduct(param);
-    if (result.toString() == '111' || result.toString() == '101') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       _listRecentProduct = [];
@@ -290,7 +298,7 @@ class BlocProduk extends ChangeNotifier {
     notifyListeners();
     var param = {'id_toko': id_toko.toString(), 'aktif': '1'};
     var result = await UserRepository().getProdukTerjual(param);
-    if (result.toString() == '111' || result.toString() == '101') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       _listOfficialStore = [];
@@ -308,7 +316,7 @@ class BlocProduk extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().addProduk(files, body);
-    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       notifyListeners();
@@ -331,7 +339,7 @@ class BlocProduk extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().updateProduk(files, body);
-    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       notifyListeners();
@@ -354,7 +362,7 @@ class BlocProduk extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().updateStatus(body);
-    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       notifyListeners();
@@ -388,25 +396,32 @@ class BlocProduk extends ChangeNotifier {
     if (currentIdProvinsi == null) {
     } else {
       var result = await RajaOngkirRepository().getProvince({'id': currentIdProvinsi.toString()});
-      _namaProvinsi = result['rajaongkir']['results']['province'];
-      notifyListeners();
-      String currentIdKota = await LocalStorage.sharedInstance.readValue('idKota');
-      if (currentIdKota != 'null') {
-        var param = {'id': currentIdKota.toString()};
-        var result = await RajaOngkirRepository().getCity(param);
-        _namaKota = result['rajaongkir']['results']['city_name'];
+      if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405' || result.toString() == 'Conncetion Error') {
+        _connection = false;
+        _isLoading = false;
         notifyListeners();
+        return false;
       } else {
-        _namaKota = null;
-      }
-      String currentIdKecamatan = await LocalStorage.sharedInstance.readValue('idKecamatan');
-      if (currentIdKecamatan != 'null') {
-        var param = {'id': currentIdKota.toString()};
-        var result = await RajaOngkirRepository().getSubDistrict(param);
-        _namaKecamatan = result['rajaongkir']['results']['subdistrict_name'];
+        _namaProvinsi = result['rajaongkir']['results']['province'];
         notifyListeners();
-      } else {
-        _namaKecamatan = null;
+        String currentIdKota = await LocalStorage.sharedInstance.readValue('idKota');
+        if (currentIdKota != 'null') {
+          var param = {'id': currentIdKota.toString()};
+          var result = await RajaOngkirRepository().getCity(param);
+          _namaKota = result['rajaongkir']['results']['city_name'];
+          notifyListeners();
+        } else {
+          _namaKota = null;
+        }
+        String currentIdKecamatan = await LocalStorage.sharedInstance.readValue('idKecamatan');
+        if (currentIdKecamatan != 'null') {
+          var param = {'id': currentIdKota.toString()};
+          var result = await RajaOngkirRepository().getSubDistrict(param);
+          _namaKecamatan = result['rajaongkir']['results']['subdistrict_name'];
+          notifyListeners();
+        } else {
+          _namaKecamatan = null;
+        }
       }
     }
   }

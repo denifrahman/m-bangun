@@ -71,249 +71,206 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
         )
       ],
     );
-    return ModalProgressHUD(
-      inAsyncCall: blocProduk.isLoading,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: appBar,
-        body: blocProduk.detailProduct.isEmpty
-            ? Center(child: PKCardListSkeleton())
-            : SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      children: [
-                        success
-                            ? SnackBarLauncher(
-                                error: 'Berhasil ditambahkan',
-                                color: Colors.green,
-                              )
-                            : Container(),
-                        error
-                            ? SnackBarLauncher(
-                                error: 'Tidak ada perubahan',
-                                color: Colors.red,
-                              )
-                            : Container(),
-                        Container(
-                          height: 70,
-                          child: TextFormField(
-                            initialValue: blocProduk.detailProduct[0].nama,
-                            onSaved: (value) {
-                              setState(() {
-                                nama = value;
-                              });
-                            },
-                            keyboardType: TextInputType.text,
-                            validator: (String arg) {
-                              if (arg.length < 1)
-                                return 'Nama Produk Harus di isi';
-                              else
-                                return null;
-                            },
-                            decoration: InputDecoration(
-                              hintText: 'Nama Produk',
-                              labelText: 'Nama Produk',
-                              labelStyle: TextStyle(fontSize: 16),
-                              hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: ModalProgressHUD(
+        inAsyncCall: blocProduk.isLoading,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: appBar,
+          body: blocProduk.detailProduct.isEmpty
+              ? Center(child: PKCardListSkeleton())
+              : SingleChildScrollView(
+                  child: Form(
+                    key: _formKey,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        children: [
+                          success
+                              ? SnackBarLauncher(
+                                  error: 'Berhasil ditambahkan',
+                                  color: Colors.green,
+                                )
+                              : Container(),
+                          error
+                              ? SnackBarLauncher(
+                                  error: 'Tidak ada perubahan',
+                                  color: Colors.red,
+                                )
+                              : Container(),
+                          Container(
+                            height: 70,
+                            child: TextFormField(
+                              initialValue: blocProduk.detailProduct[0].nama,
+                              onSaved: (value) {
+                                setState(() {
+                                  nama = value;
+                                });
+                              },
+                              keyboardType: TextInputType.text,
+                              validator: (String arg) {
+                                if (arg.length < 1)
+                                  return 'Nama Produk Harus di isi';
+                                else
+                                  return null;
+                              },
+                              decoration: InputDecoration(
+                                hintText: 'Nama Produk',
+                                labelText: 'Nama Produk',
+                                labelStyle: TextStyle(fontSize: 16),
+                                hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          height: 70,
-                          width: MediaQuery.of(context).size.width,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                height: 100,
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                child: TextFormField(
-                                  initialValue: blocProduk.detailProduct[0].berat,
-                                  onSaved: (value) {
-                                    setState(() {
-                                      berat = value;
-                                    });
-                                  },
-                                  keyboardType: TextInputType.number,
-                                  validator: (String arg) {
-                                    if (arg.length < 1)
-                                      return 'Berat Produk Harus di isi';
-                                    else
-                                      return null;
-                                  },
-                                  decoration: InputDecoration(
-                                    suffixText: 'gram',
-                                    hintText: 'Berat',
-                                    labelText: 'Berat',
-                                    labelStyle: TextStyle(fontSize: 16),
-                                    hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                          Container(
+                            height: 70,
+                            width: MediaQuery.of(context).size.width,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  height: 100,
+                                  width: MediaQuery.of(context).size.width * 0.3,
+                                  child: TextFormField(
+                                    initialValue: blocProduk.detailProduct[0].berat,
+                                    onSaved: (value) {
+                                      setState(() {
+                                        berat = value;
+                                      });
+                                    },
+                                    keyboardType: TextInputType.number,
+                                    validator: (String arg) {
+                                      if (arg.length < 1)
+                                        return 'Berat Produk Harus di isi';
+                                      else
+                                        return null;
+                                    },
+                                    decoration: InputDecoration(
+                                      suffixText: 'gram',
+                                      hintText: 'Berat',
+                                      labelText: 'Berat',
+                                      labelStyle: TextStyle(fontSize: 16),
+                                      hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Container(
-                                height: 70,
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                child: TextFormField(
-                                  initialValue: blocProduk.detailProduct[0].harga,
-                                  onSaved: (value) {
-                                    setState(() {
-                                      harga = value;
-                                    });
-                                  },
-                                  keyboardType: TextInputType.number,
-                                  validator: (String arg) {
-                                    if (arg.length < 1)
-                                      return 'Harga Produk Harus di isi';
-                                    else
-                                      return null;
-                                  },
-                                  decoration: InputDecoration(
-                                    hintText: 'Harga Produk',
-                                    labelText: 'Harga Produk',
-                                    prefixText: 'Rp ',
-                                    labelStyle: TextStyle(fontSize: 16),
-                                    hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                Container(
+                                  height: 70,
+                                  width: MediaQuery.of(context).size.width * 0.6,
+                                  child: TextFormField(
+                                    initialValue: blocProduk.detailProduct[0].harga,
+                                    onSaved: (value) {
+                                      setState(() {
+                                        harga = value;
+                                      });
+                                    },
+                                    keyboardType: TextInputType.number,
+                                    validator: (String arg) {
+                                      if (arg.length < 1)
+                                        return 'Harga Produk Harus di isi';
+                                      else
+                                        return null;
+                                    },
+                                    decoration: InputDecoration(
+                                      hintText: 'Harga Produk',
+                                      labelText: 'Harga Produk',
+                                      prefixText: 'Rp ',
+                                      labelStyle: TextStyle(fontSize: 16),
+                                      hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          height: 70,
-                          width: MediaQuery.of(context).size.width,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                height: 100,
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                child: TextFormField(
-                                  initialValue: blocProduk.detailProduct[0].panjang,
-                                  onSaved: (value) {
-                                    setState(() {
-                                      panjang = value;
-                                    });
-                                  },
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    suffixText: 'cm',
-                                    hintText: 'Panjang',
-                                    labelText: 'Panjang',
-                                    labelStyle: TextStyle(fontSize: 16),
-                                    hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                height: 70,
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                child: TextFormField(
-                                  initialValue: blocProduk.detailProduct[0].stok,
-                                  onSaved: (value) {
-                                    setState(() {
-                                      stok = value;
-                                    });
-                                  },
-                                  keyboardType: TextInputType.number,
-                                  validator: (String arg) {
-                                    if (arg.length < 1)
-                                      return 'Stok Produk Harus di isi';
-                                    else
-                                      return null;
-                                  },
-                                  decoration: InputDecoration(
-                                    hintText: 'Stok',
-                                    labelText: 'Stok',
-                                    labelStyle: TextStyle(fontSize: 16),
-                                    hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          height: 70,
-                          child: TextFormField(
-                            initialValue: blocProduk.detailProduct[0].minimalPesanan,
-                            onSaved: (value) {
-                              setState(() {
-                                minimal_pesanan = value;
-                              });
-                            },
-                            keyboardType: TextInputType.number,
-                            validator: (String arg) {
-                              if (arg.length < 1)
-                                return 'Minimal pemesanan Produk Harus di isi';
-                              else
-                                return null;
-                            },
-                            decoration: InputDecoration(
-                              hintText: 'Minimal pemesanan',
-                              labelText: 'Minimal pemesanan',
-                              labelStyle: TextStyle(fontSize: 16),
-                              hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                              ],
                             ),
                           ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width - 10,
-                          child: DropdownButtonFormField<String>(
-                            isDense: true,
-                            hint: new Text(
-                              "Pilih Kategori",
-                              style: TextStyle(color: Colors.grey, fontSize: 12),
+                          Container(
+                            height: 70,
+                            width: MediaQuery.of(context).size.width,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  height: 100,
+                                  width: MediaQuery.of(context).size.width * 0.6,
+                                  child: TextFormField(
+                                    initialValue: blocProduk.detailProduct[0].panjang,
+                                    onSaved: (value) {
+                                      setState(() {
+                                        panjang = value;
+                                      });
+                                    },
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      suffixText: 'cm',
+                                      hintText: 'Panjang',
+                                      labelText: 'Panjang',
+                                      labelStyle: TextStyle(fontSize: 16),
+                                      hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  height: 70,
+                                  width: MediaQuery.of(context).size.width * 0.3,
+                                  child: TextFormField(
+                                    initialValue: blocProduk.detailProduct[0].stok,
+                                    onSaved: (value) {
+                                      setState(() {
+                                        stok = value;
+                                      });
+                                    },
+                                    keyboardType: TextInputType.number,
+                                    validator: (String arg) {
+                                      if (arg.length < 1)
+                                        return 'Stok Produk Harus di isi';
+                                      else
+                                        return null;
+                                    },
+                                    decoration: InputDecoration(
+                                      hintText: 'Stok',
+                                      labelText: 'Stok',
+                                      labelStyle: TextStyle(fontSize: 16),
+                                      hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            value: blocProduk.detailProduct[0].idKategori,
-                            validator: (String arg) {
-                              if (arg == null)
-                                return 'Harus di isi';
-                              else
-                                return null;
-                            },
-                            onChanged: (String value) {
-                              setState(() {
-                                id_kategori = value;
-                              });
-                            },
-                            items: blocProduk.listCategory.isEmpty
-                                ? null
-                                : blocProduk.listCategory.map((Categories item) {
-                                    return new DropdownMenuItem<String>(
-                                      value: item.id,
-                                      child: Row(
-                                        children: [
-                                          Image.asset(
-                                            'assets/kategori/' + item.icon,
-                                            height: 30,
-                                            width: 30,
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          new Text(
-                                            item.nama.toString(),
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(),
                           ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width - 10,
-                          child: DropdownButtonFormField<String>(
+                          Container(
+                            height: 70,
+                            child: TextFormField(
+                              initialValue: blocProduk.detailProduct[0].minimalPesanan,
+                              onSaved: (value) {
+                                setState(() {
+                                  minimal_pesanan = value;
+                                });
+                              },
+                              keyboardType: TextInputType.number,
+                              validator: (String arg) {
+                                if (arg.length < 1)
+                                  return 'Minimal pemesanan Produk Harus di isi';
+                                else
+                                  return null;
+                              },
+                              decoration: InputDecoration(
+                                hintText: 'Minimal pemesanan',
+                                labelText: 'Minimal pemesanan',
+                                labelStyle: TextStyle(fontSize: 16),
+                                hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width - 10,
+                            child: DropdownButtonFormField<String>(
                               isDense: true,
                               hint: new Text(
-                                "Pilih Kondisi",
+                                "Pilih Kategori",
                                 style: TextStyle(color: Colors.grey, fontSize: 12),
                               ),
-                              value: blocProduk.detailProduct[0].kondisi,
+                              value: blocProduk.detailProduct[0].idKategori,
                               validator: (String arg) {
                                 if (arg == null)
                                   return 'Harus di isi';
@@ -322,209 +279,255 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
                               },
                               onChanged: (String value) {
                                 setState(() {
-                                  kondisi = value;
+                                  id_kategori = value;
                                 });
                               },
-                              items: [
-                                {'label': 'baru'},
-                                {'label': 'bekas'}
-                              ].map((e) {
-                                return DropdownMenuItem<String>(
-                                  value: e['label'],
-                                  child: new Text(
-                                    e['label'].toString(),
-                                    style: TextStyle(fontSize: 12),
+                              items: blocProduk.listCategory.isEmpty
+                                  ? null
+                                  : blocProduk.listCategory.map((Categories item) {
+                                      return new DropdownMenuItem<String>(
+                                        value: item.id,
+                                        child: Row(
+                                          children: [
+                                            Image.asset(
+                                              'assets/kategori/' + item.icon,
+                                              height: 30,
+                                              width: 30,
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            new Text(
+                                              item.nama.toString(),
+                                              style: TextStyle(fontSize: 12),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }).toList(),
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width - 10,
+                            child: DropdownButtonFormField<String>(
+                                isDense: true,
+                                hint: new Text(
+                                  "Pilih Kondisi",
+                                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                                ),
+                                value: blocProduk.detailProduct[0].kondisi,
+                                validator: (String arg) {
+                                  if (arg == null)
+                                    return 'Harus di isi';
+                                  else
+                                    return null;
+                                },
+                                onChanged: (String value) {
+                                  setState(() {
+                                    kondisi = value;
+                                  });
+                                },
+                                items: [
+                                  {'label': 'baru'},
+                                  {'label': 'bekas'}
+                                ].map((e) {
+                                  return DropdownMenuItem<String>(
+                                    value: e['label'],
+                                    child: new Text(
+                                      e['label'].toString(),
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                  );
+                                }).toList()),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width - 10,
+                            child: DropdownButtonFormField<String>(
+                                isDense: true,
+                                hint: new Text(
+                                  "Pilih Pengiriman",
+                                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                                ),
+                                value: blocProduk.detailProduct[0].jenisOngkir,
+                                validator: (String arg) {
+                                  if (arg == null)
+                                    return 'Harus di isi';
+                                  else
+                                    return null;
+                                },
+                                onChanged: (String value) {
+                                  setState(() {
+                                    jenis_ongkir = value;
+                                  });
+                                },
+                                items: [
+                                  {'label': 'expedisi', 'value': 'raja_ongkir'},
+                                  {'label': 'free ongkir seluruh kota', 'value': 'include'},
+                                  {'label': 'free ongkir dalam kota', 'value': 'include_dalam_kota'},
+                                ].map((e) {
+                                  return DropdownMenuItem<String>(
+                                    value: e['value'],
+                                    child: new Text(
+                                      e['label'].toString(),
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                  );
+                                }).toList()),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      new Text(
+                                        'Foto',
+                                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.grey),
+                                      ),
+                                      Container(
+                                        height: 20,
+                                      ),
+                                      foto != null
+                                          ? Image.file(
+                                              foto,
+                                              fit: BoxFit.fitHeight,
+                                              alignment: Alignment.topCenter,
+                                              width: 80,
+                                              height: 80,
+                                            )
+                                          : blocProduk.detailProduct[0].foto == null
+                                              ? Container()
+                                              : Image.network(
+                                                  'https://m-bangun.com/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto,
+                                                ),
+                                      Container(
+                                        height: 20,
+                                      ),
+                                      Container(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: IconButton(
+                                          highlightColor: Colors.green,
+                                          icon: Icon(Icons.camera_alt),
+                                          onPressed: () {
+                                            _openImagePickerModal(context, 'foto');
+                                          },
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                );
-                              }).toList()),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width - 10,
-                          child: DropdownButtonFormField<String>(
-                              isDense: true,
-                              hint: new Text(
-                                "Pilih Pengiriman",
-                                style: TextStyle(color: Colors.grey, fontSize: 12),
+                                ),
                               ),
-                              value: blocProduk.detailProduct[0].jenisOngkir,
-                              validator: (String arg) {
-                                if (arg == null)
-                                  return 'Harus di isi';
-                                else
-                                  return null;
-                              },
-                              onChanged: (String value) {
-                                setState(() {
-                                  jenis_ongkir = value;
-                                });
-                              },
-                              items: [
-                                {'label': 'expedisi', 'value': 'raja_ongkir'},
-                                {'label': 'free ongkir seluruh kota', 'value': 'include'},
-                                {'label': 'free ongkir dalam kota', 'value': 'include_dalam_kota'},
-                              ].map((e) {
-                                return DropdownMenuItem<String>(
-                                  value: e['value'],
-                                  child: new Text(
-                                    e['label'].toString(),
-                                    style: TextStyle(fontSize: 12),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      new Text(
+                                        'Foto 2',
+                                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.grey),
+                                      ),
+                                      Container(
+                                        height: 20,
+                                      ),
+                                      foto1 != null
+                                          ? Image.file(
+                                              foto1,
+                                              fit: BoxFit.fitHeight,
+                                              alignment: Alignment.topCenter,
+                                              width: 80,
+                                              height: 80,
+                                            )
+                                          : blocProduk.detailProduct[0].foto1 == null
+                                              ? Container()
+                                              : Image.network(
+                                                  'https://m-bangun.com/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto1,
+                                                ),
+                                      Container(
+                                        height: 20,
+                                      ),
+                                      Container(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: IconButton(
+                                          icon: Icon(Icons.camera_alt),
+                                          onPressed: () {
+                                            _openImagePickerModal(context, 'foto1');
+                                          },
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                );
-                              }).toList()),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    new Text(
-                                      'Foto',
-                                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.grey),
-                                    ),
-                                    Container(
-                                      height: 20,
-                                    ),
-                                    foto != null
-                                        ? Image.file(
-                                            foto,
-                                            fit: BoxFit.fitHeight,
-                                            alignment: Alignment.topCenter,
-                                            width: 80,
-                                            height: 80,
-                                          )
-                                        : blocProduk.detailProduct[0].foto == null
-                                            ? Container()
-                                            : Image.network(
-                                                'https://m-bangun.com/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto,
-                                              ),
-                                    Container(
-                                      height: 20,
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      child: IconButton(
-                                        highlightColor: Colors.green,
-                                        icon: Icon(Icons.camera_alt),
-                                        onPressed: () {
-                                          _openImagePickerModal(context, 'foto');
-                                        },
-                                      ),
-                                    )
-                                  ],
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    new Text(
-                                      'Foto 2',
-                                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.grey),
-                                    ),
-                                    Container(
-                                      height: 20,
-                                    ),
-                                    foto1 != null
-                                        ? Image.file(
-                                            foto1,
-                                            fit: BoxFit.fitHeight,
-                                            alignment: Alignment.topCenter,
-                                            width: 80,
-                                            height: 80,
-                                          )
-                                        : blocProduk.detailProduct[0].foto1 == null
-                                            ? Container()
-                                            : Image.network(
-                                                'https://m-bangun.com/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto1,
-                                              ),
-                                    Container(
-                                      height: 20,
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      child: IconButton(
-                                        icon: Icon(Icons.camera_alt),
-                                        onPressed: () {
-                                          _openImagePickerModal(context, 'foto1');
-                                        },
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      new Text(
+                                        'Foto 2',
+                                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.grey),
                                       ),
-                                    )
-                                  ],
+                                      Container(
+                                        height: 20,
+                                      ),
+                                      foto2 != null
+                                          ? Image.file(
+                                              foto2,
+                                              fit: BoxFit.fitHeight,
+                                              alignment: Alignment.topCenter,
+                                              width: 80,
+                                              height: 80,
+                                            )
+                                          : blocProduk.detailProduct[0].foto2 == null
+                                              ? Container()
+                                              : Image.network(
+                                                  'https://m-bangun.com/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto2,
+                                                ),
+                                      Container(
+                                        height: 20,
+                                      ),
+                                      Container(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: IconButton(
+                                          icon: Icon(Icons.camera_alt),
+                                          onPressed: () {
+                                            _openImagePickerModal(context, 'foto2');
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    new Text(
-                                      'Foto 2',
-                                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.grey),
-                                    ),
-                                    Container(
-                                      height: 20,
-                                    ),
-                                    foto2 != null
-                                        ? Image.file(
-                                            foto2,
-                                            fit: BoxFit.fitHeight,
-                                            alignment: Alignment.topCenter,
-                                            width: 80,
-                                            height: 80,
-                                          )
-                                        : blocProduk.detailProduct[0].foto2 == null
-                                            ? Container()
-                                            : Image.network(
-                                                'https://m-bangun.com/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto2,
-                                              ),
-                                    Container(
-                                      height: 20,
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      child: IconButton(
-                                        icon: Icon(Icons.camera_alt),
-                                        onPressed: () {
-                                          _openImagePickerModal(context, 'foto2');
-                                        },
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 20,
-                        ),
-                        HtmlEditor(
-                          value: blocProduk.detailProduct[0].deskripsi,
-                          key: keyEditor,
-                          showBottomToolbar: true,
-                          useBottomSheet: true,
-                          widthImage: '50%',
-                          height: 400,
-                        ),
-                        Container(
-                          height: 20,
-                        ),
-                      ],
+                            ],
+                          ),
+                          Container(
+                            height: 20,
+                          ),
+                          HtmlEditor(
+                            value: blocProduk.detailProduct[0].deskripsi.toString(),
+                            key: keyEditor,
+                            showBottomToolbar: true,
+                            useBottomSheet: false,
+                            widthImage: '50%',
+                            height: 400,
+                          ),
+                          Container(
+                            height: 20,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+        ),
       ),
     );
   }
@@ -598,6 +601,24 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
     }
   }
 
+  Future<bool> _onWillPop() {
+    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    if (blocProduk.isLoading) {
+      return showDialog(
+        context: context,
+        builder: (context) =>
+            AlertDialog(
+              backgroundColor: Colors.amber,
+              title: Text('Produk sedang di upload'),
+              content: Text('Proses upload sedang berlangsng silahkan tunggu'),
+            ),
+      ) ??
+          false;
+    } else {
+      Navigator.pop(context);
+    }
+  }
+
   void _openImagePickerModal(BuildContext context, param) {
     showModalBottomSheet(
         context: context,
@@ -635,7 +656,7 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
   }
 
   void _getImage(BuildContext context, ImageSource source, param) async {
-    File image = await ImagePicker.pickImage(source: source, maxHeight: 1000, maxWidth: 1000, imageQuality: 100);
+    File image = await ImagePicker.pickImage(source: source, imageQuality: 50);
     if (param == 'foto') {
       setState(() {
         foto = image;

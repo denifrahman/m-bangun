@@ -153,10 +153,12 @@ class WidgetHeaderDetailProduct extends StatelessWidget {
                       SizedBox(
                         width: 5,
                       ),
-                      Image.asset(
-                        'assets/icons/verified.png',
-                        height: 12,
-                      ),
+                      blocProduk.detailProduct[0].jenisToko == 'toko'
+                          ? Container()
+                          : Image.asset(
+                              'assets/icons/verified.png',
+                              height: 12,
+                            ),
                     ],
                   ),
                   Row(

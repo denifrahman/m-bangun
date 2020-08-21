@@ -30,7 +30,14 @@ class WidgetSlider extends StatelessWidget {
             builder: (BuildContext context) {
               return InkWell(
                 onTap: () {
-//                  _openDetailNews(post.link, post.title.rendered, context);
+                  blocProduk.getDetailStore(i.idToko);
+                  Navigator.push(
+                      context,
+                      SlideRightRoute(
+                          page: DetailTokoScreen(
+                        id: i.idToko,
+                        image: i.baner,
+                      )));
                 },
                 child: Card(
                   semanticContainer: true,
@@ -61,8 +68,12 @@ class WidgetSlider extends StatelessWidget {
         context,
         SlideRightRoute(
             page: DetailTokoScreen(
-          id: param.id,
-          image: param.fotoSampul,
-        )));
+              id: param.id,
+              image: param.fotoSampul,
+            )));
+  }
+
+  void _openDetailToko(context) {
+    Navigator.push(context, SlideRightRoute(page: DetailTokoScreen()));
   }
 }

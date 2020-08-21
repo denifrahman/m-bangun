@@ -21,6 +21,13 @@ class ShopItemList extends StatefulWidget {
 class _ShopItemListState extends State<ShopItemList> {
   int quantity = 1;
   final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
+  var oldValue;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +136,7 @@ class _ShopItemListState extends State<ShopItemList> {
                       ],
                     ),
                     Container(
-                      margin: const EdgeInsets.only(left: 0.0, top: 0, bottom: 55.0),
+                      margin: const EdgeInsets.only(left: 0.0, top: 0, bottom: 49.0),
                       child: Theme(
                         data: ThemeData(
                             accentColor: Colors.black,
@@ -140,21 +147,29 @@ class _ShopItemListState extends State<ShopItemList> {
                                 color: Colors.grey[400],
                               ),
                             )),
-                        child: NumberPicker.integer(
-                          initialValue: int.parse(widget.chilrdern.jumlah),
-                          minValue: 1,
-                          maxValue: 900,
-                          step: 1,
-                          onChanged: (value) {
-                            var body = {
-                              'id': widget.chilrdern.id.toString(),
-                              'id_produk': widget.chilrdern.idProduk,
-                              'jumlah': value.toString(),
-                              'harga': widget.chilrdern.harga.toString(),
-                              'subtotal': (int.parse(widget.chilrdern.harga) * value).toString()
-                            };
-                            blocOrder.updateCart(body);
-                          },
+                        child: widget.chilrdern.stok == '1'
+                            ? Text(
+                                '1',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                              )
+                            : NumberPicker.integer(
+                                initialValue: int.parse(widget.chilrdern.jumlah),
+                                minValue: 1,
+                                maxValue: int.parse(widget.chilrdern.stok),
+                                step: 1,
+                                onChanged: (value) {
+                                  setState(() {
+                                    oldValue = value;
+                                  });
+                                  var body = {
+                                    'id': widget.chilrdern.id.toString(),
+                                    'id_produk': widget.chilrdern.idProduk,
+                                    'jumlah': oldValue.toString(),
+                                    'harga': widget.chilrdern.harga.toString(),
+                                    'subtotal': (int.parse(widget.chilrdern.harga) * value).toString()
+                                  };
+                                  blocOrder.updateCart(body);
+                                },
                           itemExtent: 30,
                           listViewWidth: 30,
                         ),

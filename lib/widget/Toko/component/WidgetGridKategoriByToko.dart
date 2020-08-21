@@ -74,7 +74,7 @@ class WidgetGridKategoriByToko extends StatelessWidget {
 
   _openListProduk(BuildContext context, listCategoryByToko) {
     BlocAuth blocAuth = Provider.of(context);
-    Provider.of<BlocProduk>(context).getAllProductByParam({'id_kategori': listCategoryByToko.idKategori.toString(), 'aktif': '1', 'id_toko': blocAuth.idToko.toString()});
+    Provider.of<BlocProduk>(context).getAllProductByParam({'id_kategori': listCategoryByToko.idKategori.toString(), 'aktif': '1', 'id_toko': listCategoryByToko.idToko.toString()});
     Navigator.push(
         context,
         SlideRightRoute(

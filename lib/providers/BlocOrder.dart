@@ -103,7 +103,7 @@ class BlocOrder extends ChangeNotifier {
 
   addToCart(body) async {
     var result = await OrderRepository().addToCart(body);
-    if (result.toString() == '111' || result.toString() == '101') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       getCart();
       notifyListeners();
@@ -126,19 +126,18 @@ class BlocOrder extends ChangeNotifier {
 
   List<Cart> get listCart => _listCart;
 
-  getCart() async {
+  Future<dynamic> getCart() async {
     _isLoading = true;
     notifyListeners();
     var id = await LocalStorage.sharedInstance.readValue('id_user_login');
     var param = {'id_user_login': id.toString()};
     var result = await OrderRepository().getCart(param);
-//    print(result);
-    if (result.toString() == '111' || result.toString() == '101') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       _listCart = [];
       notifyListeners();
-      return false;
+      return result['data'];
     } else {
       if (result['meta']['success']) {
         _isLoading = false;
@@ -147,13 +146,13 @@ class BlocOrder extends ChangeNotifier {
         Iterable list = result['data'];
         _listCart = list.map((model) => Cart.fromMap(model)).toList();
         notifyListeners();
-        return true;
+        return result['data'];
       } else {
         _connection = false;
         _isLoading = false;
         _listCart = [];
         notifyListeners();
-        return false;
+        return result['data'];
       }
     }
   }
@@ -319,7 +318,7 @@ class BlocOrder extends ChangeNotifier {
     notifyListeners();
     var param = {'id_pembeli': _id_user_login.toString()};
     var result = await OrderRepository().getOrderByParam(param);
-    if (result.toString() == '111' || result.toString() == '101') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       _listCart = [];
@@ -348,7 +347,7 @@ class BlocOrder extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await OrderRepository().getOrderByParam(param);
-    if (result.toString() == '111' || result.toString() == '101') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       _listCart = [];

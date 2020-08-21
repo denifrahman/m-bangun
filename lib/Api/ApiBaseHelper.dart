@@ -22,9 +22,10 @@ class ApiBaseHelper {
       final _url = Uri.http(_baseUrl, _path + url, param);
       final response = await http.get(_url);
       responseJson = _returnResponse(response);
-    } on SocketException catch (err) {
-      return AppException(err.osError.errorCode, err.message);
+    } on SocketException {
+      return 'Conncetion Error';
     }
+
     return responseJson;
   }
 
@@ -36,15 +37,13 @@ class ApiBaseHelper {
       final response = await http.post(_url, body: body);
       responseJson = _returnResponse(response);
     } on SocketException catch (err) {
-      print(err.osError);
-      return AppException(err.osError.errorCode, err.message);
+      return 'Conncetion Error';
     }
     return responseJson;
   }
 
   Future<dynamic> multipart(String url, files, body) async {
     var responseJson;
-    var client = new http.Client();
     try {
       final _url = Uri.http(_baseUrl, _path + url);
       var request = new http.MultipartRequest("POST", _url);
@@ -56,18 +55,15 @@ class ApiBaseHelper {
         }
       }
       request.fields.addAll(body);
-      int byteCount = 0;
-      print('${request.fields.values.toString()}' + 'test');
       var response = await request.send();
       final result = await http.Response.fromStream(response);
-
       if (result.statusCode == 200) {
         responseJson = _returnResponse(result);
       } else {
         responseJson = result.statusCode.toString();
       }
     } on SocketException catch (err) {
-      return AppException(err.osError.errorCode, err.message);
+      return 'Conncetion Error';
     }
     return responseJson;
   }

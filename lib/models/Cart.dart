@@ -1,5 +1,5 @@
 /// flag : "Toko Anugerah"
-/// chilrdern : [{"id":"110","created_at":"2020-08-14 20:14:41.279496","id_produk":"29","id_user_login":"45","jumlah":"14","harga":"5000000","subtotal":"70000000","id_toko":"1","jenis_ongkir":"include_dalam_kota","catatan":"","foto":"scaled_image_picker6724287038539896222.jpg","nama":"semen gresik","nama_toko":"Toko Anugerah","id_kecamatan":"6131","foto_toko":"ramayana.png","berat":"100000","id_kota":"444","id_provinsi":"11"},{"id":"109","created_at":"2020-08-14 19:40:32.506459","id_produk":"27","id_user_login":"45","jumlah":"1","harga":"1000000","subtotal":"1000000","id_toko":"1","jenis_ongkir":"raja_ongkir","catatan":"","foto":"scaled_image_picker5911815857486830770.jpg","nama":"batako","nama_toko":"Toko Anugerah","id_kecamatan":"6131","foto_toko":"ramayana.png","berat":"100000","id_kota":"444","id_provinsi":"11"},{"id":"108","created_at":"2020-08-14 19:40:24.746809","id_produk":"28","id_user_login":"45","jumlah":"1","harga":"500000","subtotal":"500000","id_toko":"1","jenis_ongkir":"raja_ongkir","catatan":"","foto":"scaled_image_picker798869768074060374.jpg","nama":"asbes","nama_toko":"Toko Anugerah","id_kecamatan":"6131","foto_toko":"ramayana.png","berat":"10000","id_kota":"444","id_provinsi":"11"},{"id":"91","created_at":"2020-08-13 13:59:49.192174","id_produk":"31","id_user_login":"44","jumlah":"1","harga":"25000","subtotal":"25000","id_toko":"1","jenis_ongkir":"raja_ongkir","catatan":"","foto":"scaled_image_picker5306355590071312649.jpg","nama":"palu","nama_toko":"Toko Anugerah","id_kecamatan":"6131","foto_toko":"ramayana.png","berat":"5000","id_kota":"444","id_provinsi":"11"}]
+/// chilrdern : [{"id":"139","created_at":"2020-08-18 06:54:41.164384","id_produk":"31","id_user_login":"45","jumlah":"1","subtotal":"25000","id_toko":"1","jenis_ongkir":"raja_ongkir","catatan":"","foto":"scaled_image_picker5306355590071312649.jpg","nama":"palu","nama_toko":"Toko Anugerah","id_kecamatan":"6131","foto_toko":"image_picker_4D0BBF55-987F-48D2-81C4-E260925DDA17-2173-00000106BEC932A7.jpg","berat":"5000","id_kota":"444","id_provinsi":"11","stok":"94","harga":"25000","aktif":"0"}]
 
 class Cart {
   String flag;
@@ -19,24 +19,26 @@ class Cart {
       };
 }
 
-/// id : "110"
-/// created_at : "2020-08-14 20:14:41.279496"
-/// id_produk : "29"
+/// id : "139"
+/// created_at : "2020-08-18 06:54:41.164384"
+/// id_produk : "31"
 /// id_user_login : "45"
-/// jumlah : "14"
-/// harga : "5000000"
-/// subtotal : "70000000"
+/// jumlah : "1"
+/// subtotal : "25000"
 /// id_toko : "1"
-/// jenis_ongkir : "include_dalam_kota"
+/// jenis_ongkir : "raja_ongkir"
 /// catatan : ""
-/// foto : "scaled_image_picker6724287038539896222.jpg"
-/// nama : "semen gresik"
+/// foto : "scaled_image_picker5306355590071312649.jpg"
+/// nama : "palu"
 /// nama_toko : "Toko Anugerah"
 /// id_kecamatan : "6131"
-/// foto_toko : "ramayana.png"
-/// berat : "100000"
+/// foto_toko : "image_picker_4D0BBF55-987F-48D2-81C4-E260925DDA17-2173-00000106BEC932A7.jpg"
+/// berat : "5000"
 /// id_kota : "444"
 /// id_provinsi : "11"
+/// stok : "94"
+/// harga : "25000"
+/// aktif : "0"
 
 class ChilrdernBean {
   String id;
@@ -44,7 +46,6 @@ class ChilrdernBean {
   String idProduk;
   String idUserLogin;
   String jumlah;
-  String harga;
   String subtotal;
   String idToko;
   String jenisOngkir;
@@ -57,6 +58,9 @@ class ChilrdernBean {
   String berat;
   String idKota;
   String idProvinsi;
+  String stok;
+  String harga;
+  String aktif;
 
   static ChilrdernBean fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
@@ -66,7 +70,6 @@ class ChilrdernBean {
     chilrdernBean.idProduk = map['id_produk'];
     chilrdernBean.idUserLogin = map['id_user_login'];
     chilrdernBean.jumlah = map['jumlah'];
-    chilrdernBean.harga = map['harga'];
     chilrdernBean.subtotal = map['subtotal'];
     chilrdernBean.idToko = map['id_toko'];
     chilrdernBean.jenisOngkir = map['jenis_ongkir'];
@@ -79,6 +82,9 @@ class ChilrdernBean {
     chilrdernBean.berat = map['berat'];
     chilrdernBean.idKota = map['id_kota'];
     chilrdernBean.idProvinsi = map['id_provinsi'];
+    chilrdernBean.stok = map['stok'];
+    chilrdernBean.harga = map['harga'];
+    chilrdernBean.aktif = map['aktif'];
     return chilrdernBean;
   }
 
@@ -89,7 +95,6 @@ class ChilrdernBean {
         "id_produk": idProduk,
         "id_user_login": idUserLogin,
         "jumlah": jumlah,
-        "harga": harga,
         "subtotal": subtotal,
         "id_toko": idToko,
         "jenis_ongkir": jenisOngkir,
@@ -102,5 +107,8 @@ class ChilrdernBean {
         "berat": berat,
         "id_kota": idKota,
         "id_provinsi": idProvinsi,
+        "stok": stok,
+        "harga": harga,
+        "aktif": aktif,
       };
 }

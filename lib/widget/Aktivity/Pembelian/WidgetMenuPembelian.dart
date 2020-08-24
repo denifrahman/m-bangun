@@ -30,35 +30,18 @@ class WidgetMenuPembelian extends StatelessWidget {
                   style: TextStyle(fontSize: 16),
                 ),
                 leading: dataList[index] == 'Menunggu Pembayaran'
-                    ? Stack(
-                        children: <Widget>[
-                          Icon(
+                    ? blocOrder.countMenunggu.toString() == '0'
+                        ? Icon(
                             Icons.new_releases,
                             size: 33,
                             color: Colors.blue,
-                          ),
-                          Positioned(
-                            top: 0.0,
-                            right: 0.0,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                              alignment: Alignment.center,
-                              child: Text(
-                                blocOrder.countMenunggu.toString() == '0' ? '' : blocOrder.countMenunggu.toString(),
-                                style: TextStyle(color: Colors.white, fontSize: 10),
-                              ),
-                            ),
                           )
-                        ],
-                      )
-                    : dataList[index] == 'Menunggu Konfirmasi'
-                        ? Stack(
+                        : Stack(
                             children: <Widget>[
                               Icon(
-                                Icons.watch_later,
+                                Icons.new_releases,
                                 size: 33,
-                                color: Colors.amber,
+                                color: Colors.blue,
                               ),
                               Positioned(
                                 top: 0.0,
@@ -68,20 +51,26 @@ class WidgetMenuPembelian extends StatelessWidget {
                                   decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
                                   alignment: Alignment.center,
                                   child: Text(
-                                    blocOrder.countMenungguKonfirmasi.toString() == '0' ? '' : blocOrder.countMenungguKonfirmasi.toString(),
+                                    blocOrder.countMenunggu.toString() == '0' ? '' : blocOrder.countMenunggu.toString(),
                                     style: TextStyle(color: Colors.white, fontSize: 10),
                                   ),
                                 ),
                               )
                             ],
                           )
-                        : dataList[index] == 'Dikemas'
-                            ? Stack(
+                    : dataList[index] == 'Menunggu Konfirmasi'
+                        ? blocOrder.countMenungguKonfirmasi.toString() == '0'
+                            ? Icon(
+                                Icons.watch_later,
+                                size: 33,
+                                color: Colors.amber,
+                              )
+                            : Stack(
                                 children: <Widget>[
                                   Icon(
-                                    FontAwesomeIcons.shoppingBag,
-                                    color: Colors.orange,
+                                    Icons.watch_later,
                                     size: 33,
+                                    color: Colors.amber,
                                   ),
                                   Positioned(
                                     top: 0.0,
@@ -91,19 +80,25 @@ class WidgetMenuPembelian extends StatelessWidget {
                                       decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
                                       alignment: Alignment.center,
                                       child: Text(
-                                        blocOrder.countDikemas.toString() == '0' ? '' : blocOrder.countDikemas.toString(),
+                                        blocOrder.countMenungguKonfirmasi.toString() == '0' ? '' : blocOrder.countMenungguKonfirmasi.toString(),
                                         style: TextStyle(color: Colors.white, fontSize: 10),
                                       ),
                                     ),
                                   )
                                 ],
                               )
-                            : dataList[index] == 'Dikirim'
-                                ? Stack(
+                        : dataList[index] == 'Dikemas'
+                            ? blocOrder.countDikemas.toString() == '0'
+                                ? Icon(
+                                    FontAwesomeIcons.shoppingBag,
+                                    color: Colors.orange,
+                                    size: 33,
+                                  )
+                                : Stack(
                                     children: <Widget>[
                                       Icon(
-                                        FontAwesomeIcons.truckPickup,
-                                        color: Colors.cyan,
+                                        FontAwesomeIcons.shoppingBag,
+                                        color: Colors.orange,
                                         size: 33,
                                       ),
                                       Positioned(
@@ -114,26 +109,55 @@ class WidgetMenuPembelian extends StatelessWidget {
                                           decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
                                           alignment: Alignment.center,
                                           child: Text(
-                                            blocOrder.countDikirim.toString() == '0' ? '' : blocOrder.countDikirim.toString(),
+                                            blocOrder.countDikemas.toString() == '0' ? '' : blocOrder.countDikemas.toString(),
                                             style: TextStyle(color: Colors.white, fontSize: 10),
                                           ),
                                         ),
                                       )
                                     ],
-                )
-                    : dataList[index] == 'Selesai'
-                    ? Icon(
-                  Icons.assignment_turned_in,
-                  size: 33,
-                  color: Colors.green,
-                )
-                    : dataList[index] == 'Batal'
-                    ? Icon(
-                  Icons.backspace,
-                  size: 33,
-                  color: Colors.red,
-                )
-                    : Icon(Icons.backspace, color: Colors.red),
+                                  )
+                            : dataList[index] == 'Dikirim'
+                                ? blocOrder.countDikirim.toString() == '0'
+                                    ? Icon(
+                                        FontAwesomeIcons.truckPickup,
+                                        color: Colors.cyan,
+                                        size: 33,
+                                      )
+                                    : Stack(
+                                        children: <Widget>[
+                                          Icon(
+                                            FontAwesomeIcons.truckPickup,
+                                            color: Colors.cyan,
+                                            size: 33,
+                                          ),
+                                          Positioned(
+                                            top: 0.0,
+                                            right: 0.0,
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                blocOrder.countDikirim.toString() == '0' ? '' : blocOrder.countDikirim.toString(),
+                                                style: TextStyle(color: Colors.white, fontSize: 10),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                : dataList[index] == 'Selesai'
+                                    ? Icon(
+                                        Icons.assignment_turned_in,
+                                        size: 33,
+                                        color: Colors.green,
+                                      )
+                                    : dataList[index] == 'Batal'
+                                        ? Icon(
+                                            Icons.backspace,
+                                            size: 33,
+                                            color: Colors.red,
+                                          )
+                                        : Icon(Icons.backspace, color: Colors.red),
                 trailing: Icon(Icons.arrow_forward_ios)),
           );
         },

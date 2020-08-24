@@ -62,7 +62,12 @@ class _ShopItemListState extends State<ShopItemList> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(fontSize: 10, color: Colors.grey),
                               )
-                            : widget.chilrdern.jenisOngkir == 'include' ? Text('Free ongkir') : Text('')
+                            : widget.chilrdern.jenisOngkir == 'include'
+                                ? Text(
+                                    'Free ongkir',
+                                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                                  )
+                                : Text('')
                       ],
                     ),
                     Column(

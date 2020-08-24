@@ -23,8 +23,13 @@ class TokoSayaScreen extends StatelessWidget {
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     double width = MediaQuery.of(context).size.width;
     AppBar appBar = AppBar(
+//      backgroundColor: Colors.cyan[700],
       elevation: 0,
-      title: Text('Kelola Toko'),
+//      iconTheme: IconThemeData(color: Colors.white),
+      title: Text(
+        'Kelola Toko',
+        style: TextStyle(color: Colors.black),
+      ),
     );
     var appBarHeigh = appBar.preferredSize.height;
     return Scaffold(
@@ -53,7 +58,7 @@ class TokoSayaScreen extends StatelessWidget {
                           strutStyle: StrutStyle(fontSize: 14.0),
                           text: TextSpan(
                             style: TextStyle(
-                              color: Colors.grey[800],
+                              color: Colors.black,
                             ),
                             text: blocProfile.dataToko['nama_toko'],
                           ),
@@ -66,14 +71,14 @@ class TokoSayaScreen extends StatelessWidget {
                           child: Image.network('https://m-bangun.com/api-v2/assets/toko/' + blocProfile.dataToko['foto'], fit: BoxFit.contain,
 //                            width: 30,
                               errorBuilder: (context, urlImage, error) {
-                            print(error.hashCode);
-                            return Image.asset('assets/logo.png');
-                          }),
+                                print(error.hashCode);
+                                return Image.asset('assets/logo.png');
+                              }),
                         ),
                       ),
-                      subtitle: Text(blocProfile.dataToko['jenis_toko']),
+                      subtitle: Text(blocProfile.dataToko['jenis_toko'], style: TextStyle(color: Colors.grey),),
                       trailing: IconButton(
-                        icon: Icon(Icons.edit),
+                        icon: Icon(Icons.edit, color: Colors.black,),
                         onPressed: () {
                           blocProfile.getTokoByParam({'id_user': blocAuth.idUser.toString()});
                           Navigator.push(context, SlideRightRoute(page: WidgetUpdateToko())).then((value) {

@@ -249,6 +249,7 @@ class BlocProfile extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().getTokoByParam(param);
+    print(result);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;

@@ -42,7 +42,9 @@ class _KeranjangState extends State<Keranjang> {
             Expanded(
               child: SingleChildScrollView(
                 child: RefreshIndicator(
-                  onRefresh: () => blocOrder.getCart(),
+                  onRefresh: () async {
+                    onRefresh();
+                  },
                   child: Container(
                     height: (MediaQuery.of(context).size.height - 20) - (appBar.preferredSize.height + MediaQuery.of(context).padding.top),
                     child: Column(
@@ -175,24 +177,25 @@ class _KeranjangState extends State<Keranjang> {
                                           blocOrder.clearCost();
                                           int totalDalamKota = 0;
                                           int totalRajaOngkir = 0;
-                                          for (var k = 0; k < blocOrder.listCart[i].chilrdern.length; k++) {
-                                            var idKotaPembeli = blocProfile.id_city;
-                                            var idKotaToko = blocOrder.listCart[i].chilrdern[k].idKota;
-                                            var jenisOngkir = blocOrder.listCart[i].chilrdern[k].jenisOngkir;
-                                            if (jenisOngkir == 'include_dalam_kota') {
-                                              if (idKotaToko != idKotaPembeli) {
-                                                var beratTotal = int.parse(blocOrder.listCart[i].chilrdern[k].berat.toString()) *
-                                                    int.parse(blocOrder.listCart[i].chilrdern[k].jumlah.toString());
-                                                totalDalamKota += beratTotal;
+                                          if (blocProfile.listUserAddressDefault.isNotEmpty) {
+                                            for (var k = 0; k < blocOrder.listCart[i].chilrdern.length; k++) {
+                                              var idKotaPembeli = blocProfile.listUserAddressDefault[0].idKota;
+                                              var idKotaToko = blocOrder.listCart[i].chilrdern[k].idKota;
+                                              var jenisOngkir = blocOrder.listCart[i].chilrdern[k].jenisOngkir;
+                                              if (jenisOngkir == 'include_dalam_kota') {
+                                                if (idKotaToko != idKotaPembeli) {
+                                                  var beratTotal = int.parse(blocOrder.listCart[i].chilrdern[k].berat.toString()) *
+                                                      int.parse(blocOrder.listCart[i].chilrdern[k].jumlah.toString());
+                                                  totalDalamKota += beratTotal;
+                                                }
+                                              }
+                                              if (jenisOngkir == 'raja_ongkir') {
+                                                var beratTotal =
+                                                    int.parse(blocOrder.listCart[i].chilrdern[k].berat.toString()) *
+                                                        int.parse(blocOrder.listCart[i].chilrdern[k].jumlah.toString());
+                                                totalRajaOngkir += beratTotal;
                                               }
                                             }
-                                            if (jenisOngkir == 'raja_ongkir') {
-                                              var beratTotal =
-                                                  int.parse(blocOrder.listCart[i].chilrdern[k].berat.toString()) * int.parse(blocOrder.listCart[i].chilrdern[k].jumlah.toString());
-                                              totalRajaOngkir += beratTotal;
-                                            }
-                                          }
-                                          if (blocProfile.listUserAddressDefault.isNotEmpty) {
                                             var param = {
                                               'origin': idKecamatanToko.toString(),
                                               'destination': blocProfile.listUserAddressDefault[0].idKecamatan,
@@ -249,5 +252,12 @@ class _KeranjangState extends State<Keranjang> {
         ),
       ),
     );
+  }
+
+  onRefresh() async {
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+    Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
+    blocOrder.getCart();
   }
 }

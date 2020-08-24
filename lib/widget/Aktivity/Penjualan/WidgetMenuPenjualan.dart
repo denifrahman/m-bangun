@@ -31,104 +31,99 @@ class WidgetMenuPenjualan extends StatelessWidget {
                     style: TextStyle(fontSize: 16),
                   ),
                   leading: dataList[index] == 'Pesanan Baru'
-                      ? Stack(
-                    children: <Widget>[
-                      Icon(
-                        Icons.new_releases,
-                        size: 33,
-                        color: Colors.blue,
-                      ),
-                      Positioned(
-                        top: 0.0,
-                        right: 0.0,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                          alignment: Alignment.center,
-                          child: Text(
-                            blocOrder.countSaleMenungguKonfirmasi.toString() == '0' ? '' : blocOrder.countSaleMenungguKonfirmasi.toString(),
-                            style: TextStyle(color: Colors.white, fontSize: 10),
-                          ),
-                        ),
-                      )
-                    ],
-                  )
-                      : dataList[index] == 'Menunggu Konfirmasi'
-                      ? Stack(
-                    children: <Widget>[
-                      Icon(
-                        Icons.watch_later,
-                        size: 33,
-                        color: Colors.amber,
-                      ),
-                      Positioned(
-                        top: 0.0,
-                        right: 0.0,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                          alignment: Alignment.center,
-                          child: Text(
-                            blocOrder.countSaleMenungguKonfirmasi.toString() == '0' ? '' : blocOrder.countSaleMenungguKonfirmasi.toString(),
-                            style: TextStyle(color: Colors.white, fontSize: 10),
-                          ),
-                        ),
-                      )
-                    ],
-                  )
+                      ? blocOrder.countSaleMenungguKonfirmasi.toString() == '0'
+                          ? Icon(
+                              Icons.new_releases,
+                              size: 33,
+                              color: Colors.blue,
+                            )
+                          : Stack(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.new_releases,
+                                  size: 33,
+                                  color: Colors.blue,
+                                ),
+                                Positioned(
+                                  top: 0.0,
+                                  right: 0.0,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      blocOrder.countSaleMenungguKonfirmasi.toString() == '0' ? '' : blocOrder.countSaleMenungguKonfirmasi.toString(),
+                                      style: TextStyle(color: Colors.white, fontSize: 10),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )
                       : dataList[index] == 'Dikemas'
-                      ? Stack(
-                    children: <Widget>[
-                      Icon(
-                        FontAwesomeIcons.shoppingBag,
-                        color: Colors.deepOrange,
-                        size: 33,
-                      ),
-                      Positioned(
-                        top: 0.0,
-                        right: 0.0,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                          alignment: Alignment.center,
-                          child: Text(
-                            blocOrder.countSaleDikemas.toString() == '0' ? '' : blocOrder.countSaleDikemas.toString(),
-                            style: TextStyle(color: Colors.white, fontSize: 10),
-                          ),
-                        ),
-                      )
-                    ],
-                  )
-                      : dataList[index] == 'Dikirim'
-                      ? Stack(
-                    children: <Widget>[
-                      Icon(
-                        FontAwesomeIcons.truckPickup,
-                        color: Colors.cyan,
-                        size: 33,
-                      ),
-                      Positioned(
-                        top: 0.0,
-                        right: 0.0,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                          alignment: Alignment.center,
-                          child: Text(
-                            blocOrder.countSaleDikirim.toString() == '0' ? '' : blocOrder.countSaleDikirim.toString(),
-                            style: TextStyle(color: Colors.white, fontSize: 10),
-                          ),
-                        ),
-                      )
-                    ],
-                  )
-                      : dataList[index] == 'Selesai'
-                      ? Icon(
-                    Icons.assignment_turned_in,
-                    size: 33,
-                    color: Colors.green,
-                  )
-                      : Icon(Icons.delete, color: Colors.red),
+                          ? blocOrder.countSaleDikemas.toString() == '0'
+                              ? Icon(
+                                  FontAwesomeIcons.shoppingBag,
+                                  color: Colors.deepOrange,
+                                  size: 33,
+                                )
+                              : Stack(
+                                  children: <Widget>[
+                                    Icon(
+                                      FontAwesomeIcons.shoppingBag,
+                                      color: Colors.deepOrange,
+                                      size: 33,
+                                    ),
+                                    Positioned(
+                                      top: 0.0,
+                                      right: 0.0,
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          blocOrder.countSaleDikemas.toString() == '0' ? '' : blocOrder.countSaleDikemas.toString(),
+                                          style: TextStyle(color: Colors.white, fontSize: 10),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                )
+                          : dataList[index] == 'Dikirim'
+                              ? blocOrder.countSaleDikirim.toString() == '0'
+                                  ? Icon(
+                                      FontAwesomeIcons.truckPickup,
+                                      color: Colors.cyan,
+                                      size: 33,
+                                    )
+                                  : Stack(
+                                      children: <Widget>[
+                                        Icon(
+                                          FontAwesomeIcons.truckPickup,
+                                          color: Colors.cyan,
+                                          size: 33,
+                                        ),
+                                        Positioned(
+                                          top: 0.0,
+                                          right: 0.0,
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              blocOrder.countSaleDikirim.toString() == '0' ? '' : blocOrder.countSaleDikirim.toString(),
+                                              style: TextStyle(color: Colors.white, fontSize: 10),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                              : dataList[index] == 'Selesai'
+                                  ? Icon(
+                                      Icons.assignment_turned_in,
+                                      size: 33,
+                                      color: Colors.green,
+                                    )
+                                  : Icon(Icons.delete, color: Colors.red),
                   trailing: Icon(Icons.arrow_forward_ios)),
             ),
           );

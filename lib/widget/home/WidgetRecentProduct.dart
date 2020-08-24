@@ -147,12 +147,22 @@ class WidgetRecentProduct extends StatelessWidget {
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Container(
                                     child: Row(
                                       children: [
+                                        blocProduk.listRecentProduct.isEmpty
+                                            ? Container()
+                                            : blocProduk.listRecentProduct[j].jenisToko == 'official_store'
+                                                ? Image.asset(
+                                                    'assets/icons/verified.png',
+                                                    height: 10,
+                                                  )
+                                                : Container(),
                                         Container(
-                                          width: 75,
+                                          margin: EdgeInsets.only(left: 2),
+                                          width: MediaQuery.of(context).size.width * 0.20,
                                           child: RichText(
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1,
@@ -161,25 +171,19 @@ class WidgetRecentProduct extends StatelessWidget {
                                                 text: blocProduk.listRecentProduct[j].namaToko + ' '),
                                           ),
                                         ),
-                                        blocProduk.listRecentProduct.isEmpty
-                                            ? Container()
-                                            : blocProduk.listRecentProduct[j].jenisToko == 'official_store'
-                                            ? Image.asset(
-                                          'assets/icons/verified.png',
-                                          height: 10,
-                                        )
-                                            : Container()
                                       ],
                                     ),
                                   ),
-                                  SizedBox(height: 2,),
+                                  SizedBox(
+                                    height: 1,
+                                  ),
                                   Row(
                                     children: [
                                       SmoothStarRating(
                                         rating: double.parse(avgRating.toString()),
                                         isReadOnly: true,
                                         color: Colors.amber,
-                                        size: 9,
+                                        size: 8,
                                         borderColor: Colors.grey,
                                         filledIconData: Icons.star,
                                         halfFilledIconData: Icons.star_half,

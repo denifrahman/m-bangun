@@ -76,9 +76,9 @@ class ProfileScreen extends StatelessWidget {
                       'Profil',
                       style: TextStyle(
                         fontSize: 22.0,
-                        color: AppColors.kDarkBlue,
-                        fontWeight: FontWeight.w800,
-                      ),
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w800,
+                                    ),
                     ),
                     Row(
                       children: [
@@ -140,7 +140,7 @@ class ProfileScreen extends StatelessWidget {
                                     text: TextSpan(
                                         style: TextStyle(
                                           fontSize: 16.0,
-                                          color: AppColors.kDarkBlue,
+                                          color: Colors.white,
                                           fontWeight: FontWeight.w800,
                                         ),
                                         text: blocAuth.currentUser.displayName),
@@ -157,7 +157,7 @@ class ProfileScreen extends StatelessWidget {
                               strutStyle: StrutStyle(fontSize: 12.0),
                               text: TextSpan(
                                 style: TextStyle(
-                                  color: Colors.grey[800],
+                                  color: Colors.grey[300],
                                 ),
                                 text: blocAuth.currentUser.email,
                               ),

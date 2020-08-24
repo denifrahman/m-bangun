@@ -48,8 +48,7 @@ class WidgetFlexibleSpaceDetailProduct extends StatelessWidget {
                 ),
               );
             },
-            child: Image.network(
-              'https://m-bangun.com/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto, width: MediaQuery.of(context).size.width, fit: BoxFit.fitWidth,
+            child: Image.network('https://m-bangun.com/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto, width: MediaQuery.of(context).size.width, fit: BoxFit.fitWidth,
                 errorBuilder: (context, urlImage, error) {
               print(error.hashCode);
               return Image.asset('assets/logo.png');
@@ -65,11 +64,33 @@ class WidgetFlexibleSpaceDetailProduct extends StatelessWidget {
                 ),
               );
             },
-            child: Image.network('https://m-bangun.com/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto1, width: MediaQuery.of(context).size.width, fit: BoxFit.fitWidth,
+            child: Image.network('https://m-bangun.com/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto1, width: MediaQuery
+                .of(context)
+                .size
+                .width, fit: BoxFit.fitWidth,
                 errorBuilder: (context, urlImage, error) {
-              print(error.hashCode);
-              return Image.asset('assets/logo.png');
-            }),
+                  print(error.hashCode);
+                  return Image.asset('assets/logo.png');
+                }),
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                PageRouteTransition(
+                  animationType: AnimationType.slide_down,
+                  builder: (context) => PreviewFoto(urlFoto: 'https://m-bangun.com/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto2),
+                ),
+              );
+            },
+            child: Image.network('https://m-bangun.com/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto2, width: MediaQuery
+                .of(context)
+                .size
+                .width, fit: BoxFit.fitWidth,
+                errorBuilder: (context, urlImage, error) {
+                  print(error.hashCode);
+                  return Image.asset('assets/logo.png');
+                }),
           ),
         ],
         dotSize: 4.0,

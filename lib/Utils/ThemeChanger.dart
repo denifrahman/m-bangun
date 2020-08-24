@@ -14,7 +14,13 @@ ThemeData light = ThemeData(
       brightness: Brightness.light,
       color: Colors.white,
       iconTheme: IconThemeData(color: Colors.black),
-      textTheme: TextTheme(title: TextStyle(fontSize: 18, color: Colors.black, fontFamily: 'OpenSans-Regular', fontWeight: FontWeight.bold))),
+      textTheme: TextTheme(
+          title: TextStyle(
+        fontSize: 18,
+        color: Colors.black,
+        fontFamily: 'OpenSans-Regular',
+        fontWeight: FontWeight.bold,
+      ))),
 );
 
 ThemeData dark = ThemeData(

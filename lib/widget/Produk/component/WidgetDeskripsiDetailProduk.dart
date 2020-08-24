@@ -2,9 +2,9 @@ import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 import 'package:money2/money2.dart';
 import 'package:provider/provider.dart';
-
 class WidgetDeskripsiDetailProduk extends StatelessWidget {
   const WidgetDeskripsiDetailProduk({
     Key key,
@@ -111,6 +111,11 @@ class WidgetDeskripsiDetailProduk extends StatelessWidget {
                         child: Container(
                             color: Colors.white38,
                             child: Html(
+                              style: {
+                                "div": Style(
+                                  fontSize: FontSize.large,
+                                ),
+                              },
                               data: blocProduk.detailProduct[0].deskripsi,
                             )),
                       ),

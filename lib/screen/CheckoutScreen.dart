@@ -110,16 +110,28 @@ class CheckoutScreen extends StatelessWidget {
                                             Provider.of<BlocProfile>(context).getSubDistrictById(listCart.chilrdern[0].idKecamatan);
                                             Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
                                             blocOrder.clearCost();
-                                            int total = 0;
-                                            for (var k = 0; k < this.listCart.chilrdern.length; k++) {
-                                              var beratTotal = int.parse(this.listCart.chilrdern[k].berat.toString()) * int.parse(this.listCart.chilrdern[k].jumlah.toString());
-                                              total += beratTotal;
+                                            int totalDalamKota = 0;
+                                            int totalRajaOngkir = 0;
+                                            for (var k = 0; k < listCart.chilrdern.length; k++) {
+                                              var idKotaPembeli = blocProfile.listUserAddressDefault[0].idKota;
+                                              var idKotaToko = listCart.chilrdern[k].idKota;
+                                              var jenisOngkir = listCart.chilrdern[k].jenisOngkir;
+                                              if (jenisOngkir == 'include_dalam_kota') {
+                                                if (idKotaToko != idKotaPembeli) {
+                                                  var beratTotal = int.parse(listCart.chilrdern[k].berat.toString()) * int.parse(listCart.chilrdern[k].jumlah.toString());
+                                                  totalDalamKota += beratTotal;
+                                                }
+                                              }
+                                              if (jenisOngkir == 'raja_ongkir') {
+                                                var beratTotal = int.parse(listCart.chilrdern[k].berat.toString()) * int.parse(listCart.chilrdern[k].jumlah.toString());
+                                                totalRajaOngkir += beratTotal;
+                                              }
                                             }
                                             if (blocProfile.listUserAddressDefault.isNotEmpty) {
                                               var param = {
                                                 'origin': cart.idKecamatan.toString(),
                                                 'destination': blocProfile.listUserAddressDefault[0].idKecamatan,
-                                                'weight': total.toString()
+                                                'weight': (totalDalamKota + totalRajaOngkir) == 0 ? '1' : (totalDalamKota + totalRajaOngkir).toString()
                                               };
                                               blocOrder.getCost(param);
                                             }
@@ -144,8 +156,21 @@ class CheckoutScreen extends StatelessWidget {
                                     shrinkWrap: true,
                                     physics: NeverScrollableScrollPhysics(),
                                     itemBuilder: (_, j) {
-                                      print(blocOrder.listCart[0].chilrdern.where((element) => element.jenisOngkir == 'raja_ongkir').length);
+                                      var idKotaPembeli = blocProfile.listUserAddressDefault[0].idKota;
+                                      var idKotaToko = listCart.chilrdern[j].idKota;
+                                      print(blocOrder.listCart[0].chilrdern
+                                          .where((element) => element.jenisOngkir == 'raja_ongkir')
+                                          .length);
                                       if (blocOrder.listCart[0].chilrdern[j].jenisOngkir == 'raja_ongkir') {
+                                        return CardRajaOngkir(
+                                          listCart: listCart,
+                                          blocAuth: blocAuth,
+                                          blocOrder: blocOrder,
+                                          blocProfile: blocProfile,
+                                          IDR: IDR,
+                                          btnController: _btnController,
+                                        );
+                                      } else if (idKotaPembeli != idKotaToko && blocOrder.listCart[0].chilrdern[j].jenisOngkir == 'raja_ongkir') {
                                         return CardRajaOngkir(
                                           listCart: listCart,
                                           blocAuth: blocAuth,

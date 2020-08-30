@@ -1,7 +1,7 @@
-import 'package:apps/Utils/InAppWebHandleTest.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/widget/Pengajuan/component/WidgetCardMenu.dart';
+import 'package:apps/widget/Project/PengajuanProject.dart';
 import 'package:apps/widget/Toko/Pengajuan.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +37,7 @@ class WidgetMenu extends StatelessWidget {
                   Navigator.push(
                     context,
                     SlideRightRoute(
-                      page: InAppWebHandleTest(),
+                      page: PengajuanProject(),
                     ),
                   );
                 },

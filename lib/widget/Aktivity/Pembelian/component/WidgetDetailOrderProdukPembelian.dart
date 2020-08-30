@@ -46,7 +46,6 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
                           padding: EdgeInsets.all(10),
                           itemCount: blocOrder.listOrderDetailProduk.length,
                           itemBuilder: (_, j) {
-                            print(blocOrder.listOrderDetailProduk[j].statusUlasan);
                             return Card(
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),

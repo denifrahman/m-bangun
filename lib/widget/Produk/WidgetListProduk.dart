@@ -6,9 +6,10 @@ import 'package:apps/providers/BlocProfile.dart';
 import 'package:apps/screen/ProdukDetailScreen.dart';
 import 'package:apps/widget/Produk/WidgetOverViewProduk.dart';
 import 'package:flutter/material.dart';
+import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:money2/money2.dart';
 import 'package:provider/provider.dart';
-import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 
 class WidgetListProduk extends StatefulWidget {
   final String idSubKategori;
@@ -51,39 +52,41 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
     /*24 is for notification bar on Android*/
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
     final double itemWidth = size.width / 2;
-
-    return LazyLoadScrollView(
-      isLoading: blocProduk.isLoading,
-      onEndOfPage: () => loadMore(),
-      child: GridView.count(
+    return ModalProgressHUD(
+      inAsyncCall: blocProduk.isLoading,
+      child: LazyLoadScrollView(
+        isLoading: blocProduk.isLoading,
+        onEndOfPage: () => loadMore(),
+        child: GridView.count(
 //      shrinkWrap: true,
-        crossAxisCount: 2,
-        childAspectRatio: 0.8,
-        children: List.generate(
-          blocProduk.listProducts.length,
-          (j) {
-            var avgRating = blocProduk.listProducts[j].avg_rating == null ? '0' : blocProduk.listProducts[j].avg_rating;
-            var jumlahRating = blocProduk.listProducts[j].jumlah_rating == null ? '0' : blocProduk.listProducts[j].jumlah_rating;
-            var harga = blocProduk.listProducts[j].harga;
-            var hargaFormat = Money.fromInt(harga == null ? 0 : int.parse(harga), IDR);
-            return InkWell(
-              onTap: () {
-                blocProduk.getDetailProductByParam({'id': blocProduk.listProducts[j].id.toString()});
-                blocProfile.getCityParam({'id': blocProduk.listProducts[j].idKota.toString()});
-                blocOrder.getUlasanProduByParam({'id_produk': blocProduk.listProducts[j].id});
-                Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
-              },
-              child: WidgetOverViewProduk(
-                produkNama: blocProduk.listProducts[j].nama,
-                namaToko: blocProduk.listProducts[j].namaToko,
-                jenisToko: blocProduk.listProducts[j].jenisToko,
-                thumbnail: blocProduk.listProducts[j].foto,
-                avgRating: avgRating,
-                jumlahRating: jumlahRating,
-                harga: hargaFormat.toString(),
-              ),
-            );
-          },
+          crossAxisCount: 2,
+          childAspectRatio: 0.8,
+          children: List.generate(
+            blocProduk.listProducts.length,
+            (j) {
+              var avgRating = blocProduk.listProducts[j].avg_rating == null ? '0' : blocProduk.listProducts[j].avg_rating;
+              var jumlahRating = blocProduk.listProducts[j].jumlah_rating == null ? '0' : blocProduk.listProducts[j].jumlah_rating;
+              var harga = blocProduk.listProducts[j].harga;
+              var hargaFormat = Money.fromInt(harga == null ? 0 : int.parse(harga), IDR);
+              return InkWell(
+                onTap: () {
+                  blocProduk.getDetailProductByParam({'id': blocProduk.listProducts[j].id.toString()});
+                  blocProfile.getCityParam({'id': blocProduk.listProducts[j].idKota.toString()});
+                  blocOrder.getUlasanProduByParam({'id_produk': blocProduk.listProducts[j].id});
+                  Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
+                },
+                child: WidgetOverViewProduk(
+                  produkNama: blocProduk.listProducts[j].nama,
+                  namaToko: blocProduk.listProducts[j].namaToko,
+                  jenisToko: blocProduk.listProducts[j].jenisToko,
+                  thumbnail: blocProduk.listProducts[j].foto,
+                  avgRating: avgRating,
+                  jumlahRating: jumlahRating,
+                  harga: hargaFormat.toString(),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

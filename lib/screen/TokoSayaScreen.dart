@@ -66,7 +66,7 @@ class TokoSayaScreen extends StatelessWidget {
                     width: 60.0,
                     height: 60.0,
                     child: ClipOval(
-                      child: Image.network('https://m-bangun.com/api-v2/assets/toko/' + blocProfile.dataToko['foto'], fit: BoxFit.contain,
+                      child: Image.network('https://m-bangun.com/api-v2/assets/toko/' + blocProfile.dataToko['foto'].toString(), fit: BoxFit.contain,
 //                            width: 30,
                           errorBuilder: (context, urlImage, error) {
                         print(error.hashCode);
@@ -75,7 +75,7 @@ class TokoSayaScreen extends StatelessWidget {
                     ),
                   ),
                   subtitle: Text(
-                    blocProfile.dataToko['jenis_toko'],
+                    blocProfile.dataToko.isEmpty ? '' : blocProfile.dataToko['jenis_toko'],
                     style: TextStyle(color: Colors.grey),
                   ),
                   trailing: IconButton(

@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:money2/money2.dart';
 import 'package:provider/provider.dart';
+import 'package:sup/sup.dart';
 
 class Keranjang extends StatefulWidget {
   Keranjang({Key key}) : super(key: key);
@@ -50,18 +51,29 @@ class _KeranjangState extends State<Keranjang> {
                     child: Column(
                       children: [
                         Expanded(
-                          child: ListView.builder(
-                            itemCount: blocOrder.listCart.length,
-                            itemBuilder: (_, i) {
-                              var subTotal = blocOrder.listCart[i].chilrdern.map<int>((m) => int.parse(m.subtotal)).reduce((a, b) => a + b);
-                              return Container(
-                                child: Column(
-                                  children: [
-                                    Divider(
-                                      thickness: 2,
+                          child: blocOrder.listCart.isEmpty
+                              ? Center(
+                                  child: Sup(
+                                    title: Text('Belanja dulu yuk !!!'),
+                                    image: Image.asset(
+                                      'assets/icons/empty_cart.png',
+                                      height: 150,
                                     ),
-                                    Container(
-                                      color: Colors.white,
+                                    subtitle: Text('Data tidak tersedia'),
+                                  ),
+                                )
+                              : ListView.builder(
+                                  itemCount: blocOrder.listCart.length,
+                                  itemBuilder: (_, i) {
+                                    var subTotal = blocOrder.listCart[i].chilrdern.map<int>((m) => int.parse(m.subtotal)).reduce((a, b) => a + b);
+                                    return Container(
+                                      child: Column(
+                                        children: [
+                                          Divider(
+                                            thickness: 2,
+                                          ),
+                                          Container(
+                                            color: Colors.white,
                                       padding: EdgeInsets.symmetric(horizontal: 10),
                                       child: InkWell(
                                         onTap: () {

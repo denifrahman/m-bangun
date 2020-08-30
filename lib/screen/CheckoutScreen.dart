@@ -12,6 +12,7 @@ import 'package:apps/widget/ShippingAddress/WidgetListPembayaran.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:money2/money2.dart';
 import 'package:pk_skeleton/pk_skeleton.dart';
 import 'package:provider/provider.dart';
@@ -43,258 +44,254 @@ class CheckoutScreen extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       appBar: appBar,
-      body: blocProfile.isLoading
-          ? Center(
-        child: CircularProgressIndicator(),
-      )
-          : Column(
-        children: [
-          Container(
-            height: (MediaQuery.of(context).size.height * 0.9 - appBar.preferredSize.height) - MediaQuery.of(context).padding.top,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: Column(
-                  children: [
-                    Container(
-                      color: Colors.white,
-                      margin: const EdgeInsets.only(top: 10.0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          title: Text(listCart.flag, style: TextStyle(fontWeight: FontWeight.bold)),
-                          subtitle: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Dikirim dari '),
-                              Text(blocProfile.listSubDistrictById.isEmpty ? '' : blocProfile.listSubDistrictById[0].city, style: TextStyle(color: Colors.black)),
-                            ],
-                          ),
-                          leading: Image.network(
-                            'https://m-bangun.com/api-v2/assets/toko/' + listCart.chilrdern[0].fotoToko,
-                            width: 40,
-                            height: 80,
+      body: ModalProgressHUD(
+        inAsyncCall: blocProfile.isLoading || blocOrder.isLoading,
+        child: Column(
+          children: [
+            Container(
+              height: (MediaQuery.of(context).size.height * 0.9 - appBar.preferredSize.height) - MediaQuery.of(context).padding.top,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(0.0),
+                  child: Column(
+                    children: [
+                      Container(
+                        color: Colors.white,
+                        margin: const EdgeInsets.only(top: 10.0),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListTile(
+                            title: Text(listCart.flag, style: TextStyle(fontWeight: FontWeight.bold)),
+                            subtitle: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Dikirim dari '),
+                                Text(blocProfile.listSubDistrictById.isEmpty ? '' : blocProfile.listSubDistrictById[0].city, style: TextStyle(color: Colors.black)),
+                              ],
+                            ),
+                            leading: Image.network(
+                              'https://m-bangun.com/api-v2/assets/toko/' + listCart.chilrdern[0].fotoToko,
+                              width: 40,
+                              height: 80,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Container(
-                      color: blocProfile.listUserAddressDefault.isNotEmpty ? Colors.white : Colors.red.withOpacity(0.2),
-                      margin: const EdgeInsets.only(top: 10.0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          title: Text('Alamat Penerima'),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                blocProfile.listUserAddressDefault.isEmpty
-                                    ? ''
-                                    : '#' + blocProfile.listUserAddressDefault[0].namaPenerima + ' ' + '(' + blocProfile.listUserAddressDefault[0].namaAlamat + ')',
-                              ),
-                              Text(
-                                blocProfile.listUserAddressDefault.isEmpty ? '' : blocProfile.listUserAddressDefault[0].alamatLengkap,
-                              ),
-                            ],
-                          ),
-                          leading: Icon(FontAwesomeIcons.addressBook),
-                          trailing: Container(
-                            height: 30,
-                            width: 80,
-                            child: new Row(
-                              children: <Widget>[
-                                new Expanded(
-                                    child: RoundedLoadingButton(
-                                      child: Text('Ubah', style: TextStyle(color: Colors.white, fontSize: 12)),
-                                      color: Colors.cyan[700],
-                                      controller: _btnController,
-                                      onPressed: () {
-                                        blocProfile.getAllUserAddress(blocAuth.idUser);
-                                        Navigator.push(context, SlideRightRoute(page: ShippingAddressScreen())).then((value) {
-                                          Provider.of<BlocProfile>(context).getSubDistrictById(listCart.chilrdern[0].idKecamatan);
-                                          Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
-                                          blocOrder.clearCost();
-                                          for (var k = 0; k < listCart.chilrdern.length; k++) {
-                                            var idKotaPembeli = blocProfile.listUserAddressDefault[0].idKota;
-                                            var idKotaToko = listCart.chilrdern[k].idKota;
-                                            var jenisOngkir = listCart.chilrdern[k].jenisOngkir;
-                                            if (jenisOngkir == 'include_dalam_kota') {
-                                              if (idKotaToko != idKotaPembeli) {
-                                                var beratTotal = int.parse(listCart.chilrdern[k].berat.toString()) * int.parse(listCart.chilrdern[k].jumlah.toString());
-                                                totalDalamKota += beratTotal;
-                                              }
-                                            }
-                                            if (jenisOngkir == 'raja_ongkir') {
-                                              var beratTotal = int.parse(listCart.chilrdern[k].berat.toString()) * int.parse(listCart.chilrdern[k].jumlah.toString());
-                                              totalRajaOngkir += beratTotal;
-                                            }
-                                          }
-                                          if (blocProfile.listUserAddressDefault.isNotEmpty) {
-                                            var param = {
-                                              'origin': cart.idKecamatan.toString(),
-                                              'destination': blocProfile.listUserAddressDefault[0].idKecamatan,
-                                              'weight': (totalDalamKota + totalRajaOngkir) == 0 ? '1' : (totalDalamKota + totalRajaOngkir).toString()
-                                            };
-                                            blocOrder.getCost(param);
-                                          }
-                                        });
-                                        _btnController.reset();
-                                      },
-                                    )),
-                              ],
-                            ),
+                      Container(
+                        color: blocProfile.listUserAddressDefault.isNotEmpty ? Colors.white : Colors.red.withOpacity(0.2),
+                        margin: const EdgeInsets.only(top: 10.0),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListTile(
+                            title: Text('Alamat Penerima'),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  blocProfile.listUserAddressDefault.isEmpty
+                                      ? ''
+                                      : '#' + blocProfile.listUserAddressDefault[0].namaPenerima + ' ' + '(' + blocProfile.listUserAddressDefault[0].namaAlamat + ')',
                                 ),
-                              ),
-                            ),
-                          ),
-                          blocOrder.isLoading
-                              ? Container(
-                                  height: 100,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: PKCardListSkeleton(),
-                                )
-                              : blocProfile.listUserAddressDefault.isEmpty
-                                  ? Container()
-                                  : Container(
-                                      child: ListView.builder(
-                                        shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        itemBuilder: (_, j) {
-                                          var idKotaPembeli = blocProfile.listUserAddressDefault[0].idKota;
-                                          var idKotaToko = listCart.chilrdern[j].idKota;
-                                          print(blocOrder.listCart[0].chilrdern.where((element) => element.jenisOngkir == 'raja_ongkir').length);
-                                          if (blocOrder.listCart[0].chilrdern[j].jenisOngkir == 'raja_ongkir') {
-                                            return CardRajaOngkir(
-                                              listCart: listCart,
-                                              blocAuth: blocAuth,
-                                              blocOrder: blocOrder,
-                                              blocProfile: blocProfile,
-                                              IDR: IDR,
-                                              btnController: _btnController,
-                                            );
-                                          } else if (idKotaPembeli != idKotaToko && blocOrder.listCart[0].chilrdern[j].jenisOngkir == 'raja_ongkir') {
-                                            return CardRajaOngkir(
-                                              listCart: listCart,
-                                              blocAuth: blocAuth,
-                                              blocOrder: blocOrder,
-                                              blocProfile: blocProfile,
-                                              IDR: IDR,
-                                              btnController: _btnController,
-                                            );
-                                          } else {
-                                            return Container();
-                                          }
-                                        },
-                                        itemCount: blocOrder.listCart[0].chilrdern.where((element) => element.jenisOngkir == 'raja_ongkir').length > 1
-                                            ? 1
-                                            : blocOrder.listCart[0].chilrdern.length,
-                                      ),
-                                    ),
-                          Container(
-                            color: blocOrder.listMetodePembayaranSelected.isEmpty ? Colors.red.withOpacity(0.2) : Colors.white,
-                            margin: const EdgeInsets.only(top: 10.0),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ListTile(
-                                title: Text('Metode Pembayaran'),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      blocOrder.listMetodePembayaranSelected.isEmpty ? '-' : blocOrder.listMetodePembayaranSelected['metode_pembayaran'],
-                                    ),
-                                    Text(blocOrder.listMetodePembayaranSelected.isEmpty ? '' : blocOrder.listMetodePembayaranSelected['nama_bank'],
-                                        style: TextStyle(color: Colors.black)),
-//                                    Text(
-//                                      blocOrder.listMetodePembayaranSelected.isEmpty ? '' : 'a.n ' + blocOrder.listMetodePembayaranSelected['nama_rekening'],
-//                                    )
-                                  ],
-                          ),
-                          leading: Icon(FontAwesomeIcons.creditCard),
-                          trailing: Container(
-                            height: 30,
-                            width: 80,
-                            margin: const EdgeInsets.only(top: 10.0),
-//                                  padding: const EdgeInsets.only(left: 90.0, right: 20.0),
-                            child: new Row(
-                              children: <Widget>[
-                                new Expanded(
-                                    child: RoundedLoadingButton(
-                                      child: Text('Ubah', style: TextStyle(color: Colors.white, fontSize: 12)),
-                                      color: Colors.cyan[700],
-                                      controller: _btnController,
-                                      onPressed: () {
-                                        blocProfile.getAllUserAddress(blocAuth.idUser);
-                                        blocOrder.getMetodePembayaran();
-                                        Navigator.push(context, SlideRightRoute(page: WidgetListPembayaran())).then((value) {
-                                          Provider.of<BlocProfile>(context).getSubDistrictById(listCart.chilrdern[0].idKecamatan);
-                                          Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
-                                        });
-                                        _btnController.reset();
-                                      },
-                                    )),
+                                Text(
+                                  blocProfile.listUserAddressDefault.isEmpty ? '' : blocProfile.listUserAddressDefault[0].alamatLengkap,
+                                ),
                               ],
+                            ),
+                            leading: Icon(FontAwesomeIcons.addressBook),
+                            trailing: Container(
+                              height: 30,
+                              width: 80,
+                              child: new Row(
+                                children: <Widget>[
+                                  new Expanded(
+                                      child: RoundedLoadingButton(
+                                    child: Text('Ubah', style: TextStyle(color: Colors.white, fontSize: 12)),
+                                    color: Colors.cyan[700],
+                                    controller: _btnController,
+                                    onPressed: () {
+                                      blocProfile.getAllUserAddress(blocAuth.idUser);
+                                      Navigator.push(context, SlideRightRoute(page: ShippingAddressScreen())).then((value) {
+                                        Provider.of<BlocProfile>(context).getSubDistrictById(listCart.chilrdern[0].idKecamatan);
+                                        Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
+                                        blocOrder.clearCost();
+                                        for (var k = 0; k < listCart.chilrdern.length; k++) {
+                                          var idKotaPembeli = blocProfile.listUserAddressDefault[0].idKota;
+                                          var idKotaToko = listCart.chilrdern[k].idKota;
+                                          var jenisOngkir = listCart.chilrdern[k].jenisOngkir;
+                                          if (jenisOngkir == 'include_dalam_kota') {
+                                            if (idKotaToko != idKotaPembeli) {
+                                              var beratTotal = int.parse(listCart.chilrdern[k].berat.toString()) * int.parse(listCart.chilrdern[k].jumlah.toString());
+                                              totalDalamKota += beratTotal;
+                                            }
+                                          }
+                                          if (jenisOngkir == 'raja_ongkir') {
+                                            var beratTotal = int.parse(listCart.chilrdern[k].berat.toString()) * int.parse(listCart.chilrdern[k].jumlah.toString());
+                                            totalRajaOngkir += beratTotal;
+                                          }
+                                        }
+                                        if (blocProfile.listUserAddressDefault.isNotEmpty) {
+                                          var param = {
+                                            'origin': cart.idKecamatan.toString(),
+                                            'destination': blocProfile.listUserAddressDefault[0].idKecamatan,
+                                            'weight': (totalDalamKota + totalRajaOngkir) == 0 ? '1' : (totalDalamKota + totalRajaOngkir).toString()
+                                          };
+                                          blocOrder.getCost(param);
+                                        }
+                                      });
+                                      _btnController.reset();
+                                    },
+                                  )),
+                                ],
+                              ),
                             ),
                           ),
                         ),
+                      ),
+                      blocOrder.isLoading
+                          ? Container(
+                              height: 100,
+                              width: MediaQuery.of(context).size.width,
+                              child: PKCardListSkeleton(),
+                            )
+                          : blocProfile.listUserAddressDefault.isEmpty
+                              ? Container()
+                              : Container(
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemBuilder: (_, j) {
+                                      var idKotaPembeli = blocProfile.listUserAddressDefault[0].idKota;
+                                      var idKotaToko = listCart.chilrdern[j].idKota;
+//                                      print(blocOrder.listCart[0].chilrdern.where((element) => element.jenisOngkir == 'raja_ongkir').length);
+                                      if (blocOrder.listCart[0].chilrdern[j].jenisOngkir == 'raja_ongkir') {
+                                        return CardRajaOngkir(
+                                          listCart: listCart,
+                                          blocAuth: blocAuth,
+                                          blocOrder: blocOrder,
+                                          blocProfile: blocProfile,
+                                          IDR: IDR,
+                                          btnController: _btnController,
+                                        );
+                                      } else if (idKotaPembeli != idKotaToko && blocOrder.listCart[0].chilrdern[j].jenisOngkir == 'raja_ongkir') {
+                                        return CardRajaOngkir(
+                                          listCart: listCart,
+                                          blocAuth: blocAuth,
+                                          blocOrder: blocOrder,
+                                          blocProfile: blocProfile,
+                                          IDR: IDR,
+                                          btnController: _btnController,
+                                        );
+                                      } else {
+                                        return Container();
+                                      }
+                                    },
+                                    itemCount: blocOrder.listCart[0].chilrdern.where((element) => element.jenisOngkir == 'raja_ongkir').length > 1
+                                        ? 1
+                                        : blocOrder.listCart[0].chilrdern.length,
+                                  ),
+                                ),
+                      Container(
+                        color: blocOrder.listMetodePembayaranSelected.isEmpty ? Colors.red.withOpacity(0.2) : Colors.white,
+                        margin: const EdgeInsets.only(top: 10.0),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListTile(
+                            title: Text('Metode Pembayaran'),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  blocOrder.listMetodePembayaranSelected.isEmpty ? '-' : blocOrder.listMetodePembayaranSelected['metode_pembayaran'],
+                                ),
+                                Text(blocOrder.listMetodePembayaranSelected.isEmpty ? '' : blocOrder.listMetodePembayaranSelected['nama_bank'],
+                                    style: TextStyle(color: Colors.black)),
+//                                    Text(
+//                                      blocOrder.listMetodePembayaranSelected.isEmpty ? '' : 'a.n ' + blocOrder.listMetodePembayaranSelected['nama_rekening'],
+//                                    )
+                              ],
+                            ),
+                            leading: Icon(FontAwesomeIcons.creditCard),
+                            trailing: Container(
+                              height: 30,
+                              width: 80,
+                              margin: const EdgeInsets.only(top: 10.0),
+//                                  padding: const EdgeInsets.only(left: 90.0, right: 20.0),
+                              child: new Row(
+                                children: <Widget>[
+                                  new Expanded(
+                                      child: RoundedLoadingButton(
+                                    child: Text('Ubah', style: TextStyle(color: Colors.white, fontSize: 12)),
+                                    color: Colors.cyan[700],
+                                    controller: _btnController,
+                                    onPressed: () {
+                                      blocProfile.getAllUserAddress(blocAuth.idUser);
+                                      blocOrder.getMetodePembayaran();
+                                      Navigator.push(context, SlideRightRoute(page: WidgetListPembayaran())).then((value) {
+                                        Provider.of<BlocProfile>(context).getSubDistrictById(listCart.chilrdern[0].idKecamatan);
+                                        Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
+                                      });
+                                      _btnController.reset();
+                                    },
+                                  )),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              color: Colors.white,
+              height: MediaQuery.of(context).size.height * 0.1,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          child: Text(
+                            'Subtotal',
+                            style: TextStyle(fontSize: 18, color: Colors.grey),
+                          ),
+                        ),
+                        Container(
+                          child: Text(
+                            blocOrder.listCostSelected.isEmpty
+                                ? Money.fromInt((this.subtotal), IDR).toString()
+                                : Money.fromInt((this.subtotal + blocOrder.listCostSelected['total_ongkir']), IDR).toString(),
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      height: 40,
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      child: FlatButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                        child: Text('Bayar', style: TextStyle(color: Colors.white, fontSize: 18)),
+                        color: Colors.green,
+                        onPressed: () {
+                          makePayment(context);
+                        },
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-          ),
-          Container(
-            color: Colors.white,
-            height: MediaQuery.of(context).size.height * 0.1,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        child: Text(
-                          'Subtotal',
-                          style: TextStyle(fontSize: 18, color: Colors.grey),
-                        ),
-                      ),
-                      Container(
-                        child: Text(
-                          blocOrder.listCostSelected.isEmpty
-                              ? Money.fromInt((this.subtotal), IDR).toString()
-                              : Money.fromInt((this.subtotal + blocOrder.listCostSelected['total_ongkir']), IDR).toString(),
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    height: 40,
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width * 0.4,
-                    child: FlatButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                      ),
-                      child: Text('Bayar', style: TextStyle(color: Colors.white, fontSize: 18)),
-                      color: Colors.green,
-                      onPressed: () {
-                        makePayment(context);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -308,7 +305,6 @@ class CheckoutScreen extends StatelessWidget {
         .toUtc()
         .millisecondsSinceEpoch;
     var totalOngkir = blocOrder.listCostSelected.isEmpty ? 0 : blocOrder.listCostSelected['total_ongkir'];
-
     var pengiriman = {
       "id": "ongkir",
       "price": totalOngkir.toString(),
@@ -357,7 +353,7 @@ class CheckoutScreen extends StatelessWidget {
       }
     };
     var data = json.encode(body);
-    print(data);
+//    print(data);
     var result = blocOrder.makePayment(data);
     result.then((value) {
       if (value['token'] != null) {
@@ -432,7 +428,7 @@ class CheckoutScreen extends StatelessWidget {
           .where((element) => element['stok'] == '0')
           .length;
       if (aktif <= 0 && stok <= 0) {
-        print('push');
+//        print('push');
         if (rajaOngkir == 0 && blocOrder.listMetodePembayaranSelected.isNotEmpty && blocProfile.listUserAddressDefault.isNotEmpty) {
           Navigator.push(
             context,
@@ -444,7 +440,7 @@ class CheckoutScreen extends StatelessWidget {
               ),
             ),
           );
-          print('pembayaran free ongkir');
+//          print('pembayaran free ongkir');
         } else if (blocOrder.listCostSelected.isNotEmpty && rajaOngkir == 1 && blocOrder.listMetodePembayaranSelected.isNotEmpty && blocProfile.listUserAddressDefault.isNotEmpty) {
           print('cost');
           Navigator.push(
@@ -465,7 +461,7 @@ class CheckoutScreen extends StatelessWidget {
           backgroundColor: Colors.red,
           duration: Duration(seconds: 3),
         ));
-        print('not');
+//        print('not');
       }
     });
   }

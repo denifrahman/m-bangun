@@ -1,7 +1,8 @@
+import 'package:apps/Utils/InAppWebHandleTest.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocAuth.dart';
-import 'package:apps/screen/KategoriScreenNew.dart';
 import 'package:apps/widget/Pengajuan/component/WidgetCardMenu.dart';
+import 'package:apps/widget/Toko/Pengajuan.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -22,7 +23,7 @@ class WidgetMenu extends StatelessWidget {
             children: [
               blocAuth.statusToko == '0'
                   ? InkWell(
-                      onTap: () => _openScreen('pengajuan_toko', context),
+                      onTap: () => _pengajuan(context),
                       child: WidgetCardMenu(
                         title: 'Buka Toko',
                         color: Colors.amber[800],
@@ -31,11 +32,21 @@ class WidgetMenu extends StatelessWidget {
                       ),
                     )
                   : Container(),
-              WidgetCardMenu(
-                title: 'Panggil m-Bangun (Segera Hadir)',
-                color: Colors.cyan[600],
-                thumbnail: 'assets/icons/worker.png',
-                deskripsi: 'Mau benerin perabotan rumah atau appartemen? kesulitan cari tukang di tengah kota? kami siap datang untuk melakukan survey!',
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    SlideRightRoute(
+                      page: InAppWebHandleTest(),
+                    ),
+                  );
+                },
+                child: WidgetCardMenu(
+                  title: 'Pengajuan Proyek',
+                  color: Colors.cyan[600],
+                  thumbnail: 'assets/icons/worker.png',
+                  deskripsi: 'Mau benerin perabotan rumah atau appartemen? kesulitan cari tukang di tengah kota? kami siap datang untuk melakukan survey!',
+                ),
               )
             ],
           ),
@@ -44,14 +55,8 @@ class WidgetMenu extends StatelessWidget {
     );
   }
 
-  _openKategori(context, flag) {
-//    Provider.of<DataProvider>(context).getKategoriByFlag(flag.groupKategoriId);
-    Navigator.push(
-        context,
-        SlideRightRoute(
-            page: KategoriScreenNew(
-          title: flag.groupNama,
-        )));
+  _pengajuan(context) {
+    Navigator.push(context, SlideRightRoute(page: Pengajuan()));
   }
 
   openSubkategori(chilrdern) {}

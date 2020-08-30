@@ -9,8 +9,9 @@ import 'package:provider/provider.dart';
 
 class WidgetWaitingPayment extends StatefulWidget {
   final Map<dynamic, dynamic> body;
+  final idOrder;
 
-  WidgetWaitingPayment({Key key, this.body}) : super(key: key);
+  WidgetWaitingPayment({Key key, this.body, this.idOrder}) : super(key: key);
 
   @override
   _WidgetWaitingPaymentState createState() => _WidgetWaitingPaymentState();
@@ -27,6 +28,7 @@ class _WidgetWaitingPaymentState extends State<WidgetWaitingPayment> {
   createOrder() async {
     await new Future.delayed(const Duration(seconds: 1));
     BlocOrder blocOrder = Provider.of(context);
+    print('insert');
     var result = blocOrder.insert(json.encode(widget.body));
     result.then((value) {
       print(value);
@@ -35,12 +37,13 @@ class _WidgetWaitingPaymentState extends State<WidgetWaitingPayment> {
           'id': value['data']['id_order'].toString(),
         };
         blocOrder.getOrderTagihanByParam(param);
+        blocOrder.getTransaksiStatus(widget.idOrder);
         Navigator.push(
             context,
             SlideRightRoute(
                 page: WidgetTagihan(
               param: 'checkout',
-            )));
+            ))).then((value) {});
       }
     });
   }

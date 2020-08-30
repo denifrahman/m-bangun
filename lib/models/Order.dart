@@ -61,6 +61,7 @@ class Order {
   String namaPenerima;
   String alamatLengkap;
   String statusUlasan;
+  String tokenVa;
 
   static Order fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
@@ -96,6 +97,7 @@ class Order {
     orderBean.namaPenerima = map['nama_penerima'];
     orderBean.alamatLengkap = map['alamat_lengkap'];
     orderBean.statusUlasan = map['status_ulasan'];
+    orderBean.tokenVa = map['token_va'];
     return orderBean;
   }
 
@@ -131,5 +133,6 @@ class Order {
         "nama_penerima": namaPenerima,
         "alamat_lengkap": alamatLengkap,
         "status_ulasan": statusUlasan,
+        "token_va": tokenVa,
       };
 }

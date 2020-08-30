@@ -166,9 +166,10 @@ class WidgetMenuPembelian extends StatelessWidget {
   }
 
   _openPembelian(String title, idUser, context) {
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     if (title == 'Menunggu Pembayaran' || title == 'Batal') {
-      var param = {'id_pembeli': idUser.toString(), 'status_pembayaran': title == 'Menunggu Pembayaran' ? 'menunggu' : title.toLowerCase() == 'Batal' ? 'batal' : 'terbayar'};
+      var param = {'id_pembeli': idUser.toString(), 'status_pembayaran': title == 'Menunggu Pembayaran' ? 'menunggu' : title.toLowerCase() == 'Batal' ? 'batal' : 'batal'};
       print(param);
       blocOrder.getOrderByParam(param);
     } else {
@@ -177,7 +178,6 @@ class WidgetMenuPembelian extends StatelessWidget {
         'status_order': title.toString().toLowerCase() == 'ulasan' ? 'selesai' : title.toString().toLowerCase(),
         'status_pembayaran': 'terbayar'
       };
-      print(param);
       blocOrder.getOrderByParam(param);
     }
 
@@ -186,6 +186,6 @@ class WidgetMenuPembelian extends StatelessWidget {
         SlideRightRoute(
             page: WidgetListPembelian(
           title: title,
-        )));
+        ))).then((value) {});
   }
 }

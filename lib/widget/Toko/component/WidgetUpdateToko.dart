@@ -4,6 +4,7 @@ import 'package:apps/Utils/SnacbarLauncher.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/providers/BlocProfile.dart';
+import 'package:apps/widget/Toko/component/UpdateAlamatToko.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -150,6 +151,17 @@ class _WidgetUpdateTokoState extends State<WidgetUpdateToko> {
                             ),
                           ),
                         ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text('Alamat Toko'),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        UpdateAlamatToko(),
+                        SizedBox(
+                          height: 30,
+                        ),
                         new Text(
                           'Foto',
                           style: TextStyle(fontWeight: FontWeight.w800, color: Colors.black),
@@ -283,7 +295,10 @@ class _WidgetUpdateTokoState extends State<WidgetUpdateToko> {
       'foto_sampul': fileNameFoto1,
       'nama_bank': namaBank.toString(),
       'no_rekening': noRekening.toString(),
-      'nama_pemilik_rekening': namaPemilikRekening.toString()
+      'nama_pemilik_rekening': namaPemilikRekening.toString(),
+      'id_kecamatan': blocProfile.id_subdistrict,
+      'id_kota': blocProfile.id_city,
+      'id_provinsi': blocProfile.id_provice,
     };
     List<File> files = [foto, foto1];
     var result = await blocProfile.updateToko(files, body);

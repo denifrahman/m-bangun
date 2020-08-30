@@ -11,7 +11,7 @@ description: Aplikasi m-bangun
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.0.6+18
+version: 2.0.7+19
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -44,7 +44,7 @@ dependencies:
   shared_preferences: ^0.5.3+4
   google_sign_in: ^4.5.1
   loading_animations: ^2.1.0
-  empty_widget: ^0.0.1
+  sup: ^1.0.1
   rounded_loading_button: ^1.0.0
   expansion_tile_card: ^1.0.3
   carousel_pro: ^1.0.0
@@ -62,6 +62,8 @@ dependencies:
   flutter_signature_pad: ^2.0.2
   advance_pdf_viewer: ^1.1.6
   webview_flutter: ^0.3.22+1
+  flutter_webview_plugin: ^0.3.11
+  flutter_inappwebview: ^4.0.0+4
   random_color: ^1.0.5
   flutter_wordpress: ^0.2.1
   carousel_slider: ^2.2.1
@@ -78,6 +80,7 @@ dependencies:
   dotted_line: ^2.0.1
   multipart_request: ^0.3.1
   html_editor: ^1.0.1
+  lazy_load_scrollview: ^1.1.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
@@ -123,6 +126,11 @@ flutter:
     - assets/kategori/paint.png
     - assets/kategori/semen.png
     - assets/kategori/plumbing.png
+    - assets/bank/mandiri.jpg
+    - assets/bank/bni.jpg
+    - assets/bank/bca.jpg
+    - assets/bank/permata.jpg
+    - assets/bank/atm_bersama.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

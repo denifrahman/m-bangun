@@ -1,10 +1,12 @@
 import 'package:apps/Api/ApiBaseHelper.dart';
+import 'package:apps/Api/ApiBaseHelperMidtrans.dart';
 import 'package:apps/Api/ApiOrderJson.dart';
 
 class OrderRepository {
   final String _apiKey = "Paste your api key here";
 
   ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelperMidtrans _helperMidtrans = ApiBaseHelperMidtrans();
   ApiOrderJson _helperOrderJson = ApiOrderJson();
 
   Future getCart(param) async {
@@ -69,6 +71,16 @@ class OrderRepository {
 
   Future insertUlasanToko(body) async {
     final response = await _helper.post("order/insertUlasanToko", body);
+    return response;
+  }
+
+  Future makePayment(body) async {
+    final response = await _helperMidtrans.post("transactions", body);
+    return response;
+  }
+
+  Future getTransaksiStatus(param) async {
+    final response = await _helperMidtrans.getStatus("${param}/status");
     return response;
   }
 }

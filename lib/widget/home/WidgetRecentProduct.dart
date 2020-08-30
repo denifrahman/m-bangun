@@ -57,7 +57,9 @@ class WidgetRecentProduct extends StatelessWidget {
                       'id_kecamatan': currentIdKecamatan.toString() == 'null' ? '' : currentIdKecamatan.toString(),
                       'id_kota': currentIdKota.toString() == 'null' ? '' : currentIdKota.toString(),
                       'id_provinsi': currentIdProvinsi.toString() == 'null' ? '' : currentIdProvinsi.toString(),
-                      'aktif': '1'
+                      'aktif': '1',
+                      'limit': blocProduk.limit.toString(),
+                      'offset': blocProduk.offset.toString()
                     };
                     blocProduk.getAllProductByParam(param);
                     Navigator.push(
@@ -65,7 +67,7 @@ class WidgetRecentProduct extends StatelessWidget {
                         SlideRightRoute(
                             page: ProdukScreen(
                               namaKategori: 'Semua',
-                            )));
+                                param: param)));
                   },
                   child: Text(
                     'Semua',

@@ -30,6 +30,9 @@ class BlocProduk extends ChangeNotifier {
     Toko('https://m-bangun.com/wp-content/uploads/2020/07/contarctor.png', 'Boat roackerz 400 On-Ear Bluetooth Headphones', 'description', 120000, 2),
     Toko('https://m-bangun.com/wp-content/uploads/2020/07/properti-2.png', 'Boat roackerz 100 On-Ear Bluetooth Headphones', 'description', 122222, 1),
   ];
+  int _totalProduk = 0;
+
+  int get totalProduk => _totalProduk;
 
   bool _isLoading = false;
   bool _connection = false;
@@ -58,6 +61,18 @@ class BlocProduk extends ChangeNotifier {
   subTotal(index) {}
 
   List<Product> _listProducts = [];
+  int _limit = 10;
+  int _offset = 0;
+
+  int get limit => _limit;
+
+  int get offset => _offset;
+
+  setDefaultLimitAndOffset() {
+    _limit = 10;
+    _offset = 0;
+    notifyListeners();
+  }
 
   List<Product> get listProducts => _listProducts;
   List<Product> _detailProduct = [];
@@ -65,6 +80,7 @@ class BlocProduk extends ChangeNotifier {
   List<Product> get detailProduct => _detailProduct;
 
   getAllProductByParam(param) async {
+    setDefaultLimitAndOffset();
     imageCache.clear();
     _isLoading = true;
     notifyListeners();
@@ -76,7 +92,30 @@ class BlocProduk extends ChangeNotifier {
       notifyListeners();
     } else {
       Iterable list = result['data'];
+      _totalProduk = int.parse(result['meta']['total']);
       _listProducts = list.map((model) => Product.fromMap(model)).toList();
+      _isLoading = false;
+      _connection = true;
+      notifyListeners();
+    }
+  }
+
+  loadMoreProduk(param) async {
+    setDefaultLimitAndOffset();
+    imageCache.clear();
+    _isLoading = true;
+    notifyListeners();
+    var result = await UserRepository().getAllProduct(param);
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '8') {
+      _connection = false;
+      _isLoading = false;
+      _listProducts = [];
+      notifyListeners();
+    } else {
+      Iterable list = result['data'];
+      print(result['data']);
+      _listProducts.addAll(list.map((model) => Product.fromMap(model)).toList());
+//      _listProducts = list.map((model) => Product.fromMap(model)).toList();
       _isLoading = false;
       _connection = true;
       notifyListeners();

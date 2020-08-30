@@ -10,7 +10,7 @@ import 'package:mime/mime.dart';
 class ApiBaseHelper {
   final _baseUrl = 'm-bangun.com';
 
-//  final _baseUrl = '192.168.0.7';
+//  final _baseUrl = '192.168.0.11';
 
   final _path = 'api-v2/';
 

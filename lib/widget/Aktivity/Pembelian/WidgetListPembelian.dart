@@ -16,6 +16,7 @@ class WidgetListPembelian extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
     return Scaffold(
       appBar: AppBar(
@@ -45,7 +46,18 @@ class WidgetListPembelian extends StatelessWidget {
                               'id': blocOrder.listOrder[index].id,
                             };
                             blocOrder.getOrderTagihanByParam(param);
-                            Navigator.push(context, SlideRightRoute(page: WidgetTagihan()));
+                            blocOrder.getTransaksiStatus(blocOrder.listOrder[index].noOrder);
+                            Navigator.push(context, SlideRightRoute(page: WidgetTagihan())).then((value) {
+                              blocOrder.getCountSaleByParam({'id_toko': blocAuth.idToko.toString()});
+                              blocOrder.setCountPembelian();
+                              if (title == 'Menunggu Pembayaran') {
+                                var param = {'id_pembeli': blocAuth.idUser.toString(), 'status_pembayaran': title == 'Menunggu Pembayaran' ? 'menunggu' : 'terbayar'};
+                                blocOrder.getOrderByParam(param);
+                              } else {
+                                var param = {'id_pembeli': blocAuth.idUser.toString(), 'status_order': title.toString(), 'status_pembayaran': 'terbayar'};
+                                blocOrder.getOrderByParam(param);
+                              }
+                            });
                           }
                           if (blocOrder.listOrder[index].statusOrder == 'menunggu konfirmasi' || blocOrder.listOrder[index].statusPembayaran == 'terbayar') {
                             var param = {

@@ -33,7 +33,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
-  AnimationController _hideFabAnimation;
   String PLAY_STORE_URL = 'https://play.google.com/apps';
   String APP_STORE_URL = 'https://play.google.com/store/apps/details?id=com.bangun.apps';
   String namaProfile;
@@ -43,9 +42,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _hideFabAnimation = AnimationController(vsync: this, duration: kThemeAnimationDuration);
-    _hideFabAnimation.forward();
-//    syncVersion();
   }
 
   @override

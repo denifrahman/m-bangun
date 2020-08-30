@@ -12,7 +12,7 @@ class WidgetListPembayaran extends StatelessWidget {
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Metode pembayaran'),
+        title: Text('Pilih Pembayaran'),
       ),
       body: GroupedListView<dynamic, String>(
         groupBy: (element) => element['nama'],
@@ -28,9 +28,17 @@ class WidgetListPembayaran extends StatelessWidget {
           ),
         ),
         itemBuilder: (c, element) {
+          print(element['kode']);
           return InkWell(
             onTap: () {
-              var body = {'metode_pembayaran': element['nama'], 'no_rekening': element['no_rekening'], 'nama_rekening': element['atas_nama'], 'nama_bank': element['nama_bank']};
+              var body = {
+                'metode_pembayaran': element['nama'],
+                'payment_type': element['tipe_pembayaran'],
+                'no_rekening': element['no_rekening'],
+                'nama_rekening': element['atas_nama'],
+                'nama_bank': element['nama_bank'],
+                'kode': element['kode']
+              };
               blocOrder.onChangeMetodePembayaran(body);
               Navigator.pop(context);
             },
@@ -41,21 +49,16 @@ class WidgetListPembayaran extends StatelessWidget {
                 padding: EdgeInsets.all(2),
                 child: ListTile(
                   contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                  leading: Icon(
-                    Icons.credit_card,
-                    size: 35,
+                  leading: Image.network(
+                    'https://m-bangun.com/api-v2/assets/bank/' + "${element['icon']}",
+                    height: 50,
+                    width: 50,
                   ),
                   title: Text(
                     element['nama_bank'],
-                    style: TextStyle(fontWeight: FontWeight.normal, color: Colors.grey, fontSize: 16),
+                    style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontSize: 16),
                   ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(element['no_rekening'], style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
-                      Text('a.n ' + element['atas_nama'], style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black)),
-                    ],
-                  ),
+                  subtitle: Text(element['deskripsi_bank'], style: TextStyle()),
                   trailing: Icon(
                     Icons.arrow_forward,
                     size: 20,

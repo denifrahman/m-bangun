@@ -164,6 +164,7 @@ class BlocOrder extends ChangeNotifier {
   getMetodePembayaran() async {
     var param = {'': ''};
     var result = await OrderRepository().getMetodePembayaran(param);
+    print(result);
     _listMetodePembayaran = result['data'];
     notifyListeners();
   }
@@ -174,6 +175,7 @@ class BlocOrder extends ChangeNotifier {
 
   getCost(param) async {
     _isLoading = true;
+    _listCost = [];
     notifyListeners();
     var result = await OrderRepository().getCost(param);
     if (result != null) {
@@ -394,12 +396,11 @@ class BlocOrder extends ChangeNotifier {
 
   List<Order> get listOrderDetail => _listOrderDetail;
 
-  getOrderTagihanByParam(param) async {
+  Future<bool> getOrderTagihanByParam(param) async {
     imageCache.clear();
     _isLoading = true;
     notifyListeners();
     var result = await OrderRepository().getOrderByParam(param);
-//    print(result);
     if (result['meta']['success']) {
       _isLoading = false;
       Iterable list = result['data'];
@@ -462,7 +463,6 @@ class BlocOrder extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await OrderRepository().updateOrder(body);
-//    print(body);
     if (result['meta']['success']) {
       _isLoading = false;
       notifyListeners();
@@ -488,7 +488,6 @@ class BlocOrder extends ChangeNotifier {
   Future<bool> insertUlasanToko(body) async {
     _isLoading = true;
     var result = await OrderRepository().insertUlasanToko(body);
-//    print(result);
     _ulasan = '';
     if (result['meta']['success']) {
       return true;
@@ -510,5 +509,28 @@ class BlocOrder extends ChangeNotifier {
 
   changeRating(value) {
     _rating = value;
+  }
+
+  Future<dynamic> makePayment(body) async {
+    _isLoading = true;
+    notifyListeners();
+    var result = await OrderRepository().makePayment(body);
+    _isLoading = false;
+    notifyListeners();
+    return result;
+  }
+
+  Map<String, dynamic> _detailMidtransTransaksi = {};
+
+  Map<String, dynamic> get detailMidtransTransaksi => _detailMidtransTransaksi;
+
+  Future<dynamic> getTransaksiStatus(param) async {
+    _isLoading = true;
+    var result = await OrderRepository().getTransaksiStatus(param);
+    print(result);
+    _detailMidtransTransaksi = result;
+    notifyListeners();
+    _isLoading = false;
+    return result;
   }
 }

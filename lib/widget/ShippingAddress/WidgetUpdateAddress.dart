@@ -68,7 +68,7 @@ class _WidgetUpdateAddressState extends State<WidgetUpdateAddress> {
                                 Container(
                                   margin: const EdgeInsets.only(top: 0.0),
                                   child: TextFormField(
-                                    initialValue: blocProfile.listUserDetailAddress[0].namaAlamat,
+                                    initialValue: blocProfile.listUserDetailAddress.isEmpty ? '' : blocProfile.listUserDetailAddress[0].namaAlamat,
                                     onSaved: (value) {
                                       setState(() {
                                         nama_alamat = value;
@@ -96,7 +96,7 @@ class _WidgetUpdateAddressState extends State<WidgetUpdateAddress> {
                                 Container(
                                   margin: const EdgeInsets.only(top: 20.0),
                                   child: TextFormField(
-                                    initialValue: blocProfile.listUserDetailAddress[0].namaPenerima,
+                                    initialValue: blocProfile.listUserDetailAddress.isEmpty ? '' : blocProfile.listUserDetailAddress[0].namaPenerima,
                                     onSaved: (value) {
                                       setState(() {
                                         nama_penerima = value;
@@ -124,7 +124,7 @@ class _WidgetUpdateAddressState extends State<WidgetUpdateAddress> {
                                 Container(
                                   margin: const EdgeInsets.only(top: 20.0),
                                   child: TextFormField(
-                                    initialValue: blocProfile.listUserDetailAddress[0].noHp,
+                                    initialValue: blocProfile.listUserDetailAddress.isEmpty ? '' : blocProfile.listUserDetailAddress[0].noHp,
                                     onSaved: (value) {
                                       setState(() {
                                         no_hp = value;
@@ -245,7 +245,7 @@ class _WidgetUpdateAddressState extends State<WidgetUpdateAddress> {
                                 Container(
                                   margin: const EdgeInsets.only(top: 20.0),
                                   child: TextFormField(
-                                    initialValue: blocProfile.listUserDetailAddress[0].alamatLengkap,
+                                    initialValue: blocProfile.listUserDetailAddress.isEmpty ? '' : blocProfile.listUserDetailAddress[0].alamatLengkap,
                                     onSaved: (value) {
                                       setState(() {
                                         alamat_lengkap = value;

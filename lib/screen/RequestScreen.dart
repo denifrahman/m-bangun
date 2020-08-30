@@ -26,9 +26,8 @@ class _RequestScreenState extends State<RequestScreen> {
 
   _chekSession() async {
     await new Future.delayed(const Duration(seconds: 1));
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
-    dataProvider.chekSession();
-    if (dataProvider.isLogin) {
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+    if (blocAuth.isLogin) {
       setState(() {
         title = 'Hai! Apa yang anda butuhkan?';
       });

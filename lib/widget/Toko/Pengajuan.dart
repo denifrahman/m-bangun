@@ -1,16 +1,38 @@
 import 'dart:async';
 
+import 'package:apps/providers/BlocAuth.dart';
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:provider/provider.dart';
 
-class Pengajuan extends StatelessWidget {
+class Pengajuan extends StatefulWidget {
   Pengajuan({Key key}) : super(key: key);
 
-  final Completer<WebViewController> _controller = Completer<WebViewController>();
+  @override
+  _PengajuanState createState() => _PengajuanState();
+}
+
+class _PengajuanState extends State<Pengajuan> {
+  bool loading = true;
+  Timer timer;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    loading = true;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     // TODO: implement build
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -18,27 +40,28 @@ class Pengajuan extends StatelessWidget {
       ),
       body: Builder(
         builder: (BuildContext context) {
-          return WebView(
-            initialUrl: 'https://mobile.m-bangun.com',
-            javascriptMode: JavascriptMode.unrestricted,
-            onWebViewCreated: (WebViewController webViewController) {
-              _controller.complete(webViewController);
-            },
-            navigationDelegate: (NavigationRequest request) {
-              if (request.url.startsWith('https://www.youtube.com/')) {
-                print('blocking navigation to $request}');
-                return NavigationDecision.prevent;
-              }
-              print('allowing navigation to $request');
-              return NavigationDecision.navigate;
-            },
-            onPageStarted: (String url) {
-              print('Page started loading: $url');
-            },
-            onPageFinished: (String url) {
-              print('Page finished loading: $url');
-            },
-            gestureNavigationEnabled: true,
+          return WebviewScaffold(
+            url: 'https://mobile.m-bangun.com/welcome?email=' + blocAuth.currentUser.email.toString(),
+            withZoom: true,
+            javascriptChannels: <JavascriptChannel>[
+              JavascriptChannel(
+                  name: 'Print',
+                  onMessageReceived: (JavascriptMessage msg) {
+                    if (msg.message == 'kelolaToko') {
+                      Navigator.pop(context);
+                    }
+                  }),
+            ].toSet(),
+            scrollBar: true,
+            allowFileURLs: true,
+            withJavascript: true,
+            withLocalStorage: true,
+            hidden: true,
+            initialChild: Container(
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
           );
         },
       ),

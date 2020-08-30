@@ -169,6 +169,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                         onPressed: () {
                           blocAuth.checkSession();
                           blocOrder.getCart();
+                          blocOrder.getCountSaleByParam({'id_toko': blocAuth.idToko.toString()});
                           setState(() {
                             currentScreen = CheckListScreen(); // if user taps on this dashboard tab will be active
                             currentTab = 1;

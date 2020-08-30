@@ -174,8 +174,8 @@ class BlocProfile extends ChangeNotifier {
     var param = {'id': id.toString()};
     var result = await UserRepository().getUserAddress(param);
     Iterable list = result['data'];
-    _listUserDetailAddress = list.map((model) => UserAddress.fromMap(model)).toList();
-    if (_listUserDetailAddress.isNotEmpty) {
+    if (result['data'] != null) {
+      _listUserDetailAddress = list.map((model) => UserAddress.fromMap(model)).toList();
       _isLoading = false;
     }
     notifyListeners();
@@ -245,7 +245,7 @@ class BlocProfile extends ChangeNotifier {
 
   Map<String, dynamic> get dataToko => _dataToko;
 
-  getTokoByParam(param) async {
+  Future<dynamic> getTokoByParam(param) async {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().getTokoByParam(param);
@@ -265,6 +265,7 @@ class BlocProfile extends ChangeNotifier {
         notifyListeners();
       }
     }
+    return result;
   }
 
   bool _connection = false;

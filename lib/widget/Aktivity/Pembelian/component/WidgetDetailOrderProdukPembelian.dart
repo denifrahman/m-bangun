@@ -87,16 +87,16 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
                                       ),
                                       title.toString().toLowerCase() == 'selesai'
                                           ? blocOrder.listOrderDetailProduk[j].statusUlasan == '1'
-                                          ? Container()
-                                          : SizedBox(
-                                        height: 25,
-                                        width: double.infinity,
-                                        child: RaisedButton(
-                                          child: Text(
-                                            'Ulas Produk',
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                          color: Colors.orangeAccent,
+                                              ? Container()
+                                              : SizedBox(
+                                                  height: 25,
+                                                  width: double.infinity,
+                                                  child: RaisedButton(
+                                                    child: Text(
+                                                      'Ulas Produk',
+                                                      style: TextStyle(fontSize: 12),
+                                                    ),
+                                                    color: Colors.orangeAccent,
                                                     textColor: Colors.white,
                                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                                     onPressed: () async {
@@ -179,28 +179,30 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
                               },
                             ),
                           ),
-                        ),
-                  order.statusUlasan.toString() == '1'
+                  ),
+                  title.toLowerCase().toLowerCase() != 'selesai'
+                      ? Container()
+                      : order.statusUlasan.toString() != '0'
                       ? Container()
                       : Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 40,
-                            child: RaisedButton(
-                              child: Text(
-                                'Beri Rating Penjual',
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                              ),
-                              color: Color(0xffb16a085),
-                              textColor: Colors.white,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              onPressed: () async {
-                                _ulasanToko(context, blocAuth, blocOrder);
-                              },
-                            ),
-                          ),
-                        )
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 40,
+                      child: RaisedButton(
+                        child: Text(
+                          'Beri Rating Penjual',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                        ),
+                        color: Color(0xffb16a085),
+                        textColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                        onPressed: () async {
+                          _ulasanToko(context, blocAuth, blocOrder);
+                        },
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),

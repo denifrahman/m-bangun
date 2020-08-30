@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 class ApiOrderJson {
   final _baseUrl = 'm-bangun.com';
-//  final _baseUrl = '192.168.100.248';
+//  final _baseUrl = 'localhost';
 
   final _path = 'api-v2/';
 //  final _path = 'api-mbangun/';
@@ -27,8 +27,10 @@ class ApiOrderJson {
     var responseJson;
     try {
       final _url = Uri.http(_baseUrl, _path + url);
+//      print(_url);
       var header = {"Content-Type": "application/json"};
       final response = await http.post(_url, body: body, headers: header);
+//      print(response.body);
       responseJson = _returnResponse(response);
     } on SocketException catch (err) {
       return FetchDataException(err.osError.errorCode.toString());

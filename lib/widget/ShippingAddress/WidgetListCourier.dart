@@ -25,18 +25,22 @@ class WidgetLisCourier extends StatelessWidget {
         elevation: 0,
         title: Text('Pilih jasa pengiriman'),
       ),
-      body: GroupedListView<dynamic, String>(
-        padding: EdgeInsets.all(8),
-        groupBy: (element) => element['code'],
-        elements: blocOrder.listCost,
-        order: GroupedListOrder.DESC,
-        useStickyGroupSeparators: true,
-        groupSeparatorBuilder: (String value) => Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            value.toUpperCase(),
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+      body: blocOrder.listCost.isEmpty
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : GroupedListView<dynamic, String>(
+              padding: EdgeInsets.all(8),
+              groupBy: (element) => element['code'],
+              elements: blocOrder.listCost,
+              order: GroupedListOrder.DESC,
+              useStickyGroupSeparators: true,
+              groupSeparatorBuilder: (String value) => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  value.toUpperCase(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
             ),
         itemBuilder: (c, element) {

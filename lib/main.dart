@@ -4,6 +4,7 @@ import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/providers/BlocProfile.dart';
+import 'package:apps/providers/BlocProject.dart';
 import 'package:apps/providers/Categories.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/LoginScreen.dart';
@@ -58,6 +59,9 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider<BlocOrder>(
           create: (_) => BlocOrder(),
+        ),
+        ChangeNotifierProvider<BlocProject>(
+          create: (_) => BlocProject(),
         )
       ],
       child: MaterialApp(
@@ -67,25 +71,6 @@ class _MyAppState extends State<MyApp> {
         home: SplashScreen(),
         initialRoute: '/',
         routes: {
-          '/widget': (_) =>
-          new WebviewScaffold(
-            url: 'https://mobile.m-bangun.com?email=',
-            appBar: new AppBar(
-              title: const Text('Pembukaan toko'),
-            ),
-            withZoom: true,
-            javascriptChannels: jsChannels,
-            allowFileURLs: true,
-            withJavascript: true,
-            withLocalStorage: true,
-            hidden: true,
-            initialChild: Container(
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
-          ),
-//          '/splace-screen': (context) => SplaceScreen(),
           '/login': (context) => LoginScreen(),
           '/request': (context) => RequestScreen(),
           '/profile': (context) => ProfileScreen(),

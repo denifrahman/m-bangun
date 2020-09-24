@@ -3,15 +3,17 @@ import 'dart:convert';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/widget/Tagihan/WidgetTagihan.dart';
+import 'package:apps/widget/Tagihan/WidgetTagihanProject.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class WidgetWaitingPayment extends StatefulWidget {
-  final Map<dynamic, dynamic> body;
+  final body;
   final idOrder;
+  final param;
 
-  WidgetWaitingPayment({Key key, this.body, this.idOrder}) : super(key: key);
+  WidgetWaitingPayment({Key key, this.body, this.idOrder, this.param}) : super(key: key);
 
   @override
   _WidgetWaitingPaymentState createState() => _WidgetWaitingPaymentState();
@@ -26,26 +28,46 @@ class _WidgetWaitingPaymentState extends State<WidgetWaitingPayment> {
   }
 
   createOrder() async {
-    await new Future.delayed(const Duration(seconds: 1));
-    BlocOrder blocOrder = Provider.of(context);
-    print('insert');
-    var result = blocOrder.insert(json.encode(widget.body));
-    result.then((value) {
-      print(value);
-      if (value['meta']['success']) {
-        var param = {
-          'id': value['data']['id_order'].toString(),
-        };
-        blocOrder.getOrderTagihanByParam(param);
-        blocOrder.getTransaksiStatus(widget.idOrder);
-        Navigator.push(
-            context,
-            SlideRightRoute(
-                page: WidgetTagihan(
-              param: 'checkout',
-            ))).then((value) {});
-      }
-    });
+    await new Future.delayed(const Duration(seconds: 5));
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+    if (widget.param == 'project') {
+      var result = blocOrder.insertProject(widget.body);
+      result.then((value) {
+        if (value) {
+          var param = {
+            'no_order': widget.idOrder.toString(),
+          };
+          blocOrder.getProjectByOrder(param);
+          blocOrder.getTransaksiStatus(widget.idOrder);
+          Navigator.push(
+              context,
+              SlideRightRoute(
+                  page: WidgetTagihanProject(
+                param: 'checkout',
+              ))).then((value) {});
+        }
+      });
+    } else {
+      print('insertToko');
+      BlocOrder blocOrder = Provider.of(context);
+      var result = blocOrder.insert(json.encode(widget.body));
+      result.then((value) {
+        print(value);
+        if (value['meta']['success']) {
+          var param = {
+            'id': value['data']['id_order'].toString(),
+          };
+          blocOrder.getOrderTagihanByParam(param);
+          blocOrder.getTransaksiStatus(widget.idOrder);
+          Navigator.push(
+              context,
+              SlideRightRoute(
+                  page: WidgetTagihan(
+                param: 'checkout',
+              ))).then((value) {});
+        }
+      });
+    }
   }
 
   @override

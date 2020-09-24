@@ -40,6 +40,7 @@ class _WidgetViewPdfPengajuanState extends State<WidgetViewPdfPengajuan> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: Text(widget.title),
       ),
       body: Center(

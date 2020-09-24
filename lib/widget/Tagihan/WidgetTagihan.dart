@@ -44,6 +44,9 @@ class _WidgetTagihanState extends State<WidgetTagihan> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     double statusBarHeight = MediaQuery.of(context).padding.top;
+    var va = blocOrder.detailMidtransTransaksi['va_numbers'] == null ? '0' : blocOrder.detailMidtransTransaksi['va_numbers'][0];
+    var mandiri_bill = blocOrder.detailMidtransTransaksi['bill_key'];
+    var paymentType = blocOrder.detailMidtransTransaksi['payment_type'];
     AppBar appBar = AppBar(
       elevation: 0,
       iconTheme: IconThemeData(color: Colors.white),
@@ -79,7 +82,7 @@ class _WidgetTagihanState extends State<WidgetTagihan> {
           children: [
             Container(
               color: Colors.cyan[600],
-              height: (height * 0.23) - appBar.preferredSize.height - statusBarHeight,
+              height: (height * 0.22) - appBar.preferredSize.height - statusBarHeight,
               width: width,
               child: Column(
                 children: [
@@ -359,7 +362,7 @@ class _WidgetTagihanState extends State<WidgetTagihan> {
                                                       padding: const EdgeInsets.all(10.0),
                                                       child: Center(
                                                         child: Text(
-                                                          blocOrder.listOrderDetail[0].namaBank,
+                                                          va == '0' ? 'Mandiri' : va['bank'].toString().toUpperCase(),
                                                           style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20.0, color: Colors.grey),
                                                         ),
                                                       ),
@@ -369,7 +372,10 @@ class _WidgetTagihanState extends State<WidgetTagihan> {
                                                     child: Column(
                                                       children: [
                                                         blocOrder.detailMidtransTransaksi['va_numbers'] == null
-                                                            ? Text(blocOrder.detailMidtransTransaksi['bill_key'] == null ? '0' : blocOrder.detailMidtransTransaksi['bill_key'],
+                                                            ? Text(
+                                                            blocOrder.detailMidtransTransaksi['bill_key'] == null
+                                                                ? '0'
+                                                                : blocOrder.detailMidtransTransaksi['bill_key'],
                                                             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0))
                                                             : Text(
                                                           blocOrder.detailMidtransTransaksi['va_numbers'][0]['va_number'].toString(),
@@ -434,14 +440,12 @@ class _WidgetTagihanState extends State<WidgetTagihan> {
                                                     ],
                                                   ),
                                                   onTap: () {
-                                                    Clipboard.setData(new ClipboardData(
-                                                        text: blocOrder.detailMidtransTransaksi['va_numbers'][0]['va_number'] == null
-                                                            ? blocOrder.detailMidtransTransaksi['bill_key'].toString()
-                                                            : blocOrder.detailMidtransTransaksi['va_numbers'][0]['va_number'].toString()));
+                                                    print(va);
+                                                    va == '0'
+                                                        ? Clipboard.setData(new ClipboardData(text: mandiri_bill.toString()))
+                                                        : Clipboard.setData(new ClipboardData(text: va['va_number'].toString()));
                                                     _scaffoldKey.currentState.showSnackBar(new SnackBar(
-                                                      content: Text('Salin ' + "'" + blocOrder.detailMidtransTransaksi['va_numbers'][0]['va_number'] == null
-                                                          ? blocOrder.detailMidtransTransaksi['bill_key'].toString()
-                                                          : blocOrder.detailMidtransTransaksi['va_numbers'][0]['va_number'].toString() + "'"),
+                                                      content: va == "0" ? Text('Salin ' + mandiri_bill.toString()) : Text('Salin ' + va['va_number']),
                                                       backgroundColor: Colors.green,
                                                     ));
                                                   },

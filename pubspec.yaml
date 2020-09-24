@@ -11,7 +11,7 @@ description: Aplikasi m-bangun
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.0.7+19
+version: 2.1.9+35
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -81,6 +81,7 @@ dependencies:
   multipart_request: ^0.3.1
   html_editor: ^1.0.1
   lazy_load_scrollview: ^1.1.0
+  maps_launcher: ^1.2.2+1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
@@ -160,6 +161,10 @@ flutter:
     - family: WorkSansRegular
       fonts:
         - asset: assets/fonts/Work_Sans/WorkSans-Regular.ttf
+
+    - family: SanSerif
+      fonts:
+        - asset: assets/fonts/SanSerif/SanSerif.ttf
 
     - family: LinoWrite
       fonts:

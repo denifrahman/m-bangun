@@ -55,7 +55,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                             width: 150,
                           )),
                           Text(
-                            'm-Bangun',
+                            'Mbangun',
                             style: TextStyle(fontSize: 24, fontFamily: 'SUNDAY', letterSpacing: 2, fontWeight: FontWeight.bold),
                           )
                         ],

@@ -1,3 +1,4 @@
+import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
@@ -52,8 +53,8 @@ class WidgetProdukTerjual extends StatelessWidget {
                         context,
                         SlideRightRoute(
                             page: ProdukScreen(
-                          namaKategori: 'Produk ' + blocProduk.detailStore[0].namaToko,
-                        )));
+                              namaKategori: 'Produk ' + blocProduk.detailStore[0].namaToko,
+                            )));
                   },
                   child: Text(
                     'Semua',
@@ -74,7 +75,7 @@ class WidgetProdukTerjual extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             children: List.generate(
               blocProduk.listProdukTerjual.isEmpty ? 1 : blocProduk.listProdukTerjual.length,
-              (j) {
+                  (j) {
                 final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
                 var avgRating = blocProduk.listProdukTerjual.isEmpty || blocProduk.listProdukTerjual[j].avg_rating == null ? '0' : blocProduk.listProdukTerjual[j].avg_rating;
                 var jumlahRating = blocProduk.listProdukTerjual.isEmpty ? '0' : blocProduk.listProdukTerjual[j].jumlah_rating;
@@ -147,11 +148,11 @@ class WidgetProdukTerjual extends StatelessWidget {
                                         blocProduk.listProdukTerjual.isEmpty
                                             ? Container()
                                             : blocProduk.listProdukTerjual[j].jenisToko == 'official_store'
-                                                ? Image.asset(
-                                                    'assets/icons/verified.png',
-                                                    height: 10,
-                                                  )
-                                                : Container()
+                                            ? Image.asset(
+                                          'assets/icons/verified.png',
+                                          height: 10,
+                                        )
+                                            : Container()
                                       ],
                                     ),
                                   ),
@@ -209,7 +210,7 @@ class WidgetProdukTerjual extends StatelessWidget {
     if (url == null) {
       return SizedBox();
     }
-    return Image.network('https://m-bangun.com/api-v2/assets/toko/' + url, fit: BoxFit.cover, errorBuilder: (context, urlImage, error) {
+    return Image.network(baseURL + '/api-v2/assets/toko/' + url, fit: BoxFit.cover, errorBuilder: (context, urlImage, error) {
       print(error.hashCode);
       return Image.asset('assets/logo.png');
     });

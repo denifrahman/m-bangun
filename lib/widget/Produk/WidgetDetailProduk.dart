@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:apps/Api/Api.dart';
 import 'package:apps/Utils/PreviewFoto.dart';
 import 'package:apps/providers/DataProvider.dart';
-import 'package:apps/widget/Produk/component/WidgetDeskripsiProduk.dart';
-import 'package:apps/widget/Produk/component/WidgetDetailBahanProduk.dart';
-import 'package:apps/widget/Produk/component/WidgetDetailLokasi.dart';
+import 'package:apps/widget/Aktivity/Pengajuan/component/WidgetDeskripsiProduk.dart';
+import 'package:apps/widget/Aktivity/Pengajuan/component/WidgetDetailBahanProduk.dart';
+import 'package:apps/widget/Aktivity/Pengajuan/component/WidgetDetailLokasi.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
@@ -252,7 +252,7 @@ class _WidgetDetailProdukState extends State<WidgetDetailProduk> {
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 10),
-                              child: WidgetDetailLokasi(dataProvider: dataProvider),
+                              child: WidgetDetailLokasi(),
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -424,8 +424,6 @@ class _WidgetDetailProdukState extends State<WidgetDetailProduk> {
                               hintText: 'Rp 100,000',
                               labelText: 'Ajukan Budget anda',
                               errorText: 'ganti jika anda memiliki budget penawaran',
-//                          hintStyle: TextStyle(fontSize: 12, color: Colors.grey),
-//                          labelStyle: TextStyle(fontSize: 14, color: Colors.grey),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Color(0xffb16a085),
@@ -455,8 +453,6 @@ class _WidgetDetailProdukState extends State<WidgetDetailProduk> {
                           decoration: const InputDecoration(
                               hintText: '15 Hari',
                               labelText: 'Ajukan Waktu Pengerjaan',
-//                          labelStyle: TextStyle(fontSize: 14, color: Colors.grey),
-//                          hintStyle: TextStyle(fontSize: 12, color: Colors.grey),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Color(0xffb16a085),

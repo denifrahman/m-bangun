@@ -12,6 +12,16 @@ class UserRepository {
     return response;
   }
 
+  Future getMitraByParam(param) async {
+    final response = await _helper.get("user/getAllMitraByParam", param);
+    return response;
+  }
+
+  Future getJenisLayananByParam(param) async {
+    final response = await _helper.get("JenisLayanan/getAllByParam", param);
+    return response;
+  }
+
   Future create(body) async {
     final response = await _helper.post("user/insert", body);
     return response;

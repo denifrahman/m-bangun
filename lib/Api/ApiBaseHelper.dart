@@ -2,24 +2,21 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/Utils/appException.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
 class ApiBaseHelper {
-  final _baseUrl = 'm-bangun.com';
-
-//  final _baseUrl = '192.168.0.11';
-
+//  final _baseUrl = 'm-bangun.com';
+  final _baseUrl = apiBaseURL;
   final _path = 'api-v2/';
-
-//  final _path = 'api-mbangun/';
 
   Future<dynamic> get(String url, param) async {
     var responseJson;
     try {
-      final _url = Uri.http(_baseUrl, _path + url, param);
+      final _url = Uri.https(_baseUrl, _path + url, param);
       final response = await http.get(_url);
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -32,7 +29,7 @@ class ApiBaseHelper {
   Future<dynamic> post(String url, body) async {
     var responseJson;
     try {
-      final _url = Uri.http(_baseUrl, _path + url);
+      final _url = Uri.https(_baseUrl, _path + url);
       var header = {"Content-Type": "application/json"};
       final response = await http.post(_url, body: body);
       responseJson = _returnResponse(response);
@@ -45,7 +42,7 @@ class ApiBaseHelper {
   Future<dynamic> multipart(String url, files, body) async {
     var responseJson;
     try {
-      final _url = Uri.http(_baseUrl, _path + url);
+      final _url = Uri.https(_baseUrl, _path + url);
       var request = new http.MultipartRequest("POST", _url);
       for (var file in files) {
         if (file != null) {

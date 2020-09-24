@@ -3,6 +3,7 @@ import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/models/Cart.dart';
 import 'package:apps/models/Order.dart';
 import 'package:apps/models/OrderProduk.dart';
+import 'package:apps/models/Project.dart';
 import 'package:apps/models/Ulasan.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -212,6 +213,7 @@ class BlocOrder extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await OrderRepository().insert(body);
+    print(body);
     if (result['meta']['success']) {
       _isLoading = false;
       notifyListeners();
@@ -415,6 +417,30 @@ class BlocOrder extends ChangeNotifier {
     }
   }
 
+  List<Project> _listProjectDetail = [];
+
+  List<Project> get listProjectDetail => _listProjectDetail;
+
+  Future<bool> getProjectByOrder(param) async {
+    imageCache.clear();
+    _isLoading = true;
+    notifyListeners();
+    var result = await OrderRepository().getProjectByOrder(param);
+//    print(result);
+    if (result['meta']['success']) {
+      _isLoading = false;
+      Iterable list = result['data'];
+      _listProjectDetail = list.map((model) => Project.fromMap(model)).toList();
+      notifyListeners();
+      return true;
+    } else {
+      _listOrderDetail = [];
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
   List<OrderProduk> _listOrderDetailProduk = [];
 
   List<OrderProduk> get listOrderDetailProduk => _listOrderDetailProduk;
@@ -493,6 +519,16 @@ class BlocOrder extends ChangeNotifier {
       return true;
     } else {
       return true;
+    }
+  }
+
+  Future<bool> insertProject(body) async {
+    _isLoading = true;
+    var result = await OrderRepository().insertProject(body);
+    if (result['meta']['success']) {
+      return true;
+    } else {
+      return false;
     }
   }
 

@@ -1,16 +1,13 @@
 import 'package:apps/Utils/values/colors.dart';
-import 'package:apps/providers/DataProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class WidgetFotoCircular extends StatelessWidget {
   const WidgetFotoCircular({
     Key key,
-    @required this.dataProvider,
     @required this.userFoto,
   }) : super(key: key);
 
-  final DataProvider dataProvider;
   final String userFoto;
 
   @override
@@ -29,7 +26,7 @@ class WidgetFotoCircular extends StatelessWidget {
           height: 45.0,
           child: ClipOval(
             child: Image.network(
-              userFoto == null ? dataProvider.fotoNull : userFoto,
+              userFoto,
               fit: BoxFit.cover,
               width: 45,
             ),

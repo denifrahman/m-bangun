@@ -5,7 +5,6 @@ import 'package:apps/models/KotaM.dart';
 import 'package:apps/models/ProvinsiM.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/providers/BlocProfile.dart';
-import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/widget/Home/WidgetSelectLokasi.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -72,7 +71,7 @@ class _WidgetLokasiState extends State<WidgetLokasi> {
               width: 5,
             ),
             TitleHeader(
-              title: "m-Bangun",
+              title: "Mbangun",
               color: Colors.white,
             )
           ],

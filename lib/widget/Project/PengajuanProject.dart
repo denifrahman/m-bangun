@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:apps/providers/BlocAuth.dart';
+import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:provider/provider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class PengajuanProject extends StatefulWidget {
   PengajuanProject({Key key}) : super(key: key);
@@ -15,7 +15,6 @@ class PengajuanProject extends StatefulWidget {
 }
 
 class _PengajuanProjectState extends State<PengajuanProject> {
-  final Completer<WebViewController> _controller = Completer<WebViewController>();
   bool loading = true;
   Timer timer;
 
@@ -30,7 +29,6 @@ class _PengajuanProjectState extends State<PengajuanProject> {
   @override
   void dispose() {
     super.dispose();
-    timer.cancel();
   }
 
   void _initializeTimer() async {
@@ -50,6 +48,8 @@ class _PengajuanProjectState extends State<PengajuanProject> {
   @override
   Widget build(BuildContext context) {
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+    BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     // TODO: implement build
 
     return Scaffold(
@@ -60,19 +60,21 @@ class _PengajuanProjectState extends State<PengajuanProject> {
       body: Builder(
         builder: (BuildContext context) {
           return WebviewScaffold(
-            url: 'https://mobile.m-bangun.com/Projek?email=' + blocAuth.currentUser.email.toString(),
+            url: 'https://mobile.mbangun.id/Projek?email=' + blocAuth.currentUser.email.toString(),
+            withJavascript: true,
+            displayZoomControls: false,
             withZoom: false,
             clearCache: true,
-            scrollBar: true,
-            allowFileURLs: true,
-            withJavascript: true,
-            withLocalStorage: true,
-            hidden: true,
-            initialChild: Container(
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
+            javascriptChannels: <JavascriptChannel>[
+              JavascriptChannel(
+                  name: 'Print',
+                  onMessageReceived: (JavascriptMessage msg) {
+                    var result = msg.message;
+                    if (result != null) {
+                      Navigator.pop(context, result);
+                    }
+                  }),
+            ].toSet(),
           );
         },
       ),

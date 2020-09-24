@@ -1,3 +1,4 @@
+import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/models/Cart.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class _ShopItemListState extends State<ShopItemList> {
                         Container(
                           margin: EdgeInsets.only(top: 0),
                           child: Image.network(
-                            'https://m-bangun.com/api-v2/assets/toko/' + widget.chilrdern.foto,
+                            baseURL + '/api-v2/assets/toko/' + widget.chilrdern.foto,
                             width: 80,
                             height: 80,
                           ),
@@ -58,16 +59,16 @@ class _ShopItemListState extends State<ShopItemList> {
                         ),
                         widget.chilrdern.jenisOngkir == 'include_dalam_kota'
                             ? Text(
-                                'Free ongkir \ndalam kota',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 10, color: Colors.grey),
-                              )
+                          'Free ongkir \ndalam kota',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 10, color: Colors.grey),
+                        )
                             : widget.chilrdern.jenisOngkir == 'include'
-                                ? Text(
-                                    'Free ongkir',
-                                    style: TextStyle(color: Colors.grey, fontSize: 12),
-                                  )
-                                : Text('')
+                            ? Text(
+                          'Free ongkir',
+                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                        )
+                            : Text('')
                       ],
                     ),
                     Column(
@@ -154,27 +155,27 @@ class _ShopItemListState extends State<ShopItemList> {
                             )),
                         child: widget.chilrdern.stok == '1'
                             ? Text(
-                                '1',
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                              )
+                          '1',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                        )
                             : NumberPicker.integer(
-                                initialValue: int.parse(widget.chilrdern.jumlah),
-                                minValue: 1,
-                                maxValue: int.parse(widget.chilrdern.stok),
-                                step: 1,
-                                onChanged: (value) {
-                                  setState(() {
-                                    oldValue = value;
-                                  });
-                                  var body = {
-                                    'id': widget.chilrdern.id.toString(),
-                                    'id_produk': widget.chilrdern.idProduk,
-                                    'jumlah': oldValue.toString(),
-                                    'harga': widget.chilrdern.harga.toString(),
-                                    'subtotal': (int.parse(widget.chilrdern.harga) * value).toString()
-                                  };
-                                  blocOrder.updateCart(body);
-                                },
+                          initialValue: int.parse(widget.chilrdern.jumlah),
+                          minValue: 1,
+                          maxValue: int.parse(widget.chilrdern.stok),
+                          step: 1,
+                          onChanged: (value) {
+                            setState(() {
+                              oldValue = value;
+                            });
+                            var body = {
+                              'id': widget.chilrdern.id.toString(),
+                              'id_produk': widget.chilrdern.idProduk,
+                              'jumlah': oldValue.toString(),
+                              'harga': widget.chilrdern.harga.toString(),
+                              'subtotal': (int.parse(widget.chilrdern.harga) * value).toString()
+                            };
+                            blocOrder.updateCart(body);
+                          },
                           itemExtent: 30,
                           listViewWidth: 30,
                         ),

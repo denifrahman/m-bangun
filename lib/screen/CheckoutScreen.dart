@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/Utils/SnapWidgetMidtrans.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/models/Cart.dart';
@@ -25,6 +26,8 @@ class CheckoutScreen extends StatelessWidget {
 
   CheckoutScreen({Key key, this.listCart, this.subtotal, this.index}) : super(key: key);
   final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
+  final RoundedLoadingButtonController _btnControllerMetodeBayar = new RoundedLoadingButtonController();
+  final RoundedLoadingButtonController _btnControllerALamatPenerima = new RoundedLoadingButtonController();
   final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   int totalDalamKota = 0;
@@ -70,7 +73,7 @@ class CheckoutScreen extends StatelessWidget {
                               ],
                             ),
                             leading: Image.network(
-                              'https://m-bangun.com/api-v2/assets/toko/' + listCart.chilrdern[0].fotoToko,
+                              baseURL + '/api-v2/assets/toko/' + listCart.chilrdern[0].fotoToko,
                               width: 40,
                               height: 80,
                             ),
@@ -105,9 +108,9 @@ class CheckoutScreen extends StatelessWidget {
                                 children: <Widget>[
                                   new Expanded(
                                       child: RoundedLoadingButton(
-                                    child: Text('Ubah', style: TextStyle(color: Colors.white, fontSize: 12)),
+                                        child: Text('Ubah', style: TextStyle(color: Colors.white, fontSize: 12)),
                                     color: Colors.cyan[700],
-                                    controller: _btnController,
+                                    controller: _btnControllerALamatPenerima,
                                     onPressed: () {
                                       blocProfile.getAllUserAddress(blocAuth.idUser);
                                       Navigator.push(context, SlideRightRoute(page: ShippingAddressScreen())).then((value) {
@@ -128,17 +131,17 @@ class CheckoutScreen extends StatelessWidget {
                                             var beratTotal = int.parse(listCart.chilrdern[k].berat.toString()) * int.parse(listCart.chilrdern[k].jumlah.toString());
                                             totalRajaOngkir += beratTotal;
                                           }
-                                        }
-                                        if (blocProfile.listUserAddressDefault.isNotEmpty) {
-                                          var param = {
-                                            'origin': cart.idKecamatan.toString(),
-                                            'destination': blocProfile.listUserAddressDefault[0].idKecamatan,
-                                            'weight': (totalDalamKota + totalRajaOngkir) == 0 ? '1' : (totalDalamKota + totalRajaOngkir).toString()
-                                          };
-                                          blocOrder.getCost(param);
-                                        }
-                                      });
-                                      _btnController.reset();
+                                            }
+                                            if (blocProfile.listUserAddressDefault.isNotEmpty) {
+                                              var param = {
+                                                'origin': cart.idKecamatan.toString(),
+                                                'destination': blocProfile.listUserAddressDefault[0].idKecamatan,
+                                                'weight': (totalDalamKota + totalRajaOngkir) == 0 ? '1' : (totalDalamKota + totalRajaOngkir).toString()
+                                              };
+                                              blocOrder.getCost(param);
+                                            }
+                                          });
+                                          _btnControllerALamatPenerima.reset();
                                     },
                                   )),
                                 ],
@@ -205,9 +208,6 @@ class CheckoutScreen extends StatelessWidget {
                                 ),
                                 Text(blocOrder.listMetodePembayaranSelected.isEmpty ? '' : blocOrder.listMetodePembayaranSelected['nama_bank'],
                                     style: TextStyle(color: Colors.black)),
-//                                    Text(
-//                                      blocOrder.listMetodePembayaranSelected.isEmpty ? '' : 'a.n ' + blocOrder.listMetodePembayaranSelected['nama_rekening'],
-//                                    )
                               ],
                             ),
                             leading: Icon(FontAwesomeIcons.creditCard),
@@ -220,18 +220,19 @@ class CheckoutScreen extends StatelessWidget {
                                 children: <Widget>[
                                   new Expanded(
                                       child: RoundedLoadingButton(
-                                    child: Text('Ubah', style: TextStyle(color: Colors.white, fontSize: 12)),
-                                    color: Colors.cyan[700],
-                                    controller: _btnController,
-                                    onPressed: () {
-                                      blocProfile.getAllUserAddress(blocAuth.idUser);
-                                      blocOrder.getMetodePembayaran();
-                                      Navigator.push(context, SlideRightRoute(page: WidgetListPembayaran())).then((value) {
-                                        Provider.of<BlocProfile>(context).getSubDistrictById(listCart.chilrdern[0].idKecamatan);
-                                        Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
-                                      });
-                                      _btnController.reset();
-                                    },
+                                        child: Text('Ubah', style: TextStyle(color: Colors.white, fontSize: 12)),
+                                        color: Colors.cyan[700],
+                                        controller: _btnControllerMetodeBayar,
+                                        onPressed: () {
+                                          blocProfile.getAllUserAddress(blocAuth.idUser);
+                                          blocOrder.getMetodePembayaran();
+                                          Navigator.push(context, SlideRightRoute(page: WidgetListPembayaran())).then((value) {
+                                            Provider.of<BlocProfile>(context).getSubDistrictById(listCart.chilrdern[0].idKecamatan);
+                                            Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
+                                            _btnControllerMetodeBayar.reset();
+                                          });
+                                          print('stop');
+                                        },
                                   )),
                                 ],
                               ),
@@ -321,10 +322,11 @@ class CheckoutScreen extends StatelessWidget {
     } else {
       phoneNumber = blocProfile.listUserAddressDefault[0].noHp.toString();
     }
+    var no_order = "PROD-" + "$timeStamp";
     var body = {
       "enabled_payments": [blocOrder.listMetodePembayaranSelected['kode'].toString().toLowerCase()],
       blocOrder.listMetodePembayaranSelected['kode'].toString().toLowerCase(): {"va_number": phoneNumber},
-      "transaction_details": {"order_id": "$timeStamp", "gross_amount": (this.subtotal + totalOngkir).toString()},
+      "transaction_details": {"order_id": no_order.toString(), "gross_amount": (this.subtotal + totalOngkir).toString()},
       "item_details": listKeranjang,
       "expiry": {"start_time": "${Jiffy(DateTime.now()).format("yyyy-MM-dd HH:mm:ss")} +0700", "duration": 120, "unit": "minute"},
       "customer_details": {
@@ -357,7 +359,7 @@ class CheckoutScreen extends StatelessWidget {
     var result = blocOrder.makePayment(data);
     result.then((value) {
       if (value['token'] != null) {
-        saveTransaction(context, timeStamp, value);
+        saveTransaction(context, no_order, value);
       }
     });
   }
@@ -450,6 +452,7 @@ class CheckoutScreen extends StatelessWidget {
                 tokenSnap: responMidtrasn['token'],
                 urlSnap: responMidtrasn['redirect_url'],
                 bodyTransaction: body,
+                param: 'toko',
               ),
             ),
           );

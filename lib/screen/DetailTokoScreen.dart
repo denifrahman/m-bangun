@@ -1,3 +1,4 @@
+import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/widget/Toko/WidgetKategoriByToko.dart';
 import 'package:apps/widget/Toko/WidgetProdukTerjual.dart';
@@ -35,7 +36,7 @@ class _DetailTokoScreenState extends State<DetailTokoScreen> {
   }
 
   setColor() async {
-    var a = _updatePaletteGenerator(region, 'https://m-bangun.com/api-v2/assets/toko/' + widget.image);
+    var a = _updatePaletteGenerator(region, baseURL + '/api-v2/assets/toko/' + widget.image);
     a.then((value) {
       setState(() {
         bannerColor = value;
@@ -90,102 +91,102 @@ class _DetailTokoScreenState extends State<DetailTokoScreen> {
     return Material(
       child: blocProduk.isLoading
           ? Center(
-              child: PKCardListSkeleton(),
-            )
+        child: PKCardListSkeleton(),
+      )
           : RefreshIndicator(
-              onRefresh: () => blocProduk.getProdukTerjual(widget.id),
-              child: CardSliverAppBar(
-                height: 200,
-                background: Image.network(
-                  "https://m-bangun.com/api-v2/assets/toko/" + blocProduk.detailStore[0].fotoSampul,
+        onRefresh: () => blocProduk.getProdukTerjual(widget.id),
+        child: CardSliverAppBar(
+          height: 200,
+          background: Image.network(
+            baseURL + "/api-v2/assets/toko/" + blocProduk.detailStore[0].fotoSampul,
                   fit: BoxFit.cover,
                   errorBuilder: (context, urlImage, error) {
                     print(error.hashCode);
                     return Image.asset('assets/logo.png');
                   },
                 ),
-                title: Text(blocProduk.detailStore[0].namaToko, style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
-                titleDescription: Text(blocProduk.detailStore[0].jenisToko, style: TextStyle(color: Colors.black, fontSize: 11)),
-                card: NetworkImage(
-                  'https://m-bangun.com/api-v2/assets/toko/' + blocProduk.detailStore[0].foto,
-                ),
-                backButton: true,
-                backButtonColors: [Colors.white, Colors.black],
-                action: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                      color: Colors.white,
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.person_outline,
-                          color: bannerColor,
-                        ),
-                        Text(
-                          'Follow',
-                          style: TextStyle(color: bannerColor, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    )),
-                body: Container(
-                  alignment: Alignment.topLeft,
-                  color: Colors.white,
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  child: Column(
-                    children: <Widget>[
-                      Divider(),
-                      Expanded(
-                        flex: 2,
-                        child: DefaultTabController(
-                          length: 1,
-                          child: Scaffold(
-                            appBar: appBar,
-                            body: TabBarView(
-                              children: [
-                                Column(
-                                  children: [
-                                    Expanded(flex: 0, child: WidgetKategoriByToko()),
-                                    Expanded(
-                                      flex: 0,
-                                      child: WidgetProdukTerjual(
-                                        blocProduk: blocProduk,
-                                      ),
-                                    ),
-                                  ],
+          title: Text(blocProduk.detailStore[0].namaToko, style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
+          titleDescription: Text(blocProduk.detailStore[0].jenisToko, style: TextStyle(color: Colors.black, fontSize: 11)),
+          card: NetworkImage(
+            baseURL + '/api-v2/assets/toko/' + blocProduk.detailStore[0].foto,
+          ),
+          backButton: true,
+          backButtonColors: [Colors.white, Colors.black],
+          action: Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+                color: Colors.white,
+              ),
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.person_outline,
+                    color: bannerColor,
+                  ),
+                  Text(
+                    'Follow',
+                    style: TextStyle(color: bannerColor, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              )),
+          body: Container(
+            alignment: Alignment.topLeft,
+            color: Colors.white,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: <Widget>[
+                Divider(),
+                Expanded(
+                  flex: 2,
+                  child: DefaultTabController(
+                    length: 1,
+                    child: Scaffold(
+                      appBar: appBar,
+                      body: TabBarView(
+                        children: [
+                          Column(
+                            children: [
+                              Expanded(flex: 0, child: WidgetKategoriByToko()),
+                              Expanded(
+                                flex: 0,
+                                child: WidgetProdukTerjual(
+                                  blocProduk: blocProduk,
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-//                        height: MediaQuery.of(context).size.height * 0.3,
-                        child: Column(
-                          children: [
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              margin: EdgeInsets.only(left: 10, top: 10),
-                              child: Text("Toko Lainnya", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                            ),
-                            Container(
-                              alignment: Alignment.center,
-                              width: MediaQuery.of(context).size.width,
-                              child: WidgetOffialStore(
-                                blocProduk: blocProduk,
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+//                        height: MediaQuery.of(context).size.height * 0.3,
+                  child: Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.only(left: 10, top: 10),
+                        child: Text("Toko Lainnya", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        width: MediaQuery.of(context).size.width,
+                        child: WidgetOffialStore(
+                          blocProduk: blocProduk,
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
+              ],
             ),
+          ),
+        ),
+      ),
     );
   }
 

@@ -90,6 +90,9 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
         ),
         floatingActionButton: Container(
           child: FloatingActionButton(
+            onPressed: () {
+              _openRequest();
+            },
             tooltip: 'Panggil Tukang',
             backgroundColor: Colors.white,
             foregroundColor: Colors.redAccent,
@@ -108,7 +111,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                     tileMode: TileMode.clamp),
               ),
               child: new Center(
-                child: InkWell(onTap: () => _openRequest(), child: Image(width: 35, fit: BoxFit.fill, image: new AssetImage('assets/logo.png'))),
+                child: Image(width: 35, fit: BoxFit.fill, image: new AssetImage('assets/logo.png')),
               ),
             ),
           ),
@@ -118,14 +121,14 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
         bottomNavigationBar: BottomAppBar(
           color: Colors.cyan[700],
           shape: CircularNotchedRectangle(),
-          notchMargin: 5,
+          notchMargin: 3,
           child: Container(
             height: 50,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.only(right: 20),
+                  margin: EdgeInsets.only(right: 0),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -216,7 +219,16 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 20),
+                    margin: EdgeInsets.only(top: 25, right: 15),
+                    child: Text(
+                      'Project',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                      ),
+                    )),
+                Container(
+                  margin: EdgeInsets.only(left: 0, right: 5),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

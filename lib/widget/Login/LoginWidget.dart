@@ -90,7 +90,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                       height: 10,
                                     ),
                                     TitleHeader(
-                                      title: 'm-Bangun',
+                                      title: 'Mbangun',
                                       color: Colors.black,
                                     )
                                   ],
@@ -129,7 +129,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                       ),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [Text('Selamat datang di', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)), TextBold(title: ' m-Bangun')],
+                                        children: [Text('Selamat datang di', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)), TextBold(title: ' Mbangun')],
                                       ),
                                     ),
                                   ),

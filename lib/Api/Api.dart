@@ -7,7 +7,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
 //const baseUrl = "http://niagatravel.com/api/api-m-bangun-jwt-token/api/";
-const baseUrl = "http://m-bangun.com/api-v2/api/";
+const baseUrl = "https://mbangun.id/api-v2/";
 //const baseUrl = "http://192.168.0.6/api_jwt/api/";
 //const baseUrl = "http://192.168.0.6/api_jwt/api/";
 //const api_url = "192.168.0.6";

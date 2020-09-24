@@ -1,3 +1,4 @@
+import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/models/Cart.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,7 @@ class _ShopItemListNonAtifState extends State<ShopItemListNonAtif> {
                         Container(
                           margin: EdgeInsets.only(top: 0),
                           child: Image.network(
-                            'https://m-bangun.com/api-v2/assets/toko/' + widget.chilrdern.foto,
+                            baseURL + '/api-v2/assets/toko/' + widget.chilrdern.foto,
                             width: 80,
                             height: 80,
                           ),
@@ -57,10 +58,10 @@ class _ShopItemListNonAtifState extends State<ShopItemListNonAtif> {
                         ),
                         widget.chilrdern.jenisOngkir == 'include_dalam_kota'
                             ? Text(
-                                'Free ongkir \ndalam kota',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 10, color: Colors.grey),
-                              )
+                          'Free ongkir \ndalam kota',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 10, color: Colors.grey),
+                        )
                             : widget.chilrdern.jenisOngkir == 'include' ? Text('Free ongkir') : Text('')
                       ],
                     ),

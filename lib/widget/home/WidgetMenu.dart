@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocAuth.dart';
+import 'package:apps/screen/CheckoutScreenProject.dart';
 import 'package:apps/widget/Pengajuan/component/WidgetCardMenu.dart';
 import 'package:apps/widget/Project/PengajuanProject.dart';
 import 'package:apps/widget/Toko/Pengajuan.dart';
@@ -23,14 +26,14 @@ class WidgetMenu extends StatelessWidget {
             children: [
               blocAuth.statusToko == '0'
                   ? InkWell(
-                      onTap: () => _pengajuan(context),
-                      child: WidgetCardMenu(
-                        title: 'Buka Toko',
-                        color: Colors.amber[800],
-                        thumbnail: 'assets/icons/store.png',
-                        deskripsi: 'Anda bisa menjual produk anda secara eksklusif di m-Bangun, cukup mengisi detail produk anda dan produk anda siap di untuk publish!',
-                      ),
-                    )
+                onTap: () => _pengajuan(context),
+                child: WidgetCardMenu(
+                  title: 'Buka Toko',
+                  color: Colors.amber[800],
+                  thumbnail: 'assets/icons/store.png',
+                  deskripsi: 'Anda bisa menjual produk anda secara eksklusif di m-Bangun, cukup mengisi detail produk anda dan produk anda siap di untuk publish!',
+                ),
+              )
                   : Container(),
               InkWell(
                 onTap: () {
@@ -39,7 +42,16 @@ class WidgetMenu extends StatelessWidget {
                     SlideRightRoute(
                       page: PengajuanProject(),
                     ),
-                  );
+                  ).then((value) {
+                    print(value);
+                    Navigator.push(
+                        context,
+                        SlideRightRoute(
+                            page: CheckoutScreenProject(
+                          body: value,
+                          subtotal: int.parse(json.decode(value)['biaya_survey']),
+                        )));
+                  });
                 },
                 child: WidgetCardMenu(
                   title: 'Pengajuan Proyek',

@@ -1,14 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/Utils/appException.dart';
 import 'package:http/http.dart' as http;
 
 class ApiBaseHelperRajaOngkir {
-//  final _baseUrl = 'm-bangun.com';
-  final _baseUrl = 'pro.rajaongkir.com';
-
-//  final _path = 'api-v2/';
+  final _baseUrl = apiBaseUrlRajaOngkir;
   final _path = 'api/';
 
   Future<dynamic> get(String url, param) async {
@@ -28,7 +26,6 @@ class ApiBaseHelperRajaOngkir {
     var responseJson;
     try {
       final _url = Uri.https(_baseUrl, _path + url);
-//      print(_url);
       var header = {'key': "e99ff50191d54f9bc76c9c00e43cd158"};
       final response = await http.post(_url, body: body, headers: header);
       responseJson = _returnResponse(response);

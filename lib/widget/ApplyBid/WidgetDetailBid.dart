@@ -1,9 +1,9 @@
 import 'package:apps/Utils/PreviewFoto.dart';
 import 'package:apps/providers/DataProvider.dart';
+import 'package:apps/widget/Aktivity/Pengajuan/component/WidgetDeskripsiProduk.dart';
+import 'package:apps/widget/Aktivity/Pengajuan/component/WidgetDetailBahanProduk.dart';
+import 'package:apps/widget/Aktivity/Pengajuan/component/WidgetDetailLokasi.dart';
 import 'package:apps/widget/Kontrak/WidgetKontrak.dart';
-import 'package:apps/widget/Produk/component/WidgetDeskripsiProduk.dart';
-import 'package:apps/widget/Produk/component/WidgetDetailBahanProduk.dart';
-import 'package:apps/widget/Produk/component/WidgetDetailLokasi.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:pk_skeleton/pk_skeleton.dart';
@@ -228,8 +228,7 @@ class WidgetDetailBid extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 10),
-                              child: WidgetDetailLokasi(dataProvider:
-                              dataProvider),
+                              child: WidgetDetailLokasi(),
                             ),
                             param != 'Publish'
                                 ? Padding(

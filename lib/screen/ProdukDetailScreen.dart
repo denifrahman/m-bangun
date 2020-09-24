@@ -1,3 +1,4 @@
+import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
@@ -37,97 +38,97 @@ class ProdukDetailScreen extends StatelessWidget {
       body: blocProduk.isLoading
           ? Center(child: PKCardListSkeleton())
           : SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.9,
-                    child: NestedScrollView(
-                      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-                        return <Widget>[
-                          SliverAppBar(
-                            automaticallyImplyLeading: true,
-                            expandedHeight: 380.0,
-                            floating: false,
-                            pinned: true,
-                            leading: WidgetLeadingTopDetaikProduct(),
-                            flexibleSpace: WidgetFlexibleSpaceDetailProduct(blocProduk: blocProduk, hashCode: hashCode),
-                          ),
-                        ];
-                      },
-                      body: SingleChildScrollView(
-                        child: Column(
-                          children: <Widget>[
-                            WidgetHeaderDetailProduct(blocProduk: blocProduk, blocOrder: blocOrder, IDR: IDR),
-                            WidgetInformasiDetailProduk(blocProduk: blocProduk),
-                            WidgetDeskripsiDetailProduk(blocProduk: blocProduk),
-                            WidgetUlasanPembeli(blocProduk: blocProduk),
-                          ],
-                        ),
-                      ),
+        child: Column(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.9,
+              child: NestedScrollView(
+                headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                  return <Widget>[
+                    SliverAppBar(
+                      automaticallyImplyLeading: true,
+                      expandedHeight: 380.0,
+                      floating: false,
+                      pinned: true,
+                      leading: WidgetLeadingTopDetaikProduct(),
+                      flexibleSpace: WidgetFlexibleSpaceDetailProduct(blocProduk: blocProduk, hashCode: hashCode),
                     ),
+                  ];
+                },
+                body: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      WidgetHeaderDetailProduct(blocProduk: blocProduk, blocOrder: blocOrder, IDR: IDR),
+                      WidgetInformasiDetailProduk(blocProduk: blocProduk),
+                      WidgetDeskripsiDetailProduk(blocProduk: blocProduk),
+                      WidgetUlasanPembeli(blocProduk: blocProduk),
+                    ],
                   ),
-                  Container(
-                    color: Colors.white,
-//                  decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3), borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20))),
-                    height: MediaQuery.of(context).size.height * 0.1,
-                    width: MediaQuery.of(context).size.width,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            BlocAuth blocAuth = Provider.of<BlocAuth>(context);
-                            BlocProfile blocProfile = Provider.of<BlocProfile>(context);
-                            blocProfile.getUserAddressDefault(blocAuth.idUser);
-                            blocOrder.getCart();
-                            Navigator.push(context, SlideRightRoute(page: Keranjang()));
-                          },
-                          child: Stack(
-                            children: <Widget>[
-                              Icon(
-                                Icons.shopping_cart,
-                                size: 25,
-                                color: Colors.cyan,
-                              ),
-                              blocOrder.listCart.length == 0
-                                  ? Container(
-                                      child: Text(''),
-                                    )
-                                  : Positioned(
-                                      top: 0.0,
-                                      right: 0.0,
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          blocOrder.listCart.length.toString(),
-                                          style: TextStyle(color: Colors.white, fontSize: 8),
-                                        ),
-                                      ),
-                                    )
-                            ],
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.favorite_border,
-                            color: Colors.cyan,
-                            size: 25,
-                          ),
-                          onPressed: () {
-                            if (blocAuth.isLogin) {
-//                           Navigator.
-                            } else {}
-                          },
-                        ),
-                        _buttonBuy(context)
-                      ],
-                    ),
-                  )
-                ],
+                ),
               ),
             ),
+            Container(
+              color: Colors.white,
+//                  decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3), borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20))),
+              height: MediaQuery.of(context).size.height * 0.1,
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+                      BlocProfile blocProfile = Provider.of<BlocProfile>(context);
+                      blocProfile.getUserAddressDefault(blocAuth.idUser);
+                      blocOrder.getCart();
+                      Navigator.push(context, SlideRightRoute(page: Keranjang()));
+                    },
+                    child: Stack(
+                      children: <Widget>[
+                        Icon(
+                          Icons.shopping_cart,
+                          size: 25,
+                          color: Colors.cyan,
+                        ),
+                        blocOrder.listCart.length == 0
+                            ? Container(
+                          child: Text(''),
+                        )
+                            : Positioned(
+                          top: 0.0,
+                          right: 0.0,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                            alignment: Alignment.center,
+                            child: Text(
+                              blocOrder.listCart.length.toString(),
+                              style: TextStyle(color: Colors.white, fontSize: 8),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.favorite_border,
+                      color: Colors.cyan,
+                      size: 25,
+                    ),
+                    onPressed: () {
+                      if (blocAuth.isLogin) {
+//                           Navigator.
+                      } else {}
+                    },
+                  ),
+                  _buttonBuy(context)
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 
@@ -140,9 +141,9 @@ class ProdukDetailScreen extends StatelessWidget {
         },
         child: Center(
             child: Text(
-          blocProduk.detailProduct[0].stok == '0' ? 'Stok tidak tersedia' : 'Beli',
-          style: TextStyle(color: Colors.white),
-        )),
+              blocProduk.detailProduct[0].stok == '0' ? 'Stok tidak tersedia' : 'Beli',
+              style: TextStyle(color: Colors.white),
+            )),
       ),
       height: 40,
       width: MediaQuery.of(context).size.width * 0.7,
@@ -209,14 +210,14 @@ class ProdukDetailScreen extends StatelessWidget {
                                     children: [
                                       Container(
                                         margin: EdgeInsets.only(top: 0),
-                                        child: Image.network('https://m-bangun.com/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto, width: 50, height: 80,
+                                        child: Image.network(baseURL + '/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto, width: 50, height: 80,
                                             errorBuilder: (context, urlImage, error) {
-                                              print(error.hashCode);
-                                              return Image.asset(
-                                                'assets/logo.png',
-                                                height: 40,
-                                              );
-                                            }),
+                                          print(error.hashCode);
+                                          return Image.asset(
+                                            'assets/logo.png',
+                                            height: 40,
+                                          );
+                                        }),
                                       ),
                                       Column(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -314,12 +315,12 @@ class ProdukDetailScreen extends StatelessWidget {
                       ),
                       blocOrder.jumlah < int.parse(blocProduk.detailProduct[0].minimalPesanan)
                           ? RoundedLoadingButton(
-                              width: MediaQuery.of(context).size.width,
-                              height: 40,
-                              child: Text('Tambah Keranjang', style: TextStyle(color: Colors.white)),
-                              color: Colors.grey,
-                              controller: _btnController,
-                            )
+                        width: MediaQuery.of(context).size.width,
+                        height: 40,
+                        child: Text('Tambah Keranjang', style: TextStyle(color: Colors.white)),
+                        color: Colors.grey,
+                        controller: _btnController,
+                      )
                           : RoundedLoadingButton(
                         width: MediaQuery
                             .of(context)

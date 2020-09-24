@@ -19,6 +19,11 @@ class OrderRepository {
     return response;
   }
 
+  Future updateSelectedBid(body) async {
+    final response = await _helper.post("bids/updateSelectedBid", body);
+    return response;
+  }
+
   Future removeCart(body) async {
     final response = await _helper.post("order/delete", body);
     return response;
@@ -49,6 +54,16 @@ class OrderRepository {
     return response;
   }
 
+  Future getProjectByOrder(param) async {
+    final response = await _helper.get("project/getAllByParam", param);
+    return response;
+  }
+
+  Future getBidsByParam(param) async {
+    final response = await _helper.get("bids/getAllByParam", param);
+    return response;
+  }
+
   Future getOrderProdukByParam(param) async {
     final response = await _helper.get("order/getOrderProdukByParam", param);
     return response;
@@ -69,8 +84,18 @@ class OrderRepository {
     return response;
   }
 
+  Future insertProject(body) async {
+    final response = await _helper.post("project/insert", body);
+    return response;
+  }
+
   Future insertUlasanToko(body) async {
     final response = await _helper.post("order/insertUlasanToko", body);
+    return response;
+  }
+
+  Future createSignature(body) async {
+    final response = await _helper.post("project/insertSignature", body);
     return response;
   }
 
@@ -83,4 +108,5 @@ class OrderRepository {
     final response = await _helperMidtrans.getStatus("${param}/status");
     return response;
   }
+
 }

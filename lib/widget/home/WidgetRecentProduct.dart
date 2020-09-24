@@ -1,4 +1,5 @@
 import 'package:apps/Utils/LocalBindings.dart';
+import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
@@ -225,7 +226,7 @@ class WidgetRecentProduct extends StatelessWidget {
   }
 
   getPostImages(String url) {
-    var urlImage = 'https://m-bangun.com/api-v2/assets/toko/' + url;
+    var urlImage = baseURL + '/api-v2/assets/toko/' + url;
     if (url == null) {
       return SizedBox();
     }
@@ -234,7 +235,7 @@ class WidgetRecentProduct extends StatelessWidget {
       fit: BoxFit.cover,
       errorBuilder: (context, urlImage, error) {
         print(error.hashCode);
-        return Image.network('https://m-bangun.com/api-v2/assets/toko/No-image-found.jpg');
+        return Image.network(baseURL + '/api-v2/assets/toko/No-image-found.jpg');
       },
     );
   }

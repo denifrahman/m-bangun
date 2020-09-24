@@ -1,5 +1,6 @@
 import 'package:apps/Utils/navigation_right.dart';
-import 'package:apps/providers/DataProvider.dart';
+import 'package:apps/providers/BlocAuth.dart';
+import 'package:apps/providers/BlocProject.dart';
 import 'package:apps/widget/Aktivity/Pengajuan/WidgetPengajuanByParamList.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,7 @@ class WidgetPengajuanList extends StatefulWidget {
 }
 
 class _WidgetPengajuanListState extends State<WidgetPengajuanList> {
-  var dataList = ['New', 'Review', 'Publish', 'Negosiasi', 'Kontrak', 'Progress', 'Finish', 'Tolak'];
+  var dataList = ['Menunggu Pembayaran', 'Survey', 'Penawaran', 'Proses', 'Selesai'];
 
   @override
   void initState() {
@@ -37,44 +38,49 @@ class _WidgetPengajuanListState extends State<WidgetPengajuanList> {
         itemCount: dataList.length,
         padding: EdgeInsets.all(10),
         itemBuilder: (context, index) {
+          var title = dataList[index].toString().toLowerCase();
+          var statusProject = title == 'menunggu pembayaran' ? 'baru' : title == 'penawaran' ? 'setuju' : title == 'negosiasi' ? 'setuju' : title.toLowerCase();
+          var statusPembayaran = title == 'menunggu pembayaran' ? 'menunggu_pembayaran' : title == 'penawaran' ? 'terbayar' : 'terbayar';
           return Card(
             child: InkWell(
-              onTap: () => _openPengajuan(dataList[index]),
+              onTap: () => _openPengajuan(statusProject, statusPembayaran, title),
               child: ListTile(
                   title: Text(dataList[index]),
-                  leading: dataList[index] == 'New'
+                  leading: dataList[index] == 'Menunggu Pembayaran'
                       ? Icon(
                           Icons.new_releases,
+                          size: 30,
                           color: Colors.blue,
                         )
-                      : dataList[index] == 'Review'
+                      : dataList[index] == 'Penawaran'
                           ? Icon(
                               Icons.watch_later,
+                              size: 30,
                               color: Colors.amber,
                             )
-                          : dataList[index] == 'Publish'
+                          : dataList[index] == 'Survey'
                               ? Icon(
                                   Icons.backup,
+                                  size: 30,
                                   color: Colors.green,
                                 )
                               : dataList[index] == 'Negosiasi'
                                   ? Icon(
-                                      Icons.assignment,
-                                      color: Color(0xffff7675),
+                                      Icons.account_balance_wallet,
+                                      size: 30,
+                                      color: Colors.red,
                                     )
-                                  : dataList[index] == 'Kontrak'
-                                      ? Icon(Icons.event_note, color: Colors.red)
-                                      : dataList[index] == 'Progress'
-                                          ? Icon(
-                                              Icons.work,
-                                              color: Color(0xffff7675),
-                                            )
-                                          : dataList[index] == 'Finish'
-                                              ? Icon(
-                                                  Icons.done_all,
-                                                  color: Color(0xff00cec9),
-                                                )
-                                              : Icon(Icons.delete, color: Colors.red),
+                                  : dataList[index] == 'Proses'
+                                      ? Icon(
+                                          Icons.style,
+                                          color: Colors.orange,
+                                          size: 30,
+                                        )
+                                      : Icon(
+                                          Icons.done_all,
+                                          color: Colors.green,
+                                          size: 30,
+                                        ),
                   trailing: Icon(Icons.arrow_forward_ios)),
             ),
           );
@@ -83,17 +89,12 @@ class _WidgetPengajuanListState extends State<WidgetPengajuanList> {
     );
   }
 
-  _openPengajuan(param) {
-    for (int i = 0; i < dataList.length; i++) {
-      if (param == dataList[i]) {
-        Provider.of<DataProvider>(context).getProdukListByUserId(param);
-        Navigator.push(
-            context,
-            SlideRightRoute(
-                page: WidgetPengajuanByParamList(
-              param: param,
-            )));
-      }
-    }
+  _openPengajuan(statusProject, statusPembayaran, title) {
+    BlocProject blocProject = Provider.of<BlocProject>(context);
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+    var param = {'id_user_login': blocAuth.idUser.toString(), 'status': statusProject.toString(), 'status_pembayaran_survey': statusPembayaran.toString()};
+    print(param);
+    blocProject.getProjectByParam(param);
+    Navigator.push(context, SlideRightRoute(page: WidgetPengajuanByParamList(param: param, title: title)));
   }
 }

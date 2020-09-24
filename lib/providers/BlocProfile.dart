@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:apps/Repository/RajaOngkirRepository.dart';
 import 'package:apps/Repository/UserRepository.dart';
 import 'package:apps/models/City.dart';
+import 'package:apps/models/JenisLayanan.dart';
+import 'package:apps/models/Mitra.dart';
 import 'package:apps/models/Penghasilan.dart';
 import 'package:apps/models/Provice.dart';
 import 'package:apps/models/SubDistricById.dart';
@@ -15,9 +17,56 @@ class BlocProfile extends ChangeNotifier {
     getProvince();
   }
 
-  getProfileUser(id) async {
-    var param = {'id': id.toString()};
-    var result = await UserRepository().getUserByParam(param);
+  List<Mitra> _detailProfile = [];
+
+  List<Mitra> get detailProfile => _detailProfile;
+
+  getMitraByParam(param) async {
+    _isLoading = true;
+    notifyListeners();
+    var result = await UserRepository().getMitraByParam(param);
+    print(result);
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405' || result.toString() == 'Conncetion Error') {
+      _connection = false;
+      _isLoading = false;
+      notifyListeners();
+      return result;
+    } else {
+      if (result['meta']['success']) {
+        Iterable list = result['data'];
+        _detailProfile = list.map((model) => Mitra.fromMap(model)).toList();
+        notifyListeners();
+      } else {
+        _isLoading = false;
+        notifyListeners();
+      }
+    }
+  }
+
+  List<JenisLayanan> _jenisLayananMitra = [];
+
+  List<JenisLayanan> get jenisLayananMitra => _jenisLayananMitra;
+
+  getJenisLayananByParam(param) async {
+    _isLoading = true;
+    notifyListeners();
+    var result = await UserRepository().getJenisLayananByParam(param);
+    print(result);
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405' || result.toString() == 'Conncetion Error') {
+      _connection = false;
+      _isLoading = false;
+      notifyListeners();
+      return result;
+    } else {
+      if (result['meta']['success']) {
+        Iterable list = result['data'];
+        _jenisLayananMitra = list.map((model) => JenisLayanan.fromMap(model)).toList();
+        notifyListeners();
+      } else {
+        _isLoading = false;
+        notifyListeners();
+      }
+    }
   }
 
   String _id_provice, _id_city, _id_subdistrict;

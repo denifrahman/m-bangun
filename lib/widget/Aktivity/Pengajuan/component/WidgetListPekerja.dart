@@ -1,5 +1,8 @@
+import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/Utils/navigation_right.dart';
-import 'package:apps/providers/DataProvider.dart';
+import 'package:apps/providers/BlocAuth.dart';
+import 'package:apps/providers/BlocProfile.dart';
+import 'package:apps/providers/BlocProject.dart';
 import 'package:apps/screen/ProfileWorkerScreen.dart';
 import 'package:apps/widget/Helper/WidgetFotoCircular.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
@@ -20,10 +23,11 @@ class WidgetListPekerja extends StatefulWidget {
 class _WidgetListPekerjaState extends State<WidgetListPekerja> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
+  final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
 
   @override
   Widget build(BuildContext context) {
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
+    BlocProject blocProject = Provider.of<BlocProject>(context);
     final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
     return ExpansionTileCard(
       elevation: 2,
@@ -44,58 +48,53 @@ class _WidgetListPekerjaState extends State<WidgetListPekerja> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(dataProvider.listBidding.length == 0 ? 'Belum ada yang memilih pekerjaan anda' : 'Silahkan pilih pekerja salah satu rekomendasi dari kami'),
-              dataProvider.listBidding.length == 0
+              Text(blocProject.listBids.length == 0 ? 'Belum ada yang memilih pekerjaan anda' : 'Silahkan pilih pekerja salah satu rekomendasi dari kami dibawah ini :'),
+              blocProject.listBids.length == 0
                   ? Container()
                   : Container(
                       width: MediaQuery.of(context).size.width,
                       height: 250,
                       child: ListView.builder(
-                          itemCount: dataProvider.listBidding.length,
+                          itemCount: blocProject.listBids.length,
                           itemBuilder: (context, index) {
-                            var harga = dataProvider.listBidding[index].bidprice;
-                            var hargaFormat = Money.fromInt(harga == null ? 0 : int.parse(harga), IDR);
-                            print(dataProvider.listBidding[index].statusnama);
+                            var jenisMitra = blocProject.listBids[index].jenisMitra;
+                            print(blocProject.listBids[index].status);
                             return InkWell(
                               onTap: () {
-                                if (widget.param == 'Negosiasi') {
-                                  _showDialog(dataProvider.listBidding[index]);
+                                print(blocProject.listBids.where((element) => element.status == '1').length);
+                                if (blocProject.listBids.where((element) => element.status == '1').length == 0) {
+                                  if (widget.param['status'] == 'setuju') {
+                                    _showDialog(blocProject.listBids[index]);
+                                  }
                                 }
                               },
                               child: Column(
                                 children: [
-                                  ListTile(
-                                      leading: WidgetFotoCircular(
-                                        dataProvider: dataProvider,
-                                        userFoto: dataProvider.listBidding[index].userfoto,
-                                      ),
-                                      title: Text(dataProvider.listBidding[index].userbidnama + ' (' + dataProvider.listBidding[index].bidwaktupengerjaan + ' Hari' + ')'),
-                                      subtitle: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(dataProvider.listBidding[index].biddeskripsi),
-//                                Text(dataProvider.listBidding[index].bidwaktupengerjaan + ' Hari'),
-                                          Text(
-                                            hargaFormat.toString(),
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                      trailing: dataProvider.listBidding[index].statusnama == 'Kontrak' || dataProvider.listBidding[index].statusnama == 'Progress'
-                                          ? Icon(
-                                              Icons.done_all,
-                                              color: Colors.green,
-                                            )
-                                          : Icon(
-                                              Icons.done_all,
-                                              color: Colors.grey[300],
-                                            )),
-                                  Divider()
-                                ],
+                            ListTile(
+                              leading: WidgetFotoCircular(
+                                userFoto: blocProject.listBids[index].fotoMitra,
                               ),
-                            );
-                          }),
-                    ),
+                              title: Text(blocProject.listBids[index].namaMitra.toUpperCase()),
+                              subtitle: Text(
+                                '(' + jenisMitra.toString().toUpperCase() + ')',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.grey, fontSize: 13),
+                              ),
+                              trailing: blocProject.listBids[index].status == '1'
+                                  ? Icon(
+                                Icons.done_all,
+                                color: Colors.green,
+                              )
+                                  : Icon(
+                                Icons.done_all,
+                                color: Colors.grey[300],
+                              ),
+                            ),
+                            Divider()
+                          ],
+                        ),
+                      );
+                    }),
+              ),
             ],
           ),
         )
@@ -104,8 +103,10 @@ class _WidgetListPekerjaState extends State<WidgetListPekerja> {
   }
 
   void _showDialog(param) {
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
-    if (dataProvider.userId_ == null) {
+    BlocProfile blocProfile = Provider.of<BlocProfile>(context);
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+    BlocProject blocProject = Provider.of<BlocProject>(context);
+    if (!blocAuth.isLogin) {
       Flushbar(
         title: "Error",
         message: "Silahkan login / daftar member",
@@ -118,7 +119,7 @@ class _WidgetListPekerjaState extends State<WidgetListPekerja> {
         ),
       )..show(context);
     } else {
-      showModalBottomSheet(
+      Future<void> future = showModalBottomSheet<void>(
         isScrollControlled: true,
         context: context,
         builder: (BuildContext context) {
@@ -126,7 +127,10 @@ class _WidgetListPekerjaState extends State<WidgetListPekerja> {
             key: _formKey,
             autovalidate: false,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.3,
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height * 0.95,
               padding: EdgeInsets.only(top: 10, left: 20, right: 20),
               child: SingleChildScrollView(
                 child: Column(
@@ -153,7 +157,79 @@ class _WidgetListPekerjaState extends State<WidgetListPekerja> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Pilih Sebagai pekerja?'),
+                        Text('Penawaran Harga'),
+                        Text(
+                          Money.fromInt((int.parse(param.harga)), IDR).toString(),
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Waktu pengerjaan'),
+                        Text(
+                          param.waktuPengerjaan + ' Hari',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(width: MediaQuery
+                            .of(context)
+                            .size
+                            .width * 0.4, child: Text('Catatan')),
+                        Container(
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width * 0.48,
+                          child: Text(
+                            param.deskripsi,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text('Foto'),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Center(
+                      child: Image.network(baseURL + '/api-v2/assets/bid/' + param.fotoBid, width: MediaQuery
+                          .of(context)
+                          .size
+                          .width * 0.9, height: 200,
+                          errorBuilder: (context, urlImage, error) {
+                            print(error.hashCode);
+                            return Image.asset(
+                              'assets/logo.png',
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width * 0.5,
+                            );
+                          }),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Lihat profile'),
                         Container(
                           child: Container(
                             height: 40.0,
@@ -163,22 +239,27 @@ class _WidgetListPekerjaState extends State<WidgetListPekerja> {
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: FlatButton(
+                              height: 30,
                               onPressed: () {
-                                dataProvider.getProfileWorker(param.userid);
+                                blocProfile.getMitraByParam({'id': param.idMitra.toString()});
+                                blocProfile.getJenisLayananByParam({'id_mitra': param.idMitra.toString()});
+                                blocProject.getBidsByParam({'id_mitra': param.idMitra.toString(), 'status_proyek': 'selesai'});
                                 Navigator.push(context, SlideRightRoute(page: ProfileWorkerScreen())).then((value) {
-                                  dataProvider.getProfile();
+                                  Navigator.pop(context);
+                                  blocProject.getBidsByParam({"id_projek": param.idProjek.toString(), 'id_user': param.idUser.toString()});
                                 });
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
-                                  Icon(Icons.perm_contact_calendar, color: Colors.white,),
+                                  Icon(
+                                    Icons.perm_contact_calendar,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
                                   Text(
                                     'Profile',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 16),
+                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14),
                                   ),
                                 ],
                               ),
@@ -188,9 +269,14 @@ class _WidgetListPekerjaState extends State<WidgetListPekerja> {
                       ],
                     ),
                     SizedBox(
-                      height: 25,
+                      height: 20,
+                    ),
+                    Text('Anda tidak dapat mengganti mitra yang sudah terpilih, pastikan anda sudah melihat profile mitra yang akan anda pilih!'),
+                    SizedBox(
+                      height: 20,
                     ),
                     RoundedLoadingButton(
+                      height: 40,
                       child: Text('Setuju', style: TextStyle(color: Colors.white)),
                       color: Colors.green,
                       controller: _btnController,
@@ -207,18 +293,26 @@ class _WidgetListPekerjaState extends State<WidgetListPekerja> {
   }
 
   updateBidToKontrak(param) async {
+    BlocProject blocProject = Provider.of<BlocProject>(context);
     var map = new Map<String, dynamic>();
-    map['userid'] = param.userid;
-    map['produkid'] = param.produkid;
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
-    dataProvider.updateToKontrak(map);
-    if (dataProvider.isLoading) {
-      _btnController.success();
-    } else {
-      _btnController.error();
-    }
-//    dataProvider.getBiddingByProdukId(param.produkid);
-//    await new Future.delayed(const Duration(seconds: 1));
-    Navigator.pop(context);
+    map['id_user'] = param.idUser;
+    map['id'] = param.id;
+    map['id_projek'] = param.idProjek;
+    print(map);
+    var result = blocProject.updateSelectedBid(map);
+    result.then((value) async {
+      if (value) {
+        _btnController.success();
+        await new Future.delayed(const Duration(seconds: 2));
+        Navigator.pop(context);
+        blocProject.getProjectByOrder({
+          'no_order': blocProject.listProjectDetail[0].noOrder.toString(),
+        });
+      } else {
+        _btnController.error();
+        await new Future.delayed(const Duration(seconds: 2));
+        Navigator.pop(context);
+      }
+    });
   }
 }

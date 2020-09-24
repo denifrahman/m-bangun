@@ -1,3 +1,4 @@
+import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,180 +32,180 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
       body: blocOrder.isLoading
           ? PKCardListSkeleton()
           : Container(
-              decoration: BoxDecoration(color: Colors.grey[100], image: DecorationImage(image: AssetImage('assets/shipping_background.png'), fit: BoxFit.contain)),
-              height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top),
-              child: Column(
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: RefreshIndicator(
-                      onRefresh: () async {
-                        onRefresh(context, order.id);
-                      },
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.all(10),
-                          itemCount: blocOrder.listOrderDetailProduk.length,
-                          itemBuilder: (_, j) {
-                            return Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ListTile(
-                                  leading: Image.network(
-                                    'https://m-bangun.com/api-v2/assets/toko/' + blocOrder.listOrderDetailProduk[j].foto,
+        decoration: BoxDecoration(color: Colors.grey[100], image: DecorationImage(image: AssetImage('assets/shipping_background.png'), fit: BoxFit.contain)),
+        height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top),
+        child: Column(
+          children: [
+            Expanded(
+              flex: 5,
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  onRefresh(context, order.id);
+                },
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.all(10),
+                    itemCount: blocOrder.listOrderDetailProduk.length,
+                    itemBuilder: (_, j) {
+                      return Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListTile(
+                            leading: Image.network(
+                              baseURL + '/api-v2/assets/toko/' + blocOrder.listOrderDetailProduk[j].foto,
                                     errorBuilder: (context, urlImage, error) {
                                       print(error.hashCode);
                                       return Image.asset('assets/logo.png');
                                     },
                                     width: 80,
                                   ),
-                                  title: RichText(
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    text: TextSpan(
-                                        style: TextStyle(
-                                          fontSize: 16.0,
-                                          color: Colors.black,
-                                        ),
-                                        text: blocOrder.listOrderDetailProduk[j].namaProduk),
+                            title: RichText(
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              text: TextSpan(
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: Colors.black,
                                   ),
-                                  subtitle: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(Money.fromInt((int.parse(blocOrder.listOrderDetailProduk[j].subtotal)), IDR).toString(),
-                                          style: TextStyle(fontStyle: FontStyle.normal, color: Colors.redAccent)),
-                                      Text(
-                                        blocOrder.listOrderDetailProduk[j].catatan == null ? '-' : '"' + blocOrder.listOrderDetailProduk[j].catatan + '"',
-                                        style: TextStyle(
-                                          fontStyle: FontStyle.italic,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      title.toString().toLowerCase() == 'selesai'
-                                          ? blocOrder.listOrderDetailProduk[j].statusUlasan == '1'
-                                              ? Container()
-                                              : SizedBox(
-                                                  height: 25,
-                                                  width: double.infinity,
-                                                  child: RaisedButton(
-                                                    child: Text(
-                                                      'Ulas Produk',
-                                                      style: TextStyle(fontSize: 12),
-                                                    ),
-                                                    color: Colors.orangeAccent,
-                                                    textColor: Colors.white,
-                                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                                    onPressed: () async {
-                                                      _ulasaPopUp(context, blocAuth, blocOrder, blocOrder.listOrderDetailProduk[j]);
-                                                    },
-                                                  ),
-                                                )
-                                          : Container()
-                                    ],
+                                  text: blocOrder.listOrderDetailProduk[j].namaProduk),
+                            ),
+                            subtitle: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(Money.fromInt((int.parse(blocOrder.listOrderDetailProduk[j].subtotal)), IDR).toString(),
+                                    style: TextStyle(fontStyle: FontStyle.normal, color: Colors.redAccent)),
+                                Text(
+                                  blocOrder.listOrderDetailProduk[j].catatan == null ? '-' : '"' + blocOrder.listOrderDetailProduk[j].catatan + '"',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 14,
                                   ),
-                                  trailing: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 8),
-                                    child: Container(
-                                      width: 40,
-                                      height: 40,
-                                      decoration: BoxDecoration(color: Colors.orange[100], borderRadius: BorderRadius.all(Radius.circular(50))),
-                                      child: Center(
-                                        child: Text(
-                                          blocOrder.listOrderDetailProduk[j].jumlah,
-                                          style: TextStyle(color: Colors.orange[900]),
-                                        ),
-                                      ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                title.toString().toLowerCase() == 'selesai'
+                                    ? blocOrder.listOrderDetailProduk[j].statusUlasan == '1'
+                                    ? Container()
+                                    : SizedBox(
+                                  height: 25,
+                                  width: double.infinity,
+                                  child: RaisedButton(
+                                    child: Text(
+                                      'Ulas Produk',
+                                      style: TextStyle(fontSize: 12),
                                     ),
+                                    color: Colors.orangeAccent,
+                                    textColor: Colors.white,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                    onPressed: () async {
+                                      _ulasaPopUp(context, blocAuth, blocOrder, blocOrder.listOrderDetailProduk[j]);
+                                    },
+                                  ),
+                                )
+                                    : Container()
+                              ],
+                            ),
+                            trailing: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(color: Colors.orange[100], borderRadius: BorderRadius.all(Radius.circular(50))),
+                                child: Center(
+                                  child: Text(
+                                    blocOrder.listOrderDetailProduk[j].jumlah,
+                                    style: TextStyle(color: Colors.orange[900]),
                                   ),
                                 ),
                               ),
-                            );
-                          }),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: SingleChildScrollView(
-                      child: Container(
-                        width: 150,
-                        child: this.title == 'menunggu_konfirmasi'
-                            ? Image.asset(
-                                'assets/img/waiting.png',
-                                fit: BoxFit.fitWidth,
-                              )
-                            : this.title == 'dikemas'
-                                ? Image.asset(
-                                    'assets/img/packing.png',
-                                    fit: BoxFit.fitWidth,
-                                  )
-                                : this.title == 'dikirim'
-                                    ? Image.asset(
-                                        'assets/img/dikirim.png',
-                                        fit: BoxFit.fitWidth,
-                                      )
-                                    : this.title == 'ulasan'
-                                        ? Image.asset(
-                                            'assets/img/waiting.png',
-                                            fit: BoxFit.fitWidth,
-                                          )
-                                        : Image.asset(
-                                            'assets/img/waiting.png',
-                                            fit: BoxFit.fitWidth,
-                                          ),
-                      ),
-                    ),
-                  ),
-                  title.toLowerCase().toLowerCase() != 'dikirim'
-                      ? Container()
-                      : Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 40,
-                            child: RaisedButton(
-                              child: Text(
-                                title.toLowerCase() == 'dikirim' ? 'Barang diterima' : title == 'menunggu konfirmasi' ? 'Kemas Barang' : title,
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                              ),
-                              color: Color(0xffb16a085),
-                              textColor: Colors.white,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                              onPressed: () async {
-                                _confirmPopUp(context, blocOrder, blocAuth);
-                              },
                             ),
                           ),
-                  ),
-                  title.toLowerCase().toLowerCase() != 'selesai'
-                      ? Container()
-                      : order.statusUlasan.toString() != '0'
-                      ? Container()
-                      : Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 40,
-                      child: RaisedButton(
-                        child: Text(
-                          'Beri Rating Penjual',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
                         ),
-                        color: Color(0xffb16a085),
-                        textColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                        onPressed: () async {
-                          _ulasanToko(context, blocAuth, blocOrder);
-                        },
-                      ),
-                    ),
-                  )
-                ],
+                      );
+                    }),
               ),
             ),
+            Expanded(
+              flex: 2,
+              child: SingleChildScrollView(
+                child: Container(
+                  width: 150,
+                  child: this.title == 'menunggu_konfirmasi'
+                      ? Image.asset(
+                    'assets/img/waiting.png',
+                    fit: BoxFit.fitWidth,
+                  )
+                      : this.title == 'dikemas'
+                      ? Image.asset(
+                    'assets/img/packing.png',
+                    fit: BoxFit.fitWidth,
+                  )
+                      : this.title == 'dikirim'
+                      ? Image.asset(
+                    'assets/img/dikirim.png',
+                    fit: BoxFit.fitWidth,
+                  )
+                      : this.title == 'ulasan'
+                      ? Image.asset(
+                    'assets/img/waiting.png',
+                    fit: BoxFit.fitWidth,
+                  )
+                      : Image.asset(
+                    'assets/img/waiting.png',
+                    fit: BoxFit.fitWidth,
+                  ),
+                ),
+              ),
+            ),
+            title.toLowerCase().toLowerCase() != 'dikirim'
+                ? Container()
+                : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: double.infinity,
+                height: 40,
+                child: RaisedButton(
+                  child: Text(
+                    title.toLowerCase() == 'dikirim' ? 'Barang diterima' : title == 'menunggu konfirmasi' ? 'Kemas Barang' : title,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                  ),
+                  color: Color(0xffb16a085),
+                  textColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                  onPressed: () async {
+                    _confirmPopUp(context, blocOrder, blocAuth);
+                  },
+                ),
+              ),
+            ),
+            title.toLowerCase().toLowerCase() != 'selesai'
+                ? Container()
+                : order.statusUlasan.toString() != '0'
+                ? Container()
+                : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: double.infinity,
+                height: 40,
+                child: RaisedButton(
+                  child: Text(
+                    'Beri Rating Penjual',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                  ),
+                  color: Color(0xffb16a085),
+                  textColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                  onPressed: () async {
+                    _ulasanToko(context, blocAuth, blocOrder);
+                  },
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 

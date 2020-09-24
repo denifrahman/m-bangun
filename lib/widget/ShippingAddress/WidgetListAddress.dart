@@ -31,7 +31,6 @@ class WidgetListAddress extends StatelessWidget {
                     return Card(
                       child: InkWell(
                         onTap: () {
-                          print('dsad');
                           var body = {"id": blocProfile.listUserAddress[index].id.toString(), "id_user": blocAuth.idUser.toString()};
                           var result = blocProfile.setDefaultAlamat(body);
                           result.then((value) async {

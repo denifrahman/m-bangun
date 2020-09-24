@@ -10,7 +10,7 @@ class BlocAuth extends ChangeNotifier {
     getCurrentUser();
   }
 
-  bool _isLoading = true;
+  bool _isLoading = false;
   bool _isLogin = false;
   String _statusToko = '0';
   String _idToko = '0';
@@ -103,13 +103,16 @@ class BlocAuth extends ChangeNotifier {
     _googleSignIn.signInSilently();
   }
 
+  Map<String, dynamic> _currentUserLogin = {};
+
+  Map<String, dynamic> get currentUserLogin => _currentUserLogin;
+
   checkSession() async {
     checkVersionApp();
     _isLoading = false;
     notifyListeners();
     await Future.delayed(Duration(milliseconds: 1), () {
       _googleSignIn.isSignedIn().then((value) async {
-        print(_currentUser);
         if (value) {
           if (_currentUser == null) {
             getCurrentUser();
@@ -120,6 +123,7 @@ class BlocAuth extends ChangeNotifier {
           } else {
             var queryString = {'username': _currentUser.email, 'id_google': _currentUser.id};
             var result = await AuthRepository().googleSign(queryString);
+            print(_currentUserLogin['no_hp']);
             if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
               _connection = false;
               _isLoading = false;
@@ -127,6 +131,7 @@ class BlocAuth extends ChangeNotifier {
               return false;
             } else {
               if (result['meta']['success']) {
+                _currentUserLogin = result['data'];
                 _statusToko = result['data']['status_toko'];
                 if (result['data']['aktif'] != '1') {
                   _isNonActive = true;

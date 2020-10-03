@@ -15,6 +15,7 @@ class Iklan {
   dynamic tglMulai;
   dynamic tglSelesai;
   String urutan;
+  String link;
   String aktif;
 
   static Iklan fromMap(Map<String, dynamic> map) {
@@ -27,18 +28,21 @@ class Iklan {
     iklanBean.tglMulai = map['tgl_mulai'];
     iklanBean.tglSelesai = map['tgl_selesai'];
     iklanBean.urutan = map['urutan'];
+    iklanBean.link = map['link'];
     iklanBean.aktif = map['aktif'];
     return iklanBean;
   }
 
-  Map toJson() => {
-    "id": id,
-    "nama": nama,
-    "baner": baner,
-    "id_toko": idToko,
-    "tgl_mulai": tglMulai,
-    "tgl_selesai": tglSelesai,
-    "urutan": urutan,
-    "aktif": aktif,
-  };
+  Map toJson() =>
+      {
+        "id": id,
+        "nama": nama,
+        "baner": baner,
+        "id_toko": idToko,
+        "tgl_mulai": tglMulai,
+        "tgl_selesai": tglSelesai,
+        "urutan": urutan,
+        "link": link,
+        "aktif": aktif,
+      };
 }

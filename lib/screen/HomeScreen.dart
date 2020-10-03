@@ -9,6 +9,7 @@ import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/RequestScreen.dart';
 import 'package:apps/widget/Home/WidgetLokasi.dart';
 import 'package:apps/widget/Home/WidgetNews.dart';
+import 'package:apps/widget/home/WidgetIklanTokoLink.dart';
 import 'package:apps/widget/home/WidgetKategori.dart';
 import 'package:apps/widget/home/WidgetOffialStore.dart';
 import 'package:apps/widget/home/WidgetRecentProduct.dart';
@@ -79,6 +80,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
+                          WidgetIklanTokoLink(
+                            blocProduk: blocProduk,
+                          ),
                           WidgetSlider(
                             blocProduk: blocProduk,
                           ),

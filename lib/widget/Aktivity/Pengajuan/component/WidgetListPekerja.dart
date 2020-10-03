@@ -298,7 +298,6 @@ class _WidgetListPekerjaState extends State<WidgetListPekerja> {
     map['id_user'] = param.idUser;
     map['id'] = param.id;
     map['id_projek'] = param.idProjek;
-    print(map);
     var result = blocProject.updateSelectedBid(map);
     result.then((value) async {
       if (value) {

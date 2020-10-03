@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:apps/Utils/SettingApp.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
@@ -43,7 +44,7 @@ class Api {
 
   static Future getUser(email) {
 //    var url = Uri.https('m-bangun.com/wp-json/wp/v2/users?search' + email);
-    var url = 'https://m-bangun.com/wp-json/wp/v2/users?search=' + email;
+    var url = baseURL + '/wp-json/wp/v2/users?search=' + email;
     print(url);
     try {
       return http.get(

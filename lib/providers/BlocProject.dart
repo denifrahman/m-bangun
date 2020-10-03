@@ -43,6 +43,7 @@ class BlocProject extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await OrderRepository().getProjectByOrder(param);
+//    print(result);
     if (result['meta']['success']) {
       _isLoading = false;
       Iterable list = result['data'];

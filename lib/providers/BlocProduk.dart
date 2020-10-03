@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:apps/Repository/RajaOngkirRepository.dart';
 import 'package:apps/Repository/UserRepository.dart';
 import 'package:apps/Utils/LocalBindings.dart';
+import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/models/CategioryByToko.dart';
 import 'package:apps/models/Categories.dart';
 import 'package:apps/models/Iklan.dart';
+import 'package:apps/models/IklanTokoLink.dart';
 import 'package:apps/models/OfficialStore.dart';
 import 'package:apps/models/Product.dart';
 import 'package:apps/models/RecentProduk.dart';
@@ -24,11 +26,12 @@ class BlocProduk extends ChangeNotifier {
     getCategory();
     getRecentProduct();
     getIklan();
+    getIklanTokoLink();
   }
 
   List<Toko> _toko = [
-    Toko('https://m-bangun.com/wp-content/uploads/2020/07/contarctor.png', 'Boat roackerz 400 On-Ear Bluetooth Headphones', 'description', 120000, 2),
-    Toko('https://m-bangun.com/wp-content/uploads/2020/07/properti-2.png', 'Boat roackerz 100 On-Ear Bluetooth Headphones', 'description', 122222, 1),
+    Toko(baseURL + '/wp-content/uploads/2020/07/contarctor.png', 'Boat roackerz 400 On-Ear Bluetooth Headphones', 'description', 120000, 2),
+    Toko(baseURL + '/wp-content/uploads/2020/07/properti-2.png', 'Boat roackerz 100 On-Ear Bluetooth Headphones', 'description', 122222, 1),
   ];
   int _totalProduk = 0;
 
@@ -85,6 +88,7 @@ class BlocProduk extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().getAllProduct(param);
+    print(result);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == '8') {
       _connection = false;
       _isLoading = false;
@@ -129,6 +133,7 @@ class BlocProduk extends ChangeNotifier {
 
   addCountViewProduk(body) async {
     var result = await UserRepository().addCountViewProduk(body);
+    print(result);
   }
 
   getDetailProductByParam(param) async {
@@ -216,7 +221,6 @@ class BlocProduk extends ChangeNotifier {
     notifyListeners();
     var param = {'': ''};
     var result = await UserRepository().getOfficialStore(param);
-
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _isLoading = false;
       _connection = false;
@@ -231,6 +235,31 @@ class BlocProduk extends ChangeNotifier {
     }
   }
 
+  List<IklanTokoLink> _listIklanTokoLink = [];
+
+  List<IklanTokoLink> get listIklanTokoLink => _listIklanTokoLink;
+
+  getIklanTokoLink() async {
+    imageCache.clear();
+    _isLoading = true;
+    notifyListeners();
+    var param = {'aktif': '1'};
+    var result = await UserRepository().getIklanTokoLink(param);
+    print(result);
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
+      _isLoading = false;
+      _connection = false;
+      _listIklanTokoLink = [];
+      notifyListeners();
+    } else {
+      Iterable list = result['data'];
+      _listIklanTokoLink = list.map((model) => IklanTokoLink.fromMap(model)).toList();
+      _connection = true;
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   List<Iklan> _listIklan = [];
 
   List<Iklan> get listIklan => _listIklan;
@@ -239,8 +268,9 @@ class BlocProduk extends ChangeNotifier {
     imageCache.clear();
     _isLoading = true;
     notifyListeners();
-    var param = {'': ''};
+    var param = {'aktif': '1'};
     var result = await UserRepository().getAllIklan(param);
+    print(result);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _isLoading = false;
       _connection = false;

@@ -166,6 +166,7 @@ class CheckoutScreenProject extends StatelessWidget {
     } else {
       phoneNumber = blocAuth.currentUserLogin['no_hp'].toString();
     }
+
     var no_order = "PROJ-" + dataPost['no_order'].toString();
     var bodyPayment = {
       "enabled_payments": [blocOrder.listMetodePembayaranSelected['kode'].toString().toLowerCase()],
@@ -183,6 +184,7 @@ class CheckoutScreenProject extends StatelessWidget {
       }
     };
     var data = json.encode(bodyPayment);
+    print(data);
     var result = blocOrder.makePayment(data);
     result.then((value) {
       dataPost['token_va'] = value['token'];

@@ -128,7 +128,7 @@ class WidgetRecentProduct extends StatelessWidget {
                                     width: 100,
                                     child: RichText(
                                       overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
+                                      maxLines: 1,
                                       text: TextSpan(style: TextStyle(color: Colors.black, fontSize: 12), text: blocProduk.listRecentProduct[j].nama),
                                     ),
                                   ),

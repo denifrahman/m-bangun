@@ -1,3 +1,4 @@
+import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/screen/NewsDetailScreen.dart';
@@ -9,8 +10,7 @@ import 'package:provider/provider.dart';
 
 class WidgetSlide extends StatelessWidget {
   WidgetSlide({Key key}) : super(key: key);
-  wp.WordPress wordPress =
-      wp.WordPress(baseUrl: 'https://m-bangun.com', authenticator: wp.WordPressAuthenticator.ApplicationPasswords, adminKey: 'admin9876', adminName: 'm-bangun');
+  wp.WordPress wordPress = wp.WordPress(baseUrl: baseURL, authenticator: wp.WordPressAuthenticator.ApplicationPasswords, adminKey: 'admin9876', adminName: 'm-bangun');
 
   fetchPost() {
     Future<List<wp.Post>> posts = wordPress.fetchPosts(
@@ -135,8 +135,8 @@ class WidgetSlide extends StatelessWidget {
         context,
         SlideRightRoute(
             page: NewsDetailScreen(
-          link: link,
-          title: title,
-        )));
+              link: link,
+              title: title,
+            )));
   }
 }

@@ -4,6 +4,7 @@ import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/screen/DetailTokoScreen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class WidgetSlider extends StatelessWidget {
   const WidgetSlider({
@@ -16,35 +17,43 @@ class WidgetSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 35),
+      margin: EdgeInsets.only(top: 15),
       color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 10),
       width: MediaQuery.of(context).size.width,
       height: 180,
       child: CarouselSlider(
-        options: CarouselOptions(
-          aspectRatio: 2.5,
-          autoPlay: true,
-        ),
+        options: CarouselOptions(aspectRatio: 2.5, autoPlay: true, enlargeCenterPage: true, autoPlayInterval: Duration(milliseconds: 5000)),
         items: blocProduk.listIklan.map((i) {
           return Builder(
             builder: (BuildContext context) {
               return InkWell(
-                onTap: () {
-                  blocProduk.getDetailStore(i.idToko);
-                  Navigator.push(
-                      context,
-                      SlideRightRoute(
-                          page: DetailTokoScreen(
-                            id: i.idToko,
-                            image: i.baner,
-                          )));
+                onTap: () async {
+                  if (i.link == null || i.link == '') {
+                    blocProduk.getDetailStore(i.idToko);
+                    Navigator.push(
+                        context,
+                        SlideRightRoute(
+                            page: DetailTokoScreen(
+                              id: i.idToko,
+                              image: i.baner,
+                            )));
+                  } else {
+                    if (await canLaunch(i.link.toString())) {
+                      await launch(i.link.toString());
+                    } else {
+                      throw 'Could not launch';
+                    }
+                  }
                 },
                 child: Card(
                   semanticContainer: true,
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   child: Container(
-                    width: MediaQuery.of(context).size.width * 0.75,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.75,
                     child: Image.network(
                       baseURL + '/api-v2/assets/iklan/' + i.baner,
                       fit: BoxFit.cover,

@@ -355,7 +355,6 @@ class CheckoutScreen extends StatelessWidget {
       }
     };
     var data = json.encode(body);
-//    print(data);
     var result = blocOrder.makePayment(data);
     result.then((value) {
       if (value['token'] != null) {

@@ -32,6 +32,11 @@ class UserRepository {
     return response;
   }
 
+  Future getIklanTokoLink(param) async {
+    final response = await _helper.get("toko/getIklanTokoLink", param);
+    return response;
+  }
+
   Future getDetailStore(param) async {
     final response = await _helper.get("toko/getAllByParam", param);
     return response;

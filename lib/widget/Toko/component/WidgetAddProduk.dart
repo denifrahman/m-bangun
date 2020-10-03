@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/Utils/SnacbarLauncher.dart';
 import 'package:apps/models/Categories.dart';
 import 'package:apps/providers/BlocAuth.dart';
@@ -278,8 +279,8 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                                   value: item.id,
                                   child: Row(
                                     children: [
-                                      Image.asset(
-                                        'assets/kategori/' + item.icon,
+                                      Image.network(
+                                        baseURL + '/api-v2/assets/kategori/' + item.icon,
                                         height: 30,
                                         width: 30,
                                       ),

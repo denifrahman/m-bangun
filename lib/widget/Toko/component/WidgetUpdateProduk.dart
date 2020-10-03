@@ -290,8 +290,8 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
                                         value: item.id,
                                         child: Row(
                                           children: [
-                                            Image.asset(
-                                              'assets/kategori/' + item.icon,
+                                            Image.network(
+                                              baseURL + '/api-v2/assets/kategori/' + item.icon,
                                               height: 30,
                                               width: 30,
                                             ),

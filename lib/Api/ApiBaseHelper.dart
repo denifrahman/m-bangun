@@ -17,6 +17,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final _url = Uri.https(_baseUrl, _path + url, param);
+//      print(_url);
       final response = await http.get(_url);
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -30,6 +31,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final _url = Uri.https(_baseUrl, _path + url);
+      print(_url);
       var header = {"Content-Type": "application/json"};
       final response = await http.post(_url, body: body);
       responseJson = _returnResponse(response);

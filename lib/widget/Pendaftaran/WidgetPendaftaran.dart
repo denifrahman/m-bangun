@@ -262,10 +262,21 @@ class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: Text(
-                  "Jenis Kelamin",
-                  style: TextStyle(color: Colors.grey, fontSize: 16.0),
+                padding: const EdgeInsets.only(left: 40.0, right: 40),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Jenis Kelamin",
+                      style: TextStyle(color: Colors.grey, fontSize: 16.0),
+                    ),
+                    jenis_kelamin == null
+                        ? Text(
+                            "Pilih Jenis Kelamin",
+                            style: TextStyle(color: jenis_kelamin == null ? Colors.red : Colors.grey, fontSize: 16.0),
+                          )
+                        : Container(),
+                  ],
                 ),
               ),
               Container(
@@ -444,15 +455,20 @@ class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
     map['password'] = password;
     map['id_google'] = blocAuth.currentUser.id;
     map['foto'] = blocAuth.currentUser.photoUrl;
+    print(jenis_kelamin != null);
     if (_formKey.currentState.validate()) {
-      var response = await blocAuth.create(map);
-      if (response['meta']['success']) {
-        _btnController.success();
-        _showToast(response['meta']['status_message']);
-        _btnController.stop();
+      if (jenis_kelamin != null) {
+        var response = await blocAuth.create(map);
+        if (response['meta']['success']) {
+          _btnController.success();
+          _showToast(response['meta']['status_message']);
+          _btnController.stop();
+        } else {
+          _btnController.stop();
+          _showToast(response['meta']['status_message']);
+        }
       } else {
-        _btnController.stop();
-        _showToast(response['meta']['status_message']);
+        _btnController.reset();
       }
     } else {
       _btnController.reset();

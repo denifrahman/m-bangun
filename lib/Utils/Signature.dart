@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui' as ui;
 
+import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocProject.dart';
@@ -73,7 +74,7 @@ class _WidgetSignatureState extends State<WidgetSignature> {
                               ? InkWell(
                                   onTap: () {
                                     imageCache.clear();
-                                    var url = 'https://mobile.mbangun.id/kontrak?id=' + blocProject.listProjectDetail[0].id;
+                                    var url = baseURLMobile + '/kontrak?id=' + blocProject.listProjectDetail[0].id;
                                     print(url);
                                     var title = 'Kontrak';
                                     Navigator.push(context, SlideRightRoute(page: WidgetViewPdfPengajuan(urlPdf: url, title: title)));

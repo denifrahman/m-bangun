@@ -5,6 +5,7 @@ import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/widget/Aktivity/Pengajuan/component/WidgetDeskripsiProduk.dart';
 import 'package:apps/widget/Aktivity/Pengajuan/component/WidgetDetailBahanProduk.dart';
 import 'package:apps/widget/Aktivity/Pengajuan/component/WidgetDetailLokasi.dart';
+import 'package:apps/widget/Aktivity/Pengajuan/component/WidgetLaporanAkhir.dart';
 import 'package:apps/widget/Aktivity/Pengajuan/component/WidgetListPekerja.dart';
 import 'package:apps/widget/Aktivity/Pengajuan/component/WidgetSurveyInformation.dart';
 import 'package:apps/widget/Kontrak/WidgetKontrak.dart';
@@ -232,15 +233,21 @@ class WidgetDetailPengajuanKontrak extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(horizontal: 10),
                               child: WidgetListPekerja(
                                 param: param,
-                              ),
-                            )
+                                    ),
+                                  )
                                 : Container(),
                             param['status'] == 'proses' || param['status'] == 'setuju'
                                 ? Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
-                              child: WidgetKontrak(
-                                param: 'owner',
-                              ),
+                                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                                    child: WidgetKontrak(
+                                      param: 'owner',
+                                    ),
+                                  )
+                                : Container(),
+                            param['status'] == 'proses' || param['status'] == 'selesai'
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                                    child: WidgetLaporanAkhir(),
                                   )
                                 : Container()
                           ],

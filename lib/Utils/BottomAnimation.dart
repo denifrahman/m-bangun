@@ -4,12 +4,36 @@ import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/screen/ChekListScreen.dart';
 import 'package:apps/screen/HomeScreen.dart';
 import 'package:apps/screen/MyAdsScreen.dart';
+import 'package:apps/screen/Notification.dart';
 import 'package:apps/screen/ProfileScreen.dart';
 import 'package:apps/screen/RequestScreen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_session/flutter_session.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:rxdart/subjects.dart';
+
+class ReceivedNotification {
+  final int id;
+  final String title;
+  final String body;
+  final String payload;
+
+  ReceivedNotification({
+    @required this.id,
+    @required this.title,
+    @required this.body,
+    @required this.payload,
+  });
+}
+
+final BehaviorSubject<ReceivedNotification> didReceiveLocalNotificationSubject = BehaviorSubject<ReceivedNotification>();
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+final BehaviorSubject<String> selectNotificationSubject = BehaviorSubject<String>();
+NotificationAppLaunchDetails notificationAppLaunchDetails;
 
 class BottomAnimateBar extends StatefulWidget {
   @override
@@ -18,6 +42,93 @@ class BottomAnimateBar extends StatefulWidget {
 
 class _BottomAnimateBarState extends State<BottomAnimateBar> {
   // Properties & Variables needed
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final TextEditingController _topicController = TextEditingController(text: 'topic');
+  String _homeScreenText = "Waiting for token...";
+  bool _topicButtonsDisabled = false;
+
+  @override
+  void initState() {
+    _requestIOSPermissions();
+    _configureDidReceiveLocalNotificationSubject();
+    _configureSelectNotificationSubject();
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+        _showNotification(message);
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+//        _navigateToItemDetail(message);
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+//        _navigateToItemDetail(message);
+      },
+    );
+    _firebaseMessaging.requestNotificationPermissions(const IosNotificationSettings(sound: true, badge: true, alert: true, provisional: true));
+    _firebaseMessaging.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
+    _firebaseMessaging.getToken().then((String token) async {
+      await FlutterSession().set('fcm_token', token);
+      assert(token != null);
+    });
+    super.initState();
+  }
+
+  void _requestIOSPermissions() {
+    flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+  }
+
+  void _configureDidReceiveLocalNotificationSubject() {
+    didReceiveLocalNotificationSubject.stream.listen((ReceivedNotification receivedNotification) async {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) => CupertinoAlertDialog(
+          title: receivedNotification.title != null ? Text(receivedNotification.title) : null,
+          content: receivedNotification.body != null ? Text(receivedNotification.body) : null,
+          actions: [
+            CupertinoDialogAction(
+              isDefaultAction: true,
+              child: Text('Ok'),
+              onPressed: () async {
+                Navigator.of(context, rootNavigator: true).pop();
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NotificationScreen(),
+                  ),
+                );
+              },
+            )
+          ],
+        ),
+      );
+    });
+  }
+
+  void _configureSelectNotificationSubject() {
+    print('select');
+    selectNotificationSubject.stream.listen((String payload) async {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => NotificationScreen()),
+      );
+    });
+  }
+
+  Future<void> _showNotification(message) async {
+    var androidPlatformChannelSpecifics =
+        AndroidNotificationDetails('your channel id', 'your channel name', 'your channel description', importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(0, message['notification']['title'], message['notification']['body'], platformChannelSpecifics, payload: 'item x');
+  }
 
   int currentTab = 0; // to keep track of active tab index
   final List<Widget> screens = [
@@ -28,6 +139,40 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
   ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
   Widget currentScreen = HomeScreen(); // Our first view in viewport
+  void _showItemDialog(Map<String, dynamic> message) {
+    print(message);
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(message['notification']['title']),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Apakah anda yakin ?'),
+                Text('Menyelesaikan proyek ini'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Batal'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Setuju'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   _openRequest() {
     Navigator.push(
@@ -41,23 +186,23 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
   Future<bool> _onWillPop() {
     if (currentTab == 0) {
       return showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text('Anda yakin!'),
-              content: Text('Ingin keluar dari aplikasi?'),
-              actions: <Widget>[
-                FlatButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text('No'),
-                ),
-                FlatButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  /*Navigator.of(context).pop(true)*/
-                  child: Text('Yes'),
-                ),
-              ],
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Anda yakin!'),
+          content: Text('Ingin keluar dari aplikasi?'),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text('No'),
             ),
-          ) ??
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              /*Navigator.of(context).pop(true)*/
+              child: Text('Yes'),
+            ),
+          ],
+        ),
+      ) ??
           false;
     } else {
       setState(() {
@@ -191,18 +336,18 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                                 blocOrder.listCart.isEmpty
                                     ? Container()
                                     : Positioned(
-                                        top: 0.0,
-                                        right: 0.0,
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            blocOrder.listCart.length.toString(),
-                                            style: TextStyle(color: Colors.white, fontSize: 8),
-                                          ),
-                                        ),
-                                      )
+                                  top: 0.0,
+                                  right: 0.0,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      blocOrder.listCart.length.toString(),
+                                      style: TextStyle(color: Colors.white, fontSize: 8),
+                                    ),
+                                  ),
+                                )
                               ],
                             ),
                             Text(
@@ -256,23 +401,23 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                                 ),
                                 countAktivitas == 0
                                     ? Icon(
-                                        Icons.local_activity,
-                                        size: 25,
-                                        color: currentTab == 2 ? Colors.white : Colors.grey[400],
-                                      )
+                                  Icons.local_activity,
+                                  size: 25,
+                                  color: currentTab == 2 ? Colors.white : Colors.grey[400],
+                                )
                                     : new Positioned(
-                                        top: 0.0,
-                                        right: 0.0,
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            countAktivitas.toString(),
-                                            style: TextStyle(color: Colors.white, fontSize: 8),
-                                          ),
-                                        ),
-                                      )
+                                  top: 0.0,
+                                  right: 0.0,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      countAktivitas.toString(),
+                                      style: TextStyle(color: Colors.white, fontSize: 8),
+                                    ),
+                                  ),
+                                )
                               ],
                             ),
                             Text(

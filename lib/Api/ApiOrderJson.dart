@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/Utils/appException.dart';
 import 'package:http/http.dart' as http;
 
 class ApiOrderJson {
 //  final _baseUrl = 'm-bangun.com';
-  final _baseUrl = 'mbangun.id';
+  final _baseUrl = apiBaseURL;
   final _path = 'api-v2/';
 
   Future<dynamic> get(String url, param) async {

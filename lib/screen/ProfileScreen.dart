@@ -48,6 +48,7 @@ class ProfileScreen extends StatelessWidget {
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     BlocProduk blocProduk = Provider.of<BlocProduk>(context);
     double width = MediaQuery.of(context).size.width;
+    print(!blocAuth.isLogin);
     return Scaffold(
       body: !blocAuth.connection
           ? WidgetErrorConection()

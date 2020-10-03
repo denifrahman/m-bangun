@@ -184,8 +184,8 @@ class WidgetDetailOrderProdukPenjualan extends StatelessWidget {
                 ),
               ),
             ),
-            title == 'dikirim' || title == 'ulasan'
-                ? Container()
+            title == 'dikirim' || title == 'ulasan' || title == 'selesai'
+                      ? Container()
                 : Padding(
               padding: const EdgeInsets.all(8.0),
               child: SizedBox(

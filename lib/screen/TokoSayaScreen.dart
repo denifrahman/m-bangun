@@ -23,10 +23,9 @@ class TokoSayaScreen extends StatelessWidget {
     BlocProduk blocProduk = Provider.of<BlocProduk>(context);
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     double width = MediaQuery.of(context).size.width;
+    print(blocProfile.dataToko['no_rekening'] == '');
     AppBar appBar = AppBar(
-//      backgroundColor: Colors.cyan[700],
       elevation: 0,
-//      iconTheme: IconThemeData(color: Colors.white),
       title: Text(
         'Kelola Toko',
         style: TextStyle(color: Colors.black),
@@ -101,7 +100,13 @@ class TokoSayaScreen extends StatelessWidget {
                   ? Container()
                   : Container(
                 color: Colors.white,
-                height: (MediaQuery.of(context).size.height - appBarHeigh) * 0.85 - MediaQuery.of(context).padding.top,
+                height: (MediaQuery
+                    .of(context)
+                    .size
+                    .height - appBarHeigh) * 0.85 - MediaQuery
+                    .of(context)
+                    .padding
+                    .top,
                 child: SingleChildScrollView(
                   child: RefreshIndicator(
                     onRefresh: () async {
@@ -122,7 +127,9 @@ class TokoSayaScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   subheading('Produk Saya'),
-                                  GestureDetector(
+                                  blocProfile.dataToko['no_rekening'] == null || blocProfile.dataToko['no_rekening'] == ''
+                                      ? Container()
+                                      : GestureDetector(
                                     onTap: () {
                                       Navigator.push(context, SlideRightRoute(page: WidgetAddProduk())).then((value) {
                                         blocProduk.getAllProductByParam({'id_toko': blocAuth.idToko.toString()});
@@ -145,7 +152,13 @@ class TokoSayaScreen extends StatelessWidget {
                               height: 10,
                             ),
                             Container(
-                              height: (MediaQuery.of(context).size.height - appBarHeigh) * 0.8 - MediaQuery.of(context).padding.top - 40,
+                              height: (MediaQuery
+                                  .of(context)
+                                  .size
+                                  .height - appBarHeigh) * 0.8 - MediaQuery
+                                  .of(context)
+                                  .padding
+                                  .top - 40,
                               child: ListView.builder(
                                   padding: EdgeInsets.only(left: 5, right: 5, top: 10),
                                   itemCount: blocProduk.listProducts.length,
@@ -216,7 +229,10 @@ class TokoSayaScreen extends StatelessWidget {
                                                   child: InkWell(
                                                     child: Container(
                                                         padding: EdgeInsets.symmetric(vertical: 12),
-                                                        width: MediaQuery.of(context).size.width * 0.3,
+                                                        width: MediaQuery
+                                                            .of(context)
+                                                            .size
+                                                            .width * 0.3,
                                                         child: Text(
                                                           "Ubah",
                                                           style: TextStyle(fontSize: 14),
@@ -239,7 +255,10 @@ class TokoSayaScreen extends StatelessWidget {
                                                     child: Container(
                                                         height: 40,
                                                         padding: EdgeInsets.symmetric(vertical: 12),
-                                                        width: MediaQuery.of(context).size.width * 0.3,
+                                                        width: MediaQuery
+                                                            .of(context)
+                                                            .size
+                                                            .width * 0.3,
                                                         child: Text(
                                                           aktif == '1' ? "Non Aktifkan" : 'Aktifkan',
                                                           style: TextStyle(fontSize: 14),

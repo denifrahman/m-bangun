@@ -160,6 +160,7 @@ class BlocAuth extends ChangeNotifier {
           _connection = true;
           _isLogin = false;
           _isLoading = false;
+          _isRegister = false;
           notifyListeners();
           return false;
         }
@@ -271,6 +272,7 @@ class BlocAuth extends ChangeNotifier {
         getNotificationUnread();
         return result['data'];
       } else {
+        getNotificationUnread();
         _connection = false;
         _isLoading = false;
         _listNotification = [];
@@ -287,6 +289,7 @@ class BlocAuth extends ChangeNotifier {
   getNotificationUnread() async {
     var param = {'id_user': _id_user.toString(), 'status': 'unread', "limit": '20'};
     var result = await AuthRepository().getNotification(param);
+    print(result);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
@@ -296,6 +299,8 @@ class BlocAuth extends ChangeNotifier {
       if (result['meta']['success']) {
         _coundNotification = result['data'].length;
         notifyListeners();
+      } else {
+        _coundNotification = result['data'].length;
       }
     }
   }

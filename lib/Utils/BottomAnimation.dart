@@ -123,11 +123,13 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
   }
 
   Future<void> _showNotification(message) async {
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     var androidPlatformChannelSpecifics =
         AndroidNotificationDetails('your channel id', 'your channel name', 'your channel description', importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(0, message['notification']['title'], message['notification']['body'], platformChannelSpecifics, payload: 'item x');
+    blocAuth.getNotification();
   }
 
   int currentTab = 0; // to keep track of active tab index

@@ -109,6 +109,7 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
                                 blocProject.getProjectByOrder({
                                   'no_order': noOrder.toString(),
                                 });
+                                blocProject.getTagihanByParam({'id_proyek': blocProject.listProjects[index].id});
                                 blocProfile.getSubDistrictById(blocProject.listProjects[index].idKecamatan);
                                 Navigator.push(
                                     context,
@@ -120,27 +121,28 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
                                 });
                               }
                             },
-                        child: Stack(
-                          children: <Widget>[
-                            Card(
-                              elevation: 2,
-                              margin: EdgeInsets.all(15),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Container(
-                                decoration: BoxDecoration(color: Colors.cyan[500], borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10))),
-                                padding: EdgeInsets.all(5),
-                                child: ListTile(
-                                  title: Text(
-                                    blocProject.listProjects[index].nama,
-                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
-                                    maxLines: 2,
+                            child: Stack(
+                              children: <Widget>[
+                                Card(
+                                  elevation: 2,
+                                  margin: EdgeInsets.all(15),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  trailing: Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: <Widget>[
-                                      (blocProject.listProjects[index].status == 'baru' || blocProject.listProjects[index].status == 'survey')
+                                  child: Container(
+                                    decoration:
+                                        BoxDecoration(color: Colors.cyan[500], borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10))),
+                                    padding: EdgeInsets.all(5),
+                                    child: ListTile(
+                                      title: Text(
+                                        blocProject.listProjects[index].nama,
+                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
+                                        maxLines: 2,
+                                      ),
+                                      trailing: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: <Widget>[
+                                          (blocProject.listProjects[index].status == 'baru' || blocProject.listProjects[index].status == 'survey')
                                           ? Icon(
                                         FontAwesomeIcons.exclamationCircle,
                                         color: Colors.amber,

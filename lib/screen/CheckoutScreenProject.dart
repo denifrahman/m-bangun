@@ -36,7 +36,7 @@ class CheckoutScreenProject extends StatelessWidget {
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     AppBar appBar = AppBar(
       elevation: 0,
-      title: Text('Checkout'),
+      title: Text('Checkout Proyek'),
     );
     return Scaffold(
       key: _scaffoldKey,
@@ -184,7 +184,7 @@ class CheckoutScreenProject extends StatelessWidget {
       }
     };
     var data = json.encode(bodyPayment);
-    print(data);
+//    print(data);
     var result = blocOrder.makePayment(data);
     result.then((value) {
       dataPost['token_va'] = value['token'];

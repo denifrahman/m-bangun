@@ -7,6 +7,7 @@ import 'package:apps/widget/Aktivity/Pengajuan/component/WidgetDetailBahanProduk
 import 'package:apps/widget/Aktivity/Pengajuan/component/WidgetDetailLokasi.dart';
 import 'package:apps/widget/Aktivity/Pengajuan/component/WidgetLaporanAkhir.dart';
 import 'package:apps/widget/Aktivity/Pengajuan/component/WidgetListPekerja.dart';
+import 'package:apps/widget/Aktivity/Pengajuan/component/WidgetListPembayaran.dart';
 import 'package:apps/widget/Aktivity/Pengajuan/component/WidgetSurveyInformation.dart';
 import 'package:apps/widget/Kontrak/WidgetKontrak.dart';
 import 'package:carousel_pro/carousel_pro.dart';
@@ -242,6 +243,12 @@ class WidgetDetailPengajuanKontrak extends StatelessWidget {
                                     child: WidgetKontrak(
                                       param: 'owner',
                                     ),
+                                  )
+                                : Container(),
+                            param['status'] == 'setuju' || param['status'] == 'proses'
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                                    child: WidgetListPembayaran(param: param),
                                   )
                                 : Container(),
                             param['status'] == 'proses' || param['status'] == 'selesai'

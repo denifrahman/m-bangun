@@ -11,7 +11,7 @@ description: Aplikasi m-bangun
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.2.1+37
+version: 2.2.2+38
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -86,6 +86,7 @@ dependencies:
   flutter_session: ^0.1.1
   device_info: ^0.4.2+8
   flutter_local_notifications: ^1.4.4+5
+  image_cropper: ^1.3.1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3

@@ -107,6 +107,9 @@ PODS:
   - GTMSessionFetcher/Core (1.4.0)
   - GTMSessionFetcher/Full (1.4.0):
     - GTMSessionFetcher/Core (= 1.4.0)
+  - image_cropper (0.0.3):
+    - Flutter
+    - TOCropViewController (~> 2.5.4)
   - image_picker (0.0.1):
     - Flutter
   - local_auth (0.0.1):
@@ -138,6 +141,7 @@ PODS:
   - sqflite (0.0.1):
     - Flutter
     - FMDB (~> 2.7.2)
+  - TOCropViewController (2.5.5)
   - url_launcher (0.0.1):
     - Flutter
   - video_player (0.0.1):
@@ -159,6 +163,7 @@ DEPENDENCIES:
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - flutter_webview_plugin (from `.symlinks/plugins/flutter_webview_plugin/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
+  - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - local_auth (from `.symlinks/plugins/local_auth/ios`)
   - maps_launcher (from `.symlinks/plugins/maps_launcher/ios`)
@@ -199,6 +204,7 @@ SPEC REPOS:
     - PromisesObjC
     - Protobuf
     - Reachability
+    - TOCropViewController
 
 EXTERNAL SOURCES:
   advance_pdf_viewer:
@@ -223,6 +229,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_webview_plugin/ios"
   google_sign_in:
     :path: ".symlinks/plugins/google_sign_in/ios"
+  image_cropper:
+    :path: ".symlinks/plugins/image_cropper/ios"
   image_picker:
     :path: ".symlinks/plugins/image_picker/ios"
   local_auth:
@@ -283,6 +291,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   GTMAppAuth: 197a8dabfea5d665224aa00d17f164fc2248dab9
   GTMSessionFetcher: 6f5c8abbab8a9bce4bb3f057e317728ec6182b10
+  image_cropper: c8f9b4157933c7bb965a66d1c5e6c8fd408c6eb4
   image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
   local_auth: 25938960984c3a7f6e3253e3f8d962fdd16852bd
   maps_launcher: eae38ee13a9c3f210fa04e04bb4c073fa4c6ed92
@@ -297,6 +306,7 @@ SPEC CHECKSUMS:
   screen: abd91ca7bf3426e1cc3646d27e9b2358d6bf07b0
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
+  TOCropViewController: da59f531f8ac8a94ef6d6c0fc34009350f9e8bfe
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
   wakelock: 0d4a70faf8950410735e3f61fb15d517c8a6efc4

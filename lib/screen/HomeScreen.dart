@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:apps/Utils/HeaderAnimation.dart';
 import 'package:apps/Utils/WidgetErrorConnection.dart';
 import 'package:apps/providers/BlocAuth.dart';
+import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/providers/Categories.dart';
 import 'package:apps/providers/DataProvider.dart';
@@ -64,43 +65,46 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       title: WidgetLokasi(),
     );
     double height = appBar.preferredSize.height;
-    return Scaffold(
-      appBar: appBar,
-      body: !blocProduk.connection
-          ? WidgetErrorConection()
-          : Container(
-              margin: EdgeInsets.only(bottom: 50),
-              color: Colors.white10.withOpacity(0.2),
-              child: Stack(
-                children: [
-                  HeaderAnimation(),
-                  Container(
-                    margin: EdgeInsets.only(top: 115),
-                    height: MediaQuery.of(context).size.height - 115 - height - MediaQuery.of(context).padding.top - 50,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          WidgetIklanTokoLink(
-                            blocProduk: blocProduk,
-                          ),
-                          WidgetSlider(
-                            blocProduk: blocProduk,
-                          ),
-                          WidgetOffialStore(
-                            blocProduk: blocProduk,
-                          ),
-                          WidgetRecentProduct(
-                            blocProduk: blocProduk,
-                          ),
-                          WidgetNews(),
-                        ],
+    return RefreshIndicator(
+      onRefresh: onRefresh,
+      child: Scaffold(
+        appBar: appBar,
+        body: !blocProduk.connection
+            ? WidgetErrorConection()
+            : Container(
+                margin: EdgeInsets.only(bottom: 50),
+                color: Colors.white10.withOpacity(0.2),
+                child: Stack(
+                  children: [
+                    HeaderAnimation(),
+                    Container(
+                      margin: EdgeInsets.only(top: 115),
+                      height: MediaQuery.of(context).size.height - 115 - height - MediaQuery.of(context).padding.top - 50,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            WidgetIklanTokoLink(
+                              blocProduk: blocProduk,
+                            ),
+                            WidgetSlider(
+                              blocProduk: blocProduk,
+                            ),
+                            WidgetOffialStore(
+                              blocProduk: blocProduk,
+                            ),
+                            WidgetRecentProduct(
+                              blocProduk: blocProduk,
+                            ),
+                            WidgetNews(),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  WidgetKategori(),
-                ],
+                    WidgetKategori(),
+                  ],
+                ),
               ),
-            ),
+      ),
     );
   }
 
@@ -184,6 +188,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  Future<bool> onRefresh() async {
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    blocAuth.checkSession();
+    blocOrder.setIdUser();
+    blocAuth.getNotification();
+    blocProduk.getRecentProduct();
+    blocProduk.getOfficialStore();
+    blocProduk.getIklanTokoLink();
+    blocProduk.getIklan();
+    blocOrder.getCountSaleByParam({'id_toko': blocAuth.idToko.toString()});
+    return true;
   }
 }
 

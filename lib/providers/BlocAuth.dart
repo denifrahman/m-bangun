@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:apps/Repository/AuthRepository.dart';
 import 'package:apps/Repository/UserRepository.dart';
 import 'package:apps/Utils/LocalBindings.dart';
-import 'package:apps/models/NotificationM.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_session/flutter_session.dart';
@@ -13,6 +12,7 @@ import 'package:package_info/package_info.dart';
 class BlocAuth extends ChangeNotifier {
   BlocAuth() {
     getCurrentUser();
+    getNotification();
   }
 
   bool _isLoading = false;
@@ -197,7 +197,6 @@ class BlocAuth extends ChangeNotifier {
           LocalStorage.sharedInstance.writeValue(key: 'id_user_login', value: result['data']['id']);
           _idUser = result['data']['id'];
           _id_user = result['data']['id_user'];
-          getNotification();
           _isRegister = false;
           _isLoading = false;
           _isLogin = true;
@@ -248,14 +247,15 @@ class BlocAuth extends ChangeNotifier {
     }
   }
 
-  List<NotificationM> _listNotification = [];
+  List _listNotification = [];
 
-  List<NotificationM> get listNotification => _listNotification;
+  List get listNotification => _listNotification;
 
   getNotification() async {
     _isLoading = true;
     var param = {'id_user': _id_user.toString(), 'limit': '20'};
     var result = await AuthRepository().getNotification(param);
+    print(param);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
@@ -267,7 +267,7 @@ class BlocAuth extends ChangeNotifier {
         _connection = true;
         _listNotification = [];
         Iterable list = result['data'];
-        _listNotification = list.map((model) => NotificationM.fromMap(model)).toList();
+        _listNotification = result['data'];
         notifyListeners();
         getNotificationUnread();
         return result['data'];
@@ -289,7 +289,7 @@ class BlocAuth extends ChangeNotifier {
   getNotificationUnread() async {
     var param = {'id_user': _id_user.toString(), 'status': 'unread', "limit": '20'};
     var result = await AuthRepository().getNotification(param);
-    print(result);
+//    print(result);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
@@ -307,7 +307,7 @@ class BlocAuth extends ChangeNotifier {
 
   updateNotification(param) async {
     var result = await AuthRepository().updateNotification(param);
-    print(result);
+//    print(result);
     getNotification();
     notifyListeners();
   }

@@ -96,7 +96,7 @@ class _KeranjangState extends State<Keranjang> {
                                                 leading: Padding(
                                                   padding: const EdgeInsets.all(8.0),
                                                   child: Image.network(
-                                                    baseURL + '/api-v2/assets/toko/' + blocOrder.listCart[i].chilrdern[0].fotoToko,
+                                                    baseURL + '/' + pathBaseUrl + '/assets/toko/' + blocOrder.listCart[i].chilrdern[0].fotoToko,
                                                     width: 40,
                                                     height: 80,
                                                   ),

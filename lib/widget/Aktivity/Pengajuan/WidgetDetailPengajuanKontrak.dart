@@ -105,13 +105,14 @@ class WidgetDetailPengajuanKontrak extends StatelessWidget {
                                         PageRouteTransition(
                                           animationType: AnimationType.slide_down,
                                           builder: (context) => PreviewFoto(
-                                            urlFoto: blocProject.listProjectDetail[0].foto1 == null ? dataProvider.fotoNull : baseURL + '/api-v2/assets/toko/' +
-                                                blocProject.listProjectDetail[0].foto1,
+                                            urlFoto: blocProject.listProjectDetail[0].foto1 == null
+                                                ? dataProvider.fotoNull
+                                                : baseURL + '/' + pathBaseUrl + '/assets/toko/' + blocProject.listProjectDetail[0].foto1,
                                           ),
                                         ));
                                   },
                                   child: Image.network(
-                                    blocProject.listProjectDetail[0].foto1 == null ? dataProvider.fotoNull : baseURL + '/api-v2/assets/toko/' +
+                                    blocProject.listProjectDetail[0].foto1 == null ? dataProvider.fotoNull : baseURL + '/' + pathBaseUrl + '/assets/toko/' +
                                         blocProject.listProjectDetail[0].foto1,
                                     width: MediaQuery
                                         .of(context)
@@ -127,13 +128,13 @@ class WidgetDetailPengajuanKontrak extends StatelessWidget {
                                         PageRouteTransition(
                                           animationType: AnimationType.slide_down,
                                           builder: (context) => PreviewFoto(
-                                            urlFoto: blocProject.listProjectDetail[0].foto2 == null ? dataProvider.fotoNull : baseURL + '/api-v2/assets/toko/' +
+                                            urlFoto: blocProject.listProjectDetail[0].foto2 == null ? dataProvider.fotoNull : baseURL + '/' + pathBaseUrl + '/assets/toko/' +
                                                 blocProject.listProjectDetail[0].foto2,
                                           ),
                                         ));
                                   },
                                   child: Image.network(
-                                    blocProject.listProjectDetail[0].foto3 == null ? dataProvider.fotoNull : baseURL + '/api-v2/assets/toko/' +
+                                    blocProject.listProjectDetail[0].foto3 == null ? dataProvider.fotoNull : baseURL + '/' + pathBaseUrl + '/assets/toko/' +
                                         blocProject.listProjectDetail[0].foto3,
                                     width: MediaQuery
                                         .of(context)
@@ -149,13 +150,13 @@ class WidgetDetailPengajuanKontrak extends StatelessWidget {
                                         PageRouteTransition(
                                           animationType: AnimationType.slide_down,
                                           builder: (context) => PreviewFoto(
-                                            urlFoto: blocProject.listProjectDetail[0].foto3 == null ? dataProvider.fotoNull : baseURL + '/api-v2/assets/toko/' +
+                                            urlFoto: blocProject.listProjectDetail[0].foto3 == null ? dataProvider.fotoNull : baseURL + '/' + pathBaseUrl + '/assets/toko/' +
                                                 blocProject.listProjectDetail[0].foto3,
                                           ),
                                         ));
                                   },
                                   child: Image.network(
-                                    blocProject.listProjectDetail[0].foto3 == null ? dataProvider.fotoNull : baseURL + '/api-v2/assets/toko/' +
+                                    blocProject.listProjectDetail[0].foto3 == null ? dataProvider.fotoNull : baseURL + '/' + pathBaseUrl + '/assets/toko/' +
                                         blocProject.listProjectDetail[0].foto3,
                                     width: MediaQuery
                                         .of(context)
@@ -171,13 +172,13 @@ class WidgetDetailPengajuanKontrak extends StatelessWidget {
                                         PageRouteTransition(
                                           animationType: AnimationType.slide_down,
                                           builder: (context) => PreviewFoto(
-                                            urlFoto: blocProject.listProjectDetail[0].foto4 == null ? dataProvider.fotoNull : baseURL + '/api-v2/assets/toko/' +
+                                            urlFoto: blocProject.listProjectDetail[0].foto4 == null ? dataProvider.fotoNull : baseURL + '/' + pathBaseUrl + '/assets/toko/' +
                                                 blocProject.listProjectDetail[0].foto4,
                                           ),
                                         ));
                                   },
                                   child: Image.network(
-                                    blocProject.listProjectDetail[0].foto4 == null ? dataProvider.fotoNull : baseURL + '/api-v2/assets/toko/' +
+                                    blocProject.listProjectDetail[0].foto4 == null ? dataProvider.fotoNull : baseURL + '/' + pathBaseUrl + '/assets/toko/' +
                                         blocProject.listProjectDetail[0].foto4,
                                     width: MediaQuery
                                         .of(context)
@@ -229,7 +230,7 @@ class WidgetDetailPengajuanKontrak extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(horizontal: 10),
                               child: WidgetDetailBahanProduk(),
                             ),
-                            param['status'] == 'setuju' || param['status'] == 'proses'
+                            param['status'] == 'setuju' || param['status'] == 'proses' || param['status'] == 'selesai'
                                 ? Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 10),
                               child: WidgetListPekerja(
@@ -237,7 +238,7 @@ class WidgetDetailPengajuanKontrak extends StatelessWidget {
                                     ),
                                   )
                                 : Container(),
-                            param['status'] == 'proses' || param['status'] == 'setuju'
+                            param['status'] == 'proses' || param['status'] == 'setuju' || param['status'] == 'selesai'
                                 ? Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 10),
                                     child: WidgetKontrak(
@@ -245,7 +246,7 @@ class WidgetDetailPengajuanKontrak extends StatelessWidget {
                                     ),
                                   )
                                 : Container(),
-                            param['status'] == 'setuju' || param['status'] == 'proses'
+                            param['status'] == 'setuju' || param['status'] == 'proses' || param['status'] == 'selesai'
                                 ? Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 10),
                                     child: WidgetListPembayaran(param: param),

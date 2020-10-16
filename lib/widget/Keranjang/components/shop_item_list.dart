@@ -49,7 +49,7 @@ class _ShopItemListState extends State<ShopItemList> {
                         Container(
                           margin: EdgeInsets.only(top: 0),
                           child: Image.network(
-                            baseURL + '/api-v2/assets/toko/' + widget.chilrdern.foto,
+                            baseURL + '/' + pathBaseUrl + '/assets/toko/' + widget.chilrdern.foto,
                             width: 80,
                             height: 80,
                           ),

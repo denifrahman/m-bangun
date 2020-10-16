@@ -55,7 +55,7 @@ class WidgetSlider extends StatelessWidget {
                         .size
                         .width * 0.75,
                     child: Image.network(
-                      baseURL + '/api-v2/assets/iklan/' + i.baner,
+                      baseURL + '/' + pathBaseUrl + '/assets/iklan/' + i.baner,
                       fit: BoxFit.cover,
                       errorBuilder: (context, urlImage, error) {
                         print(error.hashCode);

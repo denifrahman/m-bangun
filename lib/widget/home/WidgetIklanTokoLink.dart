@@ -69,7 +69,7 @@ class WidgetIklanTokoLink extends StatelessWidget {
                           },
                           child: new Center(
                             child: Image.network(
-                              baseURL + '/api-v2/assets/iklan/' + blocProduk.listIklanTokoLink[j].thumbnail,
+                              baseURL + '/' + pathBaseUrl + '/assets/iklan/' + blocProduk.listIklanTokoLink[j].thumbnail,
                               height: 75,
                               width: 75,
                               fit: BoxFit.cover,

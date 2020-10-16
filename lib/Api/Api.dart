@@ -8,7 +8,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
 //const baseUrl = "http://niagatravel.com/api/api-m-bangun-jwt-token/api/";
-const baseUrl = "https://mbangun.id/api-v2/";
+const baseUrl = "https://mbangun.id/'+pathBaseUrl+'/";
 //const baseUrl = "http://192.168.0.6/api_jwt/api/";
 //const baseUrl = "http://192.168.0.6/api_jwt/api/";
 //const api_url = "192.168.0.6";
@@ -355,7 +355,7 @@ class Api {
   }
 
   static Future getAllProdukByParam(token, query) {
-    var url = Uri.http(api_url, param + 'produk/getAllByParam', query);
+    var url = Uri.https(api_url, param + 'produk/getAllByParam', query);
     print(url);
     try {
       return http.get(
@@ -396,7 +396,7 @@ class Api {
   }
 
   static Future getAllFavoriteByParam(token, query) {
-    var url = Uri.http(api_url, param + '/Favorite/getAllByFilterParam', query);
+    var url = Uri.https(api_url, param + '/Favorite/getAllByFilterParam', query);
 //    var url = baseUrl + "Favorite/getAllByFilterParam?" + _produkId + _userId;
     print(url);
     try {
@@ -462,7 +462,7 @@ class Api {
   }
 
   static Future getBidByParam(token, query) {
-    var url = Uri.http(api_url, param + '/Bid/getBidByParam', query);
+    var url = Uri.https(api_url, param + '/Bid/getBidByParam', query);
     print(url);
     try {
       return http.get(
@@ -475,7 +475,7 @@ class Api {
   }
 
   static Future getKontrakByParam(token, query) {
-    var url = Uri.http(api_url, param + 'Kontrak/getKontrakByParam', query);
+    var url = Uri.https(api_url, param + 'Kontrak/getKontrakByParam', query);
     print(url);
     try {
       return http.get(
@@ -488,7 +488,7 @@ class Api {
   }
 
   static Future getAllGroupKategori(token, query) {
-    var url = Uri.http(api_url, param + 'GroupKategori/getAllByParam', query);
+    var url = Uri.https(api_url, param + 'GroupKategori/getAllByParam', query);
     print(url);
     try {
       return http.get(
@@ -501,7 +501,7 @@ class Api {
   }
 
   static Future getAllInvoiceByParam(token, query) {
-    var url = Uri.http(api_url, param + 'Invoice/getAllInvoiceByParam', query);
+    var url = Uri.https(api_url, param + 'Invoice/getAllInvoiceByParam', query);
     print(url);
     try {
       return http.get(
@@ -515,7 +515,7 @@ class Api {
 
   static Future getCategories(token, req) {
     String basicAuth = 'Basic ' + base64Encode(utf8.encode('${token['username']}:${token['password']}'));
-    var url = Uri.http(api_url, param + 'products/categories', req);
+    var url = Uri.https(api_url, param + 'products/categories', req);
     try {
       return http.get(
         url,
@@ -527,7 +527,7 @@ class Api {
   }
 
   static Future getAllGroupByParam(token, query) {
-    var url = Uri.http(api_url, param + 'Kategori/getAllGroupByParam', query);
+    var url = Uri.https(api_url, param + 'Kategori/getAllGroupByParam', query);
     print(url);
     try {
       return http.get(
@@ -540,7 +540,7 @@ class Api {
   }
 
   static Future getNewVersion(token) {
-    var url = Uri.http(api_url, param + 'ChekVersion/getLastVersion');
+    var url = Uri.https(api_url, param + 'ChekVersion/getLastVersion');
     print(url);
     try {
       return http.get(
@@ -553,7 +553,7 @@ class Api {
   }
 
   static Future getAllBank(token) {
-    var url = Uri.http(api_url, param + 'Sistem/getAllBank');
+    var url = Uri.https(api_url, param + 'Sistem/getAllBank');
     print(url);
     try {
       return http.get(
@@ -566,7 +566,7 @@ class Api {
   }
 
   static Future getAllMetodeTransfer(token) {
-    var url = Uri.http(api_url, param + 'Sistem/getAllMetodeTransfer');
+    var url = Uri.https(api_url, param + 'Sistem/getAllMetodeTransfer');
     print(url);
     try {
       return http.get(

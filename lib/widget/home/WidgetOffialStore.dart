@@ -61,7 +61,7 @@ class WidgetOffialStore extends StatelessWidget {
                   child: new ClipOval(
                     child: new Center(
                       child: Image.network(
-                        baseURL + '/api-v2/assets/toko/' + blocProduk.listOfficialStore[j].foto,
+                        baseURLMobile + '/assets/img/toko/' + blocProduk.listOfficialStore[j].foto,
                         height: 100,
                         width: 100,
                         fit: BoxFit.cover,

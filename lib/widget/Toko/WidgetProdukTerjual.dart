@@ -210,7 +210,7 @@ class WidgetProdukTerjual extends StatelessWidget {
     if (url == null) {
       return SizedBox();
     }
-    return Image.network(baseURL + '/api-v2/assets/toko/' + url, fit: BoxFit.cover, errorBuilder: (context, urlImage, error) {
+    return Image.network(baseURL + '/' + pathBaseUrl + '/assets/toko/' + url, fit: BoxFit.cover, errorBuilder: (context, urlImage, error) {
       print(error.hashCode);
       return Image.asset('assets/logo.png');
     });

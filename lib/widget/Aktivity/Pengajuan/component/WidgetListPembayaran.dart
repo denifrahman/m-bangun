@@ -91,9 +91,9 @@ class WidgetListPembayaran extends StatelessWidget {
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () {
-                            _chooseImage(context, blocProject.listTagihan[index]);
+                            blocProject.listProjectDetail[0].status == 'selesai' ? null : _chooseImage(context, blocProject.listTagihan[index]);
                           },
-                          color: Colors.cyan[800],
+                          color: blocProject.listProjectDetail[0].status == 'selesai' ? Colors.grey : Colors.cyan[800],
                         ),
                       ),
                     );

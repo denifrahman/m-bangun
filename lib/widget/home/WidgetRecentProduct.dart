@@ -226,7 +226,7 @@ class WidgetRecentProduct extends StatelessWidget {
   }
 
   getPostImages(String url) {
-    var urlImage = baseURL + '/api-v2/assets/toko/' + url;
+    var urlImage = baseURL + '/' + pathBaseUrl + '/assets/toko/' + url;
     if (url == null) {
       return SizedBox();
     }
@@ -235,7 +235,7 @@ class WidgetRecentProduct extends StatelessWidget {
       fit: BoxFit.cover,
       errorBuilder: (context, urlImage, error) {
         print(error.hashCode);
-        return Image.network(baseURL + '/api-v2/assets/toko/No-image-found.jpg');
+        return Image.network(baseURL + '/' + pathBaseUrl + '/assets/toko/No-image-found.jpg');
       },
     );
   }

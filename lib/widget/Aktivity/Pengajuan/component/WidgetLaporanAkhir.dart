@@ -34,124 +34,95 @@ class WidgetLaporanAkhir extends StatelessWidget {
             children: [
               blocProject.listBids.where((element) => element.status == '1').length == 0
                   ? Text(
-                'Silahkan pilih salah satu pekerja untuk dan kontrak akan otomatis dibuatkan antara pihak pertama dan pihak kedua',
-                style: TextStyle(fontSize: 12),
-              )
-                  : Container(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width,
-                height: 100,
-                child: ListTile(
-                  title: SizedBox(
-                    width: double.infinity,
-                    child: blocProject.listProjectDetail
-                        .where((element) => element.fileLaporanAkhir != '')
-                        .length == 0
-                        ? Container(
-                      child: Center(child: Text('Kontrak belum di tersedia')),
+                      'Silahkan pilih salah satu pekerja untuk dan kontrak akan otomatis dibuatkan antara pihak pertama dan pihak kedua',
+                      style: TextStyle(fontSize: 12),
                     )
-                        : blocProject.listProjectDetail
-                        .where((element) => element.fileLaporanAkhir != null)
-                        .length == 0
-                        ? Container()
-                        : Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-//                                        Text('Pastikan sudah sesuai dengan kontrak di awal. Jika sudah sesuai dan pembayaran sudah lunas silahkan selesai proyek anda'),
-                        InkWell(
-                            onTap: () {
-                              imageCache.clear();
-                              var url = baseURL + pathBaseUrl + 'assets/laporan_proyek/' + blocProject.listProjectDetail[0].fileLaporanAkhir;
-                              var title = 'Laporan';
-                              print(url);
-                              Navigator.push(context, SlideRightRoute(page: WidgetViewPdfPengajuan(urlPdf: url, title: title)));
-                            },
-                            child: Text(
-                              'Baca Laporan',
-                              style: TextStyle(color: Colors.blueAccent),
-                            )),
-                        blocProject.listProjectDetail[0].status == 'selesai' ? Container() : Container(
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width * 0.8,
-                          child: RaisedButton(
-                            child: Text("Selesai"),
-                            color: Color(0xffb16a085),
-                            textColor: Colors.white,
-                            padding: EdgeInsets.only(left: 0, right: 0, top: 15, bottom: 15),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                            onPressed: () {
-                              showDialog<void>(
-                                context: context,
-                                barrierDismissible: false, // user must tap button!
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text('Penting'),
-                                    content: SingleChildScrollView(
-                                      child: ListBody(
-                                        children: <Widget>[
-                                          Text('Apakah anda yakin ?'),
-                                          Text('Menyelesaikan proyek ini'),
-                                        ],
-                                      ),
+                  : Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: blocProject.listProjectDetail[0].status == 'selesai' ? 40 : 100,
+                      child: ListTile(
+                        title: SizedBox(
+                          width: double.infinity,
+                          child: blocProject.listProjectDetail.where((element) => element.fileLaporanAkhir != '').length == 0
+                              ? Container(
+                                  child: Center(child: Text('Kontrak belum di tersedia')),
+                                )
+                              : blocProject.listProjectDetail.where((element) => element.fileLaporanAkhir != null).length == 0
+                                  ? Container()
+                                  : Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        InkWell(
+                                            onTap: () {
+                                              imageCache.clear();
+                                              var url = baseURL + pathBaseUrl + 'assets/laporan_proyek/' + blocProject.listProjectDetail[0].fileLaporanAkhir;
+                                              var title = 'Laporan';
+                                              print(url);
+                                              Navigator.push(context, SlideRightRoute(page: WidgetViewPdfPengajuan(urlPdf: url, title: title)));
+                                            },
+                                            child: Text(
+                                              'Baca Laporan',
+                                              style: TextStyle(color: Colors.blueAccent),
+                                            )),
+                                        blocProject.listProjectDetail[0].status == 'selesai'
+                                            ? Container()
+                                            : Container(
+                                                width: MediaQuery.of(context).size.width * 0.8,
+                                                child: RaisedButton(
+                                                  child: Text("Selesai"),
+                                                  color: Color(0xffb16a085),
+                                                  textColor: Colors.white,
+                                                  padding: EdgeInsets.only(left: 0, right: 0, top: 15, bottom: 15),
+                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                                  onPressed: () {
+                                                    showDialog<void>(
+                                                      context: context,
+                                                      barrierDismissible: false, // user must tap button!
+                                                      builder: (BuildContext context) {
+                                                        return AlertDialog(
+                                                          title: Text('Penting'),
+                                                          content: SingleChildScrollView(
+                                                            child: ListBody(
+                                                              children: <Widget>[
+                                                                Text('Apakah anda yakin ?'),
+                                                                Text('Menyelesaikan proyek ini'),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          actions: <Widget>[
+                                                            FlatButton(
+                                                              child: Text('Batal'),
+                                                              onPressed: () {
+                                                                Navigator.of(context).pop();
+                                                              },
+                                                            ),
+                                                            FlatButton(
+                                                              child: Text('Setuju'),
+                                                              onPressed: () {
+                                                                Navigator.of(context).pop();
+                                                                var body = {'id': blocProject.listProjectDetail[0].id, 'status': 'selesai'};
+                                                                var result = blocProject.updateStatus(body);
+                                                                result.then((value) {
+                                                                  if (value) {
+                                                                    blocProject.getProjectByOrder({
+                                                                      'no_order': blocProject.listProjectDetail[0].noOrder.toString(),
+                                                                    });
+                                                                  }
+                                                                });
+                                                              },
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                      ],
                                     ),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        child: Text('Batal'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                      FlatButton(
-                                        child: Text('Setuju'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          var body = {'id': blocProject.listProjectDetail[0].id, 'status': 'selesai'};
-                                          var result = blocProject.updateStatus(body);
-                                          result.then((value) {
-                                            if (value) {
-                                              blocProject.getProjectByOrder({'no_order': blocProject.listProjectDetail[0].noOrder.toString(),});
-                                            }
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                          ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-//                        leading: blocProject.listProjectDetail[0].userTtd != null
-//                            ? Container(
-//                                child: Text(''),
-//                              )
-//                            : InkWell(
-//                                onTap: () {
-//                                  imageCache.clear();
-//                                  var url = 'https://mobile.mbangun.id/kontrak?id=' + blocProject.listProjectDetail[0].id;
-//                                  var title = 'Kontrak';
-//                                },
-//                                child: Column(
-//                                  crossAxisAlignment: CrossAxisAlignment.center,
-//                                  mainAxisAlignment: MainAxisAlignment.center,
-//                                  children: [
-//                                    Icon(
-//                                      Icons.attach_file,
-//                                      color: Colors.blue,
-//                                    ),
-//                                    Text('Buka')
-//                                  ],
-//                                ),
-//                              ),
-                ),
-              ),
             ],
           ),
         )

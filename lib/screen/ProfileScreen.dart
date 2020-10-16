@@ -48,213 +48,218 @@ class ProfileScreen extends StatelessWidget {
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     BlocProduk blocProduk = Provider.of<BlocProduk>(context);
     double width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      body: !blocAuth.connection
-          ? WidgetErrorConection()
-          : blocAuth.isLoading
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : blocAuth.currentUser == null
-                  ? Container(
-                      color: Colors.white,
-                      child: LoginWidget(
-                        primaryColor: Color(0xFFb16a085),
-                        backgroundColor: Colors.white,
-                        page: '/BottomNavBar',
-                      ),
-                    )
-                  : SafeArea(
-                      child: Column(
-                        children: <Widget>[
-                          TopContainer(
-                            height: 200,
-                            width: width,
-                            child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(
-                                    'Profil',
-                                    style: TextStyle(
-                                      fontSize: 22.0,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {
-                                          blocAuth.handleSignOut();
-                                          Provider.of<BlocOrder>(context).clearCart();
-                                          Provider.of<BlocOrder>(context).clearCountOrder();
-                                        },
-                                        icon: Icon(Icons.exit_to_app, color: Colors.grey[400], size: 20.0),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return RefreshIndicator(
+      onRefresh: () async {
+        blocAuth.checkSession();
+      },
+      child: Scaffold(
+        body: !blocAuth.connection
+            ? WidgetErrorConection()
+            : blocAuth.isLoading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : !blocAuth.isLogin
+                    ? Container(
+                        color: Colors.white,
+                        child: LoginWidget(
+                          primaryColor: Color(0xFFb16a085),
+                          backgroundColor: Colors.white,
+                          page: '/BottomNavBar',
+                        ),
+                      )
+                    : SafeArea(
+                        child: Column(
+                          children: <Widget>[
+                            TopContainer(
+                              height: 200,
+                              width: width,
+                              child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
-                                    CircularPercentIndicator(
-                                      radius: 70.0,
-                                      lineWidth: 5.0,
-                                      animation: true,
-                                      percent: 0.75,
-                                      circularStrokeCap: CircularStrokeCap.round,
-                                      progressColor: AppColors.kRed,
-                                      backgroundColor: AppColors.kDarkYellow,
-                                      center: Container(
-                                          width: 60.0,
-                                          height: 60.0,
-                                          child: ClipOval(
-                                            child: Image.network(
-                                              blocAuth.currentUser.photoUrl == null ? dataProvider.fotoNull : blocAuth.currentUser.photoUrl,
-                                              fit: BoxFit.cover,
-                                              width: 80,
-                                            ),
-                                          )),
+                                    Text(
+                                      'Profil',
+                                      style: TextStyle(
+                                        fontSize: 22.0,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w800,
+                                      ),
                                     ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Container(
-                                          padding: EdgeInsets.symmetric(horizontal: 5),
-                                          width: MediaQuery.of(context).size.width * 0.6,
-                                          child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              !dataProvider.verified
-                                                  ? Container()
-                                                  : Container(child: Image(width: 18, fit: BoxFit.contain, image: new AssetImage('assets/icons/verified.png'))),
-                                              Container(
-                                                width: MediaQuery.of(context).size.width * 0.5,
-                                                margin: EdgeInsets.only(left: dataProvider.verified ? 5 : 0),
-                                                child: RichText(
-                                                  overflow: TextOverflow.ellipsis,
-                                                  maxLines: 1,
-                                                  text: TextSpan(
-                                                      style: TextStyle(
-                                                        fontSize: 16.0,
-                                                        color: Colors.white,
-                                                        fontWeight: FontWeight.w800,
-                                                      ),
-                                                      text: blocAuth.currentUser.displayName),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(horizontal: 5),
-                                          child: RichText(
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            strutStyle: StrutStyle(fontSize: 12.0),
-                                            text: TextSpan(
-                                              style: TextStyle(
-                                                color: Colors.grey[300],
-                                              ),
-                                              text: blocAuth.currentUser.email,
-                                            ),
-                                          ),
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            blocAuth.handleSignOut();
+                                            Provider.of<BlocOrder>(context).clearCart();
+                                            Provider.of<BlocOrder>(context).clearCountOrder();
+                                          },
+                                          icon: Icon(Icons.exit_to_app, color: Colors.grey[400], size: 20.0),
                                         ),
                                       ],
-                                    )
+                                    ),
                                   ],
                                 ),
-                              )
-                            ]),
-                          ),
-                          blocAuth.statusToko == '0'
-                              ? InkWell(
-                                  onTap: () => _pengajuan(context),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: WidgetCardMenu(
-                                      title: 'Buka Toko',
-                                      color: Colors.amber[800],
-                                      thumbnail: 'assets/icons/store.png',
-                                      deskripsi:
-                                          'Anda bisa menjual produk anda secara eksklusif di m-Bangun, cukup mengisi detail produk anda dan produk anda siap di untuk dijual!',
-                                    ),
+                                Container(
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      CircularPercentIndicator(
+                                        radius: 70.0,
+                                        lineWidth: 5.0,
+                                        animation: true,
+                                        percent: 0.75,
+                                        circularStrokeCap: CircularStrokeCap.round,
+                                        progressColor: AppColors.kRed,
+                                        backgroundColor: AppColors.kDarkYellow,
+                                        center: Container(
+                                            width: 60.0,
+                                            height: 60.0,
+                                            child: ClipOval(
+                                              child: Image.network(
+                                                blocAuth.currentUser.photoUrl == null ? dataProvider.fotoNull : blocAuth.currentUser.photoUrl,
+                                                fit: BoxFit.cover,
+                                                width: 80,
+                                              ),
+                                            )),
+                                      ),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 5),
+                                            width: MediaQuery.of(context).size.width * 0.6,
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                !dataProvider.verified
+                                                    ? Container()
+                                                    : Container(child: Image(width: 18, fit: BoxFit.contain, image: new AssetImage('assets/icons/verified.png'))),
+                                                Container(
+                                                  width: MediaQuery.of(context).size.width * 0.5,
+                                                  margin: EdgeInsets.only(left: dataProvider.verified ? 5 : 0),
+                                                  child: RichText(
+                                                    overflow: TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                    text: TextSpan(
+                                                        style: TextStyle(
+                                                          fontSize: 16.0,
+                                                          color: Colors.white,
+                                                          fontWeight: FontWeight.w800,
+                                                        ),
+                                                        text: blocAuth.currentUser.displayName),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 5),
+                                            child: RichText(
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                              strutStyle: StrutStyle(fontSize: 12.0),
+                                              text: TextSpan(
+                                                style: TextStyle(
+                                                  color: Colors.grey[300],
+                                                ),
+                                                text: blocAuth.currentUser.email,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
                                   ),
                                 )
-                              : Expanded(
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      children: <Widget>[
-                                        Container(
-                                          color: Colors.transparent,
-                                          padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-                                          child: Column(
-                                            children: <Widget>[
-                                              Row(
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: <Widget>[
-                                                  subheading('Toko Saya'),
-                                                ],
-                                              ),
-                                              SizedBox(height: 15.0),
-                                              InkWell(
-                                                onTap: () {
-                                                  blocProfile.getTokoByParam({'id_user': blocAuth.idUser.toString()});
-                                                  blocProduk.getAllProductByParam({'id_toko': blocAuth.idToko.toString()});
-                                                  Navigator.push(context, SlideRightRoute(page: TokoSayaScreen()));
-                                                },
-                                                child: WidgetMyFavorite(
-                                                  icon: Icons.shop,
-                                                  iconBackgroundColor: AppColors.kRed,
-                                                  title: 'Kelola Toko',
-                                                  subtitle: 'Kelola produk, alamat bank anda',
+                              ]),
+                            ),
+                            blocAuth.statusToko == '0'
+                                ? InkWell(
+                                    onTap: () => _pengajuan(context),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: WidgetCardMenu(
+                                        title: 'Buka Toko',
+                                        color: Colors.amber[800],
+                                        thumbnail: 'assets/icons/store.png',
+                                        deskripsi:
+                                            'Anda bisa menjual produk anda secara eksklusif di m-Bangun, cukup mengisi detail produk anda dan produk anda siap di untuk dijual!',
+                                      ),
+                                    ),
+                                  )
+                                : Expanded(
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        children: <Widget>[
+                                          Container(
+                                            color: Colors.transparent,
+                                            padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                                            child: Column(
+                                              children: <Widget>[
+                                                Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: <Widget>[
+                                                    subheading('Toko Saya'),
+                                                  ],
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Divider(),
-                                        Container(
-                                          color: Colors.transparent,
-                                          padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-                                          child: Column(
-                                            children: <Widget>[
-                                              Row(
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: <Widget>[
-                                                  subheading('Penghasilan'),
-                                                ],
-                                              ),
-                                              SizedBox(height: 15.0),
-                                              InkWell(
-                                                onTap: () {
-                                                  blocProfile.getPenghasilanByParam({'id_toko': blocAuth.idToko.toString()});
-                                                  Navigator.push(context, SlideRightRoute(page: WidgetDetailPenghasilan()));
-                                                },
-                                                child: WidgetMyFavorite(
-                                                  icon: Icons.credit_card,
-                                                  iconBackgroundColor: Colors.green,
-                                                  title: 'Lihat Penghasilan',
-                                                  subtitle: 'Pembayaran penghasilan anda',
+                                                SizedBox(height: 15.0),
+                                                InkWell(
+                                                  onTap: () {
+                                                    blocProfile.getTokoByParam({'id_user': blocAuth.idUser.toString()});
+                                                    blocProduk.getAllProductByParam({'id_toko': blocAuth.idToko.toString()});
+                                                    Navigator.push(context, SlideRightRoute(page: TokoSayaScreen()));
+                                                  },
+                                                  child: WidgetMyFavorite(
+                                                    icon: Icons.shop,
+                                                    iconBackgroundColor: AppColors.kRed,
+                                                    title: 'Kelola Toko',
+                                                    subtitle: 'Kelola produk, alamat bank anda',
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                          Divider(),
+                                          Container(
+                                            color: Colors.transparent,
+                                            padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                                            child: Column(
+                                              children: <Widget>[
+                                                Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: <Widget>[
+                                                    subheading('Penghasilan'),
+                                                  ],
+                                                ),
+                                                SizedBox(height: 15.0),
+                                                InkWell(
+                                                  onTap: () {
+                                                    blocProfile.getPenghasilanByParam({'id_toko': blocAuth.idToko.toString()});
+                                                    Navigator.push(context, SlideRightRoute(page: WidgetDetailPenghasilan()));
+                                                  },
+                                                  child: WidgetMyFavorite(
+                                                    icon: Icons.credit_card,
+                                                    iconBackgroundColor: Colors.green,
+                                                    title: 'Lihat Penghasilan',
+                                                    subtitle: 'Pembayaran penghasilan anda',
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
+      ),
     );
   }
 

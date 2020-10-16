@@ -280,7 +280,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                                   child: Row(
                                     children: [
                                       Image.network(
-                                        baseURL + '/api-v2/assets/kategori/' + item.icon,
+                                        baseURL + '/' + pathBaseUrl + '/assets/kategori/' + item.icon,
                                         height: 30,
                                         width: 30,
                                       ),

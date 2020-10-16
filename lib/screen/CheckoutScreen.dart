@@ -73,7 +73,7 @@ class CheckoutScreen extends StatelessWidget {
                               ],
                             ),
                             leading: Image.network(
-                              baseURL + '/api-v2/assets/toko/' + listCart.chilrdern[0].fotoToko,
+                              baseURL + '/' + pathBaseUrl + '/assets/toko/' + listCart.chilrdern[0].fotoToko,
                               width: 40,
                               height: 80,
                             ),

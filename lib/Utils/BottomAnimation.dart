@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
@@ -50,6 +52,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
   @override
   void initState() {
     _requestIOSPermissions();
+    _initializeTimer();
     _configureDidReceiveLocalNotificationSubject();
     _configureSelectNotificationSubject();
     _firebaseMessaging.configure(
@@ -75,6 +78,17 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
       assert(token != null);
     });
     super.initState();
+  }
+
+  Timer timer;
+
+  void _initializeTimer() {
+    timer = Timer.periodic(const Duration(seconds: 50), (__) {
+      BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+      BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+      blocAuth.checkSession();
+      blocOrder.setIdUser();
+    });
   }
 
   void _requestIOSPermissions() {
@@ -125,7 +139,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
   Future<void> _showNotification(message) async {
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     var androidPlatformChannelSpecifics =
-        AndroidNotificationDetails('your channel id', 'your channel name', 'your channel description', importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
+    AndroidNotificationDetails('your channel id', 'your channel name', 'your channel description', importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(0, message['notification']['title'], message['notification']['body'], platformChannelSpecifics, payload: 'item x');
@@ -283,11 +297,6 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                         minWidth: 30,
                         onPressed: () {
                           setState(() {
-                            blocAuth.checkSession();
-                            blocProduk.initLoad();
-                            blocOrder.getCart();
-                            blocOrder.setIdUser();
-                            blocOrder.getCountSaleByParam({'id_toko': blocAuth.idToko.toString()});
                             currentScreen = HomeScreen(); // if user taps on this dashboard tab will be active
                             currentTab = 0;
                           });
@@ -317,9 +326,9 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                       MaterialButton(
                         minWidth: 30,
                         onPressed: () {
-                          blocAuth.checkSession();
+//                          blocAuth.checkSession();
                           blocOrder.getCart();
-                          blocOrder.getCountSaleByParam({'id_toko': blocAuth.idToko.toString()});
+//                          blocOrder.getCountSaleByParam({'id_toko': blocAuth.idToko.toString()});
                           setState(() {
                             currentScreen = CheckListScreen(); // if user taps on this dashboard tab will be active
                             currentTab = 1;
@@ -383,10 +392,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                         minWidth: 30,
                         onPressed: () {
                           setState(() {
-                            blocAuth.checkSession();
-                            blocOrder.getCart();
                             blocOrder.setIdUser();
-                            blocOrder.getCountSaleByParam({'id_toko': blocAuth.idToko.toString()});
                             currentScreen = MyAdsScreen(); // if user taps on this dashboard tab will be active
                             currentTab = 2;
                           });
@@ -435,10 +441,6 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                       MaterialButton(
                         minWidth: 30,
                         onPressed: () {
-                          blocAuth.checkSession();
-                          blocOrder.getCart();
-                          blocOrder.setIdUser();
-                          blocOrder.getCountSaleByParam({'id_toko': blocAuth.idToko.toString()});
                           setState(() {
                             currentScreen = ProfileScreen(); // if user taps on this dashboard tab will be active
                             currentTab = 3;

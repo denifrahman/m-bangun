@@ -455,7 +455,7 @@ class _WidgetPendaftaranState extends State<WidgetPendaftaran> {
     map['password'] = password;
     map['id_google'] = blocAuth.currentUser.id;
     map['foto'] = blocAuth.currentUser.photoUrl;
-    print(jenis_kelamin != null);
+    print(map);
     if (_formKey.currentState.validate()) {
       if (jenis_kelamin != null) {
         var response = await blocAuth.create(map);

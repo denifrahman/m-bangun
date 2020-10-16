@@ -61,40 +61,40 @@ class _WidgetListPekerjaState extends State<WidgetListPekerja> {
                             print(blocProject.listBids[index].status);
                             return InkWell(
                               onTap: () {
-                                print(blocProject.listBids.where((element) => element.status == '1').length);
-                                if (blocProject.listBids.where((element) => element.status == '1').length == 0) {
-                                  if (widget.param['status'] == 'setuju') {
-                                    _showDialog(blocProject.listBids[index]);
-                                  }
-                                }
+//                                print(blocProject.listBids.where((element) => element.status == '1').length);
+//                                if (blocProject.listBids.where((element) => element.status == '1').length == 0) {
+//                                  if (widget.param['status'] == 'setuju') {
+                                _showDialog(blocProject.listBids[index]);
+//                                  }
+//                                }
                               },
                               child: Column(
                                 children: [
-                            ListTile(
-                              leading: WidgetFotoCircular(
-                                userFoto: blocProject.listBids[index].fotoMitra,
+                                  ListTile(
+                                    leading: WidgetFotoCircular(
+                                      userFoto: blocProject.listBids[index].fotoMitra,
+                                    ),
+                                    title: Text(blocProject.listBids[index].namaMitra.toUpperCase()),
+                                    subtitle: Text(
+                                      '(' + jenisMitra.toString().toUpperCase() + ')',
+                                      style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.grey, fontSize: 13),
+                                    ),
+                                    trailing: blocProject.listBids[index].status == '1'
+                                        ? Icon(
+                                            Icons.done_all,
+                                            color: Colors.green,
+                                          )
+                                        : Icon(
+                                            Icons.done_all,
+                                            color: Colors.grey[300],
+                                          ),
+                                  ),
+                                  Divider()
+                                ],
                               ),
-                              title: Text(blocProject.listBids[index].namaMitra.toUpperCase()),
-                              subtitle: Text(
-                                '(' + jenisMitra.toString().toUpperCase() + ')',
-                                style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.grey, fontSize: 13),
-                              ),
-                              trailing: blocProject.listBids[index].status == '1'
-                                  ? Icon(
-                                Icons.done_all,
-                                color: Colors.green,
-                              )
-                                  : Icon(
-                                Icons.done_all,
-                                color: Colors.grey[300],
-                              ),
-                            ),
-                            Divider()
-                          ],
-                        ),
-                      );
-                    }),
-              ),
+                            );
+                          }),
+                    ),
             ],
           ),
         )
@@ -208,7 +208,7 @@ class _WidgetListPekerjaState extends State<WidgetListPekerja> {
                       height: 10,
                     ),
                     Center(
-                      child: Image.network(baseURL + '/api-v2/assets/bid/' + param.fotoBid, width: MediaQuery
+                      child: Image.network(baseURL + '/' + pathBaseUrl + '/assets/bid/' + param.fotoBid, width: MediaQuery
                           .of(context)
                           .size
                           .width * 0.9, height: 200,
@@ -275,13 +275,17 @@ class _WidgetListPekerjaState extends State<WidgetListPekerja> {
                     SizedBox(
                       height: 20,
                     ),
-                    RoundedLoadingButton(
+                    blocProject.listBids
+                        .where((element) => element.status == '1')
+                        .length == 0
+                        ? RoundedLoadingButton(
                       height: 40,
                       child: Text('Setuju', style: TextStyle(color: Colors.white)),
                       color: Colors.green,
                       controller: _btnController,
                       onPressed: () => updateBidToKontrak(param),
                     )
+                        : Container()
                   ],
                 ),
               ),
@@ -298,6 +302,7 @@ class _WidgetListPekerjaState extends State<WidgetListPekerja> {
     map['id_user'] = param.idUser;
     map['id'] = param.id;
     map['id_projek'] = param.idProjek;
+    print(map);
     var result = blocProject.updateSelectedBid(map);
     result.then((value) async {
       if (value) {

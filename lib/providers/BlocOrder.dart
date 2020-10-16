@@ -43,7 +43,7 @@ class BlocOrder extends ChangeNotifier {
   setIdUser() async {
     var id = await LocalStorage.sharedInstance.readValue('id_user_login');
     var idToko = await LocalStorage.sharedInstance.readValue('id_toko');
-    print(idToko);
+//    print(idToko);
     if (id != null) {
       _id_user_login = id;
       getOrderByIdUser(id);

@@ -96,11 +96,11 @@ class WidgetListPembelian extends StatelessWidget {
                     }
                   }
                 },
-                leading: Image.network(baseURL + '/api-v2/assets/toko/' + blocOrder.listOrder[index].foto, width: 90, height: 90,
-                    errorBuilder: (context, urlImage, error) {
-                      print(error.hashCode);
-                      return Image.asset('assets/logo.png');
-                    }),
+                leading: Image.network(baseURL + '/' + pathBaseUrl + '/assets/toko/' + blocOrder.listOrder[index].foto, width: 90, height: 90,
+                                errorBuilder: (context, urlImage, error) {
+                              print(error.hashCode);
+                              return Image.asset('assets/logo.png');
+                            }),
                 title: Text(blocOrder.listOrder[index].namaToko),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,8 +142,8 @@ class WidgetListPembelian extends StatelessWidget {
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     blocOrder.setCountPembelian();
-    if (title == 'Menunggu Pembayaran') {
-      var param = {'id_pembeli': blocAuth.idUser.toString(), 'status_pembayaran': title == 'Menunggu Pembayaran' ? 'menunggu' : 'terbayar'};
+    if (title == 'Menunggu Pembayaran' || title == 'Batal') {
+      var param = {'id_pembeli': blocAuth.idUser.toString(), 'status_pembayaran': title == 'Menunggu Pembayaran' ? 'menunggu' : title.toLowerCase() == 'Batal' ? 'batal' : 'batal'};
       blocOrder.getOrderByParam(param);
     } else {
       var param = {'id_pembeli': blocAuth.idUser.toString(), 'status_order': title.toString(), 'status_pembayaran': 'terbayar'};

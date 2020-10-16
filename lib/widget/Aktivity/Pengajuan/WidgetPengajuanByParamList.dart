@@ -43,9 +43,7 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
   Future<Null> refreshList() async {
     refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 2));
-    print(widget.param);
     Provider.of<BlocProject>(context).getProjectByParam(widget.param);
-    print(widget.param);
     return null;
   }
 
@@ -66,15 +64,14 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
         elevation: 0.0,
         title: Text(widget.title),
       ),
-      body: ModalProgressHUD(
-        inAsyncCall: blocProject.isLoading,
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              flex: 25,
-              child: RefreshIndicator(
-                onRefresh: refreshList,
-                key: refreshKey,
+      body: RefreshIndicator(
+        onRefresh: refreshList,
+        child: ModalProgressHUD(
+          inAsyncCall: blocProject.isLoading,
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                flex: 25,
                 child: blocProject.listProjects.length == 0
                     ? Center(
                         child: Sup(
@@ -91,7 +88,7 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
                         itemCount: blocProject.listProjects.length,
                         itemBuilder: (context, index) {
                           var noOrder = blocProject.listProjects[index].noOrder;
-                          DateTime tanggal_booking = DateTime.parse(blocProject.listProjects[index].tglMaxBid.toString());
+                          DateTime tanggal_booking = DateTime.parse(blocProject.listProjects[index].createdAt.toString());
                           var budget = blocProject.listProjects[index].budget;
                           var budgetFormat = Money.fromInt(budget == null ? 0 : int.parse(budget), IDR);
                           return InkWell(
@@ -200,13 +197,13 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
                                 dashColor: Colors.grey,
                               ),
                             ),
-                          ],
-                        ),
-                      );
-                    }),
-              ),
-            )
-          ],
+                              ],
+                            ),
+                          );
+                        }),
+              )
+            ],
+          ),
         ),
       ),
     );

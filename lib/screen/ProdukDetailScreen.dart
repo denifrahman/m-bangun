@@ -210,7 +210,7 @@ class ProdukDetailScreen extends StatelessWidget {
                                     children: [
                                       Container(
                                         margin: EdgeInsets.only(top: 0),
-                                        child: Image.network(baseURL + '/api-v2/assets/toko/' + blocProduk.detailProduct[0].foto, width: 50, height: 80,
+                                        child: Image.network(baseURL + '/' + pathBaseUrl + '/assets/toko/' + blocProduk.detailProduct[0].foto, width: 50, height: 80,
                                             errorBuilder: (context, urlImage, error) {
                                           print(error.hashCode);
                                           return Image.asset(

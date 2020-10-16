@@ -40,7 +40,7 @@ class _PendaftaranScreenState extends State<PendaftaranScreen> {
           ),
         ],
       ),
-      body: WidgetPendaftaran(),
+      body: SafeArea(child: WidgetPendaftaran()),
     );
   }
 }

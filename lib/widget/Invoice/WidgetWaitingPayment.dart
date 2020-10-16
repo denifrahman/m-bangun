@@ -28,9 +28,10 @@ class _WidgetWaitingPaymentState extends State<WidgetWaitingPayment> {
   }
 
   createOrder() async {
-    await new Future.delayed(const Duration(seconds: 5));
+    await new Future.delayed(const Duration(seconds: 2));
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     if (widget.param == 'project') {
+      print(widget.body);
       var result = blocOrder.insertProject(widget.body);
       result.then((value) {
         if (value) {
@@ -43,8 +44,8 @@ class _WidgetWaitingPaymentState extends State<WidgetWaitingPayment> {
               context,
               SlideRightRoute(
                   page: WidgetTagihanProject(
-                param: 'checkout',
-              ))).then((value) {});
+                    param: 'checkout',
+                  ))).then((value) {});
         }
       });
     } else {

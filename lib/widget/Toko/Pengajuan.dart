@@ -39,32 +39,34 @@ class _PengajuanState extends State<Pengajuan> {
         elevation: 0,
         title: Text('Buka Toko'),
       ),
-      body: Builder(
-        builder: (BuildContext context) {
-          return WebviewScaffold(
-            url: baseURLMobile + '/welcome?email=' + blocAuth.currentUser.email.toString(),
-            withZoom: true,
-            javascriptChannels: <JavascriptChannel>[
-              JavascriptChannel(
-                  name: 'Print',
-                  onMessageReceived: (JavascriptMessage msg) {
-                    if (msg.message == 'kelolaToko') {
-                      Navigator.pop(context);
-                    }
-                  }),
-            ].toSet(),
-            scrollBar: true,
-            allowFileURLs: true,
-            withJavascript: true,
-            withLocalStorage: true,
-            hidden: true,
-            initialChild: Container(
-              child: const Center(
-                child: CircularProgressIndicator(),
+      body: SafeArea(
+        child: Builder(
+          builder: (BuildContext context) {
+            return WebviewScaffold(
+              url: baseURLMobile + '/welcome?email=' + blocAuth.currentUser.email.toString(),
+              withZoom: true,
+              javascriptChannels: <JavascriptChannel>[
+                JavascriptChannel(
+                    name: 'Print',
+                    onMessageReceived: (JavascriptMessage msg) {
+                      if (msg.message == 'kelolaToko') {
+                        Navigator.pop(context);
+                      }
+                    }),
+              ].toSet(),
+              scrollBar: true,
+              allowFileURLs: true,
+              withJavascript: true,
+              withLocalStorage: true,
+              hidden: true,
+              initialChild: Container(
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

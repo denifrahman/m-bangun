@@ -19,6 +19,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:package_info/package_info.dart';
+import 'package:pk_skeleton/pk_skeleton.dart';
 import 'package:provider/provider.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:route_transitions/route_transitions.dart';
@@ -100,7 +101,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    WidgetKategori(),
+                    blocProduk.isLoading
+                        ? Container(
+                            margin: EdgeInsets.only(top: 20),
+                            height: 100,
+                            child: PKCardListSkeleton(
+                              length: 1,
+                            ))
+                        : WidgetKategori(),
                   ],
                 ),
               ),

@@ -11,7 +11,7 @@ description: Aplikasi m-bangun
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.2.4+40
+version: 2.2.6+42
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -41,6 +41,7 @@ dependencies:
   provider: ^3.1.0
   percent_indicator: ^2.1.3
   pk_skeleton: ^0.0.2
+  flutter_skeleton: ^0.1.0+1
   shared_preferences: ^0.5.3+4
   google_sign_in: ^4.5.1
   loading_animations: ^2.1.0

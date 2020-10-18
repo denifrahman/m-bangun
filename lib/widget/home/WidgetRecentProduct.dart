@@ -8,6 +8,7 @@ import 'package:apps/screen/ProdukDetailScreen.dart';
 import 'package:apps/screen/ProdukScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:money2/money2.dart';
+import 'package:pk_skeleton/pk_skeleton.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
@@ -79,29 +80,36 @@ class WidgetRecentProduct extends StatelessWidget {
             ),
           ),
         ),
-        Container(
-          color: Colors.white,
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * 0.5,
-          child: GridView.count(
-            childAspectRatio: 0.8,
-            crossAxisCount: 3,
-            shrinkWrap: false,
-            physics: new NeverScrollableScrollPhysics(),
-            children: List.generate(blocProduk.listRecentProduct.length, (j) {
-              final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
-              var harga = blocProduk.listRecentProduct.isEmpty ? '0' : blocProduk.listRecentProduct[j].harga;
-              var hargaFormat = Money.fromInt(harga == null ? 0 : int.parse(harga), IDR);
-              var avgRating = blocProduk.listRecentProduct[j].avg_rating == null ? 0 : blocProduk.listRecentProduct[j].avg_rating;
-              var jumlahRating = blocProduk.listRecentProduct[j].jumlah_rating == null ? '0' : blocProduk.listRecentProduct[j].jumlah_rating;
-              return Card(
-                semanticContainer: true,
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                child: InkWell(
-                  onTap: () {
-                    blocProduk.getDetailProductByParam({'id': blocProduk.listRecentProduct[j].id, 'aktif': '1'});
-                    blocProfile.getCityParam({'id': blocProduk.listRecentProduct[j].idKota.toString()});
+        blocProduk.isLoading
+            ? Container(
+                margin: EdgeInsets.only(top: 20),
+                height: 200,
+                child: PKCardListSkeleton(
+                  length: 1,
+                ))
+            : Container(
+                color: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.5,
+                child: GridView.count(
+                  childAspectRatio: 0.8,
+                  crossAxisCount: 3,
+                  shrinkWrap: false,
+                  physics: new NeverScrollableScrollPhysics(),
+                  children: List.generate(blocProduk.listRecentProduct.length, (j) {
+                    final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
+                    var harga = blocProduk.listRecentProduct.isEmpty ? '0' : blocProduk.listRecentProduct[j].harga;
+                    var hargaFormat = Money.fromInt(harga == null ? 0 : int.parse(harga), IDR);
+                    var avgRating = blocProduk.listRecentProduct[j].avg_rating == null ? 0 : blocProduk.listRecentProduct[j].avg_rating;
+                    var jumlahRating = blocProduk.listRecentProduct[j].jumlah_rating == null ? '0' : blocProduk.listRecentProduct[j].jumlah_rating;
+                    return Card(
+                      semanticContainer: true,
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      child: InkWell(
+                        onTap: () {
+                          blocProduk.getDetailProductByParam({'id': blocProduk.listRecentProduct[j].id, 'aktif': '1'});
+                          blocProfile.getCityParam({'id': blocProduk.listRecentProduct[j].idKota.toString()});
                     blocOrder.getUlasanProduByParam({'id_produk': blocProduk.listRecentProduct[j].id});
                     Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));
                   },

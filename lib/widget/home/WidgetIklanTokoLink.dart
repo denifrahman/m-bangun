@@ -3,6 +3,7 @@ import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/screen/DetailTokoScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:pk_skeleton/pk_skeleton.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class WidgetIklanTokoLink extends StatelessWidget {
@@ -43,29 +44,35 @@ class WidgetIklanTokoLink extends StatelessWidget {
             ],
           ),
         ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          width: MediaQuery.of(context).size.width,
-          height: 85,
-          child: GridView.count(
-            scrollDirection: Axis.horizontal,
-            crossAxisCount: 1,
-            children: List.generate(blocProduk.listIklanTokoLink.length, (j) {
-              return Column(
-                children: [
-                  Container(
-                    height: 60,
-                    width: 60,
-                    child: Container(
-                      child: ClipOval(
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(30),
-                          onTap: () async {
-                            if (await canLaunch(blocProduk.listIklanTokoLink[j].link.toString())) {
-                              await launch(blocProduk.listIklanTokoLink[j].link.toString());
-                            } else {
-                              throw 'Could not launch';
-                            }
+        blocProduk.isLoading
+            ? Container(
+                height: 100,
+                child: PKCardListSkeleton(
+                  length: 1,
+                ))
+            : Container(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                width: MediaQuery.of(context).size.width,
+                height: 85,
+                child: GridView.count(
+                  scrollDirection: Axis.horizontal,
+                  crossAxisCount: 1,
+                  children: List.generate(blocProduk.listIklanTokoLink.length, (j) {
+                    return Column(
+                      children: [
+                        Container(
+                          height: 60,
+                          width: 60,
+                          child: Container(
+                            child: ClipOval(
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(30),
+                                onTap: () async {
+                                  if (await canLaunch(blocProduk.listIklanTokoLink[j].link.toString())) {
+                                    await launch(blocProduk.listIklanTokoLink[j].link.toString());
+                                  } else {
+                                    throw 'Could not launch';
+                                  }
                           },
                           child: new Center(
                             child: Image.network(

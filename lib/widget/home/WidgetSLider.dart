@@ -4,6 +4,7 @@ import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/screen/DetailTokoScreen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:pk_skeleton/pk_skeleton.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class WidgetSlider extends StatelessWidget {
@@ -16,29 +17,36 @@ class WidgetSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: 15),
-      color: Colors.white,
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      width: MediaQuery.of(context).size.width,
-      height: 180,
-      child: CarouselSlider(
-        options: CarouselOptions(aspectRatio: 2.5, autoPlay: true, enlargeCenterPage: true, autoPlayInterval: Duration(milliseconds: 5000)),
-        items: blocProduk.listIklan.map((i) {
-          return Builder(
-            builder: (BuildContext context) {
-              return InkWell(
-                onTap: () async {
-                  if (i.link == null || i.link == '') {
-                    blocProduk.getDetailStore(i.idToko);
-                    Navigator.push(
-                        context,
-                        SlideRightRoute(
-                            page: DetailTokoScreen(
-                              id: i.idToko,
-                              image: i.baner,
-                            )));
-                  } else {
+    return blocProduk.isLoading
+        ? Container(
+            margin: EdgeInsets.only(top: 20),
+            height: 150,
+            child: PKCardPageSkeleton(
+              totalLines: 2,
+            ))
+        : Container(
+            margin: EdgeInsets.only(top: 15),
+            color: Colors.white,
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            width: MediaQuery.of(context).size.width,
+            height: 180,
+            child: CarouselSlider(
+              options: CarouselOptions(aspectRatio: 2.5, autoPlay: true, enlargeCenterPage: true, autoPlayInterval: Duration(milliseconds: 5000)),
+              items: blocProduk.listIklan.map((i) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return InkWell(
+                      onTap: () async {
+                        if (i.link == null || i.link == '') {
+                          blocProduk.getDetailStore(i.idToko);
+                          Navigator.push(
+                              context,
+                              SlideRightRoute(
+                                  page: DetailTokoScreen(
+                                id: i.idToko,
+                                image: i.baner,
+                              )));
+                        } else {
                     if (await canLaunch(i.link.toString())) {
                       await launch(i.link.toString());
                     } else {

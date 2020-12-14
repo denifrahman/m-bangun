@@ -2,6 +2,7 @@ import 'package:apps/widget/Login/LoginWidget.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
+  /// lastPage before login
   final String param;
 
   LoginScreen({Key key, this.param}) : super(key: key);

@@ -27,9 +27,9 @@ class _KeranjangState extends State<Keranjang> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
-    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+    final blocOrder = Provider.of<BlocOrder>(context, listen: true);
     BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     AppBar appBar = AppBar(
       elevation: 0,
@@ -88,7 +88,7 @@ class _KeranjangState extends State<Keranjang> {
                                                       id: idToko,
                                                       image: fotoSampul,
                                                     ))).then((value) {
-                                                  blocOrder.getCart();
+                                                  blocOrder.getCart(blocAuth.idUser);
                                                 });
                                               },
                                               child: ListTile(
@@ -215,7 +215,7 @@ class _KeranjangState extends State<Keranjang> {
                                                   };
                                                   blocOrder.getCost(param);
                                                 }
-                                                var result = blocOrder.getCart();
+                                                var result = blocOrder.getCart(blocAuth.idUser);
                                                 result.then((value) {
                                                   var aktif = value[i]['chilrdern'].where((element) => element['aktif'] == '0').length;
                                                   var stok = value[i]['chilrdern'].where((element) => element['stok'] == '0').length;
@@ -270,6 +270,6 @@ class _KeranjangState extends State<Keranjang> {
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
-    blocOrder.getCart();
+    blocOrder.getCart(blocAuth.idUser);
   }
 }

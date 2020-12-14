@@ -42,10 +42,12 @@ class _WidgetNewsState extends State<WidgetNews> {
     if (post.featuredMedia == null) {
       return SizedBox();
     }
-    return Image.network(
-      post.featuredMedia.sourceUrl,
-      fit: BoxFit.cover,
-      width: 170,
+    return ClipRRect(
+      // borderRadius: BorderRadius.only(
+      //   topLeft: Radius.circular(8.0),
+      //   topRight: Radius.circular(8.0),
+      // ),
+      child: Image.network(post.featuredMedia.sourceUrl, width: 50, height: 50, fit: BoxFit.fill),
     );
   }
 
@@ -99,11 +101,9 @@ class _WidgetNewsState extends State<WidgetNews> {
           ),
         ),
         Container(
-          height: 150,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width,
+          height: 250,
+          margin: EdgeInsets.only(bottom: 10),
+          width: MediaQuery.of(context).size.width,
           child: FutureBuilder(
             future: fetchPost(),
             builder: (BuildContext context, AsyncSnapshot<List<wp.Post>> snapshot) {
@@ -115,28 +115,22 @@ class _WidgetNewsState extends State<WidgetNews> {
                   child: Container(
                     height: 200,
                     child: ListView(
-                      scrollDirection: Axis.horizontal,
+                      scrollDirection: Axis.vertical,
                       children: [
                         Container(
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width * 0.5,
+                          width: MediaQuery.of(context).size.width * 0.5,
                           child: SingleChildScrollView(
                             child: PKCardPageSkeleton(
 //                                isCircularImage: true,
-                            ),
+                                ),
                           ),
                         ),
                         Container(
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width * 0.5,
+                          width: MediaQuery.of(context).size.width * 0.5,
                           child: SingleChildScrollView(
                             child: PKCardPageSkeleton(
 //                                isCircularImage: true,
-                            ),
+                                ),
                           ),
                         ),
                       ],
@@ -145,50 +139,64 @@ class _WidgetNewsState extends State<WidgetNews> {
                 );
               }
               return ListView.builder(
-                scrollDirection: Axis.horizontal,
+                scrollDirection: Axis.vertical,
+                // physics: NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.only(left: 5, right: 5, top: 10),
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
                   wp.Post post = snapshot.data[index];
-                  return Card(
-                    semanticContainer: true,
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                  return Container(
+                    height: 100,
                     child: InkWell(
                       onTap: () => _openDetailNews(post.link, post.title.rendered),
-                      child: Column(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 2,
-                            child: getPostImages(post),
+                      child: ListTile(
+                        leading: Container(child: getPostImages(post)),
+                        title: Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: RichText(
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            text: TextSpan(style: TextStyle(color: Colors.grey[800], fontSize: 14, fontWeight: FontWeight.normal), text: post.title.rendered),
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  Container(
-                                    width: 150,
-                                    child: RichText(
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                      text: TextSpan(style: TextStyle(color: Colors.grey[800], fontSize: 9, fontWeight: FontWeight.normal), text: post.title.rendered),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                        ),
+                        subtitle: Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: RichText(
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            text: TextSpan(style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.normal), text: post.slug),
                           ),
-                        ],
+                        ),
                       ),
+                      // child: Column(
+                      //   children: <Widget>[
+                      //     Expanded(
+                      //       flex: 2,
+                      //       child: getPostImages(post),
+                      //     ),
+                      //     Expanded(
+                      //       flex: 1,
+                      //       child: Padding(
+                      //         padding: const EdgeInsets.all(8.0),
+                      //         child: Column(
+                      //           crossAxisAlignment: CrossAxisAlignment.start,
+                      //           mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      //           children: [
+                      //             Container(
+                      //               width: MediaQuery.of(context).size.width,
+                      //               child: RichText(
+                      //                 overflow: TextOverflow.ellipsis,
+                      //                 maxLines: 2,
+                      //                 text: TextSpan(style: TextStyle(color: Colors.grey[800], fontSize: 9, fontWeight: FontWeight.normal), text: post.title.rendered),
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    elevation: 2,
-                    margin: EdgeInsets.all(10),
                   );
                 },
               );
@@ -200,6 +208,12 @@ class _WidgetNewsState extends State<WidgetNews> {
   }
 
   _openDetailNews(link, title) {
-    Navigator.push(context, SlideRightRoute(page: NewsDetailScreen(link: link, title: title,)));
+    Navigator.push(
+        context,
+        SlideRightRoute(
+            page: NewsDetailScreen(
+          link: link,
+          title: title,
+        )));
   }
 }

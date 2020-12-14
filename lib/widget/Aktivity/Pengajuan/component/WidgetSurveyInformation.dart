@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class WidgetSurveyInformation extends StatelessWidget {
-  final alamatLengkap;
+  // final alamatLengkap;
 
   const WidgetSurveyInformation({
     Key key,
-    @required this.alamatLengkap,
+    // @required this.alamatLengkap,
   }) : super(key: key);
 
   @override

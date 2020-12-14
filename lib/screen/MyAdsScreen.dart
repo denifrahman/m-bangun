@@ -4,7 +4,6 @@ import 'package:apps/providers/DataProvider.dart';
 import 'package:apps/widget/Aktivity/Pembelian/WidgetMenuPembelian.dart';
 import 'package:apps/widget/Aktivity/Pengajuan/widgetPengajuanList.dart';
 import 'package:apps/widget/Aktivity/Penjualan/WidgetMenuPenjualan.dart';
-import 'package:apps/widget/Login/LoginWidget.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -95,15 +94,6 @@ class _MyAdsScreenState extends State<MyAdsScreen> with SingleTickerProviderStat
     DataProvider dataProvider = Provider.of<DataProvider>(context);
     return !blocAuth.connection
         ? WidgetErrorConection()
-        : !blocAuth.isLogin
-            ? Container(
-                color: Colors.white,
-                child: LoginWidget(
-                  primaryColor: Colors.white,
-                  backgroundColor: Colors.white,
-                  page: '/BottomNavBar',
-                ),
-              )
             : DefaultTabController(
                 length: 3,
                 child: Scaffold(

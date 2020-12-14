@@ -8,7 +8,6 @@ import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/providers/BlocProfile.dart';
 import 'package:apps/screen/ProdukScreen.dart';
 import 'package:apps/widget/Keranjang/Keranjang.dart';
-import 'package:apps/widget/Login/LoginWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,17 +28,8 @@ class CheckListScreen extends StatelessWidget {
       appBar: appBar,
       body: !blocAuth.connection
           ? WidgetErrorConection()
-          : !blocAuth.isLogin
-              ? Container(
-                  color: Colors.white,
-                  child: LoginWidget(
-                    primaryColor: Color(0xFFb16a085),
-                    backgroundColor: Colors.white,
-                    page: '/BottomNavBar',
-                  ),
-                )
               : RefreshIndicator(
-                  onRefresh: () => blocOrder.getCart(),
+                  onRefresh: () => blocOrder.getCart(blocAuth.idUser),
                   child: ListView.builder(
                 itemCount: dataList.length,
                 padding: EdgeInsets.all(10),
@@ -94,16 +84,16 @@ class CheckListScreen extends StatelessWidget {
   _openScreen(String dataList, context) {
     if (dataList == 'Keranjang') {
       BlocAuth blocAuth = Provider.of<BlocAuth>(context);
-      BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+      final blocOrder = Provider.of<BlocOrder>(context);
       BlocProfile blocProfile = Provider.of<BlocProfile>(context);
       blocProfile.getUserAddressDefault(blocAuth.idUser);
-      blocOrder.getCart();
+      blocOrder.getCart(blocAuth.idUser);
       Navigator.push(context, SlideRightRoute(page: Keranjang()));
       Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
     } else {
 
       BlocAuth blocAuth = Provider.of<BlocAuth>(context);
-      BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+      final blocProduk = Provider.of<BlocProduk>(context);
       blocProduk.getFavoriteProductByParam({'id_user_login': blocAuth.idUser});
       Navigator.push(context, SlideRightRoute(page: ProdukScreen(
         namaKategori: 'Favorite',

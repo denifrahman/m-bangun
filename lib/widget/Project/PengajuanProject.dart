@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/providers/BlocAuth.dart';
-import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProfile.dart';
+import 'package:apps/widget/Pendaftaran/WidgetPendaftaran.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +23,6 @@ class _PengajuanProjectState extends State<PengajuanProject> {
   void initState() {
     // TODO: implement initState
     loading = true;
-//    _initializeTimer();
     super.initState();
   }
 
@@ -32,25 +31,9 @@ class _PengajuanProjectState extends State<PengajuanProject> {
     super.dispose();
   }
 
-  void _initializeTimer() async {
-    await new Future.delayed(const Duration(seconds: 1));
-    BlocProfile blocProfile = Provider.of<BlocProfile>(context);
-    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
-    timer = Timer.periodic(const Duration(seconds: 5), (__) {
-      var result = blocProfile.getTokoByParam({'id_user': blocAuth.idUser.toString()});
-      result.then((value) {
-        if (value['meta']['success']) {
-          Navigator.pop(context);
-        }
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
-    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
-    BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     // TODO: implement build
 
     return Scaffold(
@@ -61,7 +44,7 @@ class _PengajuanProjectState extends State<PengajuanProject> {
       body: Builder(
         builder: (BuildContext context) {
           return WebviewScaffold(
-            url: baseURLMobile + '/Projek?email=' + blocAuth.currentUser.email.toString(),
+            url: baseURLMobile + '/Projek?email=' + blocAuth.currentUserLogin['email'].toString(),
             withJavascript: true,
             displayZoomControls: false,
             withZoom: false,

@@ -88,7 +88,7 @@ class BlocProduk extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().getAllProduct(param);
-    print(result);
+    // print(result);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == '8') {
       _connection = false;
       _isLoading = false;
@@ -117,7 +117,7 @@ class BlocProduk extends ChangeNotifier {
       notifyListeners();
     } else {
       Iterable list = result['data'];
-      print(result['data']);
+      // print(result['data']);
       _listProducts.addAll(list.map((model) => Product.fromMap(model)).toList());
 //      _listProducts = list.map((model) => Product.fromMap(model)).toList();
       _isLoading = false;
@@ -133,7 +133,7 @@ class BlocProduk extends ChangeNotifier {
 
   addCountViewProduk(body) async {
     var result = await UserRepository().addCountViewProduk(body);
-    print(result);
+    // print(result);
   }
 
   getDetailProductByParam(param) async {
@@ -245,7 +245,7 @@ class BlocProduk extends ChangeNotifier {
     notifyListeners();
     var param = {'aktif': '1'};
     var result = await UserRepository().getIklanTokoLink(param);
-    print(result);
+    // print(result);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _isLoading = false;
       _connection = false;

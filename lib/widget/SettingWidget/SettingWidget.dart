@@ -1,5 +1,5 @@
-import 'package:apps/Utils/values/radii.dart';
-import 'package:apps/Utils/values/shadows.dart';
+import 'package:apps/Utils/Theme/radii.dart';
+import 'package:apps/Utils/Theme/shadows.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 

@@ -30,8 +30,8 @@ class ProdukDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
-    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context, listen: true);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     return Scaffold(
 //      backgroundColor: Colors.white,
@@ -80,7 +80,7 @@ class ProdukDetailScreen extends StatelessWidget {
                       BlocAuth blocAuth = Provider.of<BlocAuth>(context);
                       BlocProfile blocProfile = Provider.of<BlocProfile>(context);
                       blocProfile.getUserAddressDefault(blocAuth.idUser);
-                      blocOrder.getCart();
+                      blocOrder.getCart(blocAuth.idUser);
                       Navigator.push(context, SlideRightRoute(page: Keranjang()));
                     },
                     child: Stack(
@@ -133,7 +133,7 @@ class ProdukDetailScreen extends StatelessWidget {
   }
 
   Widget _buttonBuy(context) {
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
     return Container(
       child: InkWell(
         onTap: () {
@@ -154,7 +154,7 @@ class ProdukDetailScreen extends StatelessWidget {
   void _showDialog(context) async {
     imageCache.clear();
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
     blocAuth.checkSession();
     if (!blocAuth.isLogin) {
       Navigator.push(
@@ -169,7 +169,7 @@ class ProdukDetailScreen extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return ChangeNotifierProvider<BlocOrder>(
-            builder: (context) => BlocOrder(),
+            create: (context) => BlocOrder(),
             child: Consumer<BlocOrder>(builder: (context, blocOrder, _) {
               final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
               return Form(
@@ -333,7 +333,7 @@ class ProdukDetailScreen extends StatelessWidget {
                         onPressed: () async {
                           var map = new Map<String, String>();
                           map["id_produk"] = blocProduk.detailProduct[0].id;
-                          map["id_user_login"] = blocAuth.idUser;
+                          map["id_user"] = blocAuth.idUser.toString();
                           map["jumlah"] = blocOrder.jumlah.toString();
                           map["harga"] = blocProduk.detailProduct[0].harga;
                           map["subtotal"] = (int.parse(blocProduk.detailProduct[0].harga) * blocOrder.jumlah).toString();
@@ -347,7 +347,7 @@ class ProdukDetailScreen extends StatelessWidget {
                               var response = await blocOrder.addToCart(map);
                               if (response) {
                                 _btnController.success();
-                                blocOrder.getCart();
+                                blocOrder.getCart(blocAuth.idUser);
                                 await new Future.delayed(const Duration(seconds: 1));
                                 Navigator.pop(context);
                               } else {
@@ -379,6 +379,7 @@ class ProdukDetailScreen extends StatelessWidget {
 
   void _closeModal(context) {
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
-    blocOrder.getCart();
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+    blocOrder.getCart(blocAuth.idUser);
   }
 }

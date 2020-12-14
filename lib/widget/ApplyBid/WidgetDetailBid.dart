@@ -228,7 +228,7 @@ class WidgetDetailBid extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 10),
-                              child: WidgetDetailLokasi(),
+                              child: WidgetDetailLokasi(alamatLengkap: 'alamat lengkap',),
                             ),
                             param != 'Publish'
                                 ? Padding(

@@ -29,7 +29,7 @@ class _WidgetUpdateTokoState extends State<WidgetUpdateToko> {
 
   @override
   Widget build(BuildContext context) {
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     // TODO: implement build

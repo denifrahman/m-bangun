@@ -1,8 +1,10 @@
+
 import 'package:apps/Utils/SnacbarLauncher.dart';
 import 'package:apps/Utils/TextBold.dart';
 import 'package:apps/Utils/TitleHeader.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/screen/PendaftaranScreen.dart';
+import 'package:apps/providers/BlocChatService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -109,12 +111,14 @@ class _LoginWidgetState extends State<LoginWidget> {
                                       iconSize: 18,
                                       onPressed: () async {
                                         BlocAuth blocAuth = Provider.of<BlocAuth>(context);
-                                        var result = await blocAuth.handleSignIn();
                                         if (widget.page == 'product') {
-                                          Navigator.pop(context);
                                           blocAuth.checkSession();
+                                          Navigator.pop(context);
                                         }
+                                        blocAuth.initChat();
+                                        Provider.of<ChatModel>(context).setUser();
                                         blocAuth.checkSession();
+                                        // _setUser();
                                       },
                                       icon: Icon(FontAwesomeIcons.google),
                                     ),
@@ -149,7 +153,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                           ],
                         ),
                 ),
-    );
+              );
   }
 }
 

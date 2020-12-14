@@ -10,7 +10,7 @@ class WidgetListPembayaran extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
         title: Text('Pilih Pembayaran'),

@@ -18,7 +18,7 @@ class WidgetListPembelian extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context, listen: true);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
     return Scaffold(
@@ -53,7 +53,7 @@ class WidgetListPembelian extends StatelessWidget {
               child: ListTile(
                 contentPadding: EdgeInsets.all(8),
                 onTap: () {
-                  print(blocOrder.listOrder[index].statusOrder);
+                  // print(blocOrder.listOrder[index].statusOrder);
                               if (title != 'Batal') {
                                 if (blocOrder.listOrder[index].statusOrder == null ||
                                     blocOrder.listOrder[index].statusOrder == '' ||
@@ -65,7 +65,7 @@ class WidgetListPembelian extends StatelessWidget {
                                   blocOrder.getOrderTagihanByParam(param);
                                   blocOrder.getTransaksiStatus(blocOrder.listOrder[index].noOrder);
                                   Navigator.push(context, SlideRightRoute(page: WidgetTagihan())).then((value) {
-                                    blocOrder.getCountSaleByParam({'id_toko': blocAuth.idToko.toString()});
+                                    blocOrder.getCountSaleByParam(blocAuth.idToko.toString());
                                     blocOrder.setCountPembelian();
                                     if (title == 'Menunggu Pembayaran') {
                                       var param = {'id_pembeli': blocAuth.idUser.toString(), 'status_pembayaran': title == 'Menunggu Pembayaran' ? 'menunggu' : 'terbayar'};

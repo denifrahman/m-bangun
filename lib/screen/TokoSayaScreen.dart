@@ -1,6 +1,6 @@
 import 'package:apps/Utils/SettingApp.dart';
+import 'package:apps/Utils/Theme/colors.dart';
 import 'package:apps/Utils/navigation_right.dart';
-import 'package:apps/Utils/values/colors.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/providers/BlocProfile.dart';
@@ -20,7 +20,7 @@ class TokoSayaScreen extends StatelessWidget {
     // TODO: implement build
     final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     double width = MediaQuery.of(context).size.width;
     print(blocProfile.dataToko['no_rekening'] == '');
@@ -312,7 +312,7 @@ class TokoSayaScreen extends StatelessWidget {
   }
 
   void onRefresh(BuildContext context) {
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     blocProfile.getTokoByParam({'id_user': blocAuth.idUser.toString()});

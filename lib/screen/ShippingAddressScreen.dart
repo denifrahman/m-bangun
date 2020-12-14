@@ -19,6 +19,7 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
   @override
   void initState() {
     super.initState();
+    getAlamatByUserId();
   }
 
   @override
@@ -49,5 +50,12 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
       ),
       body: WidgetListAddress(),
     );
+  }
+
+  void getAlamatByUserId() async {
+    await Future.delayed(Duration(milliseconds: 40));
+    BlocProfile blocProfile = Provider.of<BlocProfile>(context);
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+    blocProfile.getAllUserAddress(blocAuth.idUser);
   }
 }

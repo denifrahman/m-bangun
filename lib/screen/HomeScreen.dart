@@ -1,28 +1,22 @@
 import 'dart:io';
 
-import 'package:apps/Utils/HeaderAnimation.dart';
 import 'package:apps/Utils/WidgetErrorConnection.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
-import 'package:apps/providers/Categories.dart';
-import 'package:apps/providers/DataProvider.dart';
-import 'package:apps/screen/RequestScreen.dart';
+import 'package:apps/screen/TopCardMenu/presentation/pages/HeaderMenu.dart';
 import 'package:apps/widget/Home/WidgetLokasi.dart';
 import 'package:apps/widget/Home/WidgetNews.dart';
 import 'package:apps/widget/home/WidgetIklanTokoLink.dart';
-import 'package:apps/widget/home/WidgetKategori.dart';
 import 'package:apps/widget/home/WidgetOffialStore.dart';
-import 'package:apps/widget/home/WidgetRecentProduct.dart';
 import 'package:apps/widget/home/WidgetSLider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:package_info/package_info.dart';
-import 'package:pk_skeleton/pk_skeleton.dart';
 import 'package:provider/provider.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
-import 'package:route_transitions/route_transitions.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -55,12 +49,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
-    BlogCategories blogCategories = Provider.of<BlogCategories>(context);
     BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     _showVersionDialog();
     AppBar appBar = AppBar(
+      automaticallyImplyLeading: false,
       backgroundColor: Colors.cyan[700],
       elevation: 0,
       title: WidgetLokasi(),
@@ -70,30 +63,31 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       onRefresh: onRefresh,
       child: Scaffold(
         appBar: appBar,
-        body: !blocProduk.connection
+        body: !blocAuth.connection
             ? WidgetErrorConection()
-            : Container(
+            : ModalProgressHUD(
+              inAsyncCall: Provider.of<BlocAuth>(context).isLoading,
+              child: Container(
                 margin: EdgeInsets.only(bottom: 50),
                 color: Colors.white10.withOpacity(0.2),
                 child: Stack(
                   children: [
-                    HeaderAnimation(),
+                    // HeaderAnimation(),
                     Container(
-                      margin: EdgeInsets.only(top: 115),
-                      height: MediaQuery.of(context).size.height - 115 - height - MediaQuery.of(context).padding.top - 50,
+                      margin: EdgeInsets.only(top: 0),
+                      height: MediaQuery.of(context).size.height - height - MediaQuery.of(context).padding.top - 50,
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
+                            HeaderMenu(),
                             WidgetIklanTokoLink(
                               blocProduk: blocProduk,
                             ),
                             WidgetSlider(
                               blocProduk: blocProduk,
                             ),
+                            // ListChannel(),
                             WidgetOffialStore(
-                              blocProduk: blocProduk,
-                            ),
-                            WidgetRecentProduct(
                               blocProduk: blocProduk,
                             ),
                             WidgetNews(),
@@ -101,42 +95,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    blocProduk.isLoading
-                        ? Container(
-                            margin: EdgeInsets.only(top: 20),
-                            height: 100,
-                            child: PKCardListSkeleton(
-                              length: 1,
-                            ))
-                        : WidgetKategori(),
                   ],
                 ),
               ),
+            ),
       ),
     );
   }
 
-  _openRequest() {
-    Navigator.push(
-        context,
-        PageRouteTransition(
-          animationType: AnimationType.slide_up,
-          builder: (context) => RequestScreen(),
-        ));
-  }
-
-//  syncVersion() async {
-//    await new Future.delayed(const Duration(seconds: 1));
-//    DataProvider dataProvider = Provider.of<DataProvider>(context);
-//    var newVersion = await dataProvider.newVersion;
-//    if (newVersion > dataProvider.currentVersion) {
-//      _showVersionDialog();
-//    }
-//  }
-
   _showVersionDialog() async {
 //    await new Future.delayed(const Duration(seconds: 1));
-    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
+    BlocAuth blocAuth = Provider.of(context);
     final PackageInfo info = await PackageInfo.fromPlatform();
     var currentVersion = info.version;
     var newVersion = blocAuth.newVersion;
@@ -152,39 +121,39 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           String btnLabelCancel = "Nanti";
           return Platform.isIOS
               ? WillPopScope(
-            onWillPop: () {},
-            child: new CupertinoAlertDialog(
-              title: Text(title),
-              content: Column(
-                children: <Widget>[
-                  Text("Pembaruan versi tersedia! $newVersion, versi saat ini adalah $currentVersion"),
-                ],
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text(btnLabel),
-                  onPressed: () => _launchURL(APP_STORE_URL),
-                ),
-              ],
-            ),
-          )
+                  onWillPop: () {},
+                  child: new CupertinoAlertDialog(
+                    title: Text(title),
+                    content: Column(
+                      children: <Widget>[
+                        Text("Pembaruan versi tersedia! $newVersion, versi saat ini adalah $currentVersion"),
+                      ],
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text(btnLabel),
+                        onPressed: () => _launchURL(APP_STORE_URL),
+                      ),
+                    ],
+                  ),
+                )
               : WillPopScope(
-            onWillPop: () {},
-            child: new CupertinoAlertDialog(
-              title: Text(title),
-              content: Column(
-                children: <Widget>[
-                  Text("Pembaruan versi tersedia! $newVersion, versi saat ini adalah $currentVersion"),
-                ],
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text(btnLabel),
-                  onPressed: () => _launchURL(PLAY_STORE_URL),
-                ),
-              ],
-            ),
-          );
+                  onWillPop: () {},
+                  child: new CupertinoAlertDialog(
+                    title: Text(title),
+                    content: Column(
+                      children: <Widget>[
+                        Text("Pembaruan versi tersedia! $newVersion, versi saat ini adalah $currentVersion"),
+                      ],
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text(btnLabel),
+                        onPressed: () => _launchURL(PLAY_STORE_URL),
+                      ),
+                    ],
+                  ),
+                );
         },
       );
     }
@@ -201,16 +170,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future<bool> onRefresh() async {
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
-    blocAuth.checkSession();
-    blocOrder.setIdUser();
-    blocAuth.getNotification();
-    blocProduk.getRecentProduct();
-    blocProduk.getOfficialStore();
-    blocProduk.getIklanTokoLink();
-    blocProduk.getIklan();
-    blocOrder.getCountSaleByParam({'id_toko': blocAuth.idToko.toString()});
+    final blocProduk = Provider.of<BlocProduk>(context);
+    await blocAuth.checkSession();
+    await blocAuth.getNotification();
+    await blocProduk.getRecentProduct();
+    await blocProduk.getOfficialStore();
+    await blocProduk.getIklanTokoLink();
+    await blocProduk.getIklan();
+    await blocOrder.getCountSaleByParam(blocAuth.idToko.toString());
     return true;
   }
 }
-

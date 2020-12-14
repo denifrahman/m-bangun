@@ -64,7 +64,7 @@ class _ProdukScreenState extends State<ProdukScreen> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
     return NotificationListener<ScrollNotification>(
       onNotification: _handleScrollNotification,
       child: Scaffold(

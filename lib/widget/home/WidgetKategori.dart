@@ -9,7 +9,7 @@ class WidgetKategori extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
     return Column(
       children: [
         Padding(

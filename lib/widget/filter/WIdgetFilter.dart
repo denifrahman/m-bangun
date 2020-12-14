@@ -1,6 +1,5 @@
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/providers/BlocProfile.dart';
-import 'package:apps/providers/DataProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +10,6 @@ class WidgetFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(

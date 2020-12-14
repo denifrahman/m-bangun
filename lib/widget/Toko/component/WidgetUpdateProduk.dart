@@ -47,14 +47,14 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
 
   @override
   void didChangeDependencies() {
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
 
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     // TODO: implement build
     AppBar appBar = AppBar(
@@ -534,7 +534,7 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
   }
 
   Future<void> _simpan() async {
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
 
     _formKey.currentState.save();
@@ -580,7 +580,7 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
         'stok': stok.toString(),
       };
       List<File> files = [foto, foto1, foto2];
-      print(body);
+      // print(body);
       var result = await blocProduk.updateProduk(files, body);
       if (result['meta']['success']) {
         setState(() {
@@ -603,7 +603,7 @@ class _WidgetUpdateProdukState extends State<WidgetUpdateProduk> {
   }
 
   Future<bool> _onWillPop() {
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
     if (blocProduk.isLoading) {
       return showDialog(
         context: context,

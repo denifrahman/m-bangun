@@ -1,4 +1,4 @@
-import 'package:apps/Utils/values/colors.dart';
+import 'package:apps/Utils/Theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
@@ -12,7 +12,7 @@ class WidgetFotoCircular extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(userFoto);
+    // print(userFoto);
     return CircularPercentIndicator(
       radius: 50.0,
       lineWidth: 5.0,

@@ -1,10 +1,12 @@
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_html/style.dart';
+// import 'package:flutter_html/flutter_html.dart';
+// import 'package:flutter_html/style.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:money2/money2.dart';
 import 'package:provider/provider.dart';
+
 class WidgetDeskripsiDetailProduk extends StatelessWidget {
   const WidgetDeskripsiDetailProduk({
     Key key,
@@ -33,9 +35,7 @@ class WidgetDeskripsiDetailProduk extends StatelessWidget {
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     height: 100,
-                    child: Html(
-                      data: blocProduk.detailProduct[0].deskripsi,
-                    ),
+                    child: HtmlWidget(blocProduk.detailProduct[0].deskripsi)
                   ),
                 ),
                 Padding(
@@ -67,7 +67,7 @@ class WidgetDeskripsiDetailProduk extends StatelessWidget {
   }
 
   void _showDeskripsi(context) async {
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
     showModalBottomSheet<void>(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
@@ -76,14 +76,11 @@ class WidgetDeskripsiDetailProduk extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return ChangeNotifierProvider<BlocOrder>(
-          builder: (context) => BlocOrder(),
+          create: (context) => BlocOrder(),
           child: Consumer<BlocOrder>(builder: (context, blocOrder, _) {
             final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
             return new Container(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height * 0.95,
+              height: MediaQuery.of(context).size.height * 0.95,
               padding: EdgeInsets.all(15.0),
               color: Colors.transparent,
               child: SingleChildScrollView(
@@ -109,15 +106,9 @@ class WidgetDeskripsiDetailProduk extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.only(top: 15, left: 5, right: 5),
                         child: Container(
-                            color: Colors.white38,
-                            child: Html(
-                              style: {
-                                "div": Style(
-                                  fontSize: FontSize.large,
-                                ),
-                              },
-                              data: blocProduk.detailProduct[0].deskripsi,
-                            )),
+                          color: Colors.white38,
+                          child: HtmlWidget(blocProduk.detailProduct[0].deskripsi),
+                        ),
                       ),
                     ),
                   ],

@@ -25,7 +25,7 @@ class BlocProfile extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().getMitraByParam(param);
-    print(result);
+    // print(result);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
@@ -34,7 +34,7 @@ class BlocProfile extends ChangeNotifier {
     } else {
       if (result['meta']['success']) {
         Iterable list = result['data'];
-        _detailProfile = list.map((model) => Mitra.fromMap(model)).toList();
+        _detailProfile = list.map((model) => Mitra.fromJson(model)).toList();
         notifyListeners();
       } else {
         _isLoading = false;
@@ -51,7 +51,7 @@ class BlocProfile extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().getJenisLayananByParam(param);
-    print(result);
+    // print(result);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
@@ -195,10 +195,10 @@ class BlocProfile extends ChangeNotifier {
 
   List<UserAddress> get listUserAddress => _listUserAddress;
 
-  getAllUserAddress(id_user) async {
+  getAllUserAddress(idUser) async {
     _isLoading = true;
     notifyListeners();
-    var param = {'id_user': id_user.toString()};
+    var param = {'id_user': idUser.toString()};
     var result = await UserRepository().getUserAddress(param);
     Iterable list = result['data'];
     _listUserAddress = list.map((model) => UserAddress.fromMap(model)).toList();
@@ -298,7 +298,7 @@ class BlocProfile extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await UserRepository().getTokoByParam(param);
-    print(result);
+    // print(result);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;

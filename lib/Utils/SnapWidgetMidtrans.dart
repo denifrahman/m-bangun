@@ -68,7 +68,7 @@ class _SnapWidgetMidtransState extends State<SnapWidgetMidtrans> {
               initialUrl: widget.urlSnap,
               javascriptMode: JavascriptMode.unrestricted,
               onPageFinished: (url) {
-                print(url);
+                // print(url);
               },
               javascriptChannels: <JavascriptChannel>[
                 JavascriptChannel(

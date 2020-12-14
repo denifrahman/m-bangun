@@ -92,8 +92,7 @@ class _WidgetPengajuanListState extends State<WidgetPengajuanList> {
   _openPengajuan(statusProject, statusPembayaran, title) {
     BlocProject blocProject = Provider.of<BlocProject>(context);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
-    var param = {'id_user_login': blocAuth.idUser.toString(), 'status': statusProject.toString(), 'status_pembayaran_survey': statusPembayaran.toString()};
-    print(param);
+    var param = {'id_user': blocAuth.idUser.toString(), 'status': statusProject.toString(), 'status_pembayaran_survey': statusPembayaran.toString()};
     blocProject.getProjectByParam(param);
     Navigator.push(context, SlideRightRoute(page: WidgetPengajuanByParamList(param: param, title: title)));
   }

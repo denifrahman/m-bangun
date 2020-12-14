@@ -2,8 +2,7 @@ import 'package:apps/providers/BlocProject.dart';
 import 'package:apps/providers/DataProvider.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_html/style.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
 
 class WidgetDetailBahanProduk extends StatelessWidget {
@@ -38,9 +37,8 @@ class WidgetDetailBahanProduk extends StatelessWidget {
                   Container(
                     height: 70,
                     margin: EdgeInsets.only(bottom: 10),
-                    child: Html(
-                      data: blocProject.listProjectDetail[0].deskripsi,
-                    ),
+                    child:
+                      HtmlWidget(blocProject.listProjectDetail[0].deskripsi,)
                   ),
                   InkWell(
                       onTap: () {
@@ -67,7 +65,7 @@ class WidgetDetailBahanProduk extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return ChangeNotifierProvider<BlocProject>(
-          builder: (context) => BlocProject(),
+          create: (context) => BlocProject(),
           child: Consumer<BlocProject>(builder: (context, blocOrder, _) {
             return new Container(
               height: MediaQuery.of(context).size.height * 0.95,
@@ -97,14 +95,8 @@ class WidgetDetailBahanProduk extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 15, left: 5, right: 5),
                         child: Container(
                             color: Colors.white38,
-                            child: Html(
-                              style: {
-                                "div": Style(
-                                  fontSize: FontSize.large,
-                                ),
-                              },
-                              data: blocProyek.listProjectDetail[0].deskripsi,
-                            )),
+                            child: HtmlWidget(blocProyek.listProjectDetail[0].deskripsi)
+                        ),
                       ),
                     ),
                   ],

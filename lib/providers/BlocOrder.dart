@@ -1,5 +1,4 @@
 import 'package:apps/Repository/OrderRepository.dart';
-import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/models/Cart.dart';
 import 'package:apps/models/Order.dart';
 import 'package:apps/models/OrderProduk.dart';
@@ -8,14 +7,7 @@ import 'package:apps/models/Ulasan.dart';
 import 'package:flutter/cupertino.dart';
 
 class BlocOrder extends ChangeNotifier {
-  BlocOrder() {
-    getCart();
-    setIdUser();
-  }
-
-  getOrderByIdUser(idUser) async {
-    getCountOrderByParam();
-  }
+  BlocOrder() {}
 
   String _id_user_login;
 
@@ -37,21 +29,6 @@ class BlocOrder extends ChangeNotifier {
 
   setErrorMethodeTransfer(bool value) {
     _errorMethodeTransfer = value;
-    notifyListeners();
-  }
-
-  setIdUser() async {
-    var id = await LocalStorage.sharedInstance.readValue('id_user_login');
-    var idToko = await LocalStorage.sharedInstance.readValue('id_toko');
-//    print(idToko);
-    if (id != null) {
-      _id_user_login = id;
-      getOrderByIdUser(id);
-      getCountSaleByParam({'id_toko': idToko.toString()});
-      getCart();
-    } else {
-      _id_user_login = '0';
-    }
     notifyListeners();
   }
 
@@ -83,16 +60,13 @@ class BlocOrder extends ChangeNotifier {
     body['id'] = id.toString();
     var result = await OrderRepository().removeCart(body);
 //    print(result);
-    if (result['meta']['success']) {
-      getCart();
-    }
+    if (result['meta']['success']) {}
     notifyListeners();
   }
 
   updateCart(body) async {
     var result = await OrderRepository().updateCart(body);
     if (result['meta']['success']) {
-      getCart();
       notifyListeners();
     }
   }
@@ -106,12 +80,11 @@ class BlocOrder extends ChangeNotifier {
     var result = await OrderRepository().addToCart(body);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
-      getCart();
+
       notifyListeners();
       return false;
     } else {
       if (result['meta']['success']) {
-        getCart();
         _connection = true;
         notifyListeners();
         return true;
@@ -127,11 +100,10 @@ class BlocOrder extends ChangeNotifier {
 
   List<Cart> get listCart => _listCart;
 
-  Future<dynamic> getCart() async {
+  Future<dynamic> getCart(id_user) async {
     _isLoading = true;
     notifyListeners();
-    var id = await LocalStorage.sharedInstance.readValue('id_user_login');
-    var param = {'id_user_login': id.toString()};
+    var param = {'id_user': id_user.toString()};
     var result = await OrderRepository().getCart(param);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
@@ -213,7 +185,7 @@ class BlocOrder extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await OrderRepository().insert(body);
-    print(body);
+    // print(body);
     if (result['meta']['success']) {
       _isLoading = false;
       notifyListeners();
@@ -317,10 +289,10 @@ class BlocOrder extends ChangeNotifier {
     notifyListeners();
   }
 
-  getCountOrderByParam() async {
+  getCountOrderByParam(idUser) async {
     _isLoading = true;
     notifyListeners();
-    var param = {'id_pembeli': _id_user_login.toString()};
+    var param = {'id_pembeli': idUser.toString()};
     var result = await OrderRepository().getOrderByParam(param);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
@@ -346,7 +318,8 @@ class BlocOrder extends ChangeNotifier {
     }
   }
 
-  getCountSaleByParam(param) async {
+  getCountSaleByParam(idToko) async {
+    var param = {'id_toko': idToko.toString()};
     imageCache.clear();
     _isLoading = true;
     notifyListeners();
@@ -381,16 +354,14 @@ class BlocOrder extends ChangeNotifier {
     notifyListeners();
     var result = await OrderRepository().getOrderByParam(param);
     if (result['meta']['success']) {
-      _isLoading = false;
       Iterable list = result['data'];
       _listOrder = list.map((model) => Order.fromMap(model)).toList();
+      _isLoading = false;
       notifyListeners();
-      return true;
     } else {
       _listOrder = [];
       _isLoading = false;
       notifyListeners();
-      return false;
     }
   }
 
@@ -403,6 +374,7 @@ class BlocOrder extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await OrderRepository().getOrderByParam(param);
+    print(result);
     if (result['meta']['success']) {
       _isLoading = false;
       Iterable list = result['data'];
@@ -563,7 +535,7 @@ class BlocOrder extends ChangeNotifier {
   Future<dynamic> getTransaksiStatus(param) async {
     _isLoading = true;
     var result = await OrderRepository().getTransaksiStatus(param);
-    print(result);
+    // print(result);
     _detailMidtransTransaksi = result;
     notifyListeners();
     _isLoading = false;

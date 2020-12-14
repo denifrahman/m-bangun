@@ -93,7 +93,7 @@ class WidgetProdukTerjual extends StatelessWidget {
                     child: InkWell(
                       onTap: () {
                         blocProduk.getDetailProductByParam({'id': blocProduk.listProdukTerjual[j].id.toString(), 'aktif': '1'});
-                        Provider.of<BlocOrder>(context).getCart();
+                        Provider.of<BlocOrder>(context).getCart(blocAuth.idUser);
                         blocProfile.getCityParam({'id': blocProduk.listProdukTerjual[j].idKota.toString()});
                         blocOrder.getUlasanProduByParam({'id_produk': blocProduk.listProdukTerjual[j].id});
                         Navigator.push(context, SlideRightRoute(page: ProdukDetailScreen()));

@@ -10,7 +10,7 @@ class WidgetErrorConection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     return Container(
       color: Colors.white,

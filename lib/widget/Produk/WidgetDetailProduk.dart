@@ -252,7 +252,7 @@ class _WidgetDetailProdukState extends State<WidgetDetailProduk> {
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 10),
-                              child: WidgetDetailLokasi(),
+                              child: WidgetDetailLokasi(alamatLengkap: 'alamat lengkap',),
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 10),

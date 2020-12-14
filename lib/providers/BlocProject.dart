@@ -48,7 +48,7 @@ class BlocProject extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await OrderRepository().getProjectByOrder(param);
-    print(result);
+    // print(result);
     if (result['meta']['success']) {
       _isLoading = false;
       Iterable list = result['data'];
@@ -156,7 +156,7 @@ class BlocProject extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await ProjectRepository().updateStatus(body);
-    print(result);
+    // print(result);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;

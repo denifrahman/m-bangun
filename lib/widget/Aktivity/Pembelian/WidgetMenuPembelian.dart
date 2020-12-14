@@ -175,7 +175,7 @@ class WidgetMenuPembelian extends StatelessWidget {
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     if (title == 'Menunggu Pembayaran' || title == 'Batal') {
       var param = {'id_pembeli': idUser.toString(), 'status_pembayaran': title == 'Menunggu Pembayaran' ? 'menunggu' : title.toLowerCase() == 'Batal' ? 'batal' : 'batal'};
-      print(param);
+      // print(param);
       blocOrder.getOrderByParam(param);
     } else {
       var param = {
@@ -194,11 +194,11 @@ class WidgetMenuPembelian extends StatelessWidget {
             ))).then((value) {});
   }
 
-  refresList(context) {
+  refresList(context) async{
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
-    blocAuth.checkSession();
-    blocOrder.setIdUser();
-    blocOrder.getCountSaleByParam({'id_toko': blocAuth.idToko.toString()});
+    await blocAuth.checkSession();
+    await blocOrder.getCountSaleByParam(blocAuth.idToko.toString());
+    await blocOrder.getCountOrderByParam(blocAuth.idUser.toString());
   }
 }

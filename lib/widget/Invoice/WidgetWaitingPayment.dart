@@ -31,7 +31,7 @@ class _WidgetWaitingPaymentState extends State<WidgetWaitingPayment> {
     await new Future.delayed(const Duration(seconds: 2));
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     if (widget.param == 'project') {
-      print(widget.body);
+      // print(widget.body);
       var result = blocOrder.insertProject(widget.body);
       result.then((value) {
         if (value) {
@@ -44,16 +44,16 @@ class _WidgetWaitingPaymentState extends State<WidgetWaitingPayment> {
               context,
               SlideRightRoute(
                   page: WidgetTagihanProject(
-                    param: 'checkout',
-                  ))).then((value) {});
+                param: 'checkout',
+              ))).then((value) {});
         }
       });
     } else {
       print('insertToko');
-      BlocOrder blocOrder = Provider.of(context);
+      BlocOrder blocOrder = Provider.of<BlocOrder>(context);
       var result = blocOrder.insert(json.encode(widget.body));
       result.then((value) {
-        print(value);
+        // print(value);
         if (value['meta']['success']) {
           var param = {
             'id': value['data']['id_order'].toString(),

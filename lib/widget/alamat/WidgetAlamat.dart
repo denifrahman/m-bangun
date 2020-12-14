@@ -44,7 +44,7 @@ class _WidgetAlamatState extends State<WidgetAlamat> {
     Provider.of<DataProvider>(context).setDataKecamatan([]);
     Api.getAllProvinsi(token).then((value) {
       var result = json.decode(value.body);
-      print(result);
+      // print(result);
       Iterable list = result['data'];
       Provider.of<DataProvider>(context).setDataProvinsi(list.map((model) => ProvinsiM.fromMap(model)).toList());
     });
@@ -54,7 +54,7 @@ class _WidgetAlamatState extends State<WidgetAlamat> {
     String token = await LocalStorage.sharedInstance.readValue('token');
     Api.getAllKotaByIdProvinsi(token, idProvinsi).then((value) {
       var result = json.decode(value.body);
-      print(result);
+      // print(result);
       Iterable list = result['data'];
       Provider.of<DataProvider>(context).setDataKota(list.map((model) => KotaM.fromMap(model)).toList());
     });

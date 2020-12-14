@@ -10,7 +10,8 @@ import 'package:apps/widget/Tagihan/WidgetTagihanProject.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+// import 'package:flutter_html/flutter_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -50,7 +51,7 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
   @override
   Widget build(BuildContext context) {
     BlocProject blocProject = Provider.of<BlocProject>(context);
-    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context, listen: true);
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     var today = DateTime.now();
@@ -178,9 +179,7 @@ class _WidgetPengajuanByParamListState extends State<WidgetPengajuanByParamList>
                                         title: Container(
                                           height: 70,
                                           margin: EdgeInsets.only(bottom: 10),
-                                          child: Html(
-                                            data: blocProject.listProjects[index].deskripsi == null ? '' : blocProject.listProjects[index].deskripsi,
-                                          ),
+                                          child: HtmlWidget(blocProject.listProjects[index].deskripsi == null ? '' : blocProject.listProjects[index].deskripsi,)
                                         ),
                                         subtitle: Text(
                                           DateFormat("EEE, dd MMMM yyyy", 'in').format(tanggal_booking),

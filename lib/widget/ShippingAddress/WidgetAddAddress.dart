@@ -275,7 +275,7 @@ class _WidgetAddAddressState extends State<WidgetAddAddress> {
       "no_hp": no_hp.toString(),
       "id_kecamatan": blocProfile.id_subdistrict.toString(),
       "alamat_lengkap": alamat_lengkap.toString(),
-      "default": '0',
+      "default_alamat": '0',
       "id_user": blocAuth.idUser.toString(),
       "nama_alamat": nama_alamat.toString()
     };

@@ -16,7 +16,6 @@ class NotificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
-    initializeDateFormatting('in', null);
     return Scaffold(
       appBar: AppBar(
 //        backgroundColor: Colors.cyan[800],
@@ -41,6 +40,7 @@ class NotificationScreen extends StatelessWidget {
                 ),
               ),
               itemBuilder: (c, element) {
+                initializeDateFormatting('in', null);
                 return Card(
                   elevation: 1.0,
                   child: ListTile(
@@ -54,9 +54,9 @@ class NotificationScreen extends StatelessWidget {
                         Navigator.push(context, SlideRightRoute(page: MyAdsScreen(indexPage: 2)));
                       }
                       blocAuth.checkSession();
-                      blocOrder.getCart();
-                      blocOrder.getCountSaleByParam({'id_toko': blocAuth.idToko.toString()});
-                      blocOrder.setIdUser();
+                      blocOrder.getCart(blocAuth.idUser);
+                      blocOrder.getCountSaleByParam(blocAuth.idToko.toString());
+                      
                     },
                     contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                     leading: Column(

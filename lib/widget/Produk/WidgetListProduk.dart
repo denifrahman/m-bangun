@@ -44,7 +44,7 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     var size = MediaQuery.of(context).size;
@@ -93,7 +93,7 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
   }
 
   loadMore() {
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
     widget.param['offset'] = ((int.parse(widget.param['offset']) + 1)).toString();
     if (blocProduk.totalProduk <= (int.parse(widget.param['offset']) * blocProduk.limit)) {
     } else {

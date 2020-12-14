@@ -109,7 +109,7 @@ class _WidgetSignatureState extends State<WidgetSignature> {
                                     map['id_user_login'] = blocAuth.idUser;
                                     map['id_projek'] = widget.projekId;
                                     map['user'] = 'user';
-                                    map['image_name'] = 'user_' + widget.projekId + '_' + blocAuth.idUser;
+                                    map['image_name'] = 'user_' + widget.projekId + '_' + blocAuth.idUser.toString();
                                     blocProject.createSignature(map);
                                   },
                                   child: Text(

@@ -8,8 +8,9 @@ ThemeData light = ThemeData(
     hintStyle: TextStyle(color: Colors.grey, fontSize: 12, fontFamily: 'OpenSans-Regular', fontWeight: FontWeight.w500),
   ),
   fontFamily: 'WorkSansRegular',
-  primaryColor: Colors.green[600],
-  primaryTextTheme: TextTheme(headline6: TextStyle(color: Colors.white, fontSize: 18)),
+  primaryColor: Colors.cyan[800],
+  primaryTextTheme: TextTheme(headline6: TextStyle(color: Colors.white, fontSize: 18),
+      subtitle2: TextStyle(fontSize: 11, color: Colors.grey)),
   appBarTheme: AppBarTheme(
       brightness: Brightness.light,
       color: Colors.white,

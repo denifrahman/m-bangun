@@ -14,7 +14,7 @@ class WidgetInformasiDetailProduk extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
     return Container(
       child: Column(
         children: [

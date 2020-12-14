@@ -46,7 +46,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
 
   @override
   Widget build(BuildContext context) {
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     // TODO: implement build
     AppBar appBar = AppBar(
@@ -549,7 +549,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
   }
 
   void _simpan() async {
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     _formKey.currentState.save();
     if (_formKey.currentState.validate()) {
@@ -617,7 +617,7 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
   }
 
   Future<bool> _onWillPop() {
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    final blocProduk = Provider.of<BlocProduk>(context);
     if (blocProduk.isLoading) {
       return showDialog(
         context: context,

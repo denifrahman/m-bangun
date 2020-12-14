@@ -27,6 +27,11 @@ class UserRepository {
     return response;
   }
 
+  Future update(body) async {
+    final response = await _helper.post("user/updateProfileUser", body);
+    return response;
+  }
+
   Future getOfficialStore(param) async {
     final response = await _helper.get("toko/getOfficialStore", param);
     return response;

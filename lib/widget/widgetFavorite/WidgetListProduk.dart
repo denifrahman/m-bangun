@@ -40,12 +40,6 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
   Widget build(BuildContext context) {
     // TODO: implement build
     DataProvider dataProvider = Provider.of<DataProvider>(context);
-    var size = MediaQuery.of(context).size;
-
-    /*24 is for notification bar on Android*/
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
-    final double itemWidth = size.width / 2;
-
     return GridView.count(
 //      shrinkWrap: true,
       crossAxisCount: 2,
@@ -55,9 +49,6 @@ class _WidgetListProdukState extends State<WidgetListProduk> {
         (j) {
           var harga = dataProvider.getProdukListByParam[j].produkharga;
           var hargaFormat = Money.fromInt(harga == null ? 0 : int.parse(harga), IDR);
-          var kecamatan = dataProvider.getProdukListByParam[j].nama_kecamatan == null ? '' : dataProvider.getProdukListByParam[j].nama_kecamatan.toLowerCase();
-          var kota = dataProvider.getProdukListByParam[j].nama_kabkota == null ? '' : dataProvider.getProdukListByParam[j].nama_kabkota.toLowerCase();
-          var provinsi = dataProvider.getProdukListByParam[j].nama_propinsi == null ? '' : dataProvider.getProdukListByParam[j].nama_propinsi.toLowerCase();
           return InkWell(
             onTap: () {
               Navigator.push(context, SlideRightRoute(page: WidgetDetailProduk()));

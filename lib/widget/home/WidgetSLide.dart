@@ -35,7 +35,7 @@ class WidgetSlide extends StatelessWidget {
       password: '123456',
     );
     response.then((user) {
-      print(user);
+      // print(user);
       createPost(user);
     }).catchError((err) {
       print('Failed to fetch user: $err');

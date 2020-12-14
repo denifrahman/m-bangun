@@ -97,7 +97,7 @@ class _WidgetTagihanState extends State<WidgetTagihan> {
                         child: Image(width: 20, height: 20, image: new AssetImage('assets/logo.png')),
                       )),
                   Text(
-                    'm-Bangun',
+                    'Mbangun',
                     style: TextStyle(fontFamily: 'SUNDAY', color: Colors.white, fontSize: 16),
                   )
                 ],
@@ -121,8 +121,9 @@ class _WidgetTagihanState extends State<WidgetTagihan> {
                           int now = DateTime
                               .now()
                               .millisecondsSinceEpoch;
-                          Duration remaining = Duration(milliseconds: estimateTs - now);
-                          if (now >= estimateTs) {
+                          Duration remaining = Duration(milliseconds: now - estimateTs);
+                          // print(now <= estimateTs);
+                          if (now <= estimateTs) {
                             expired = true;
                           }
                           var hourse = '${remaining.inHours}';

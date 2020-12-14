@@ -1,13 +1,9 @@
-import 'dart:convert';
-
-import 'package:apps/Api/Api.dart';
-import 'package:apps/Utils/LocalBindings.dart';
+import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/Utils/navigation_right.dart';
+import 'package:apps/models/Categories.dart';
 import 'package:apps/models/KategoriM.dart';
-import 'package:apps/providers/DataProvider.dart';
-import 'package:apps/screen/LoginScreen.dart';
-import 'package:apps/screen/SubKategoriScreen.dart';
-import 'package:flushbar/flushbar.dart';
+import 'package:apps/providers/BlocProduk.dart';
+import 'package:apps/screen/ProdukScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:pk_skeleton/pk_skeleton.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +23,6 @@ class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
   @override
   void initState() {
     super.initState();
-    _getToken();
   }
 
   @override
@@ -35,30 +30,11 @@ class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
     super.dispose();
   }
 
-  void _getToken() async {
-    Api.getToken().then((value) {
-      var data = json.decode(value.body);
-      LocalStorage.sharedInstance.writeValue(key: 'token', value: data['data']['token']);
-      _getKategori();
-    }).catchError((onError) {
-      print(onError);
-    });
-  }
-
-  void _getKategori() async {
-    String tokenValid = await LocalStorage.sharedInstance.readValue('token');
-    Api.getAllKategori(tokenValid).then((response) {
-      Iterable list = json.decode(response.body)['data'];
-      setState(() {
-        dataKategori = list.map((model) => KategoriM.fromMap(model)).toList();
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return dataKategori.isEmpty
+    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    return blocProduk.isLoading
         ? SingleChildScrollView(
             child: Container(
               height: MediaQuery.of(context).size.height,
@@ -70,70 +46,70 @@ class _WidgetKategoriVerticalState extends State<WidgetKategoriVertical> {
           )
         : Container(
             width: MediaQuery.of(context).size.width,
-            child: ListView.builder(
-                padding: EdgeInsets.only(left: 5, right: 5, top: 10),
-                itemCount: dataKategori.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: InkWell(
-                      onTap: () => openSubkategori(dataKategori[index]),
-                      child: Container(
-                        width: 100,
-                        padding: EdgeInsets.all(8),
-                        child: ListTile(
-                          leading: Image.network(
-                            dataKategori[index].kategoriThumbnail,
-                            width: 45,
+            child:GridView.count(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              crossAxisCount: 3,
+              crossAxisSpacing: 0.2,
+              padding: EdgeInsets.all(10),
+              children: List.generate(blocProduk.listCategory.length, (j) {
+                return Container(
+                  child: Column(
+                    children: <Widget>[
+                      InkWell(
+                        onTap: () => _openListProduk(context, blocProduk.listCategory[j]),
+                        child: new Container(
+                          height: 65,
+                          width: 65,
+                          margin: EdgeInsets.only(bottom: 5, top: 0),
+                          decoration: new BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                            gradient: new LinearGradient(
+                                colors: [Color(0xffb16a085).withOpacity(0.1), Colors.white],
+                                begin: const FractionalOffset(7.0, 10.1),
+                                end: const FractionalOffset(0.0, 0.0),
+                                stops: [0.0, 1.0],
+                                tileMode: TileMode.clamp),
                           ),
-                          title: Text(dataKategori[index].kategoriNama),
-                          trailing: Icon(
-                            Icons.arrow_forward_ios,
-                            size: 12,
+                          child: new Center(
+                            child: Image.network(
+                              baseURL + '/' + pathBaseUrl + '/assets/kategori/' + blocProduk.listCategory[j].icon.toString(),
+                              height: 40,
+                              width: 40,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                }),
+                      RichText(
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        text: TextSpan(
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 12,
+                          ),
+                          text: blocProduk.listCategory[j].nama,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ),
           );
   }
 
-  void openSubkategori(param) {
-    DataProvider dataProvider = Provider.of<DataProvider>(context);
-    print(param.produkkategorinama == 'Bahan Bangunan');
-    if (param.produkkategorinama == 'Bahan Bangunan') {
-      Navigator.push(
-          context,
-          SlideRightRoute(
-              page: SubKategoriScreen(
-            namaKategori: param.produkkategorinama,
-          )));
-    } else {
-      print(dataProvider.isLogin);
-      if (dataProvider.isLogin) {
-        if (dataProvider.userKategori == param.produkkategorinama) {
-          Navigator.push(
-              context,
-              SlideRightRoute(
-                  page: SubKategoriScreen(
-                namaKategori: param.produkkategorinama,
-              )));
-        } else {
-          Flushbar(
-            title: "Error",
-            message: "Silahkan login / member anda tidak sesuai",
-            duration: Duration(seconds: 5),
-            backgroundColor: Colors.red,
-            flushbarPosition: FlushbarPosition.BOTTOM,
-            icon: Icon(
-              Icons.assignment_turned_in,
-              color: Colors.white,
-            ),
-          )..show(context);
-        }
-      } else {
-        Navigator.push(context, SlideRightRoute(page: LoginScreen()));
-      }
-    }
+  _openListProduk(BuildContext context, Categories listCategory) {
+    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
+    var param = {'id_kategori': listCategory.id.toString(), 'aktif': '1', 'limit': blocProduk.limit.toString(), 'offset': blocProduk.offset.toString()};
+    Provider.of<BlocProduk>(context).getAllProductByParam(param);
+    Navigator.push(
+        context,
+        SlideRightRoute(
+            page: ProdukScreen(
+              param: param,
+              namaKategori: listCategory.nama,
+            )));
   }
 }

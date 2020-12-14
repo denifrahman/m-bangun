@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/Utils/TitleHeader.dart';
 import 'package:apps/Utils/navigation_right.dart';
@@ -6,11 +8,15 @@ import 'package:apps/models/ProvinsiM.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/providers/BlocProfile.dart';
+import 'package:apps/screen/LoginScreen.dart';
 import 'package:apps/screen/Notification.dart';
+import 'package:apps/providers/BlocChatService.dart';
+import 'package:apps/screen/streamChatting/presentation/pages/StreamChat.dart';
 import 'package:apps/widget/Home/WidgetSelectLokasi.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 class WidgetLokasi extends StatefulWidget {
   WidgetLokasi({Key key}) : super(key: key);
@@ -41,12 +47,9 @@ class _WidgetLokasiState extends State<WidgetLokasi> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<ChatModel>(context);
     // TODO: implement build
-    BlocProduk blocProduk = Provider.of<BlocProduk>(context);
-    BlocAuth blocAuth = Provider.of<BlocAuth>(context);
-    var kecamatan = blocProduk.namaKecamatan == null ? '' : blocProduk.namaKecamatan.toLowerCase();
-    var kota = blocProduk.namaKota == null ? '' : blocProduk.namaKota.toLowerCase();
-    var provinsi = blocProduk.namaProvinsi == null ? '' : blocProduk.namaProvinsi.toLowerCase();
+    final blocAuth = Provider.of<BlocAuth>(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -116,11 +119,46 @@ class _WidgetLokasiState extends State<WidgetLokasi> {
                     )
                   ],
                 ),
-
-//                Text(
-//                  'Lokasi Anda',
-//                  style: TextStyle(fontSize: 12, color: Colors.white),
-//                ),
+                Stack(
+                  children: <Widget>[
+                    IconButton(
+                      onPressed: () async {
+                        final client = provider.client;
+                        if (client.connectionId == null) {
+                          await provider.setUser();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => StreamChatting(),
+                            ),
+                          );
+                        } else {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => StreamChatting(),
+                            ),
+                          );
+                        }
+                      },
+                      icon: Icon(
+                        Icons.message,
+                        color: Colors.white,
+                      ),
+                    ),
+                    new Positioned(
+                      top: 5.0,
+                      right: 5.0,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                        alignment: Alignment.center,
+                        child: Text(
+                          provider.client.state.unreadChannels == null ? '0' : provider.client.state.unreadChannels.toString(),
+                          style: TextStyle(color: Colors.white, fontSize: 8),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ],
             ),
 //            InkWell(

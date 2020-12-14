@@ -244,7 +244,7 @@ class WidgetDetailOrderProdukPenjualan extends StatelessWidget {
                       if (value) {
                         var param = {'id_toko': blocAuth.idToko.toString(), 'status_order': title.toString(), 'status_pembayaran': 'terbayar'};
                         blocOrder.getOrderByParam(param);
-                        blocOrder.setIdUser();
+                        
                       }
                     });
                   }),

@@ -17,7 +17,7 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context, listen: true);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     var totalTerUlas = blocOrder.listOrderDetailProduk.where((element) => element.statusUlasan != null).length;
     var totalOrder = blocOrder.listOrderDetailProduk.length;
@@ -244,7 +244,7 @@ class WidgetDetailOrderProdukPembelian extends StatelessWidget {
                       if (value) {
                         var param = {'id_pembeli': blocAuth.idToko.toString(), 'status_order': title.toString().toLowerCase(), 'status_pembayaran': 'terbayar'};
                         blocOrder.getOrderByParam(param);
-                        blocOrder.setIdUser();
+                        
                       }
                     });
                   }),

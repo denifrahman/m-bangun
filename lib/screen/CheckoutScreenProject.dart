@@ -32,7 +32,7 @@ class CheckoutScreenProject extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
-    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context, listen: true);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     AppBar appBar = AppBar(
       elevation: 0,
@@ -158,7 +158,6 @@ class CheckoutScreenProject extends StatelessWidget {
   void makePayment(context) {
     var dataPost = json.decode(body);
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
-    BlocProfile blocProfile = Provider.of<BlocProfile>(context);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     var phoneNumber = '';
     if (blocOrder.listMetodePembayaranSelected['kode'] == 'permata_va') {
@@ -177,9 +176,9 @@ class CheckoutScreenProject extends StatelessWidget {
       ],
       "expiry": {"start_time": "${Jiffy(DateTime.now()).format("yyyy-MM-dd HH:mm:ss")} +0700", "duration": 120, "unit": "minute"},
       "customer_details": {
-        "first_name": blocAuth.currentUser.displayName.toString(),
+        "first_name": blocAuth.currentUserLogin['nama'].toString(),
         "last_name": "",
-        "email": blocAuth.currentUser.email.toString(),
+        "email": blocAuth.currentUserLogin['email'].toString(),
         "phone": blocAuth.currentUserLogin['no_hp'].toString(),
       }
     };

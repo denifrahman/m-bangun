@@ -37,7 +37,7 @@ class CheckoutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     BlocProfile blocProfile = Provider.of<BlocProfile>(context);
-    BlocOrder blocOrder = Provider.of<BlocOrder>(context);
+    BlocOrder blocOrder = Provider.of<BlocOrder>(context, listen: true);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     final cart = listCart.chilrdern[0];
     AppBar appBar = AppBar(
@@ -112,7 +112,6 @@ class CheckoutScreen extends StatelessWidget {
                                     color: Colors.cyan[700],
                                     controller: _btnControllerALamatPenerima,
                                     onPressed: () {
-                                      blocProfile.getAllUserAddress(blocAuth.idUser);
                                       Navigator.push(context, SlideRightRoute(page: ShippingAddressScreen())).then((value) {
                                         Provider.of<BlocProfile>(context).getSubDistrictById(listCart.chilrdern[0].idKecamatan);
                                         Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
@@ -165,7 +164,6 @@ class CheckoutScreen extends StatelessWidget {
                                     itemBuilder: (_, j) {
                                       var idKotaPembeli = blocProfile.listUserAddressDefault[0].idKota;
                                       var idKotaToko = listCart.chilrdern[j].idKota;
-//                                      print(blocOrder.listCart[0].chilrdern.where((element) => element.jenisOngkir == 'raja_ongkir').length);
                                       if (blocOrder.listCart[0].chilrdern[j].jenisOngkir == 'raja_ongkir') {
                                         return CardRajaOngkir(
                                           listCart: listCart,
@@ -330,14 +328,14 @@ class CheckoutScreen extends StatelessWidget {
       "item_details": listKeranjang,
       "expiry": {"start_time": "${Jiffy(DateTime.now()).format("yyyy-MM-dd HH:mm:ss")} +0700", "duration": 120, "unit": "minute"},
       "customer_details": {
-        "first_name": blocAuth.currentUser.displayName.toString(),
+        "first_name": blocAuth.currentUserLogin['nama'].toString(),
         "last_name": "",
-        "email": blocAuth.currentUser.email.toString(),
+        "email": blocAuth.currentUserLogin['email'].toString(),
         "phone": blocProfile.listUserAddressDefault[0].noHp.toString(),
         "billing_address": {
           "first_name": blocProfile.listUserAddressDefault[0].namaPenerima.toString(),
           "last_name": "",
-          "email": blocAuth.currentUser.email.toString(),
+          "email": blocAuth.currentUserLogin['email'].toString(),
           "phone": blocProfile.listUserAddressDefault[0].noHp.toString(),
           "address": blocProfile.listUserAddressDefault[0].alamatLengkap.toString(),
           "city": '',
@@ -346,7 +344,7 @@ class CheckoutScreen extends StatelessWidget {
         "shipping_address": {
           "first_name": blocProfile.listUserAddressDefault[0].namaPenerima.toString(),
           "last_name": "",
-          "email": blocAuth.currentUser.email.toString(),
+          "email": blocAuth.currentUserLogin['email'].toString(),
           "phone": blocProfile.listUserAddressDefault[0].noHp.toString(),
           "address": blocProfile.listUserAddressDefault[0].alamatLengkap.toString(),
           "city": "",
@@ -390,7 +388,7 @@ class CheckoutScreen extends StatelessWidget {
     };
     Map data_expired = {"expiry_duration": '120', "unit": "minute"};
     Map data_penerima = {
-      'id_user_login': blocAuth.idUser.toString(),
+      'id_user': blocAuth.idUser.toString(),
       'nama_penerima': blocProfile.listUserAddressDefault[0].namaPenerima.toString(),
       'no_hp_penerima': blocProfile.listUserAddressDefault[0].noHp.toString(),
       'nama_alamat': blocProfile.listUserAddressDefault[0].namaAlamat.toString(),
@@ -420,7 +418,7 @@ class CheckoutScreen extends StatelessWidget {
     var rajaOngkir = blocOrder.listCart[0].chilrdern
         .where((element) => element.jenisOngkir == 'raja_ongkir')
         .length;
-    var result = blocOrder.getCart();
+    var result = blocOrder.getCart(blocAuth.idUser);
     result.then((value) {
       var aktif = value[index]['chilrdern']
           .where((element) => element['aktif'] == '0')

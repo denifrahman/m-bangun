@@ -141,11 +141,9 @@ class WidgetMenuPenjualan extends StatelessWidget {
         'status_order': title == 'Pesanan Baru' ? 'menunggu konfirmasi' : 'menunggu konfirmasi'
       };
       blocOrder.getOrderByParam(param);
-      print(param);
     } else {
       var param = {'id_toko': idToko.toString(), 'status_order': title.toString(), 'status_pembayaran': 'terbayar'};
       blocOrder.getOrderByParam(param);
-      print(param);
     }
 
     Navigator.push(

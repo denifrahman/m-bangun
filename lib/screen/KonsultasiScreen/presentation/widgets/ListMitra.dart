@@ -10,7 +10,9 @@ import 'package:provider/provider.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 class ListMitra extends StatefulWidget {
-  ListMitra({Key key, @required this.idBidangKeahlianMitra, @required this.title}) : super(key: key);
+  ListMitra(
+      {Key key, @required this.idBidangKeahlianMitra, @required this.title})
+      : super(key: key);
   final idBidangKeahlianMitra;
   final title;
 
@@ -30,7 +32,10 @@ class _ListMitraState extends State<ListMitra> {
   getMitraByParam() async {
     await Future.delayed(Duration(milliseconds: 1));
     final provider = Provider.of<BlocAuth>(context);
-    provider.getMitraByParam({'id_bidang_keahlian': widget.idBidangKeahlianMitra.toString(),'aktif':'1'});
+    provider.getMitraByParam({
+      'id_bidang_keahlian': widget.idBidangKeahlianMitra.toString(),
+      'aktif': '1'
+    });
   }
 
   @override
@@ -43,7 +48,7 @@ class _ListMitraState extends State<ListMitra> {
     final provider = Provider.of<BlocAuth>(context);
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: Text('Chat dengan ahli '+widget.title)),
+      appBar: AppBar(title: Text('Chat dengan ahli ' + widget.title)),
       body: provider.isLoading
           ? Container(
               child: PKCardListSkeleton(),
@@ -57,23 +62,41 @@ class _ListMitraState extends State<ListMitra> {
                 return Card(
                   child: ListTile(
                     onTap: () {
-                      _createChannel(context, item.idGoogle);
+                      _createChannel(context, item.id);
                     },
                     contentPadding: EdgeInsets.all(10),
-                    title: Text(item.nama,),
+                    title: Text(
+                      item.nama,
+                    ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(item.namaBidangKeahlian ,style: TextStyle(fontSize: 12,)),
-                        SizedBox(height: 20,),
-                        Text('Curiculum Vitae :' ,style: TextStyle(color: Colors.black, fontSize: 12),),
-                        Text(item.pengalamanKerja, style: Theme.of(context).textTheme.caption,),
-                        SizedBox(height: 5,),
+                        Text(item.namaBidangKeahlian,
+                            style: TextStyle(
+                              fontSize: 12,
+                            )),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          'Curiculum Vitae :',
+                          style: TextStyle(color: Colors.black, fontSize: 12),
+                        ),
+                        Text(
+                          item.pengalamanKerja,
+                          style: Theme.of(context).textTheme.caption,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            ButtonSmall(color: Colors.cyan[800],title: 'Chat',),
+                            ButtonSmall(
+                              color: Colors.cyan[800],
+                              title: 'Chat',
+                            ),
                           ],
                         ),
                       ],
@@ -81,7 +104,14 @@ class _ListMitraState extends State<ListMitra> {
                     leading: CircleAvatar(
                       radius: 30,
                       child: ClipOval(
-                        child: Image.network(baseURLMobile + '/' + '/assets/img/toko/' + item.foto.toString(), height: 50, width: 50, errorBuilder: (context, urlImage, error) {
+                        child: Image.network(
+                            baseURLMobile +
+                                '/' +
+                                '/assets/img/toko/' +
+                                item.foto.toString(),
+                            height: 50,
+                            width: 50,
+                            errorBuilder: (context, urlImage, error) {
                           print(error.hashCode);
                           return Image.asset('assets/logo.png');
                         }),
@@ -102,14 +132,16 @@ class _ListMitraState extends State<ListMitra> {
 
   Future _createChannel(
     BuildContext context,
-    idGoogle, [
+    id, [
     String name,
   ]) async {
+    final blocAuth = Provider.of<BlocAuth>(context);
     final client = Provider.of<ChatModel>(context).client;
+    print(id);
     final channel = client.channel('messaging', extraData: {
       'members': [
-        client.state.user.id,
-        '081331339866',
+        blocAuth.currentUserLogin['id'],
+        id,
       ],
       if (name != null) 'name': name,
     });

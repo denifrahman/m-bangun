@@ -92,7 +92,7 @@ class _ListBidangKeahlianState extends State<ListBidangKeahlian> {
                       return Card(
                         child: ListTile(
                           onTap: () {
-                            _createChannel(context, item.idGoogle);
+                            _createChannel(context, item.id);
                           },
                           contentPadding: EdgeInsets.all(10),
                           title: Text(
@@ -159,16 +159,25 @@ class _ListBidangKeahlianState extends State<ListBidangKeahlian> {
                     },
                   ),
                 ),
-                  SizedBox(
+                SizedBox(
                   height: 20,
                 ),
                 Container(
                   color: Colors.cyan[600],
                   child: Row(
                     children: [
-                      Expanded(child: Divider(color: Colors.white,)),
-                      Text('Or', style: TextStyle(color: Colors.white),),
-                      Expanded(child: Divider(color: Colors.white,)),
+                      Expanded(
+                          child: Divider(
+                        color: Colors.white,
+                      )),
+                      Text(
+                        'Or',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Expanded(
+                          child: Divider(
+                        color: Colors.white,
+                      )),
                     ],
                   ),
                 ),
@@ -254,19 +263,23 @@ class _ListBidangKeahlianState extends State<ListBidangKeahlian> {
           title: listBidangKeahlian.nama,
         ),
       ),
-    );
+    ).then((value) {
+      getMitraByParam();
+    });
   }
 
   Future _createChannel(
     BuildContext context,
-    idGoogle, [
+    id, [
     String name,
   ]) async {
+    final blocAuth  = Provider.of<BlocAuth>(context);
     final client = Provider.of<ChatModel>(context).client;
+    print(id);
     final channel = client.channel('messaging', extraData: {
       'members': [
-        client.state.user.id,
-        '081331339866',
+        blocAuth.currentUserLogin['id'],
+        id,
       ],
       if (name != null) 'name': name,
     });

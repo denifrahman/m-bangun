@@ -7,6 +7,7 @@ import 'package:apps/screen/PhoneAuth/presentation/pages/firebase/auth/phone_aut
 import 'package:apps/screen/PhoneAuth/presentation/pages/firebase/auth/phone_auth/verify.dart';
 import 'package:apps/screen/PhoneAuth/presentation/widgets/bezierContainer.dart';
 import 'package:apps/screen/PhoneAuth/presentation/widgets/utils/widgets.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -248,17 +249,45 @@ class _PhoneAuthGetPhoneState extends State<PhoneAuthGetPhone> {
     var rNum = min + randomizer.nextInt(max - min);
     var body = {
       "code_otp": rNum.toString(),
-      'id_user': blocAuth.idUser.toString(),
       'no_telp':
           '62' + phoneAuthDataProvider.phoneNumberController.text.toString()
     };
-    // phoneAuthDataProvider.sendOtp(body);
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (BuildContext context) => PhoneAuthVerify(
-          phoneNumber: phoneAuthDataProvider.phone,
+    
+    if(phoneAuthDataProvider.phoneNumberController.text != ''){
+
+    }
+    var result = await phoneAuthDataProvider.sendOtp(body);
+    if (result['otp'] != 'REJECTED') {
+      Flushbar(
+        title: "OTP SEND",
+        message: 'OTP SEND',
+        duration: Duration(seconds: 5),
+        backgroundColor: Colors.green,
+        flushbarPosition: FlushbarPosition.BOTTOM,
+        icon: Icon(
+          Icons.send,
+          color: Colors.white,
         ),
-      ),
-    );
+      )..show(context);
+      Navigator.of(context).push(
+        CupertinoPageRoute(
+          builder: (BuildContext context) => PhoneAuthVerify(
+            phoneNumber: phoneAuthDataProvider.phoneNumberController.text,
+          ),
+        ),
+      );
+    } else {
+      Flushbar(
+        title: "OTP NOT SEND",
+        message: result['otp']+ ' Invalid nomor telepon',
+        duration: Duration(seconds: 5),
+        backgroundColor: Colors.black,
+        flushbarPosition: FlushbarPosition.BOTTOM,
+        icon: Icon(
+          Icons.error,
+          color: Colors.white,
+        ),
+      )..show(context);
+    }
   }
 }

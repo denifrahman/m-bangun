@@ -103,6 +103,7 @@ class HeaderMenu extends StatelessWidget {
         )..show(context);
       } else {
         Navigator.pushNamed(context, '/' + item.link.toString()).then((value) {
+          print(value);
           if (value != null) {
             Navigator.push(
               context,

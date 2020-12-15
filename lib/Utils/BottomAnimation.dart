@@ -112,6 +112,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
     BlogCategories blocCategory = Provider.of<BlogCategories>(context);
     var idUser = await blocAuth.idUser;
     await blocOrder.getCart(idUser);
+    await blocAuth.checkSession();
     await blocOrder.getCountOrderByParam(idUser);
     await blocAuth.getNotification();
     // });
@@ -460,6 +461,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
                       MaterialButton(
                         minWidth: 30,
                         onPressed: () {
+                          _initializeTimer();
                           setState(() {
                             currentScreen =
                                 ProfileScreen(); // if user taps on this dashboard tab will be active

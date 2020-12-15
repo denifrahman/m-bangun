@@ -29,7 +29,7 @@ class PhoneAuthDataProvider with ChangeNotifier {
 
   Future sendOtp(body) async {
     var result = await AuthRepository().sendOtp(body);
-    print(result);
+    return result;
   }
  
   Future verifyOTPAndLogin(body) async {

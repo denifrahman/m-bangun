@@ -121,9 +121,9 @@ class _WidgetTagihanState extends State<WidgetTagihan> {
                           int now = DateTime
                               .now()
                               .millisecondsSinceEpoch;
-                          Duration remaining = Duration(milliseconds: now - estimateTs);
+                          Duration remaining = Duration(milliseconds: estimateTs - now);
                           // print(now <= estimateTs);
-                          if (now <= estimateTs) {
+                          if (now >= estimateTs) {
                             expired = true;
                           }
                           var hourse = '${remaining.inHours}';

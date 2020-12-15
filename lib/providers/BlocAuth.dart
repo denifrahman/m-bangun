@@ -72,7 +72,7 @@ class BlocAuth extends ChangeNotifier {
         _currentUserLogin['nama'] ?? _phoneNumber;
     map["image"] = _currentUserLogin['photo_url'] ?? imageNull;
     map["role"] = 'user';
-    print(map.toString() + ' inichat');
+    // print(map.toString() + ' inichat');
     var result = await getOrCreate(map);
     if (result['success']) {
       LocalStorage.sharedInstance
@@ -92,7 +92,7 @@ class BlocAuth extends ChangeNotifier {
     fcmToken.then((value) async {
       var param = {'fcm_token': value};
       var result = await AuthRepository().deleteFcmToken(param);
-      print(result);
+      // print(result);
     });
     LocalStorage.sharedInstance.deleteValue('no_telp');
     LocalStorage.sharedInstance.deleteValue('id_toko');
@@ -139,9 +139,9 @@ class BlocAuth extends ChangeNotifier {
         'system_name': system,
         'model': value['model']
       };
-      print(param);
+      // print(param);
       var result = await AuthRepository().setFcmToken(param);
-      print(result.toString() + ' fcmtoken');
+      // print(result.toString() + ' fcmtoken');
     });
   }
 
@@ -162,13 +162,13 @@ class BlocAuth extends ChangeNotifier {
   }
 
   Future<bool> _getOrCreateUserData() async {
-    print('_getOrCreateUserData');
+    // print('_getOrCreateUserData');
     _currentUserLogin = {};
     _isLoading = true;
     notifyListeners();
     var queryString = {'no_hp': ('+' + _phoneNumber)};
     var result = await AuthRepository().getUserByParam(queryString);
-    print(result);
+    // print(result);
     if (result['data'].length < 1) {
       await create(queryString);
     } else {
@@ -313,7 +313,7 @@ class BlocAuth extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await AuthRepository().getMitraByParam(param);
-    print(result);
+    // print(result);
     if (result.toString() == '111' ||
         result.toString() == '101' ||
         result.toString() == 'Conncetion Error') {

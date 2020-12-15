@@ -44,7 +44,7 @@ class WidgetMenu extends StatelessWidget {
                       page: PengajuanProject(),
                     ),
                   ).then((value) {
-                    // print(value);
+                    print('value');
                     Navigator.push(
                         context,
                         SlideRightRoute(

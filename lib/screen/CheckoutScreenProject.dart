@@ -19,11 +19,16 @@ class CheckoutScreenProject extends StatelessWidget {
   final int index;
   final int subtotal;
 
-  CheckoutScreenProject({Key key, this.body, this.subtotal, this.index}) : super(key: key);
-  final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
-  final RoundedLoadingButtonController _btnControllerMetodeBayar = new RoundedLoadingButtonController();
-  final RoundedLoadingButtonController _btnControllerALamatPenerima = new RoundedLoadingButtonController();
-  final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
+  CheckoutScreenProject({Key key, this.body, this.subtotal, this.index})
+      : super(key: key);
+  final RoundedLoadingButtonController _btnController =
+      new RoundedLoadingButtonController();
+  final RoundedLoadingButtonController _btnControllerMetodeBayar =
+      new RoundedLoadingButtonController();
+  final RoundedLoadingButtonController _btnControllerALamatPenerima =
+      new RoundedLoadingButtonController();
+  final IDR = Currency.create('IDR', 0,
+      symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   int totalDalamKota = 0;
   int totalRajaOngkir = 0;
@@ -46,14 +51,18 @@ class CheckoutScreenProject extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              height: (MediaQuery.of(context).size.height * 0.9 - appBar.preferredSize.height) - MediaQuery.of(context).padding.top,
+              height: (MediaQuery.of(context).size.height * 0.9 -
+                      appBar.preferredSize.height) -
+                  MediaQuery.of(context).padding.top,
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(0.0),
                   child: Column(
                     children: [
                       Container(
-                        color: blocOrder.listMetodePembayaranSelected.isEmpty ? Colors.red.withOpacity(0.2) : Colors.white,
+                        color: blocOrder.listMetodePembayaranSelected.isEmpty
+                            ? Colors.red.withOpacity(0.2)
+                            : Colors.white,
                         margin: const EdgeInsets.only(top: 10.0),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -63,9 +72,18 @@ class CheckoutScreenProject extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  blocOrder.listMetodePembayaranSelected.isEmpty ? '-' : blocOrder.listMetodePembayaranSelected['metode_pembayaran'],
+                                  blocOrder.listMetodePembayaranSelected.isEmpty
+                                      ? '-'
+                                      : blocOrder.listMetodePembayaranSelected[
+                                          'metode_pembayaran'],
                                 ),
-                                Text(blocOrder.listMetodePembayaranSelected.isEmpty ? '' : blocOrder.listMetodePembayaranSelected['nama_bank'],
+                                Text(
+                                    blocOrder.listMetodePembayaranSelected
+                                            .isEmpty
+                                        ? ''
+                                        : blocOrder
+                                                .listMetodePembayaranSelected[
+                                            'nama_bank'],
                                     style: TextStyle(color: Colors.black)),
                               ],
                             ),
@@ -79,14 +97,23 @@ class CheckoutScreenProject extends StatelessWidget {
                                 children: <Widget>[
                                   new Expanded(
                                       child: RoundedLoadingButton(
-                                    child: Text('Ubah', style: TextStyle(color: Colors.white, fontSize: 12)),
+                                    child: Text('Ubah',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 12)),
                                     color: Colors.cyan[700],
                                     controller: _btnControllerMetodeBayar,
                                     onPressed: () {
-                                      blocProfile.getAllUserAddress(blocAuth.idUser);
+                                      blocProfile
+                                          .getAllUserAddress(blocAuth.idUser);
                                       blocOrder.getMetodePembayaran();
-                                      Navigator.push(context, SlideRightRoute(page: WidgetListPembayaran())).then((value) {
-                                        Provider.of<BlocProfile>(context).getUserAddressDefault(blocAuth.idUser);
+                                      Navigator.push(
+                                              context,
+                                              SlideRightRoute(
+                                                  page: WidgetListPembayaran()))
+                                          .then((value) {
+                                        Provider.of<BlocProfile>(context)
+                                            .getUserAddressDefault(
+                                                blocAuth.idUser);
                                         _btnControllerMetodeBayar.reset();
                                       });
                                       print('stop');
@@ -124,7 +151,8 @@ class CheckoutScreenProject extends StatelessWidget {
                         Container(
                           child: Text(
                             Money.fromInt((this.subtotal), IDR).toString(),
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 22),
                           ),
                         ),
                       ],
@@ -136,10 +164,13 @@ class CheckoutScreenProject extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18.0),
                         ),
-                        child: Text('Bayar', style: TextStyle(color: Colors.white, fontSize: 18)),
+                        child: Text('Bayar',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 18)),
                         color: Colors.green,
                         onPressed: () {
-                          if (blocOrder.listMetodePembayaranSelected.isNotEmpty) {
+                          if (blocOrder
+                              .listMetodePembayaranSelected.isNotEmpty) {
                             makePayment(context);
                           }
                         },
@@ -155,7 +186,7 @@ class CheckoutScreenProject extends StatelessWidget {
     );
   }
 
-  void makePayment(context) {
+  void makePayment(context) async {
     var dataPost = json.decode(body);
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
@@ -168,13 +199,30 @@ class CheckoutScreenProject extends StatelessWidget {
 
     var no_order = "PROJ-" + dataPost['no_order'].toString();
     var bodyPayment = {
-      "enabled_payments": [blocOrder.listMetodePembayaranSelected['kode'].toString().toLowerCase()],
-      blocOrder.listMetodePembayaranSelected['kode'].toString().toLowerCase(): {"va_number": phoneNumber},
-      "transaction_details": {"order_id": no_order.toString(), "gross_amount": this.subtotal.toString()},
-      "item_details": [
-        {"id": '1', "price": this.subtotal.toString(), "quantity": "1", "name": "Pembayaran Survey"}
+      "enabled_payments": [
+        blocOrder.listMetodePembayaranSelected['kode'].toString().toLowerCase()
       ],
-      "expiry": {"start_time": "${Jiffy(DateTime.now()).format("yyyy-MM-dd HH:mm:ss")} +0700", "duration": 120, "unit": "minute"},
+      blocOrder.listMetodePembayaranSelected['kode'].toString().toLowerCase(): {
+        "va_number": phoneNumber
+      },
+      "transaction_details": {
+        "order_id": no_order.toString(),
+        "gross_amount": this.subtotal.toString()
+      },
+      "item_details": [
+        {
+          "id": '1',
+          "price": this.subtotal.toString(),
+          "quantity": "1",
+          "name": "Pembayaran Survey"
+        }
+      ],
+      "expiry": {
+        "start_time":
+            "${Jiffy(DateTime.now()).format("yyyy-MM-dd HH:mm:ss")} +0700",
+        "duration": 120,
+        "unit": "minute"
+      },
       "customer_details": {
         "first_name": blocAuth.currentUserLogin['nama'].toString(),
         "last_name": "",
@@ -183,8 +231,9 @@ class CheckoutScreenProject extends StatelessWidget {
       }
     };
     var data = json.encode(bodyPayment);
-//    print(data);
+    //  print(data);
     var result = blocOrder.makePayment(data);
+    // print(result);
     result.then((value) {
       dataPost['token_va'] = value['token'];
       dataPost['no_order'] = no_order;
@@ -194,18 +243,16 @@ class CheckoutScreenProject extends StatelessWidget {
         Map bodyPost = {'data': json.encode(dataPost)};
 //        print(bodyPost);
         Navigator.push(
-            context,
-            SlideRightRoute(
-                page: SnapWidgetMidtrans(
+          context,
+          SlideRightRoute(
+            page: SnapWidgetMidtrans(
               urlSnap: value['redirect_url'],
               tokenSnap: value['token'],
               param: 'project',
               bodyTransaction: bodyPost,
-            )));
-//        var param = {
-//          'id': dataPost['no_order'].toString(),
-//        };
-//        blocOrder.getProjectByOrder(param);
+            ),
+          ),
+        );
       }
     });
   }

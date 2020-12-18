@@ -59,13 +59,13 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
       ..onTap = () {
         Navigator.pop(context);
       };
-    errorController = StreamController<ErrorAnimationType>();
+    // errorController = StreamController<ErrorAnimationType>();
     super.initState();
   }
 
   @override
   void dispose() {
-    errorController.close();
+    // errorController.close();
 
     super.dispose();
   }
@@ -123,7 +123,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Text(
-                    'Phone Number Verification',
+                    'Verifikasi nomor telepon',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
                     textAlign: TextAlign.center,
                   ),
@@ -133,10 +133,10 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
                       const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8),
                   child: RichText(
                     text: TextSpan(
-                        text: "Masukkan kode ",
+                        text: "Masukkan kode yang dikirim ke ",
                         children: [
                           TextSpan(
-                              text: widget.phoneNumber,
+                              text: '+62' + widget.phoneNumber,
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
@@ -155,12 +155,13 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 8.0, horizontal: 30),
                       child: PinCodeTextField(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         appContext: context,
                         pastedTextStyle: TextStyle(
                           color: Colors.green.shade600,
                           fontWeight: FontWeight.bold,
                         ),
-                        length: 6,
+                        length: 4,
                         obscureText: false,
                         obscuringCharacter: '*',
                         animationType: AnimationType.fade,
@@ -175,8 +176,8 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
                           shape: PinCodeFieldShape.underline,
                           borderRadius: BorderRadius.circular(5),
                           inactiveColor: Colors.white,
-                          fieldHeight: 60,
-                          fieldWidth: 50,
+                          fieldHeight: 45,
+                          fieldWidth: 45,
                           activeFillColor:
                               hasError ? Colors.orange : Colors.white,
                         ),
@@ -252,9 +253,9 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
                       onPressed: () {
                         formKey.currentState.validate();
                         // conditions for validating
-                        if (currentText.length != 6) {
-                          errorController.add(ErrorAnimationType
-                              .shake); // Triggering error shake animation
+                        if (currentText.length != 4) {
+                          // errorController.add(ErrorAnimationType
+                          //     .shake); // Triggering error shake animation
                           setState(() {
                             hasError = true;
                           });
@@ -325,7 +326,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
           color: Colors.white,
         ),
       )..show(context);
-      blocAuth.setPhoneNumber(result['data']['no_telp']);
+      blocAuth.setPhoneNumber("62" + provider.phoneNumberController.text);
       await Provider.of<BlocAuth>(context).checkSession();
       // await Provider.of<BlocAuth>(context).initChat();
       Navigator.pushReplacement(
@@ -400,42 +401,4 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
           //         borderSide: BorderSide(color: Colors.white))),
         ),
       );
-
-  onStarted() {
-    _showSnackBar("PhoneAuth started");
-//    _showSnackBar(phoneAuthDataProvider.message);
-  }
-
-  onCodeSent() {
-    _showSnackBar("OPT sent");
-//    _showSnackBar(phoneAuthDataProvider.message);
-  }
-
-  onCodeResent() {
-    _showSnackBar("OPT resent");
-//    _showSnackBar(phoneAuthDataProvider.message);
-  }
-
-  onVerified() async {
-    _showSnackBar("${Provider.of<PhoneAuthDataProvider>(context).message}");
-    await Future.delayed(Duration(seconds: 1));
-    // Navigator.of(context)
-    //     .push(MaterialPageRoute(builder: (BuildContext context) => LetsChat()));
-  }
-
-  onFailed() {
-//    _showSnackBar(phoneAuthDataProvider.message);
-    _showSnackBar("PhoneAuth failed");
-  }
-
-  onError() {
-//    _showSnackBar(phoneAuthDataProvider.message);
-    _showSnackBar(
-        "PhoneAuth error ${Provider.of<PhoneAuthDataProvider>(context).message}");
-  }
-
-  onAutoRetrievalTimeOut() {
-    _showSnackBar("PhoneAuth autoretrieval timeout");
-//    _showSnackBar(phoneAuthDataProvider.message);
-  }
 }

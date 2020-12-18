@@ -19,6 +19,7 @@ class ApiBaseHelper {
       final _url = Uri.https(_baseUrl, _path + url, param);
       final response = await http.get(_url);
       // print(_url);
+      // print(response.body);
       responseJson = _returnResponse(response);
     } on SocketException {
       return 'Conncetion Error';
@@ -33,7 +34,7 @@ class ApiBaseHelper {
       final _url = Uri.https(_baseUrl, _path + url);
       var header = {"Content-Type": "application/json"};
       final response = await http.post(_url, body: body);
-      // print(response.body);
+      print(response.body);
       responseJson = _returnResponse(response);
     } on SocketException catch (err) {
       return 'Conncetion Error';

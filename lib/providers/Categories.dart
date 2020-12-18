@@ -25,6 +25,7 @@ class BlogCategories extends ChangeNotifier {
 
   Future getListDataHeaderMenu(param) async {
     var result = await CategoryRepository().getHeaderMenuCategory(param);
+    print(result);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == '405' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;

@@ -1,15 +1,12 @@
 import 'package:apps/Utils/Theme/colors.dart';
-import 'package:apps/Utils/WidgetErrorConnection.dart';
 import 'package:apps/Utils/navigation_right.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:apps/providers/BlocProfile.dart';
 import 'package:apps/providers/DataProvider.dart';
-import 'package:apps/screen/PhoneAuth/presentation/pages/firebase/auth/auth.dart';
 import 'package:apps/screen/PhoneAuth/presentation/pages/firebase/auth/phone_auth/get_phone.dart';
 import 'package:apps/screen/TokoSayaScreen.dart';
-import 'package:apps/providers/BlocChatService.dart';
 import 'package:apps/widget/Pendaftaran/WidgetPendaftaran.dart';
 import 'package:apps/widget/Pengajuan/component/WidgetCardMenu.dart';
 import 'package:apps/widget/Profile/TopContainer.dart';
@@ -94,7 +91,6 @@ class ProfileScreen extends StatelessWidget {
                                           await Provider.of<BlocOrder>(context).clearCountOrder();
                                           await Provider.of<BlocAuth>(context).handleSignOut();
                                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PhoneAuthGetPhone()));
-                                          await FireBase.auth.signOut();
                                         },
                                         icon: Icon(Icons.exit_to_app, color: Colors.grey[400], size: 20.0),
                                       ),

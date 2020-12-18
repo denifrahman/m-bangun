@@ -212,12 +212,12 @@ class ProdukDetailScreen extends StatelessWidget {
                                         margin: EdgeInsets.only(top: 0),
                                         child: Image.network(baseURL + '/' + pathBaseUrl + '/assets/toko/' + blocProduk.detailProduct[0].foto, width: 50, height: 80,
                                             errorBuilder: (context, urlImage, error) {
-                                          print(error.hashCode);
-                                          return Image.asset(
-                                            'assets/logo.png',
-                                            height: 40,
-                                          );
-                                        }),
+                                              print(error.hashCode);
+                                              return Image.asset(
+                                                'assets/logo.png',
+                                                height: 40,
+                                              );
+                                            }),
                                       ),
                                       Column(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

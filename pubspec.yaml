@@ -11,7 +11,7 @@ description: Aplikasi m-bangun
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.2.6+42
+version: 2.2.8+44
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -24,12 +24,11 @@ dependencies:
   modal_progress_hud: ^0.1.3
   http_auth: ^0.3.0
   bubble_tab_indicator: ^0.1.4
-  font_awesome_flutter: ^8.10.0
+  font_awesome_flutter: ^8.0.1
   image_picker: ^0.6.7+1
   flutter_secure_storage: ^3.3.1+1
-  money2: ^1.4.3
+  money2: ^1.4.0
   intl: ^0.16.1
-  connectivity:
   splashscreen:
   datetime_picker_formfield: ^1.0.0
   custom_splash: ^0.0.2
@@ -39,7 +38,6 @@ dependencies:
   toast: ^0.1.5
   local_auth: ^0.6.1+3
   provider: ^3.1.0
-#  provider: ^4.3.2+2
   percent_indicator: ^2.1.3
   pk_skeleton: ^0.0.2
   flutter_skeleton: ^0.1.0+1
@@ -51,27 +49,24 @@ dependencies:
   expansion_tile_card: ^1.0.3
   carousel_pro: ^1.0.0
   flutter_cache_manager: ^1.4.1
-#  html: ^0.14.0+4
-  flutter_widget_from_html: ^0.5.1+4
-  chewie: ^0.9.10
   flutter_multi_formatter: ^1.1.6
   bezier_chart: ^1.0.16
   jiffy: ^3.0.1
   floating_search_bar: ^0.3.0
-#  fl_chart: ^0.8.7
   package_info: ^0.4.0+9
-  url_launcher: ^5.1.4
+  url_launcher: ^5.7.10
   mime: ^0.9.6+3
   pinch_zoom_image_last: ^0.3.1
   flutter_signature_pad: ^2.0.2
   advance_pdf_viewer: ^1.2.0
-  webview_flutter: ^0.3.22+1
+  webview_flutter: ^1.0.7
   flutter_webview_plugin: ^0.3.11
   flutter_inappwebview: ^4.0.0+4
   random_color: ^1.0.5
   flutter_wordpress: ^0.2.1
   carousel_slider: ^2.2.1
-  multi_image_picker: ^4.6.9
+#  multi_image_picker: ^4.7.14
+  numberpicker: ^1.3.0
   woocommerce: ^0.9.6
   gender_selection: ^0.0.8
   sliverbar_with_card: ^0.1.5
@@ -83,25 +78,26 @@ dependencies:
   fw_ticket: ^0.1.1
   dotted_line: ^2.0.1
   multipart_request: ^0.3.1
-  html_editor: ^1.0.1
+  flutter_summernote: ^0.2.2
   lazy_load_scrollview: ^1.1.0
   maps_launcher: ^1.2.2+1
-  firebase_messaging: ^7.0.3
-  firebase_auth:
+  firebase_messaging: ^7.0.1
   flutter_session: ^0.1.1
   device_info: ^0.4.2+8
   flutter_local_notifications: ^1.4.4+5
   image_cropper: ^1.3.1
-  focus_detector: ^1.0.3
-  dash_chat: ^1.1.14
-  stream_chat_flutter: ^0.2.11+1
+  flutter_widget_from_html: ^0.5.1+4
   start_jwt: ^0.2.0
   pin_code_fields: ^6.0.1
   flare_flutter: ^2.0.6
+  firebase_auth:
+  cloud_firestore:
+  firebase_storage:
+  dash_chat: ^1.1.15
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-#  cupertino_icons: ^1.0.1
+  cupertino_icons: ^1.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,4 @@
 import 'package:apps/Repository/AuthRepository.dart';
-import 'package:apps/screen/PhoneAuth/presentation/pages/firebase/auth/auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' show ChangeNotifier, VoidCallback;
 import 'package:flutter/widgets.dart' show TextEditingController;
 

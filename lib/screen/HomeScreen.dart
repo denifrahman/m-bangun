@@ -4,6 +4,7 @@ import 'package:apps/Utils/WidgetErrorConnection.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/BlocProduk.dart';
+import 'package:apps/providers/Categories.dart';
 import 'package:apps/screen/TopCardMenu/presentation/pages/HeaderMenu.dart';
 import 'package:apps/widget/Home/WidgetLokasi.dart';
 import 'package:apps/widget/Home/WidgetNews.dart';
@@ -66,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         body: !blocAuth.connection
             ? WidgetErrorConection()
             : ModalProgressHUD(
-              inAsyncCall: Provider.of<BlocAuth>(context).isLoading,
+              inAsyncCall: blocAuth.isLoading,
               child: Container(
                 margin: EdgeInsets.only(bottom: 50),
                 color: Colors.white10.withOpacity(0.2),
@@ -171,7 +172,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     BlocAuth blocAuth = Provider.of<BlocAuth>(context);
     BlocOrder blocOrder = Provider.of<BlocOrder>(context);
     final blocProduk = Provider.of<BlocProduk>(context);
+    final blogCategories = Provider.of<BlogCategories>(context);
     await blocAuth.checkSession();
+    await blogCategories.getListDataHeaderMenu({'aktif': '1'});
     await blocAuth.getNotification();
     await blocProduk.getRecentProduct();
     await blocProduk.getOfficialStore();

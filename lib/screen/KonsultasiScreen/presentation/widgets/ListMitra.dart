@@ -1,13 +1,14 @@
-import 'package:apps/Utils/Component/ButtonFullWidth.dart';
 import 'package:apps/Utils/Component/ButtonSmall.dart';
 import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/providers/BlocAuth.dart';
-import 'package:apps/providers/BlocChatService.dart';
-import 'package:apps/screen/streamChatting/presentation/pages/ChannelPage.dart';
+import 'package:apps/providers/BlocChatting.dart';
+import 'package:apps/screen/KonsultasiScreen/presentation/widgets/ConversationScreen.dart';
+import 'package:apps/widget/Pendaftaran/WidgetPendaftaran.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:pk_skeleton/pk_skeleton.dart';
 import 'package:provider/provider.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+// import 'package:stream_chat/stream_chat.dart';
 
 class ListMitra extends StatefulWidget {
   ListMitra(
@@ -46,7 +47,7 @@ class _ListMitraState extends State<ListMitra> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<BlocAuth>(context);
-    // TODO: implement build
+    final blocAuth = Provider.of<BlocAuth>(context);
     return Scaffold(
       appBar: AppBar(title: Text('Chat dengan ahli ' + widget.title)),
       body: provider.isLoading
@@ -62,7 +63,9 @@ class _ListMitraState extends State<ListMitra> {
                 return Card(
                   child: ListTile(
                     onTap: () {
-                      _createChannel(context, item.id);
+                      _createOrGetConverence(
+                          nama: blocAuth.listMitra[index].nama,
+                          fromUser: blocAuth.listMitra[index].noHp);
                     },
                     contentPadding: EdgeInsets.all(10),
                     title: Text(
@@ -89,17 +92,14 @@ class _ListMitraState extends State<ListMitra> {
                         SizedBox(
                           height: 5,
                         ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            ButtonSmall(
-                              color: Colors.cyan[800],
-                              title: 'Chat',
-                            ),
-                          ],
-                        ),
                       ],
+                    ),
+                    trailing: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: ButtonSmall(
+                        color: Colors.cyan[800],
+                        title: 'Chat',
+                      ),
                     ),
                     leading: CircleAvatar(
                       radius: 30,
@@ -117,12 +117,6 @@ class _ListMitraState extends State<ListMitra> {
                         }),
                       ),
                     ),
-                    // trailing: Column(
-                    //   children: [
-                    //     SizedBox( height: 10,),
-                    //     ButtonSmall(color: Colors.cyan[800],title: 'Chat',),
-                    //   ],
-                    // ),
                   ),
                 );
               },
@@ -130,32 +124,37 @@ class _ListMitraState extends State<ListMitra> {
     );
   }
 
-  Future _createChannel(
-    BuildContext context,
-    id, [
-    String name,
-  ]) async {
+  Future _createOrGetConverence({String nama, String fromUser}) async {
+      final blocChat = Provider.of<BlocChatting>(context);
     final blocAuth = Provider.of<BlocAuth>(context);
-    final client = Provider.of<ChatModel>(context).client;
-    print(id);
-    final channel = client.channel('messaging', extraData: {
-      'members': [
-        blocAuth.currentUserLogin['id'],
-        id,
-      ],
-      if (name != null) 'name': name,
-    });
-    var result = await channel.watch();
-    if (result != null) {
+    if (blocAuth.currentUserLogin['email'] == null) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => WidgetPendaftaran()));
+      Flushbar(
+        title: "Maaf",
+        message: 'Silahkan lengkapi profil anda',
+        duration: Duration(seconds: 5),
+        backgroundColor: Colors.red,
+        flushbarPosition: FlushbarPosition.TOP,
+        icon: Icon(
+          Icons.assignment_turned_in,
+          color: Colors.white,
+        ),
+      )..show(context);
+    } else {
+      var chatRoomId = await blocChat.getChatRoomId(
+          sendBy: blocAuth.currentUserChat.uid, sendFrom: fromUser);
+      var dataMember = [blocAuth.currentUserChat.uid, fromUser];
+      await blocChat.createChatRoom(
+          chatroomId: chatRoomId,
+          member: dataMember,
+          owner: blocAuth.currentUserChat.uid);
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) {
-            return StreamChannel(
-              child: ChannelPage(),
-              channel: channel,
-            );
-          },
+          builder: (context) => ConversationScreen(
+            fromUser: nama,
+          ),
         ),
       );
     }

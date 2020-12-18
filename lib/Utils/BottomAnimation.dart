@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:apps/providers/Categories.dart';
@@ -112,9 +111,9 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
     BlogCategories blocCategory = Provider.of<BlogCategories>(context);
     var idUser = await blocAuth.idUser;
     await blocOrder.getCart(idUser);
-    await blocAuth.checkSession();
+    // await blocAuth.checkSession();
     await blocOrder.getCountOrderByParam(idUser);
-    await blocAuth.getNotification();
+    // await blocAuth.getNotification();
     // });
   }
 
@@ -179,7 +178,7 @@ class _BottomAnimateBarState extends State<BottomAnimateBar> {
         importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+        androidPlatformChannelSpecifics,  iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
         0,
         message['notification']['title'],

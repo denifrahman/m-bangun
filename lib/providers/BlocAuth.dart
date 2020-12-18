@@ -5,8 +5,8 @@ import 'package:apps/Repository/UserRepository.dart';
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/models/Mitra.dart';
-import 'package:apps/screen/PhoneAuth/presentation/pages/firebase/auth/auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dash_chat/dash_chat.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_session/flutter_session.dart';
@@ -68,8 +68,7 @@ class BlocAuth extends ChangeNotifier {
     notifyListeners();
     var map = new Map<String, String>();
     map["id"] = _phoneNumber.replaceAll('+628', '08');
-    map["name"] =
-        _currentUserLogin['nama'] ?? _phoneNumber;
+    map["name"] = _currentUserLogin['nama'] ?? _phoneNumber;
     map["image"] = _currentUserLogin['photo_url'] ?? imageNull;
     map["role"] = 'user';
     // print(map.toString() + ' inichat');
@@ -141,7 +140,7 @@ class BlocAuth extends ChangeNotifier {
       };
       // print(param);
       var result = await AuthRepository().setFcmToken(param);
-      // print(result.toString() + ' fcmtoken');
+      print(result.toString() + ' fcmtoken');
     });
   }
 
@@ -156,21 +155,38 @@ class BlocAuth extends ChangeNotifier {
 
   Future checkSession() async {
     checkVersionApp();
-    await _getOrCreateUserData();
+    return await _getOrCreateUserData();
     _isLoading = false;
     notifyListeners();
   }
 
+  ChatUser _currentUserChat;
+
+  ChatUser get currentUserChat => _currentUserChat;
+
+  setFirestore(result) async {
+    var dataUser = result['data'][0];
+    final ChatUser data = ChatUser(
+      name: dataUser['nama'].toString(),
+      avatar: 'https://mbangun.id//api-v2//assets/kategori/worker.png',
+      uid: dataUser['no_hp'].toString().replaceAll('+', ''),
+    );
+    print(data.toJson());
+    await Firestore.instance.collection('users').document(data.uid).set(data.toJson());
+    _currentUserChat = data;
+    notifyListeners();
+  }
+
   Future<bool> _getOrCreateUserData() async {
-    // print('_getOrCreateUserData');
     _currentUserLogin = {};
     _isLoading = true;
     notifyListeners();
-    var queryString = {'no_hp': ('+' + _phoneNumber)};
+    var queryString = {'no_hp': _phoneNumber};
     var result = await AuthRepository().getUserByParam(queryString);
-    // print(result);
+    setFirestore(result);
     if (result['data'].length < 1) {
       await create(queryString);
+      _isLoading = false;
     } else {
       if (result['meta']['success']) {
         _currentUserLogin = result['data'][0];
@@ -189,9 +205,9 @@ class BlocAuth extends ChangeNotifier {
           _token = result['token'];
           _idToko = result['data'][0]['id_toko'];
           LocalStorage.sharedInstance
-              .writeValue(key: 'id_toko', value: result['data'][0]['id_toko']);
+              .writeValue(key: 'id_toko', value: result['data'][0]['id_toko'] == null ? "" : result['data'][0]['id_toko']);
           LocalStorage.sharedInstance
-              .writeValue(key: 'id_user', value: result['data'][0]['id']);
+              .writeValue(key: 'id_user', value: result['data'][0]['id'] == null ? "" : result['data'][0]['id'] );
           _idUser = result['data'][0]['id'];
           var fcmToken = await FlutterSession().get('fcm_token');
           await setFcmToken(fcmToken);

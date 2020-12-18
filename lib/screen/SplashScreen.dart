@@ -1,13 +1,12 @@
 import 'package:apps/Utils/BottomAnimation.dart';
 import 'package:apps/Utils/LocalBindings.dart';
 import 'package:apps/providers/BlocAuth.dart';
-import 'package:apps/screen/PhoneAuth/presentation/pages/firebase/auth/auth.dart';
 import 'package:apps/screen/PhoneAuth/presentation/pages/firebase/auth/phone_auth/get_phone.dart';
 import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
 import 'package:provider/provider.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+// import 'package:stream_chat/stream_chat.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -18,11 +17,11 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   Animation<double> opacity;
   AnimationController controller;
-  final client = Client(
-    'd9yg7epnra2p',
-    logLevel: Level.INFO,
-    persistenceEnabled: true,
-  );
+  // final client = Client(
+  //   'd9yg7epnra2p',
+  //   logLevel: Level.INFO,
+  //   // persistenceEnabled: true,
+  // );
 
   List<Slide> slides = new List();
 
@@ -82,7 +81,6 @@ class _SplashScreenState extends State<SplashScreen>
     final provider = await Provider.of<BlocAuth>(context, listen: false);
     // await Future.delayed(Duration(milliseconds: 3));
     var noTelp = await LocalStorage.sharedInstance.readValue('no_telp');
-    print(noTelp);
     if (noTelp != null) {
       provider.setPhoneNumber(noTelp);
       final result = Provider.of<BlocAuth>(context).checkSession();

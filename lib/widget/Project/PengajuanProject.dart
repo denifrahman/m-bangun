@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/providers/BlocAuth.dart';
-import 'package:apps/providers/BlocProfile.dart';
-import 'package:apps/widget/Pendaftaran/WidgetPendaftaran.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:provider/provider.dart';

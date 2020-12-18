@@ -1,7 +1,6 @@
 import 'package:apps/Utils/Theme/radii.dart';
 import 'package:apps/Utils/Theme/shadows.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class SettingWidget extends StatelessWidget {
   void darkSwitchControll(BuildContext context) {}
@@ -15,7 +14,6 @@ class SettingWidget extends StatelessWidget {
   void onPrivacyPressed(BuildContext context) {}
 
   void onLogoutPressed(BuildContext context) {}
-  GoogleSignIn _googleSignIn = GoogleSignIn();
 
   @override
   Widget build(BuildContext context) {

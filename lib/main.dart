@@ -7,8 +7,8 @@ import 'package:apps/Utils/MultiProviders.dart';
 import 'package:apps/Utils/ThemeChanger.dart';
 import 'package:apps/Utils/routes.dart';
 import 'package:apps/models/DeviceInfo.dart';
-import 'package:apps/screen/SplashScreen.dart';
 import 'package:apps/providers/BlocChatService.dart';
+import 'package:apps/screen/SplashScreen.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:provider/provider.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+// import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -93,37 +93,38 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           title: 'Flutter Theme Provider',
           theme: light,
-          builder: (context, widget) {
-            return Consumer<ChatModel>(builder: (context, chatModel, child) {
-              return StreamChat(
-                streamChatThemeData: StreamChatThemeData.fromTheme(light).copyWith(
-                  ownMessageTheme: MessageTheme(
-                    messageBackgroundColor: Theme.of(context).primaryColor.withOpacity(0.6),
-                    messageText: TextStyle(
-                      color: Colors.white,
-                    ),
-                    avatarTheme: AvatarTheme(
-                        // borderRadius: BorderRadius.circular(8),
-                        ),
-                  ),
-                  otherMessageTheme: MessageTheme(
-                    messageBackgroundColor: Theme.of(context).primaryColor,
-                    messageText: TextStyle(
-                      color: Colors.white,
-                    ),
-                    avatarTheme: AvatarTheme(
-                        // borderRadius: BorderRadius.circular(8),
-                        ),
-                  ),
-                ),
-                child: widget,
-                client: chatModel.client,
-              );
-            });
-          },
+          // builder: (context, widget) {
+          //   return Consumer<ChatModel>(builder: (context, chatModel, child) {
+          //     return StreamChat(
+          //       streamChatThemeData: StreamChatThemeData.fromTheme(light).copyWith(
+          //         ownMessageTheme: MessageTheme(
+          //           messageBackgroundColor: Theme.of(context).primaryColor.withOpacity(0.6),
+          //           messageText: TextStyle(
+          //             color: Colors.white,
+          //           ),
+          //           avatarTheme: AvatarTheme(
+          //               // borderRadius: BorderRadius.circular(8),
+          //               ),
+          //         ),
+          //         otherMessageTheme: MessageTheme(
+          //           messageBackgroundColor: Theme.of(context).primaryColor,
+          //           messageText: TextStyle(
+          //             color: Colors.white,
+          //           ),
+          //           avatarTheme: AvatarTheme(
+          //               // borderRadius: BorderRadius.circular(8),
+          //               ),
+          //         ),
+          //       ),
+          //       child: widget,
+          //       client: chatModel.client,
+          //     );
+          //   });
+          // },
           home: SplashScreen(),
           initialRoute: '/',
           routes: routes),
     );
   }
 }
+

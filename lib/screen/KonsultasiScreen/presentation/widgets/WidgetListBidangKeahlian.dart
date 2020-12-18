@@ -4,12 +4,14 @@ import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocChatService.dart';
 import 'package:apps/providers/BlocChatting.dart';
 import 'package:apps/screen/KonsultasiScreen/data/models/BidangKeahLianModel.dart';
+import 'package:apps/screen/KonsultasiScreen/presentation/widgets/ConversationScreen.dart';
 import 'package:apps/screen/KonsultasiScreen/presentation/widgets/ListMitra.dart';
-import 'package:apps/screen/StreamChatting/presentation/pages/ChannelPage.dart';
+import 'package:apps/widget/Pendaftaran/WidgetPendaftaran.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:pk_skeleton/pk_skeleton.dart';
 import 'package:provider/provider.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+// import 'package:stream_chat/stream_chat.dart';
 
 class ListBidangKeahlian extends StatefulWidget {
   ListBidangKeahlian({Key key}) : super(key: key);
@@ -48,15 +50,12 @@ class _ListBidangKeahlianState extends State<ListBidangKeahlian> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<BlocChatting>(context);
-    final blocAuth = Provider.of<BlocAuth>(context);
     // TODO: implement build
     return provider.isLoading
         ? Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            child: PKCardPageSkeleton(
-              totalLines: 4,
-            ),
+            child: PKCardListSkeleton(),
           )
         : Container(
             height: MediaQuery.of(context).size.height,
@@ -66,101 +65,9 @@ class _ListBidangKeahlianState extends State<ListBidangKeahlian> {
                 SizedBox(
                   height: 15,
                 ),
-                Container(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Rekomendasi',
-                          style: Theme.of(context).textTheme.title,
-                        ),
-                        Text('Rekomendasi'),
-                      ],
-                    )),
+                _buildRecomendasi(),
                 SizedBox(
                   height: 10,
-                ),
-                Expanded(
-                  flex: 2,
-                  child: ListView.builder(
-                    itemCount: blocAuth.listMitra.length,
-                    shrinkWrap: true,
-                    padding: EdgeInsets.all(10),
-                    itemBuilder: (context, index) {
-                      var item = blocAuth.listMitra[index];
-                      return Card(
-                        child: ListTile(
-                          onTap: () {
-                            _createChannel(context, item.id);
-                          },
-                          contentPadding: EdgeInsets.all(10),
-                          title: Text(
-                            item.nama,
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(item.namaBidangKeahlian,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                  )),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                'Curiculum Vitae :',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 12),
-                              ),
-                              Text(
-                                item.pengalamanKerja,
-                                style: Theme.of(context).textTheme.caption,
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  ButtonSmall(
-                                    color: Colors.cyan[800],
-                                    title: 'Chat',
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          leading: CircleAvatar(
-                            radius: 30,
-                            child: ClipOval(
-                              child: Image.network(
-                                  baseURLMobile +
-                                      '/' +
-                                      '/assets/img/toko/' +
-                                      item.foto.toString(),
-                                  height: 50,
-                                  width: 50,
-                                  errorBuilder: (context, urlImage, error) {
-                                print(error.hashCode);
-                                return Image.asset('assets/logo.png');
-                              }),
-                            ),
-                          ),
-                          // trailing: Column(
-                          //   children: [
-                          //     SizedBox( height: 10,),
-                          //     ButtonSmall(color: Colors.cyan[800],title: 'Chat',),
-                          //   ],
-                          // ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
                 ),
                 Container(
                   color: Colors.cyan[600],
@@ -171,7 +78,7 @@ class _ListBidangKeahlianState extends State<ListBidangKeahlian> {
                         color: Colors.white,
                       )),
                       Text(
-                        'Or',
+                        'Pilih kategori lainnya',
                         style: TextStyle(color: Colors.white),
                       ),
                       Expanded(
@@ -182,10 +89,9 @@ class _ListBidangKeahlianState extends State<ListBidangKeahlian> {
                   ),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 Expanded(
-                  // width: MediaQuery.of(context).size.width,
                   child: GridView.count(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
@@ -268,34 +174,135 @@ class _ListBidangKeahlianState extends State<ListBidangKeahlian> {
     });
   }
 
-  Future _createChannel(
-    BuildContext context,
-    id, [
-    String name,
-  ]) async {
-    final blocAuth  = Provider.of<BlocAuth>(context);
-    final client = Provider.of<ChatModel>(context).client;
-    print(id);
-    final channel = client.channel('messaging', extraData: {
-      'members': [
-        blocAuth.currentUserLogin['id'],
-        id,
-      ],
-      if (name != null) 'name': name,
-    });
-    var result = await channel.watch();
-    if (result != null) {
+  Future _createOrGetConverence({String nama, String fromUser}) async {
+    final blocChat = Provider.of<BlocChatting>(context);
+    final blocAuth = Provider.of<BlocAuth>(context);
+    if (blocAuth.currentUserLogin['email'] == null) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => WidgetPendaftaran()));
+      Flushbar(
+        title: "Maaf",
+        message: 'Silahkan lengkapi profil anda',
+        duration: Duration(seconds: 5),
+        backgroundColor: Colors.red,
+        flushbarPosition: FlushbarPosition.TOP,
+        icon: Icon(
+          Icons.assignment_turned_in,
+          color: Colors.white,
+        ),
+      )..show(context);
+    } else {
+      var chatRoomId = await blocChat.getChatRoomId(
+          sendBy: blocAuth.currentUserChat.uid, sendFrom: fromUser);
+      var dataMember = [blocAuth.currentUserChat.uid, fromUser];
+      await blocChat.createChatRoom(
+          chatroomId: chatRoomId,
+          member: dataMember,
+          owner: blocAuth.currentUserChat.uid);
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) {
-            return StreamChannel(
-              child: ChannelPage(),
-              channel: channel,
-            );
-          },
+          builder: (context) => ConversationScreen(
+            fromUser: nama,
+          ),
         ),
       );
     }
+  }
+
+  Widget _buildRecomendasi() {
+    final blocAuth = Provider.of<BlocAuth>(context);
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Rekomendasi',
+                    style: Theme.of(context).textTheme.title,
+                  ),
+                  Text('Rekomendasi untuk anda'),
+                ],
+              )),
+          SizedBox(
+            height: 10,
+          ),
+          Expanded(
+            flex: 1,
+            child: ListView.builder(
+              itemCount: blocAuth.listMitra.length,
+              shrinkWrap: true,
+              padding: EdgeInsets.all(10),
+              itemBuilder: (context, index) {
+                var item = blocAuth.listMitra[index];
+                return Card(
+                  child: ListTile(
+                    onTap: () {
+                      _createOrGetConverence(
+                          nama: blocAuth.listMitra[index].nama,
+                          fromUser: blocAuth.listMitra[index].noHp);
+                    },
+                    contentPadding: EdgeInsets.all(10),
+                    title: Text(
+                      item.nama,
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(item.namaBidangKeahlian,
+                            style: TextStyle(
+                              fontSize: 12,
+                            )),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          'Curiculum Vitae :',
+                          style: TextStyle(color: Colors.black, fontSize: 12),
+                        ),
+                        Text(
+                          item.pengalamanKerja,
+                          style: Theme.of(context).textTheme.caption,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                      ],
+                    ),
+                    trailing: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: ButtonSmall(
+                        color: Colors.cyan[800],
+                        title: 'Chat',
+                      ),
+                    ),
+                    leading: CircleAvatar(
+                      radius: 30,
+                      child: ClipOval(
+                        child: Image.network(
+                            baseURLMobile +
+                                '/' +
+                                '/assets/img/toko/' +
+                                item.foto.toString(),
+                            height: 50,
+                            width: 50,
+                            errorBuilder: (context, urlImage, error) {
+                          print(error.hashCode);
+                          return Image.asset('assets/logo.png');
+                        }),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

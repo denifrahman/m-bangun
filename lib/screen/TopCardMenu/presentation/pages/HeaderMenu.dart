@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:apps/Utils/SettingApp.dart';
-import 'package:apps/Utils/SnacbarLauncher.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/Categories.dart';
 import 'package:apps/screen/CheckoutScreenProject.dart';
@@ -32,6 +31,7 @@ class HeaderMenu extends StatelessWidget {
           crossAxisCount: 3,
           children: List.generate(provider.listDataHeaderMenu.length, (j) {
             var item = provider.listDataHeaderMenu;
+            print(baseURL + '/' + pathBaseUrl + '/assets/kategori/' + provider.listDataHeaderMenu[j].icon);
             return Card(
               child: InkWell(
                 onTap: () {
@@ -42,8 +42,8 @@ class HeaderMenu extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
-                        height: 50,
-                        width: 60,
+                        height: 40,
+                        width: 50,
                         child: Container(
                           child: ClipOval(
                             child: new Center(
@@ -65,7 +65,7 @@ class HeaderMenu extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        height: 10,
+                        height: 12,
                       ),
                       RichText(
                         overflow: TextOverflow.ellipsis,
@@ -74,7 +74,7 @@ class HeaderMenu extends StatelessWidget {
                         text: TextSpan(
                           style: TextStyle(
                             color: Colors.black,
-                            fontSize: 12,
+                            fontSize: 10,
                           ),
                           text: provider.listDataHeaderMenu[j].nama,
                         ),

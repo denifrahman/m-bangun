@@ -64,11 +64,22 @@ class BlocOrder extends ChangeNotifier {
     notifyListeners();
   }
 
-  updateCart(body) async {
+  Future updateCart(body) async {
+    _isLoading = true;
+    notifyListeners();
     var result = await OrderRepository().updateCart(body);
-    if (result['meta']['success']) {
-      notifyListeners();
-    }
+    _isLoading = false;
+    notifyListeners();
+    return result;
+  }
+
+  num _counterQty = 1;
+
+  num get counterQty => _counterQty;
+
+  setcounterQty(num value) {
+    _counterQty = value;
+    notifyListeners();
   }
 
   clearCart() {

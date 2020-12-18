@@ -86,17 +86,19 @@ class _PhoneAuthGetPhoneState extends State<PhoneAuthGetPhone> {
       // ),
       key: scaffoldKey,
       backgroundColor: Colors.white.withOpacity(0.95),
-      body: Container(
-        color: Colors.white,
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              top: -MediaQuery.of(context).size.height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer(),
-            ),
-            _getBody(countriesProvider),
-          ],
+      body: SingleChildScrollView(
+        child: Container(
+          color: Colors.white,
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                top: -MediaQuery.of(context).size.height * .15,
+                right: -MediaQuery.of(context).size.width * .4,
+                child: BezierContainer(),
+              ),
+              _getBody(countriesProvider),
+            ],
+          ),
         ),
       ),
     );
@@ -243,8 +245,8 @@ class _PhoneAuthGetPhoneState extends State<PhoneAuthGetPhone> {
   startPhoneAuth() async {
     final phoneAuthDataProvider = Provider.of<PhoneAuthDataProvider>(context);
     final blocAuth = Provider.of<BlocAuth>(context);
-    int min = 100000; //min and max values act as your 6 digit range
-    int max = 999999;
+    int min = 1000; //min and max values act as your 6 digit range
+    int max = 9999;
     var randomizer = new Random();
     var rNum = min + randomizer.nextInt(max - min);
     var body = {
@@ -252,42 +254,40 @@ class _PhoneAuthGetPhoneState extends State<PhoneAuthGetPhone> {
       'no_telp':
           '62' + phoneAuthDataProvider.phoneNumberController.text.toString()
     };
-    
-    if(phoneAuthDataProvider.phoneNumberController.text != ''){
-
-    }
-    var result = await phoneAuthDataProvider.sendOtp(body);
-    if (result['otp'] != 'REJECTED') {
-      Flushbar(
-        title: "OTP SEND",
-        message: 'OTP SEND',
-        duration: Duration(seconds: 5),
-        backgroundColor: Colors.green,
-        flushbarPosition: FlushbarPosition.BOTTOM,
-        icon: Icon(
-          Icons.send,
-          color: Colors.white,
-        ),
-      )..show(context);
-      Navigator.of(context).push(
-        CupertinoPageRoute(
-          builder: (BuildContext context) => PhoneAuthVerify(
-            phoneNumber: phoneAuthDataProvider.phoneNumberController.text,
+    if (phoneAuthDataProvider.phoneNumberController.text != '') {
+      var result = await phoneAuthDataProvider.sendOtp(body);
+      if (result['otp'] != 'REJECTED') {
+        Flushbar(
+          title: "OTP SEND",
+          message: 'OTP SEND',
+          duration: Duration(seconds: 5),
+          backgroundColor: Colors.green,
+          flushbarPosition: FlushbarPosition.BOTTOM,
+          icon: Icon(
+            Icons.send,
+            color: Colors.white,
           ),
-        ),
-      );
-    } else {
-      Flushbar(
-        title: "OTP NOT SEND",
-        message: result['otp']+ ' Invalid nomor telepon',
-        duration: Duration(seconds: 5),
-        backgroundColor: Colors.black,
-        flushbarPosition: FlushbarPosition.BOTTOM,
-        icon: Icon(
-          Icons.error,
-          color: Colors.white,
-        ),
-      )..show(context);
+        )..show(context);
+        Navigator.of(context).push(
+          CupertinoPageRoute(
+            builder: (BuildContext context) => PhoneAuthVerify(
+              phoneNumber: phoneAuthDataProvider.phoneNumberController.text,
+            ),
+          ),
+        );
+      } else {
+        Flushbar(
+          title: "OTP NOT SEND",
+          message: result['otp'] + ' Invalid nomor telepon',
+          duration: Duration(seconds: 5),
+          backgroundColor: Colors.black,
+          flushbarPosition: FlushbarPosition.BOTTOM,
+          icon: Icon(
+            Icons.error,
+            color: Colors.white,
+          ),
+        )..show(context);
+      }
     }
   }
 }

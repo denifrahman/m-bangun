@@ -17,7 +17,6 @@ import 'package:apps/models/ProdukListM.dart';
 import 'package:apps/models/ProvinsiM.dart';
 import 'package:apps/models/SubKategoriM.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:package_info/package_info.dart';
 
 class DataProvider extends ChangeNotifier {
@@ -68,32 +67,8 @@ class DataProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  GoogleSignInAccount _currentUser;
 
-  GoogleSignInAccount get currentUser => _currentUser;
 
-  Future<void> handleSignIn() async {
-    try {
-      await _googleSignIn.signIn();
-      chekSession();
-    } catch (error) {
-      print(error);
-    }
-  }
-
-  GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: <String>['email'],
-  );
-
-  Future<void> handleSignOut() async {
-    _googleSignIn.disconnect().then((value) {
-      _googleSignIn.isSignedIn().then((value) {
-        if (!value) {
-          chekSession();
-        }
-      });
-    });
-  }
 
   setLoading(bool Boolean) {
     _isLoading = Boolean;
@@ -171,21 +146,7 @@ class DataProvider extends ChangeNotifier {
   }
 
   chekSession() async {
-    _googleSignIn.isSignedIn().then((value) {
-      print(value);
-      if (value) {
-        _currentUser = _googleSignIn.currentUser;
-        getCurrentLocation();
-        _isLogin = true;
-        getProfile();
-        notifyListeners();
-      } else {
-        _isLogin = false;
-        _verified = false;
-        _userKategori = null;
-        notifyListeners();
-      }
-    });
+
 //    token = await LocalStorage.sharedInstance.readValue('token');
 //    String dataSession = await LocalStorage.sharedInstance.readValue('session');
 ////    print(dataSession);

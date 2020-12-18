@@ -3,8 +3,8 @@ import 'package:apps/Utils/SnacbarLauncher.dart';
 import 'package:apps/Utils/TextBold.dart';
 import 'package:apps/Utils/TitleHeader.dart';
 import 'package:apps/providers/BlocAuth.dart';
-import 'package:apps/screen/PendaftaranScreen.dart';
 import 'package:apps/providers/BlocChatService.dart';
+import 'package:apps/screen/PendaftaranScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -116,7 +116,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                           Navigator.pop(context);
                                         }
                                         blocAuth.initChat();
-                                        Provider.of<ChatModel>(context).setUser();
+                                        // Provider.of<ChatModel>(context).setUser();
                                         blocAuth.checkSession();
                                         // _setUser();
                                       },

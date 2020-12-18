@@ -1,7 +1,12 @@
+import 'package:flutter_wordpress/flutter_wordpress.dart';
+// import 'package:apps/Utils/Modal/circular_modal.dart';
+// import 'package:apps/Utils/Modal/floating_modal.dart';
 import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/models/Cart.dart';
+import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocOrder.dart';
 import 'package:flutter/material.dart';
+// import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:money2/money2.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
@@ -50,8 +55,8 @@ class _ShopItemListState extends State<ShopItemList> {
                           margin: EdgeInsets.only(top: 0),
                           child: Image.network(
                             baseURL + '/' + pathBaseUrl + '/assets/toko/' + widget.chilrdern.foto,
-                            width: 80,
-                            height: 80,
+                            width: 50,
+                            height: 50,
                           ),
                         ),
                         SizedBox(
@@ -59,16 +64,16 @@ class _ShopItemListState extends State<ShopItemList> {
                         ),
                         widget.chilrdern.jenisOngkir == 'include_dalam_kota'
                             ? Text(
-                          'Free ongkir \ndalam kota',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 10, color: Colors.grey),
-                        )
+                                'Free ongkir \ndalam kota',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 10, color: Colors.grey),
+                              )
                             : widget.chilrdern.jenisOngkir == 'include'
-                            ? Text(
-                          'Free ongkir',
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
-                        )
-                            : Text('')
+                                ? Text(
+                                    'Free ongkir',
+                                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                                  )
+                                : Text('')
                       ],
                     ),
                     Column(
@@ -144,42 +149,119 @@ class _ShopItemListState extends State<ShopItemList> {
                     Container(
                       margin: const EdgeInsets.only(left: 0.0, top: 0, bottom: 49.0),
                       child: Theme(
-                        data: ThemeData(
-                            accentColor: Colors.black,
-                            textTheme: TextTheme(
-                              headline: TextStyle(fontFamily: 'Montserrat', fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
-                              body1: TextStyle(
-                                fontFamily: 'Montserrat',
-                                color: Colors.grey[400],
-                              ),
-                            )),
-                        child: widget.chilrdern.stok == '1'
-                            ? Text(
-                          '1',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                        )
-                            : NumberPicker.integer(
-                          initialValue: int.parse(widget.chilrdern.jumlah),
-                          minValue: 1,
-                          maxValue: int.parse(widget.chilrdern.stok),
-                          step: 1,
-                          onChanged: (value) {
-                            setState(() {
-                              oldValue = value;
-                            });
-                            var body = {
-                              'id': widget.chilrdern.id.toString(),
-                              'id_produk': widget.chilrdern.idProduk,
-                              'jumlah': oldValue.toString(),
-                              'harga': widget.chilrdern.harga.toString(),
-                              'subtotal': (int.parse(widget.chilrdern.harga) * value).toString()
-                            };
-                            blocOrder.updateCart(body);
-                          },
-                          itemExtent: 30,
-                          listViewWidth: 30,
-                        ),
-                      ),
+                          data: ThemeData(
+                              accentColor: Colors.black,
+                              textTheme: TextTheme(
+                                headline: TextStyle(fontFamily: 'Montserrat', fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
+                                body1: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  color: Colors.grey[400],
+                                ),
+                              )),
+                          child: widget.chilrdern.stok == '1'
+                              ? Text(
+                                  '1',
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                                )
+                              : InkWell(
+                                  onTap: () {
+                                    blocOrder.setcounterQty(int.parse(widget.chilrdern.jumlah));
+                                    // showFloatingModalBottomSheet(
+                                    //     context: context,
+                                    //     builder: (context) => StatefulBuilder(builder: (context, setState) {
+                                    //           return SingleChildScrollView(
+                                    //             controller: ModalScrollController.of(context),
+                                    //             child: Container(
+                                    //               padding: EdgeInsets.all(10),
+                                    //               child: Column(
+                                    //                 children: [
+                                    //                   Text(
+                                    //                     'Jumlah',
+                                    //                     style: Theme.of(context).textTheme.subtitle1,
+                                    //                   ),
+                                    //                   Row(
+                                    //                     crossAxisAlignment: CrossAxisAlignment.center,
+                                    //                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    //                     children: [
+                                    //                       InkWell(
+                                    //                         onTap: () {
+                                    //                           setState(() {
+                                    //                             blocOrder.setcounterQty(blocOrder.counterQty - 1);
+                                    //                           });
+                                    //                         },
+                                    //                         child: Container(
+                                    //                           color: int.parse(widget.chilrdern.jumlah) <= 1 ? Colors.grey : Colors.red,
+                                    //                           width: 30,
+                                    //                           height: 30,
+                                    //                           child: Center(
+                                    //                               child: Text(
+                                    //                             '-',
+                                    //                             style: TextStyle(color: Colors.white),
+                                    //                           )),
+                                    //                         ),
+                                    //                       ),
+                                    //                       Text(blocOrder.counterQty.toString()),
+                                    //                       InkWell(
+                                    //                         onTap: () {
+                                    //                           setState(() {
+                                    //                             blocOrder.setcounterQty(blocOrder.counterQty + 1);
+                                    //                           });
+                                    //                         },
+                                    //                         child: Container(
+                                    //                           color: Colors.red,
+                                    //                           width: 30,
+                                    //                           height: 30,
+                                    //                           child: Center(
+                                    //                               child: Text(
+                                    //                             '+',
+                                    //                             style: TextStyle(color: Colors.white),
+                                    //                           )),
+                                    //                         ),
+                                    //                       )
+                                    //                     ],
+                                    //                   ),
+                                    //                   TextButton(
+                                    //                       onPressed: () async {
+                                    //                         var body = {
+                                    //                           'id': widget.chilrdern.id.toString(),
+                                    //                           'id_produk': widget.chilrdern.idProduk,
+                                    //                           'jumlah': blocOrder.counterQty.toString(),
+                                    //                           'harga': widget.chilrdern.harga.toString(),
+                                    //                           'subtotal': (int.parse(widget.chilrdern.harga) * blocOrder.counterQty).toString()
+                                    //                         };
+                                    //                         Navigator.of(context).pop();
+                                    //                         var result = await blocOrder.updateCart(body);
+                                    //                       },
+                                    //                       child: Container(
+                                    //                         width: MediaQuery.of(context).size.width * 0.45,
+                                    //                           padding: EdgeInsets.all(10),
+                                    //                           decoration: BoxDecoration(
+                                    //                             color: Colors.cyan[800],
+                                    //                                 borderRadius: BorderRadius.all(Radius.circular(10))
+                                    //                           ),
+                                    //                           child: Center(child: Text('Simpan',style: TextStyle(color: Colors.white),))))
+                                    //                 ],
+                                    //               ),
+                                    //             ),
+                                    //           );
+                                    //         })).then((value) {
+                                    //   blocOrder.getCart(Provider.of<BlocAuth>(context).idUser);
+                                    // });
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(widget.chilrdern.jumlah),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Icon(
+                                        Icons.edit,
+                                        size: 12,
+                                      )
+                                    ],
+                                  ),
+                                )),
                     ),
                     Container(
                         child: InkWell(

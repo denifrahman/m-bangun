@@ -6,7 +6,8 @@ import 'package:apps/models/Categories.dart';
 import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocProduk.dart';
 import 'package:flutter/material.dart';
-import 'package:html_editor/html_editor.dart';
+import 'package:flutter_summernote/flutter_summernote.dart';
+// import 'package:html_editor/html_editor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +20,7 @@ class WidgetAddProduk extends StatefulWidget {
 }
 
 class _WidgetAddProdukState extends State<WidgetAddProduk> {
-  GlobalKey<HtmlEditorState> keyEditor = GlobalKey();
+  GlobalKey<FlutterSummernoteState> keyEditor = GlobalKey();
   String nama, berat, harga, minimal_pesanan, stok, panjang, deskripsi;
   String id_kategori = null;
   String kondisi = null;
@@ -489,12 +490,11 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                     Container(
                       height: 20,
                     ),
-                    HtmlEditor(
+                    FlutterSummernote(
                       hint: "Your text here...",
                       //value: "text content initial, if any",
                       key: keyEditor,
                       showBottomToolbar: true,
-                      useBottomSheet: true,
                       widthImage: '50%',
                       height: 400,
                     ),

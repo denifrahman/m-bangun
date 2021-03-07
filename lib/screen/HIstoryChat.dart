@@ -4,6 +4,7 @@ import 'package:apps/screen/KonsultasiScreen/presentation/widgets/ConversationSc
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat/dash_chat.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_wordpress/flutter_wordpress.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 
@@ -65,48 +66,56 @@ class _HistoryChatState extends State<HistoryChat> {
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.data == null)
-                      return CircularProgressIndicator();
+                      return Center(child: CircularProgressIndicator());
                     List<DocumentSnapshot> users = snapshot.data.documents;
                     var listUsers = users.map((i) => i.data()).toList();
                     var user = listUsers
                         .where((element) => element['uid'] == phone)
                         .toList();
-                    return Column(
-                      children: [
-                        ListTile(
-                          onTap: () {
-                            blocChat.setCurrentChatRoomId(
-                                _listMessage[index]['chatroomId']);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ConversationScreen(
-                                          fromUser: 'Chat',
-                                        )));
-                          },
-                          title: Text(
-                            user[0]['name'].toString(),
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.bold),
+                    if(user.length == 0){
+                      return Container(
+                        height: MediaQuery.of(context).size.height,
+                        child: Center(child: Text('no history chat'),),
+                      );
+                    }else{
+                      return Column(
+                        children: [
+                          ListTile(
+                            onTap: () {
+                              blocChat.setCurrentChatRoomId(
+                                  _listMessage[index]['chatroomId']);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ConversationScreen(
+                                        fromUser: 'Chat',
+                                      )));
+                            },
+                            title: Text(
+                              user[0]['name'].toString(),
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Text(_listMessage[index]['lastMessage']['text']
+                                .toString()),
+                            trailing: Text(
+                              Jiffy(
+                                  _listMessage[index]['lastMessage']['sendAt']
+                                      .toString(),
+                                  "yyyy-MM-dd")
+                                  .fromNow(),
+                              style: Theme.of(context).textTheme.caption,
+                            ),
+                            leading: CircleAvatar(
+                                radius: 25.0,
+                                backgroundColor: Colors.white,
+                                child: Image.network(user[0]['avatar'].toString())),
                           ),
-                          subtitle: Text(_listMessage[index]['lastMessage']['text']
-                              .toString()),
-                          trailing: Text(
-                            Jiffy(
-                                    _listMessage[index]['lastMessage']['sendAt']
-                                        .toString(),
-                                    "yyyy-MM-dd")
-                                .fromNow(),
-                            style: Theme.of(context).textTheme.caption,
-                          ),
-                          leading: CircleAvatar(
-                              radius: 25.0,
-                              backgroundColor: Colors.white,
-                              child: Image.network(user[0]['avatar'].toString())),
-                        ),
-                        Divider()
-                      ],
-                    );
+                          Divider()
+                        ],
+                      );
+                    }
+
                   });
 
             },

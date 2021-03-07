@@ -253,7 +253,7 @@ class _ListBidangKeahlianState extends State<ListBidangKeahlian> {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(item.namaBidangKeahlian,
+                        Text(item.namaBidangKeahlian.toString(),
                             style: TextStyle(
                               fontSize: 12,
                             )),

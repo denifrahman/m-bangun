@@ -21,7 +21,8 @@ class Keranjang extends StatefulWidget {
   _KeranjangState createState() => _KeranjangState();
 }
 
-final IDR = Currency.create('IDR', 0, symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
+final IDR = Currency.create('IDR', 0,
+    symbol: 'Rp', invertSeparators: true, pattern: 'S ###.###');
 
 class _KeranjangState extends State<Keranjang> {
   @override
@@ -48,25 +49,30 @@ class _KeranjangState extends State<Keranjang> {
                     onRefresh();
                   },
                   child: Container(
-                    height: (MediaQuery.of(context).size.height - 20) - (appBar.preferredSize.height + MediaQuery.of(context).padding.top),
+                    height: (MediaQuery.of(context).size.height - 20) -
+                        (appBar.preferredSize.height +
+                            MediaQuery.of(context).padding.top),
                     child: Column(
                       children: [
                         Expanded(
                           child: blocOrder.listCart.isEmpty
                               ? Center(
-                            child: Sup(
-                              title: Text('Belanja dulu yuk !!!'),
-                              image: Image.asset(
-                                'assets/icons/empty_cart.png',
-                                height: 150,
-                              ),
-                              subtitle: Text('Data tidak tersedia'),
-                            ),
-                          )
+                                  child: Sup(
+                                    title: Text('Belanja dulu yuk !!!'),
+                                    image: Image.asset(
+                                      'assets/icons/empty_cart.png',
+                                      height: 150,
+                                    ),
+                                    subtitle: Text('Data tidak tersedia'),
+                                  ),
+                                )
                               : ListView.builder(
-                            itemCount: blocOrder.listCart.length,
+                                  itemCount: blocOrder.listCart.length,
                                   itemBuilder: (_, i) {
-                                    var subTotal = blocOrder.listCart[i].chilrdern.map<int>((m) => int.parse(m.subtotal)).reduce((a, b) => a + b);
+                                    var subTotal = blocOrder
+                                        .listCart[i].chilrdern
+                                        .map<int>((m) => int.parse(m.subtotal))
+                                        .reduce((a, b) => a + b);
                                     return Container(
                                       child: Column(
                                         children: [
@@ -75,12 +81,20 @@ class _KeranjangState extends State<Keranjang> {
                                           ),
                                           Container(
                                             color: Colors.white,
-                                            padding: EdgeInsets.symmetric(horizontal: 10),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10),
                                             child: InkWell(
                                               onTap: () {
-                                                var idToko = blocOrder.listCart[i].chilrdern[0].idToko;
-                                                var fotoSampul = blocOrder.listCart[i].chilrdern[0].fotoToko;
-                                                blocProduk.getDetailStore(idToko);
+                                                var idToko = blocOrder
+                                                    .listCart[i]
+                                                    .chilrdern[0]
+                                                    .idToko;
+                                                var fotoSampul = blocOrder
+                                                    .listCart[i]
+                                                    .chilrdern[0]
+                                                    .fotoToko;
+                                                blocProduk
+                                                    .getDetailStore(idToko);
                                                 Navigator.push(
                                                     context,
                                                     SlideRightRoute(
@@ -88,15 +102,25 @@ class _KeranjangState extends State<Keranjang> {
                                                       id: idToko,
                                                       image: fotoSampul,
                                                     ))).then((value) {
-                                                  blocOrder.getCart(blocAuth.idUser);
+                                                  blocOrder
+                                                      .getCart(blocAuth.idUser);
                                                 });
                                               },
                                               child: ListTile(
-                                                title: Text(blocOrder.listCart[i].flag),
+                                                title: Text(
+                                                    blocOrder.listCart[i].flag),
                                                 leading: Padding(
-                                                  padding: const EdgeInsets.all(8.0),
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
                                                   child: Image.network(
-                                                    baseURL + '/' + pathBaseUrl + '/assets/toko/' + blocOrder.listCart[i].chilrdern[0].fotoToko,
+                                                    baseURL +
+                                                        '/' +
+                                                        pathBaseUrl +
+                                                        '/assets/toko/' +
+                                                        blocOrder
+                                                            .listCart[i]
+                                                            .chilrdern[0]
+                                                            .fotoToko,
                                                     width: 40,
                                                     height: 80,
                                                   ),
@@ -106,22 +130,26 @@ class _KeranjangState extends State<Keranjang> {
                                                     Icon(
                                                       Icons.star,
                                                       size: 15,
-                                                      color: Colors.orangeAccent,
+                                                      color:
+                                                          Colors.orangeAccent,
                                                     ),
                                                     Icon(
                                                       Icons.star,
                                                       size: 15,
-                                                      color: Colors.orangeAccent,
+                                                      color:
+                                                          Colors.orangeAccent,
                                                     ),
                                                     Icon(
                                                       Icons.star,
                                                       size: 15,
-                                                      color: Colors.orangeAccent,
+                                                      color:
+                                                          Colors.orangeAccent,
                                                     ),
                                                     Icon(
                                                       Icons.star,
                                                       size: 15,
-                                                      color: Colors.orangeAccent,
+                                                      color:
+                                                          Colors.orangeAccent,
                                                     ),
                                                   ],
                                                 ),
@@ -131,103 +159,232 @@ class _KeranjangState extends State<Keranjang> {
                                           Container(
                                             child: ListView.builder(
                                               shrinkWrap: true,
-                                              physics: NeverScrollableScrollPhysics(),
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
                                               itemBuilder: (_, j) {
-                                                if (blocOrder.listCart[i].chilrdern[j].aktif == '0' || blocOrder.listCart[i].chilrdern[j].stok == '0') {
+                                                if (blocOrder
+                                                            .listCart[i]
+                                                            .chilrdern[j]
+                                                            .aktif ==
+                                                        '0' ||
+                                                    blocOrder
+                                                            .listCart[i]
+                                                            .chilrdern[j]
+                                                            .stok ==
+                                                        '0') {
                                                   return ShopItemListNonAtif(
-                                                    chilrdern: blocOrder.listCart[i].chilrdern[j],
+                                                    chilrdern: blocOrder
+                                                        .listCart[i]
+                                                        .chilrdern[j],
                                                     index: j,
                                                     onRemove: () {
-                                                      blocOrder.removeCart(blocOrder.listCart[i].chilrdern[j].id);
+                                                      blocOrder.removeCart(
+                                                          blocOrder.listCart[i]
+                                                              .chilrdern[j].id);
                                                     },
                                                   );
                                                 } else {
                                                   return ShopItemList(
-                                                    chilrdern: blocOrder.listCart[i].chilrdern[j],
+                                                    chilrdern: blocOrder
+                                                        .listCart[i]
+                                                        .chilrdern[j],
                                                     index: j,
-                                                    onRemove: () {
-                                                      blocOrder.removeCart(blocOrder.listCart[i].chilrdern[j].id);
+                                                    onRemove: () async {
+                                                          await blocOrder
+                                                              .removeCart(
+                                                                  blocOrder
+                                                                      .listCart[
+                                                                          i]
+                                                                      .chilrdern[
+                                                                          j]
+                                                                      .id);
+                                                      onRefresh();
                                                     },
                                                   );
                                                 }
                                               },
-                                              itemCount: blocOrder.listCart[i].chilrdern.length,
+                                              itemCount: blocOrder
+                                                  .listCart[i].chilrdern.length,
                                             ),
                                           ),
                                           Container(
-                                            padding: EdgeInsets.symmetric(horizontal: 20.0),
-                                            height: MediaQuery.of(context).size.height * 0.06,
-                                            color: Colors.cyan[500].withOpacity(0.7),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 20.0),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.06,
+                                            color: Colors.cyan[500]
+                                                .withOpacity(0.7),
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: <Widget>[
                                                 Text(
                                                   'Subtotal',
-                                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 16),
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      fontSize: 16),
                                                 ),
                                                 Text(
-                                                  blocOrder.listCart[i].chilrdern.length.toString() + ' items',
-                                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w200, fontSize: 16),
+                                                  blocOrder.listCart[i]
+                                                          .chilrdern.length
+                                                          .toString() +
+                                                      ' items',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w200,
+                                                      fontSize: 16),
                                                 ),
                                                 Text(
-                                                  Money.fromInt(subTotal, IDR).toString(),
-                                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                                                  Money.fromInt(subTotal, IDR)
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16),
                                                 ),
                                               ],
                                             ),
                                           ),
                                           Container(
-                                            width: MediaQuery.of(context).size.width * 0.95,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.95,
                                             margin: EdgeInsets.only(top: 5),
                                             height: 50,
-                                            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)), color: Colors.deepOrange),
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10)),
+                                                color: Colors.deepOrange),
                                             child: InkWell(
                                               onTap: () async {
                                                 blocProfile.getProvince();
-                                                var idKecamatanToko = blocOrder.listCart[i].chilrdern[0].idKecamatan;
-                                                blocProfile.getSubDistrictById(idKecamatanToko);
+                                                var idKecamatanToko = blocOrder
+                                                    .listCart[i]
+                                                    .chilrdern[0]
+                                                    .idKecamatan;
+                                                blocProfile.getSubDistrictById(
+                                                    idKecamatanToko);
                                                 blocOrder.getMetodePembayaran();
                                                 blocOrder.clearCost();
                                                 int totalDalamKota = 0;
                                                 int totalRajaOngkir = 0;
-                                                if (blocProfile.listUserAddressDefault.isNotEmpty) {
-                                                  for (var k = 0; k < blocOrder.listCart[i].chilrdern.length; k++) {
-                                                    var idKotaPembeli = blocProfile.listUserAddressDefault[0].idKota;
-                                                    var idKotaToko = blocOrder.listCart[i].chilrdern[k].idKota;
-                                                    var jenisOngkir = blocOrder.listCart[i].chilrdern[k].jenisOngkir;
-                                                    if (jenisOngkir == 'include_dalam_kota') {
-                                                      if (idKotaToko != idKotaPembeli) {
-                                                        var beratTotal = int.parse(blocOrder.listCart[i].chilrdern[k].berat.toString()) *
-                                                            int.parse(blocOrder.listCart[i].chilrdern[k].jumlah.toString());
-                                                        totalDalamKota += beratTotal;
+                                                if (blocProfile
+                                                    .listUserAddressDefault
+                                                    .isNotEmpty) {
+                                                  for (var k = 0;
+                                                      k <
+                                                          blocOrder.listCart[i]
+                                                              .chilrdern.length;
+                                                      k++) {
+                                                    var idKotaPembeli = blocProfile
+                                                        .listUserAddressDefault[
+                                                            0]
+                                                        .idKota;
+                                                    var idKotaToko = blocOrder
+                                                        .listCart[i]
+                                                        .chilrdern[k]
+                                                        .idKota;
+                                                    var jenisOngkir = blocOrder
+                                                        .listCart[i]
+                                                        .chilrdern[k]
+                                                        .jenisOngkir;
+                                                    if (jenisOngkir ==
+                                                        'include_dalam_kota') {
+                                                      if (idKotaToko !=
+                                                          idKotaPembeli) {
+                                                        var beratTotal = int
+                                                                .parse(blocOrder
+                                                                    .listCart[i]
+                                                                    .chilrdern[
+                                                                        k]
+                                                                    .berat
+                                                                    .toString()) *
+                                                            int.parse(blocOrder
+                                                                .listCart[i]
+                                                                .chilrdern[k]
+                                                                .jumlah
+                                                                .toString());
+                                                        totalDalamKota +=
+                                                            beratTotal;
                                                       }
                                                     }
-                                                    if (jenisOngkir == 'raja_ongkir') {
-                                                      var beratTotal = int.parse(blocOrder.listCart[i].chilrdern[k].berat.toString()) *
-                                                          int.parse(blocOrder.listCart[i].chilrdern[k].jumlah.toString());
-                                                      totalRajaOngkir += beratTotal;
+                                                    if (jenisOngkir ==
+                                                        'raja_ongkir') {
+                                                      var beratTotal = int
+                                                              .parse(blocOrder
+                                                                  .listCart[i]
+                                                                  .chilrdern[k]
+                                                                  .berat
+                                                                  .toString()) *
+                                                          int.parse(blocOrder
+                                                              .listCart[i]
+                                                              .chilrdern[k]
+                                                              .jumlah
+                                                              .toString());
+                                                      totalRajaOngkir +=
+                                                          beratTotal;
                                                     }
                                                   }
                                                   var param = {
-                                                    'origin': idKecamatanToko.toString(),
-                                                    'destination': blocProfile.listUserAddressDefault[0].idKecamatan,
-                                                    'weight': (totalDalamKota + totalRajaOngkir) == 0 ? '1' : (totalDalamKota + totalRajaOngkir).toString()
+                                                    'origin': idKecamatanToko
+                                                        .toString(),
+                                                    'destination': blocProfile
+                                                        .listUserAddressDefault[
+                                                            0]
+                                                        .idKecamatan,
+                                                    'weight': (totalDalamKota +
+                                                                totalRajaOngkir) ==
+                                                            0
+                                                        ? '1'
+                                                        : (totalDalamKota +
+                                                                totalRajaOngkir)
+                                                            .toString()
                                                   };
                                                   blocOrder.getCost(param);
                                                 }
-                                                var result = blocOrder.getCart(blocAuth.idUser);
+                                                var result = blocOrder
+                                                    .getCart(blocAuth.idUser);
                                                 result.then((value) {
-                                                  var aktif = value[i]['chilrdern'].where((element) => element['aktif'] == '0').length;
-                                                  var stok = value[i]['chilrdern'].where((element) => element['stok'] == '0').length;
+                                                  var aktif = value[i]
+                                                          ['chilrdern']
+                                                      .where((element) =>
+                                                          element['aktif'] ==
+                                                          '0')
+                                                      .length;
+                                                  var stok = value[i]
+                                                          ['chilrdern']
+                                                      .where((element) =>
+                                                          element['stok'] ==
+                                                          '0')
+                                                      .length;
                                                   if (aktif <= 0 && stok <= 0) {
                                                     print('push');
                                                     Navigator.push(
                                                         context,
                                                         SlideRightRoute(
                                                             page: CheckoutScreen(
-                                                                listCart: blocOrder.listCart[i],
+                                                                listCart: blocOrder
+                                                                        .listCart[
+                                                                    i],
                                                                 index: i,
-                                                                subtotal: blocOrder.listCart[i].chilrdern.map<int>((m) => int.parse(m.subtotal)).reduce((a, b) => a + b))));
+                                                                subtotal: blocOrder
+                                                                    .listCart[i]
+                                                                    .chilrdern
+                                                                    .map<int>((m) =>
+                                                                        int.parse(m
+                                                                            .subtotal))
+                                                                    .reduce((a,
+                                                                            b) =>
+                                                                        a +
+                                                                        b))));
                                                   } else {
                                                     print('not');
                                                   }
@@ -235,11 +392,27 @@ class _KeranjangState extends State<Keranjang> {
                                               },
                                               child: Center(
                                                 child: Text(
-                                                  blocOrder.listCart[i].chilrdern.where((element) => element.aktif == '0').length >= 1 ||
-                                                          blocOrder.listCart[i].chilrdern.where((element) => element.stok == '0').length >= 1
+                                                  blocOrder.listCart[i]
+                                                                  .chilrdern
+                                                                  .where((element) =>
+                                                                      element
+                                                                          .aktif ==
+                                                                      '0')
+                                                                  .length >=
+                                                              1 ||
+                                                          blocOrder.listCart[i]
+                                                                  .chilrdern
+                                                                  .where((element) =>
+                                                                      element
+                                                                          .stok ==
+                                                                      '0')
+                                                                  .length >=
+                                                              1
                                                       ? 'Hapus produk tidak tersedia'
                                                       : 'Checkout',
-                                                  style: TextStyle(color: Colors.white, fontSize: 18),
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 18),
                                                 ),
                                               ),
                                             ),

@@ -93,34 +93,6 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           title: 'Flutter Theme Provider',
           theme: light,
-          // builder: (context, widget) {
-          //   return Consumer<ChatModel>(builder: (context, chatModel, child) {
-          //     return StreamChat(
-          //       streamChatThemeData: StreamChatThemeData.fromTheme(light).copyWith(
-          //         ownMessageTheme: MessageTheme(
-          //           messageBackgroundColor: Theme.of(context).primaryColor.withOpacity(0.6),
-          //           messageText: TextStyle(
-          //             color: Colors.white,
-          //           ),
-          //           avatarTheme: AvatarTheme(
-          //               // borderRadius: BorderRadius.circular(8),
-          //               ),
-          //         ),
-          //         otherMessageTheme: MessageTheme(
-          //           messageBackgroundColor: Theme.of(context).primaryColor,
-          //           messageText: TextStyle(
-          //             color: Colors.white,
-          //           ),
-          //           avatarTheme: AvatarTheme(
-          //               // borderRadius: BorderRadius.circular(8),
-          //               ),
-          //         ),
-          //       ),
-          //       child: widget,
-          //       client: chatModel.client,
-          //     );
-          //   });
-          // },
           home: SplashScreen(),
           initialRoute: '/',
           routes: routes),

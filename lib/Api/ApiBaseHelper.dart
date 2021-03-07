@@ -18,8 +18,8 @@ class ApiBaseHelper {
     try {
       final _url = Uri.https(_baseUrl, _path + url, param);
       final response = await http.get(_url);
-      // print(_url);
-      // print(response.body);
+      print(_url);
+      print(response.body);
       responseJson = _returnResponse(response);
     } on SocketException {
       return 'Conncetion Error';
@@ -50,6 +50,7 @@ class ApiBaseHelper {
       for (var file in files) {
         if (file != null) {
           final mimeTypeprodukthumbnail = lookupMimeType(file.path, headerBytes: [0xFF, 0xD8]).split('/');
+          print(mimeTypeprodukthumbnail);
           final foto = await http.MultipartFile.fromPath('foto[]', file.path, contentType: MediaType(mimeTypeprodukthumbnail[0], mimeTypeprodukthumbnail[1]));
           request.files.addAll([foto]);
         }

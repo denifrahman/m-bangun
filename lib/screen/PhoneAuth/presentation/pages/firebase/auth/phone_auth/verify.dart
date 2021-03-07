@@ -39,8 +39,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
   FocusNode focusNode5 = FocusNode();
   FocusNode focusNode6 = FocusNode();
   String code = "";
-  final scaffoldKey =
-      GlobalKey<ScaffoldState>(debugLabel: "scaffold-verify-phone");
+  final scaffoldKey = GlobalKey<ScaffoldState>(debugLabel: "scaffold-verify-phone");
   var onTapRecognizer;
 
   TextEditingController textEditingController = TextEditingController();
@@ -129,18 +128,14 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
                   ),
                 ),
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8),
                   child: RichText(
                     text: TextSpan(
                         text: "Masukkan kode yang dikirim ke ",
                         children: [
                           TextSpan(
                               text: '+62' + widget.phoneNumber,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15)),
+                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15)),
                         ],
                         style: TextStyle(color: Colors.black54, fontSize: 15)),
                     textAlign: TextAlign.center,
@@ -152,8 +147,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
                 Form(
                   key: formKey,
                   child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 30),
+                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 30),
                       child: PinCodeTextField(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         appContext: context,
@@ -178,8 +172,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
                           inactiveColor: Colors.white,
                           fieldHeight: 45,
                           fieldWidth: 45,
-                          activeFillColor:
-                              hasError ? Colors.orange : Colors.white,
+                          activeFillColor: hasError ? Colors.orange : Colors.white,
                         ),
                         cursorColor: Colors.black,
                         animationDuration: Duration(milliseconds: 300),
@@ -217,10 +210,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: Text(
                     hasError ? "*Please fill up all the cells properly" : "",
-                    style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400),
+                    style: TextStyle(color: Colors.red, fontSize: 12, fontWeight: FontWeight.w400),
                   ),
                 ),
                 SizedBox(
@@ -235,18 +225,14 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
                         TextSpan(
                             text: " KIRIM ULANG",
                             recognizer: onTapRecognizer,
-                            style: TextStyle(
-                                color: Color(0xFF91D3B3),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16))
+                            style: TextStyle(color: Color(0xFF91D3B3), fontWeight: FontWeight.bold, fontSize: 16))
                       ]),
                 ),
                 SizedBox(
                   height: 14,
                 ),
                 Container(
-                  margin: const EdgeInsets.symmetric(
-                      vertical: 16.0, horizontal: 30),
+                  margin: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 30),
                   child: ButtonTheme(
                     height: 50,
                     child: FlatButton(
@@ -269,26 +255,15 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
                       child: Center(
                           child: Text(
                         "VERIFY".toUpperCase(),
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold),
+                        style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                       )),
                     ),
                   ),
-                  decoration: BoxDecoration(
-                      color: Colors.green.shade300,
-                      borderRadius: BorderRadius.circular(5),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.green.shade200,
-                            offset: Offset(1, -2),
-                            blurRadius: 5),
-                        BoxShadow(
-                            color: Colors.green.shade200,
-                            offset: Offset(-1, 2),
-                            blurRadius: 5)
-                      ]),
+                  decoration:
+                      BoxDecoration(color: Colors.green.shade300, borderRadius: BorderRadius.circular(5), boxShadow: [
+                    BoxShadow(color: Colors.green.shade200, offset: Offset(1, -2), blurRadius: 5),
+                    BoxShadow(color: Colors.green.shade200, offset: Offset(-1, 2), blurRadius: 5)
+                  ]),
                 ),
               ],
             ),
@@ -313,8 +288,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
     var body = {'code_otp': textEditingController.text, 'expired': 'f'};
     var result = await provider.verifyOTPAndLogin(body);
     if (result['meta']['success']) {
-      LocalStorage.sharedInstance.writeValue(
-          key: 'no_telp', value: "62" + provider.phoneNumberController.text);
+      LocalStorage.sharedInstance.writeValue(key: 'no_telp', value: "62" + provider.phoneNumberController.text);
       Flushbar(
         title: "Verified",
         message: result['meta']['status_message'],
@@ -327,10 +301,11 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
         ),
       )..show(context);
       blocAuth.setPhoneNumber("62" + provider.phoneNumberController.text);
-      await Provider.of<BlocAuth>(context).checkSession();
       // await Provider.of<BlocAuth>(context).initChat();
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => BottomAnimateBar()));
+      await blocAuth.handleSignIn();
+      if (blocAuth.googleCurrentUser != null) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomAnimateBar()));
+      }
     } else {
       Flushbar(
         title: "Error",
@@ -386,8 +361,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
           cursorColor: Colors.white,
 
           keyboardType: TextInputType.number,
-          style: TextStyle(
-              fontSize: 20.0, fontWeight: FontWeight.w600, color: Colors.white),
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600, color: Colors.white),
           // decoration: InputDecoration(
           //     contentPadding: const EdgeInsets.only(
           //         bottom: 10.0, top: 10.0, left: 4.0, right: 4.0),

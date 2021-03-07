@@ -116,7 +116,7 @@ class ProfileScreen extends StatelessWidget {
                                           height: 60.0,
                                           child: ClipOval(
                                             child: Image.network(
-                                              blocAuth.currentUserLogin['photo_url'] == null ? dataProvider.fotoNull : blocAuth.currentUserLogin['photo_url'],
+                                              blocAuth.googleCurrentUser == null ? '': blocAuth.googleCurrentUser.photoUrl.toString(),
                                               fit: BoxFit.cover,
                                               width: 80,
                                             ),

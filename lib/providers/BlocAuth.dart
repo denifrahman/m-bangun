@@ -7,16 +7,21 @@ import 'package:apps/Utils/SettingApp.dart';
 import 'package:apps/models/Mitra.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat/dash_chat.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_session/flutter_session.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:package_info/package_info.dart';
+import 'package:start_jwt/json_web_token.dart';
 
 class BlocAuth extends ChangeNotifier {
   BlocAuth() {
     // initChat();
+    _getUserGoogle();
   }
 
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   bool _isLoading = false;
   bool _isLogin = false;
   String _statusToko = '0';
@@ -63,6 +68,63 @@ class BlocAuth extends ChangeNotifier {
 
   double get newVersion => _newVersion;
 
+  GoogleSignIn _googleSignIn = GoogleSignIn();
+  GoogleSignInAccount _currentUser;
+
+  GoogleSignInAccount get googleCurrentUser => _currentUser;
+
+  UserCredential _userCredential;
+
+  Future _getUserGoogle() async {
+    _googleSignIn.signInSilently();
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) async {
+      if (account != null) {
+        _currentUser = account;
+        final GoogleSignInAuthentication googleAuth = await _currentUser.authentication;
+
+        final GoogleAuthCredential googleAuthCredential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        //Authenticate against Firebase with Google credentials
+        await firebaseAuth
+            .signInWithCredential(googleAuthCredential)
+            .then((userCredential) => {_userCredential = userCredential});
+      }
+      checkSession();
+    });
+    // var setData = await _googleSignIn.currentUser;
+    print(_googleSignIn.currentUser == null);
+    if (_googleSignIn.currentUser != null) {
+      _currentUser = _googleSignIn.currentUser;
+      final GoogleSignInAuthentication googleAuth = await _googleSignIn.currentUser.authentication;
+
+      final GoogleAuthCredential googleAuthCredential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      //Authenticate against Firebase with Google credentials
+      await firebaseAuth
+          .signInWithCredential(googleAuthCredential)
+          .then((userCredential) => {_userCredential = userCredential});
+      _getOrCreateUserData();
+    } else {
+      // handleSignIn();
+    }
+  }
+
+  Future handleSignIn() async {
+    _googleSignIn.signInSilently();
+    try {
+      await _googleSignIn.signIn();
+      _getUserGoogle();
+    } catch (error) {
+      print(error);
+    }
+  }
+
   Future initChat() async {
     _isLoading = true;
     notifyListeners();
@@ -74,8 +136,7 @@ class BlocAuth extends ChangeNotifier {
     // print(map.toString() + ' inichat');
     var result = await getOrCreate(map);
     if (result['success']) {
-      LocalStorage.sharedInstance
-          .writeValue(key: 'chatToken', value: json.encode(result));
+      LocalStorage.sharedInstance.writeValue(key: 'chatToken', value: json.encode(result));
     }
     ;
     _isLoading = false;
@@ -129,8 +190,7 @@ class BlocAuth extends ChangeNotifier {
     var deviceData = FlutterSession().get('deviceData');
     deviceData.then((value) async {
       var devices = value['name'] == null ? value['brand'] : value['name'];
-      var system =
-          value['systemName'] == null ? 'Android' : value['systemName'];
+      var system = value['systemName'] == null ? 'Android' : value['systemName'];
       var param = {
         'id_user': idUser.toString(),
         'fcm_token': token.toString(),
@@ -168,12 +228,12 @@ class BlocAuth extends ChangeNotifier {
     var dataUser = result['data'][0];
     final ChatUser data = ChatUser(
       name: dataUser['nama'].toString(),
-      avatar: 'https://mbangun.id//api-v2//assets/kategori/worker.png',
+      avatar: _currentUser.photoUrl,
       uid: dataUser['no_hp'].toString().replaceAll('+', ''),
     );
-    print(data.toJson());
-    await Firestore.instance.collection('users').document(data.uid).set(data.toJson());
+    await FirebaseFirestore.instance.collection('users').doc(data.uid).set(data.toJson());
     _currentUserChat = data;
+    print(currentUserChat.toString() + 'userChat');
     notifyListeners();
   }
 
@@ -204,10 +264,10 @@ class BlocAuth extends ChangeNotifier {
           _connection = true;
           _token = result['token'];
           _idToko = result['data'][0]['id_toko'];
+          LocalStorage.sharedInstance.writeValue(
+              key: 'id_toko', value: result['data'][0]['id_toko'] == null ? "" : result['data'][0]['id_toko']);
           LocalStorage.sharedInstance
-              .writeValue(key: 'id_toko', value: result['data'][0]['id_toko'] == null ? "" : result['data'][0]['id_toko']);
-          LocalStorage.sharedInstance
-              .writeValue(key: 'id_user', value: result['data'][0]['id'] == null ? "" : result['data'][0]['id'] );
+              .writeValue(key: 'id_user', value: result['data'][0]['id'] == null ? "" : result['data'][0]['id']);
           _idUser = result['data'][0]['id'];
           var fcmToken = await FlutterSession().get('fcm_token');
           await setFcmToken(fcmToken);
@@ -230,16 +290,13 @@ class BlocAuth extends ChangeNotifier {
     notifyListeners();
     var param = {'': ''};
     var result = await AuthRepository().checkVersionApp(param);
-    if (result.toString() == '111' ||
-        result.toString() == '101' ||
-        result.toString() == 'Conncetion Error') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       notifyListeners();
       return result;
     } else {
-      _newVersion = double.parse(
-          result['data'][0]['versi_nomor'].trim().replaceAll(".", ""));
+      _newVersion = double.parse(result['data'][0]['versi_nomor'].trim().replaceAll(".", ""));
       if (newVersion > currentVersion) {
         _showVersionDialog = true;
         notifyListeners();
@@ -254,9 +311,7 @@ class BlocAuth extends ChangeNotifier {
   getNotification() async {
     var param = {'id_user': _idUser, 'limit': '20'};
     var result = await AuthRepository().getNotification(param);
-    if (result.toString() == '111' ||
-        result.toString() == '101' ||
-        result.toString() == 'Conncetion Error') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       notifyListeners();
@@ -287,15 +342,9 @@ class BlocAuth extends ChangeNotifier {
   int get coundNotification => _coundNotification;
 
   getNotificationUnread() async {
-    var param = {
-      'id_user': idUser.toString(),
-      'status': 'unread',
-      "limit": '20'
-    };
+    var param = {'id_user': idUser.toString(), 'status': 'unread', "limit": '20'};
     var result = await AuthRepository().getNotification(param);
-    if (result.toString() == '111' ||
-        result.toString() == '101' ||
-        result.toString() == 'Conncetion Error') {
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       notifyListeners();
@@ -329,18 +378,16 @@ class BlocAuth extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await AuthRepository().getMitraByParam(param);
-    // print(result);
-    if (result.toString() == '111' ||
-        result.toString() == '101' ||
-        result.toString() == 'Conncetion Error') {
+    print(result);
+    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       notifyListeners();
     } else {
-      _isLoading = false;
-      _connection = true;
       Iterable list = result['data'];
       _listMitra = list.map((e) => Mitra.fromJson(e)).toList();
+      _isLoading = false;
+      _connection = true;
       notifyListeners();
     }
   }

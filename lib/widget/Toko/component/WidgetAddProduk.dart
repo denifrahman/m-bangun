@@ -8,6 +8,7 @@ import 'package:apps/providers/BlocProduk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_summernote/flutter_summernote.dart';
 // import 'package:html_editor/html_editor.dart';
+// import 'package:html_editor/html_editor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +22,7 @@ class WidgetAddProduk extends StatefulWidget {
 
 class _WidgetAddProdukState extends State<WidgetAddProduk> {
   GlobalKey<FlutterSummernoteState> keyEditor = GlobalKey();
+  // GlobalKey<HtmlEditorState> keyEditor = GlobalKey();
   String nama, berat, harga, minimal_pesanan, stok, panjang, deskripsi;
   String id_kategori = null;
   String kondisi = null;
@@ -498,6 +500,14 @@ class _WidgetAddProdukState extends State<WidgetAddProduk> {
                       widthImage: '50%',
                       height: 400,
                     ),
+                    // HtmlEditor(
+                    //   value: blocProduk.detailProduct[0].deskripsi.toString(),
+                    //   key: keyEditor,
+                    //   showBottomToolbar: true,
+                    //   useBottomSheet: false,
+                    //   widthImage: '50%',
+                    //   height: 400,
+                    // ),
                     Container(
                       height: 20,
                     ),

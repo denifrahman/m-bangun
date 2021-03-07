@@ -55,13 +55,16 @@ class BlocOrder extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  removeCart(id) async {
+  Future removeCart(id) async {
+    _isLoading = true;
+    notifyListeners();
     var body = new Map<String, String>();
     body['id'] = id.toString();
     var result = await OrderRepository().removeCart(body);
-//    print(result);
-    if (result['meta']['success']) {}
+    print(result);
+    _isLoading = false;
     notifyListeners();
+    return result;
   }
 
   Future updateCart(body) async {
@@ -89,7 +92,9 @@ class BlocOrder extends ChangeNotifier {
 
   addToCart(body) async {
     var result = await OrderRepository().addToCart(body);
-    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
+    if (result.toString() == '111' ||
+        result.toString() == '101' ||
+        result.toString() == 'Conncetion Error') {
       _connection = false;
 
       notifyListeners();
@@ -116,7 +121,9 @@ class BlocOrder extends ChangeNotifier {
     notifyListeners();
     var param = {'id_user': id_user.toString()};
     var result = await OrderRepository().getCart(param);
-    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
+    if (result.toString() == '111' ||
+        result.toString() == '101' ||
+        result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       _listCart = [];
@@ -171,7 +178,8 @@ class BlocOrder extends ChangeNotifier {
 
   Map<String, dynamic> _listMetodePembayaranSelected = {};
 
-  Map<String, dynamic> get listMetodePembayaranSelected => _listMetodePembayaranSelected;
+  Map<String, dynamic> get listMetodePembayaranSelected =>
+      _listMetodePembayaranSelected;
 
   onChangeMetodePembayaran(Map<String, dynamic> body) {
     _listMetodePembayaranSelected = body;
@@ -265,25 +273,53 @@ class BlocOrder extends ChangeNotifier {
   int get countSaleBatal => _countSaleBatal;
 
   setCountPembelian() {
-    _countMenunggu = _listCountOrder.where((element) => element.statusPembayaran == 'menunggu').length;
-    _countTerbayar = _listCountOrder.where((element) => element.statusPembayaran == 'terbayar').length;
-    _countMenungguKonfirmasi = _listCountOrder.where((element) => element.statusOrder == 'menunggu konfirmasi').length;
-    _countDikemas = _listCountOrder.where((element) => element.statusOrder == 'dikemas').length;
-    _countDikirim = _listCountOrder.where((element) => element.statusOrder == 'dikirim').length;
-    _countUlasan = _listCountOrder.where((element) => element.statusOrder == 'ulasan').length;
-    _countSelesai = _listCountOrder.where((element) => element.statusOrder == 'selesai').length;
-    _countBatal = _listCountOrder.where((element) => element.statusOrder == 'batal').length;
+    _countMenunggu = _listCountOrder
+        .where((element) => element.statusPembayaran == 'menunggu')
+        .length;
+    _countTerbayar = _listCountOrder
+        .where((element) => element.statusPembayaran == 'terbayar')
+        .length;
+    _countMenungguKonfirmasi = _listCountOrder
+        .where((element) => element.statusOrder == 'menunggu konfirmasi')
+        .length;
+    _countDikemas = _listCountOrder
+        .where((element) => element.statusOrder == 'dikemas')
+        .length;
+    _countDikirim = _listCountOrder
+        .where((element) => element.statusOrder == 'dikirim')
+        .length;
+    _countUlasan = _listCountOrder
+        .where((element) => element.statusOrder == 'ulasan')
+        .length;
+    _countSelesai = _listCountOrder
+        .where((element) => element.statusOrder == 'selesai')
+        .length;
+    _countBatal = _listCountOrder
+        .where((element) => element.statusOrder == 'batal')
+        .length;
     notifyListeners();
   }
 
   setCountPenjualan() {
 //    print(_countSaleMenungguKonfirmasi);
-    _countSaleMenungguKonfirmasi = _listSaleCountOrder.where((element) => element.statusOrder == 'menunggu konfirmasi').length;
-    _countSaleDikemas = _listSaleCountOrder.where((element) => element.statusOrder == 'dikemas').length;
-    _countSaleDikirim = _listSaleCountOrder.where((element) => element.statusOrder == 'dikirim').length;
-    _countSaleUlasan = _listSaleCountOrder.where((element) => element.statusOrder == 'ulasan').length;
-    _countSaleSelesai = _listSaleCountOrder.where((element) => element.statusOrder == 'selesai').length;
-    _countSaleBatal = _listSaleCountOrder.where((element) => element.statusOrder == 'batal').length;
+    _countSaleMenungguKonfirmasi = _listSaleCountOrder
+        .where((element) => element.statusOrder == 'menunggu konfirmasi')
+        .length;
+    _countSaleDikemas = _listSaleCountOrder
+        .where((element) => element.statusOrder == 'dikemas')
+        .length;
+    _countSaleDikirim = _listSaleCountOrder
+        .where((element) => element.statusOrder == 'dikirim')
+        .length;
+    _countSaleUlasan = _listSaleCountOrder
+        .where((element) => element.statusOrder == 'ulasan')
+        .length;
+    _countSaleSelesai = _listSaleCountOrder
+        .where((element) => element.statusOrder == 'selesai')
+        .length;
+    _countSaleBatal = _listSaleCountOrder
+        .where((element) => element.statusOrder == 'batal')
+        .length;
     notifyListeners();
   }
 
@@ -305,7 +341,9 @@ class BlocOrder extends ChangeNotifier {
     notifyListeners();
     var param = {'id_pembeli': idUser.toString()};
     var result = await OrderRepository().getOrderByParam(param);
-    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
+    if (result.toString() == '111' ||
+        result.toString() == '101' ||
+        result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       _listCart = [];
@@ -335,7 +373,9 @@ class BlocOrder extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await OrderRepository().getOrderByParam(param);
-    if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
+    if (result.toString() == '111' ||
+        result.toString() == '101' ||
+        result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;
       _listCart = [];
@@ -345,7 +385,8 @@ class BlocOrder extends ChangeNotifier {
       if (result['meta']['success']) {
         _isLoading = false;
         Iterable list = result['data'];
-        _listSaleCountOrder = list.map((model) => Order.fromMap(model)).toList();
+        _listSaleCountOrder =
+            list.map((model) => Order.fromMap(model)).toList();
         setCountPenjualan();
         notifyListeners();
         return true;
@@ -434,7 +475,8 @@ class BlocOrder extends ChangeNotifier {
     _isLoading = true;
     var order = await OrderRepository().getOrderProdukByParam(param);
     Iterable list = order['data'];
-    _listOrderDetailProduk = list.map((model) => OrderProduk.fromMap(model)).toList();
+    _listOrderDetailProduk =
+        list.map((model) => OrderProduk.fromMap(model)).toList();
     _isLoading = false;
     notifyListeners();
   }

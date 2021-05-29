@@ -8,12 +8,11 @@ import 'package:apps/models/Mitra.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat/dash_chat.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:package_info/package_info.dart';
-import 'package:start_jwt/json_web_token.dart';
 
 class BlocAuth extends ChangeNotifier {
   BlocAuth() {
@@ -98,9 +97,11 @@ class BlocAuth extends ChangeNotifier {
     print(_googleSignIn.currentUser == null);
     if (_googleSignIn.currentUser != null) {
       _currentUser = _googleSignIn.currentUser;
-      final GoogleSignInAuthentication googleAuth = await _googleSignIn.currentUser.authentication;
-
-      final GoogleAuthCredential googleAuthCredential = GoogleAuthProvider.credential(
+      final GoogleSignInAuthentication googleAuth =
+          await _googleSignIn.currentUser.authentication;
+      print('googleAuth');
+      final GoogleAuthCredential googleAuthCredential =
+          GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
@@ -111,7 +112,7 @@ class BlocAuth extends ChangeNotifier {
           .then((userCredential) => {_userCredential = userCredential});
       _getOrCreateUserData();
     } else {
-      // handleSignIn();
+      handleSignIn();
     }
   }
 
@@ -184,7 +185,8 @@ class BlocAuth extends ChangeNotifier {
   Map<String, dynamic> _currentUserLogin = {};
 
   Map<String, dynamic> get currentUserLogin => _currentUserLogin;
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   setFcmToken(String token) async {
     var deviceData = FlutterSession().get('deviceData');
@@ -200,7 +202,7 @@ class BlocAuth extends ChangeNotifier {
       };
       // print(param);
       var result = await AuthRepository().setFcmToken(param);
-      print(result.toString() + ' fcmtoken');
+      // print(result.toString() + ' fcmtoken');
     });
   }
 
@@ -228,12 +230,13 @@ class BlocAuth extends ChangeNotifier {
     var dataUser = result['data'][0];
     final ChatUser data = ChatUser(
       name: dataUser['nama'].toString(),
-      avatar: _currentUser.photoUrl,
+      avatar: _currentUser == null ? "" : _currentUser.photoUrl,
       uid: dataUser['no_hp'].toString().replaceAll('+', ''),
     );
+    // print('data chat' + data.uid);
     await FirebaseFirestore.instance.collection('users').doc(data.uid).set(data.toJson());
     _currentUserChat = data;
-    print(currentUserChat.toString() + 'userChat');
+    // print(currentUserChat.toString() + 'userChat');
     notifyListeners();
   }
 
@@ -378,7 +381,7 @@ class BlocAuth extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     var result = await AuthRepository().getMitraByParam(param);
-    print(result);
+    // print(result);
     if (result.toString() == '111' || result.toString() == '101' || result.toString() == 'Conncetion Error') {
       _connection = false;
       _isLoading = false;

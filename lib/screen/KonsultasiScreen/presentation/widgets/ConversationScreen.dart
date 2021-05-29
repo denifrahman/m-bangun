@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 class ConversationScreen extends StatefulWidget {
   ConversationScreen({Key key, this.fromUser}) : super(key: key);
   final fromUser;
+
   @override
   _ConversationScreenState createState() {
     return _ConversationScreenState();
@@ -20,8 +21,8 @@ class ConversationScreen extends StatefulWidget {
 }
 
 class _ConversationScreenState extends State<ConversationScreen> {
-
   final GlobalKey<DashChatState> _chatViewKey = GlobalKey<DashChatState>();
+
   @override
   void initState() {
     super.initState();
@@ -42,10 +43,12 @@ class _ConversationScreenState extends State<ConversationScreen> {
         title: Text(widget.fromUser),
       ),
       body: StreamBuilder(
-          stream: Firestore.instance.collection('chatrooms')
-              .document(blocChat.currentChatRoomId)
+          stream: FirebaseFirestore.instance
+              .collection('chatrooms')
+              .doc(blocChat.currentChatRoomId)
               .collection('chats')
-              .orderBy('createdAt').snapshots(),
+              .orderBy('createdAt')
+              .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(
@@ -164,6 +167,28 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           );
                         });
                       }
+                      // if (result != null) {
+                      //   final Reference storageRef =
+                      //       FirebaseStorage.instance.ref().child("chat_images");
+                      //
+                      //   final taskSnapshot = await storageRef.putFile(
+                      //     File(result.path),
+                      //     SettableMetadata(
+                      //       contentType: 'image/jpg',
+                      //     ),
+                      //   );
+                      //
+                      //   String url = await taskSnapshot.ref.getDownloadURL();
+                      //
+                      //   ChatMessage message = ChatMessage(
+                      //       text: "",
+                      //       user: blocAuth.currentUserChat,
+                      //       image: url);
+                      //
+                      //   FirebaseFirestore.instance
+                      //       .collection('messages')
+                      //       .add(message.toJson());
+                      // }
                     },
                   )
                 ],
@@ -175,7 +200,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   void onSend(ChatMessage message) async {
     final blocChat = Provider.of<BlocChatting>(context);
-    blocChat.addConverenceMessage(chatroomdId: message.user.uid, messageMap: message);
+    blocChat.addConverenceMessage(
+        chatroomdId: message.user.uid, messageMap: message);
   }
 
   List<ChatMessage> messages = List<ChatMessage>();
@@ -201,5 +227,4 @@ class _ConversationScreenState extends State<ConversationScreen> {
       });
     });
   }
-
 }

@@ -2,9 +2,7 @@ import 'package:apps/providers/BlocAuth.dart';
 import 'package:apps/providers/BlocChatting.dart';
 import 'package:apps/screen/KonsultasiScreen/presentation/widgets/ConversationScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dash_chat/dash_chat.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_wordpress/flutter_wordpress.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 
@@ -72,12 +70,14 @@ class _HistoryChatState extends State<HistoryChat> {
                     var user = listUsers
                         .where((element) => element['uid'] == phone)
                         .toList();
-                    if(user.length == 0){
+                    if (user.length == 0) {
                       return Container(
                         height: MediaQuery.of(context).size.height,
-                        child: Center(child: Text('no history chat'),),
+                        child: Center(
+                          child: Text('no history chat'),
+                        ),
                       );
-                    }else{
+                    } else {
                       return Column(
                         children: [
                           ListTile(
@@ -88,36 +88,41 @@ class _HistoryChatState extends State<HistoryChat> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => ConversationScreen(
-                                        fromUser: 'Chat',
-                                      )));
+                                            fromUser: 'Chat',
+                                          )));
                             },
                             title: Text(
                               user[0]['name'].toString(),
                               style: TextStyle(
                                   fontSize: 14, fontWeight: FontWeight.bold),
                             ),
-                            subtitle: Text(_listMessage[index]['lastMessage']['text']
-                                .toString()),
+                            subtitle: Text(
+                                _listMessage[index]['lastMessage'] == null
+                                    ? ''
+                                    : _listMessage[index]['lastMessage']['text']
+                                        .toString()),
                             trailing: Text(
-                              Jiffy(
-                                  _listMessage[index]['lastMessage']['sendAt']
-                                      .toString(),
-                                  "yyyy-MM-dd")
-                                  .fromNow(),
+                              _listMessage[index]['lastMessage'] == null
+                                  ? ''
+                                  : Jiffy(
+                                          _listMessage[index]['lastMessage']
+                                                  ['sendAt']
+                                              .toString(),
+                                          "yyyy-MM-dd")
+                                      .fromNow(),
                               style: Theme.of(context).textTheme.caption,
                             ),
                             leading: CircleAvatar(
                                 radius: 25.0,
                                 backgroundColor: Colors.white,
-                                child: Image.network(user[0]['avatar'].toString())),
+                                child: Image.network(
+                                    user[0]['avatar'].toString())),
                           ),
                           Divider()
                         ],
                       );
                     }
-
                   });
-
             },
           );
         },
